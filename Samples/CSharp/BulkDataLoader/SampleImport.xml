@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Invoices>
+  <Invoice>
+    <Number>ACME / 01</Number>
+    <Notes>Delivered to </Notes>
+    <Customer>Hammond, Wilson</Customer>
+    <Date>2010-07-13T03:10:23Z</Date>
+  </Invoice>
+  <Invoice>
+    <Number>ACME / 02</Number>
+    <Notes>Delivered to </Notes>
+    <Customer>Hammond, Wilson</Customer>
+    <Date>2010-07-13T05:20:23Z</Date>
+  </Invoice>
+  <Invoice>
+    <Number>ACME / 03</Number>
+    <Notes>Delivered to </Notes>
+    <Customer>Hammond, Wilson</Customer>
+    <Date>2010-07-13T23:06:23Z</Date>
+  </Invoice>
+  <Invoice>
+    <Number>ACME / 04</Number>
+    <Notes>Delivered to </Notes>
+    <Customer>Hammond, Wilson</Customer>
+    <Date>2010-07-13T01:31:32Z</Date>
+  </Invoice>
+  <Invoice>
+    <Number>ACME / 05</Number>
+    <Notes>Delivered to </Notes>
+    <Customer>Smith, Wilson</Customer>
+    <Date>2010-07-13T22:11:20Z</Date>
+  </Invoice>
+</Invoices>
