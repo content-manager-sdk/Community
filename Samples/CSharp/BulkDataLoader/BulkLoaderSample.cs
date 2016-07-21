@@ -46,7 +46,7 @@ namespace HP.HPTRIM.SDK.Samples.BulkLoading
                 m_origin.OriginLocation = "N/A";
 
                 // sample code assumes you have a record type defined called "Document"
-                m_origin.DefaultRecordType = db.FindTrimObjectByName(BaseObjectTypes.RecordType, "Document") as RecordType;
+                m_origin.DefaultRecordType = db.FindTrimObjectByName(BaseObjectTypes.RecordType, ConfigurationManager.AppSettings["recordType"]) as RecordType;
 
                 // don't bother with other origin defaults for the sample, just save it so we can use it
                 m_origin.Save();
@@ -55,7 +55,10 @@ namespace HP.HPTRIM.SDK.Samples.BulkLoading
             // construct a BulkDataLoader for this origin
             m_loader = new BulkDataLoader(m_origin);
 
-            // initialise it as per instructions
+            m_loader.UseBulkLoaderRecordNumbering = false;
+
+            // there are various optimisations use by the bulk loader, here is where we 
+            // initialise them
             if (!m_loader.Initialise())
             {
                 // this sample has no way of dealing with the error.
