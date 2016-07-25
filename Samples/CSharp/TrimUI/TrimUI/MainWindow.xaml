@@ -1,0 +1,23 @@
+﻿<Window x:Class="HP.HPTRIM.SDK.Samples.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="UI Components Sample" Height="250" Width="482">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#425563" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="Helvetica" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="Margin" Value="4" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="0,0,2,2">
+        <Button Content="Edit Record!" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top" Width="117" Click="Button_Click_Edit_Record" IsEnabled="{Binding IsRecordSelected}"/>
+        <Button Content="Display Record" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Width="117" Click="Button_Click_Display_Record" IsEnabled="{Binding IsRecordSelected}"/>
+        <Button Content="Select Record" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Width="117" Click="Button_Click_Select_Record"  IsEnabled="{Binding IsDatabaseAvailable}"/>
+        <Button Content="Select Database" HorizontalAlignment="Left" Margin="335,10,0,0" VerticalAlignment="Top" Width="127" Click="Button_Click_3"/>
+        <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding SelectedRecord.Title}" HorizontalAlignment="Left" Margin="133,63,0,0" VerticalAlignment="Top" Width="337" Height="76"></TextBlock>
+
+    </Grid>
+</Window>
