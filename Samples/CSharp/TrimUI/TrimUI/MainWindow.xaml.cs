@@ -37,6 +37,10 @@ namespace HP.HPTRIM.SDK.Samples
             try
             {
                 TrimApplication.Initialize();
+
+                // There a are a few error messages which will only be displayed of you have set this to true.  By and large you application will work
+                // whether you set this or not.  Still it does not hurt to set it if you have a UI application.
+                TrimApplication.HasUserInterface = true;
             }
             catch (Exception ex)
             {
@@ -50,6 +54,7 @@ namespace HP.HPTRIM.SDK.Samples
             base.BeginInit();
         }
 
+        // The following three properties exist to support WPF Databinding
         public static readonly DependencyProperty IsDatabaseAvailableProperty = DependencyProperty.Register("IsDatabaseAvailable", typeof(bool), typeof(MainWindow));
         public bool IsDatabaseAvailable
         {
@@ -137,6 +142,7 @@ namespace HP.HPTRIM.SDK.Samples
                 }
 
                 _database = newDatabase;
+
                 IsDatabaseAvailable = newDatabase.IsValid;
             }
         }
