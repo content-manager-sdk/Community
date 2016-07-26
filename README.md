@@ -16,8 +16,9 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 
 ## List Sample Projects
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| Project            | Description                                                                            |
+| ------------------ |:--------------------------------------------------------------------------------------:|
+| [TrimUI](Samples/CSharp/TrimUI)             | A simple WPF application to demonstrate the user interferface classes in the SDK.      |
+| CreateNewDocument  | A simple application demonstrating creation of a new Record from a RecordType.         | 
+| BulkDataLoader     | Combines the BulkDataLoader and Origin to create a high performance import of Records. |
+| ExecutableAddin    | Sample demonstrates passing parameters via the command line for an EXE addin.          |
