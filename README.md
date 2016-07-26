@@ -16,9 +16,12 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 
 ## List Sample Projects
 
-| Project                                     | Description                                                                            |
-| ------------------------------------------- |----------------------------------------------------------------------------------------|
-| [TrimUI](Samples/CSharp/TrimUI)             | A simple WPF application to demonstrate the user interferface classes in the SDK.      |
-| CreateNewDocument  | A simple application demonstrating creation of a new Record from a RecordType.         | 
-| BulkDataLoader     | Combines the BulkDataLoader and Origin to create a high performance import of Records. |
-| ExecutableAddin    | Sample demonstrates passing parameters via the command line for an EXE addin.          |
+| Project                                                 | Description                                                                            |
+| ------------------------------------------------------- |----------------------------------------------------------------------------------------|
+| [TrimUI](Samples/CSharp/TrimUI)                         | A simple WPF application to demonstrate the user interferface classes in the SDK.      |
+| [CreateNewDocument](Samples/CSharp/CreateNewDocument/)  | A simple application demonstrating creation of a new Record from a RecordType.         | 
+| [BulkDataLoader] (Samples/CSharp/BulkDataLoader/)       | Combines the BulkDataLoader and Origin to create a high performance import of Records. |
+| [ExecutableAddin](Samples/CSharp/ExecutableAddin/)      | Sample demonstrates passing parameters via the command line for an EXE addin.          |
+| [EventProcessor](Samples/CSharp/EventProcessor/)        | A custom event to plug into the core event processor and react to object (e.g. Record) related events on the server.|
+| [SampleAddIn](Samples/CSharp/SampleAddIn/)              | Custome save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
+
