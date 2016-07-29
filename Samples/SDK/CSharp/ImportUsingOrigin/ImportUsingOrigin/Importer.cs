@@ -32,7 +32,13 @@ namespace HP.HPTRIM.SDK.Samples.ImportUsingOrigin
 
                 foreach (string file in scanFolder(_folder))
                 {
+                   
                     Record record = _origin.NewRecord(history);
+
+                    // We need to call this to trigger the Origin functionality to create a new folder
+                    // and put this Record in the folder
+                    _origin.AllocateContainer(record);
+
                     record.SetDocument(file);
                     record.Save();
 

@@ -29,6 +29,8 @@ namespace HP.HPTRIM.SDK.Samples.ImportUsingOrigin
 
         public void Start()
         {
+            _runnable.Run();
+
             _timer.Start();
         }
 

@@ -66,7 +66,11 @@ namespace HP.HPTRIM.SDK.Samples.ImportUsingOrigin
                 }
 
                 SourceFolder = Properties.Settings.Default["source_folder"] as string;
-                Interval = Properties.Settings.Default["interval"].ToString();
+
+                if ((int)Properties.Settings.Default["interval"] > 0)
+                {
+                    Interval = Properties.Settings.Default["interval"].ToString();
+                }
                 IsOnSchedule = (bool)Properties.Settings.Default["on_schedule"];
 
                 if (IsOnSchedule)
@@ -140,10 +144,6 @@ namespace HP.HPTRIM.SDK.Samples.ImportUsingOrigin
                 if (value != null)
                 {
                     Properties.Settings.Default["origin_uri"] = value.Uri.Value;
-                    if (string.IsNullOrEmpty(SourceFolder))
-                    {
-                        SourceFolder = value.OriginLocation;
-                    }
                 }
                 else
                 {
@@ -161,6 +161,11 @@ namespace HP.HPTRIM.SDK.Samples.ImportUsingOrigin
             search.SetSearchString(string.Format("ognType:{0}", OriginType.WindowsFolder));
 
             SelectedOrigin = ObjectSelector.SelectOne(GetDesktopWindow(), search) as Origin;
+
+            if (string.IsNullOrEmpty(SourceFolder))
+            {
+                SourceFolder = SelectedOrigin.OriginLocation;
+            }
         }
 
         private void Select_Database_Button_Click(object sender, RoutedEventArgs e)
@@ -249,6 +254,10 @@ namespace HP.HPTRIM.SDK.Samples.ImportUsingOrigin
             // If the user changes the Scheduled Checkbox we start the scheduler, if appropriate
             if (_scheduler == null && IsOnSchedule)
             {
+                if (string.IsNullOrEmpty(Interval)) {
+                    Interval = "1";
+                }
+
                 _scheduler = new Scheduler(new Importer(SelectedOrigin, SourceFolder), Convert.ToInt32(Interval));
                 _scheduler.Start();
             }
