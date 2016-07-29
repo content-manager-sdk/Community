@@ -24,4 +24,4 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [ExecutableAddin](Samples/SDK/CSharp/ExecutableAddin/)      | Sample demonstrates passing parameters via the command line for an EXE addin.          |
 | [EventProcessor](Samples/SDK/CSharp/EventProcessor/)        | A custom event to plug into the core event processor and react to object (e.g. Record) related events on the server.|
 | [SampleAddIn](Samples/SDK/CSharp/SampleAddIn/)              | Custome save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
-| [SampleAddIn](Samples/SDK/CSharp/ImportUsingOrigin/)        | A WPF application to import documents based on an Origin. |
+| [ImportUsingOrigin](Samples/SDK/CSharp/ImportUsingOrigin/)        | A WPF application to import documents based on an Origin. |
