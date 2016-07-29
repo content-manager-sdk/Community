@@ -1,0 +1,22 @@
+﻿<Window x:Class="HP.HPTRIM.SDK.Samples.ImportUsingOrigin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Record Importer" Height="220" Width="565">
+    <Grid>
+        <Button Content="Create" HorizontalAlignment="Left" Margin="486,48,0,0" VerticalAlignment="Top" Width="56" Height="22" IsEnabled="{Binding IsDatabaseAvailable}" Click="Origin_Create_Btton_Click"/>
+        <Button Content="Choose" HorizontalAlignment="Left" Margin="423,48,0,0" VerticalAlignment="Top" Width="56" Height="22" Click="Origin_Chooser_Button_Click" IsEnabled="{Binding IsDatabaseAvailable}"/>
+        <Label Content="Origin" HorizontalAlignment="Left" Margin="10,0,0,244" VerticalAlignment="Bottom" RenderTransformOrigin="0.54,0.078"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="129,48,0,0" TextWrapping="Wrap" Text="{Binding SelectedOrigin.Name}" VerticalAlignment="Top" Width="281" Name="Origin_Name_Text"/>
+        <Button Content="Choose" HorizontalAlignment="Left" Margin="423,20,0,0" VerticalAlignment="Top" Width="56" Height="22" Click="Select_Database_Button_Click"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="129,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="281" Text="{Binding Database.Name, Mode=OneWay}" />
+        <Label Content="Source" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="129,76,0,0" TextWrapping="Wrap" Text="{Binding SourceFolder}" VerticalAlignment="Top" Width="281"/>
+        <Button Content="Choose" HorizontalAlignment="Left" Margin="424,76,0,0" VerticalAlignment="Top" Width="56" Height="22" Click="Source_Chooser_Button_Click"/>
+        <Label Content="Database" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top"/>
+        <Button Content="Import Now" HorizontalAlignment="Left" Margin="424,117,0,0" VerticalAlignment="Top" Width="75" Click="Scan_Folder_Button_Click"/>
+        <CheckBox Content="Import on Schedule" HorizontalAlignment="Left" Margin="130,117,0,0" VerticalAlignment="Top" Width="151" IsChecked="{Binding IsOnSchedule}" Click="Schedule_Run_Button_Click" />
+        <Label Content="Interval minutes" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.132,0.385"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="129,147,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="55"  Text="{Binding Interval}"/>
+
+    </Grid>
+</Window>
