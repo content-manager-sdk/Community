@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,14 +23,14 @@ namespace AddingGroupMemberships
         {
             try
             {
-                TrimClient trimClient = new TrimClient("http://15.146.221.186/HPECMServiceAPI");
+                TrimClient trimClient = new TrimClient("http://[IPaddress]/HPECMServiceAPI");  // Change [IPaddress] to match your ServiceAPI machine
                 trimClient.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
-                Location myloc = new Location() { Uri = 1011 };
+                Location myloc = new Location() { Uri = [PersonUri] };  // Change [PersonUri] to the person location you want to the member of a group location
                 myloc.AddAction(
                     new AddRelationship()
                     {
-                        RelatedLocation = new LocationRef() { Uri = 179879 },
+                        RelatedLocation = new LocationRef() { Uri = [GroupUri] },  // Change [GroupUri] to the group location you want to add the membership to
                         RelationshipType = LocRelationshipType.MemberOf,
                         MakeThisTheDefaultRelationship = false
                     }
@@ -43,7 +43,7 @@ namespace AddingGroupMemberships
                 }
                 else
                 {
-                    MessageBox.Show("Group Updated");
+                    MessageBox.Show("Association Updated");
                 }
             }
             catch (Exception ex)
