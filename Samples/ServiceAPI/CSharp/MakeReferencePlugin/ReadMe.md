@@ -1,14 +1,33 @@
-# Adding Group Memberships
-This sample allows the developer to add an 'Member Of' association between 2 locations. 
+# MakeReference ServiceAPI Plugin
+This sample adds a new service to the ServiceAPI to download a TR5 reference file which maybe used to open a Record (or other object type) in the native client.
 
 ## Setup
 To use this sample:
- - perform the steps as per lib folder's ReadMe.md
- - update the the References to the files in the lib folder.
- - update the Service URL in the program to your ServiceAPI's IP address
- - update the location URIs in the program to your own data
- - build the sample and run it
+ - Copy these files from your ServiceAPI bin folder to the Samples\ServiceAPI\CSharp\lib folder
+    - HP.HPTRIM.SDK.dll
+	- HP.HPTRIM.ServiceAPI.Client.dll
+	- HP.HPTRIM.ServiceAPI.Common.dll
+	- HP.HPTRIM.ServiceAPI.Model.dll
+	- ServiceStack.Client.dll
+	- ServiceStack.dll
+	- ServiceStack.Interfaces.dll
+	- ServiceStack.Text.dll
+ - build the MakeReferencePlugin project
+ - copy MakeReferencePlugin.dll to your ServiceAPI bin folder
+ - add the XML below to the hptrim.config file in your ServiceAPI folder
 
-## Testing
-Check your locations Association tab for 'Member of' and/or 'Has Member' associations to see if they have been updated.
+ 
+## Plugin Configuration
+The following XML must be copied as a child of the hptrim element of hptrim.config
+
+```
+  <pluginAssemblies>
+    <add name="MakeReferencePlugin" />
+  </pluginAssemblies>
+```  
+
+### Example
+
+![Example Config](plugin_config.PNG)
+
 
