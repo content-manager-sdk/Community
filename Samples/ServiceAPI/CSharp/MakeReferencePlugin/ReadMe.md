@@ -31,3 +31,15 @@ The following XML must be copied as a child of the hptrim element of hptrim.conf
 ![Example Config](plugin_config.PNG)
 
 
+## Usage
+Once the plugin is installed you should be able to download a TR5 file using a URL similar to this:
+
+### Record TR5
+```
+http://localhost/HPRMServiceAPI/MakeReference?TrimType=Record&Name=D16/1
+```
+
+### Location TR5
+```
+http://localhost/HPRMServiceAPI/MakeReference?TrimType=Location&Name=David
+```
