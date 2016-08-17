@@ -16,12 +16,14 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 
 ## List Sample Projects
 
-| Project                                                 | Description                                                                            |
-| ------------------------------------------------------- |----------------------------------------------------------------------------------------|
-| [TrimUI](Samples/SDK/CSharp/TrimUI)                         | A simple WPF application to demonstrate the user interferface classes in the SDK.      |
-| [CreateNewDocument](Samples/SDK/CSharp/CreateNewDocument/)  | A simple application demonstrating creation of a new Record from a RecordType.         | 
-| [BulkDataLoader] (Samples/SDK/CSharp/BulkDataLoader/)       | Combines the BulkDataLoader and Origin to create a high performance import of Records. |
-| [ExecutableAddin](Samples/SDK/CSharp/ExecutableAddin/)      | Sample demonstrates passing parameters via the command line for an EXE addin.          |
-| [EventProcessor](Samples/SDK/CSharp/EventProcessor/)        | A custom event to plug into the core event processor and react to object (e.g. Record) related events on the server.|
-| [SampleAddIn](Samples/SDK/CSharp/SampleAddIn/)              | Custome save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
-| [ImportUsingOrigin](Samples/SDK/CSharp/ImportUsingOrigin/)        | A WPF application to import documents based on an Origin. |
+| Project                                                                     | Description                                                                            |
+| --------------------------------------------------------------------------- |----------------------------------------------------------------------------------------|
+| [TrimUI](Samples/SDK/CSharp/TrimUI)                                         | A simple WPF application to demonstrate the user interferface classes in the SDK.      |
+| [CreateNewDocument](Samples/SDK/CSharp/CreateNewDocument/)                  | A simple application demonstrating creation of a new Record from a RecordType.         | 
+| [BulkDataLoader] (Samples/SDK/CSharp/BulkDataLoader/)                       | Combines the BulkDataLoader and Origin to create a high performance import of Records. |
+| [ExecutableAddin](Samples/SDK/CSharp/ExecutableAddin/)                      | Sample demonstrates passing parameters via the command line for an EXE addin.          |
+| [EventProcessor](Samples/SDK/CSharp/EventProcessor/)                        | A custom event to plug into the core event processor and react to object (e.g. Record) related events on the server.|
+| [SampleAddIn](Samples/SDK/CSharp/SampleAddIn/)                              | Custom save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
+| [ImportUsingOrigin](Samples/SDK/CSharp/ImportUsingOrigin/)                  | A WPF application to import documents based on an Origin. |
+| [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plugin to add a service to allow download of a TR5 reference file. |
+| [AddingGroupMemberships](Samples/ServiceAPI/CSharp/AddingGroupMemberships/) | A C# ServiceAPI client application to add a 'Member Of' association between two Locations. |
