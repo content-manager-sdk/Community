@@ -16,6 +16,15 @@ To use this sample:
  - copy MakeReferencePlugin.dll to your ServiceAPI bin folder
  - add the XML below to the hptrim.config file in your ServiceAPI folder
 
+## NOTE for HPE CM 8.x users
+This sample has been built against HPE CM 9.0 but will work against 8.x with one change.   Instead of the DLLs above copy the ones below from the ServiceAPI bin (and then update the project references):
+ - HP.HPTRIM.SDK.dll
+ - HP.HPTRIM.Service.dll
+ - HP.HPTRIM.ServiceModel.dll
+ - ServiceStack.dll
+ - ServiceStack.Interfaces.dll
+ - ServiceStack.ServiceInterface.dll
+ - ServiceStack.Text.dll
  
 ## Plugin Configuration
 The following XML must be copied as a child of the hptrim element of hptrim.config

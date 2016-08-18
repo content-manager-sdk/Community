@@ -1,5 +1,5 @@
 # Simple ServiceAPI Plugin
-This sample adds a new service to the ServiceAPI to download a TR5 reference file which maybe used to open a Record (or other object type) in the native client.
+This sample adds a new service to the ServiceAPI to fetch a Record Title along with the current user name, it serves to demonstrate the creation of a ServiceAPI plugin.
 
 ## Setup
 To use this sample:
@@ -12,8 +12,8 @@ To use this sample:
 	- ServiceStack.dll
 	- ServiceStack.Interfaces.dll
 	- ServiceStack.Text.dll
- - build the MakeReferencePlugin project
- - copy MakeReferencePlugin.dll to your ServiceAPI bin folder
+ - build the SimpleServiceAPIPlugin project
+ - copy SimpleServiceAPIPlugin.dll to your ServiceAPI bin folder
  - add the XML below to the hptrim.config file in your ServiceAPI folder
 
 ## NOTE for HPE CM 8.x users
