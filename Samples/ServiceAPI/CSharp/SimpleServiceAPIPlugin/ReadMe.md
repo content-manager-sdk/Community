@@ -47,7 +47,7 @@ http://localhost/HPRMServiceAPI/simple?format=json&Uri=9000000000
 ```
 
 ## Usage from .Net proxy classes
-One important thing to note is that in the service the request model implements the interface IReturn<SimpleResponse>. This allow the .Net proxy classes to link the request and response in the .Get method, for example:
+One important thing to note is that in the SimpleService.cs the request model (Simple) implements the interface IReturn<SimpleResponse>. This allow the .Net proxy classes to link the request and response in the .Get method, for example:
 
 ```
 TrimClient trimClient = new TrimClient("http://localhost/ServiceAPI");
