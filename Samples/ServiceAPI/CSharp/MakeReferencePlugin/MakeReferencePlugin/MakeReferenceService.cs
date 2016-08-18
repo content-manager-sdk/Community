@@ -26,6 +26,7 @@ namespace HP.HPTRIM.ServiceAPI.Samples
                 TrimMainObject trimObject = Database.FindTrimObjectByName((BaseObjectTypes)request.TrimType, request.Name);
                 if (trimObject != null)
                 {
+                    // replace / with _ so that windows will not get confused by the path seperator in a file name
                     string fileLocation = trimObject.MakeReference(string.Format("c:\\temp\\{0}.tr5", request.Name.Replace('/', '_')));
                     return new HttpResult(new TempDownloadableFile(fileLocation), true);
                 }                
