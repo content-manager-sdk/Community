@@ -25,5 +25,7 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [EventProcessor](Samples/SDK/CSharp/EventProcessor/)                        | A custom event to plug into the core event processor and react to object (e.g. Record) related events on the server.|
 | [SampleAddIn](Samples/SDK/CSharp/SampleAddIn/)                              | Custom save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
 | [ImportUsingOrigin](Samples/SDK/CSharp/ImportUsingOrigin/)                  | A WPF application to import documents based on an Origin. |
+| [SimpleServiceAPIPlugin](Samples/ServiceAPI/CSharp/SimpleServiceAPIPlugin/) | A Simple ServiceAPI plugin, demonstrates how to call your plugin from the ServiceAPI client proxy. |
 | [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plugin to add a service to allow download of a TR5 reference file. |
 | [AddingGroupMemberships](Samples/ServiceAPI/CSharp/AddingGroupMemberships/) | A C# ServiceAPI client application to add a 'Member Of' association between two Locations. |
+
