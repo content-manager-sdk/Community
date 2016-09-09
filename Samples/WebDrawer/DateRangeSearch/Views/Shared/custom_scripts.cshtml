@@ -6,11 +6,7 @@
 <script>
     $(function () {
         $(document).off("click", "a");
-    });
-
-    $('.wd-search-field').each(function () {
-        var fld = $(this);
-
+		
         var rangePickerSettings = {
             altFormat: 'yyyy-mm-dd',
             change: function (event, data) {
@@ -25,6 +21,11 @@
                 }
             }
         }
+
+    $('.wd-search-field').each(function () {
+        var fld = $(this);
+
+
 
         var isDate = function (n) {
             var toReturn = false;
@@ -63,5 +64,5 @@
         });
 
     });
-
+});
 </script>
