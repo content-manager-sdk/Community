@@ -26,11 +26,13 @@ namespace AddingGroupMemberships
                 TrimClient trimClient = new TrimClient("http://[IPaddress]/HPECMServiceAPI");  // Change [IPaddress] to match your ServiceAPI machine
                 trimClient.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
-                Location myloc = new Location() { Uri = [PersonUri] };  // Change [PersonUri] to the person location you want to the member of a group location
+                long PersonUri = 0;
+                long GroupUri = 0;
+                Location myloc = new Location() { Uri = PersonUri };  // Change [PersonUri] to the person location you want to the member of a group location
                 myloc.AddAction(
                     new AddRelationship()
                     {
-                        RelatedLocation = new LocationRef() { Uri = [GroupUri] },  // Change [GroupUri] to the group location you want to add the membership to
+                        RelatedLocation = new LocationRef() { Uri = GroupUri },  // Change [GroupUri] to the group location you want to add the membership to
                         RelationshipType = LocRelationshipType.MemberOf,
                         MakeThisTheDefaultRelationship = false
                     }

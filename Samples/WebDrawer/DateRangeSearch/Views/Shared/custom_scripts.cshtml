@@ -1,0 +1,67 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/2.3.1/moment.min.js"></script>
+
+<script src="~/scripts/jquery.comiseo.daterangepicker.js" type="text/javascript"></script>
+
+<script>
+    $(function () {
+        $(document).off("click", "a");
+    });
+
+    $('.wd-search-field').each(function () {
+        var fld = $(this);
+
+        var rangePickerSettings = {
+            altFormat: 'yyyy-mm-dd',
+            change: function (event, data) {
+                var range = $(this).daterangepicker("getRange");
+                var start = range.start.toISOString().split('T')[0];
+                var end = range.end.toISOString().split('T')[0];
+
+                if (start !== end) {
+                    $(this).val(start + ' To ' + end);
+                } else {
+                    $(this).val(start);
+                }
+            }
+        }
+
+        var isDate = function (n) {
+            var toReturn = false;
+            $.each(searchClauses, function (key, value) {
+                if (value.Name === n) {
+                    toReturn = value.ParameterFormat === 'Datetime' || value.ParameterFormat === 'Date';
+                    return false;
+                }
+
+            });
+            return toReturn;
+        }
+
+        if (isDate(fld.attr('name'))) {
+            fld.daterangepicker(rangePickerSettings);
+        }
+    });
+
+    $('.clause-selector').change(function () {
+        var fld = $(this).parents('.control-group').first().find('.search-clause').first();
+
+        $(this).children('option').filter("option:selected").each(function () {
+            fld.prop('disabled', $(this).parameterFormat() === 'Boolean');
+
+            if ($(this).parameterFormat() === 'Datetime' || $(this).parameterFormat() === 'Date') {
+                // some of the default formatting interferes with the date picker, lets remove it
+                $(fld).parent('.input-append').removeClass('input-append');
+
+                // set the date picker on a Date or Datetime field
+                $(fld).daterangepicker(rangePickerSettings);
+            } else {
+                if (fld.daterangepicker) {
+                    fld.daterangepicker('destroy');
+                }
+            }
+        });
+
+    });
+
+</script>
