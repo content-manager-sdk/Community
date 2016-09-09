@@ -11,8 +11,8 @@
             altFormat: 'yyyy-mm-dd',
             change: function (event, data) {
                 var range = $(this).daterangepicker("getRange");
-                var start = range.start.toISOString().split('T')[0];
-                var end = range.end.toISOString().split('T')[0];
+                var start = moment(range.start).utc().format("YYYY-MM-DDTHH:mm:ss"); //"YYYY-MM-DDTHH:mm:ss"
+                var end = moment(range.end).utc().format("YYYY-MM-DDTHH:mm:ss");
 
                 if (start !== end) {
                     $(this).val(start + ' To ' + end);
