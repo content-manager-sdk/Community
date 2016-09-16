@@ -21,7 +21,7 @@ To install from the files here:
 
  ![image 2](date_range_picker.PNG)
  
- To install in Records Manager 81
+ ##To install in Records Manager 81
  Version 81 does not automatically load scripts from the custom_head.cshtml and custom_scripts.cshtml files.  To include the date range picker in 81 you need to add the following lines immediately prior to the line (near the bottom of the file) that reads ' @RenderSection("scripts")'.
  
  ```.html
