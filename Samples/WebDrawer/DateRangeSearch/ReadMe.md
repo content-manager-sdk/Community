@@ -25,8 +25,8 @@ To install from the files here:
  Version 81 does not automatically load scripts from the custom_head.cshtml and custom_scripts.cshtml files.  To include the date range picker in 81 you need to add the following lines immediately prior to the line (near the bottom of the file) that reads ' @RenderSection("scripts")'.
  
  ```.html
- 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
-		<script src="https://cdn.jsdelivr.net/momentjs/2.3.1/moment.min.js"></script>
-		<script src="~/scripts/jquery.comiseo.daterangepicker.js" type="text/javascript"></script>
-        <script src="~/scripts/custom_scripts.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/2.3.1/moment.min.js"></script>
+<script src="~/scripts/jquery.comiseo.daterangepicker.js" type="text/javascript"></script>
+<script src="~/scripts/custom_scripts.js" type="text/javascript"></script>
  ```
