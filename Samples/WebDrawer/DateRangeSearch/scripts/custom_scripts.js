@@ -12,13 +12,14 @@ $(function () {
 	$('head').append('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" type="text/css" />');
 	$('head').append('<link rel="stylesheet" href="css/jquery.comiseo.daterangepicker.css" type="text/css" />');
 
-// switch off the link click behaviour in webdrawer.js, this behaviour breaks the calendar paging and is unnecesary anyway.	
+// switch off the link click behaviour in webdrawer.js, this behaviour breaks the calendar paging and is unnecessary anyway.	
     $(document).off("click", "a");
 
 // how we add the date picker to date search fields
 
 // first set up the options and the change event to convert the date range from a JSON object to a search compatible string.	
-	var rangePickerSettings = {
+    var rangePickerSettings = {
+        buttonImage: 'calendar.png',
 		datepickerOptions:{changeYear: true},
 		presetRanges:[],
 		dateFormat: "MM/DD/YYYY",

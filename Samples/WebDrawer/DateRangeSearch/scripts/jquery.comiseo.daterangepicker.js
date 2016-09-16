@@ -55,7 +55,7 @@
 //				showCurrentAtPos: 1 // bug; use maxDate instead
 				maxDate: 0 // the maximum selectable date is today (also current month is displayed on the last position)
 			},
-			buttonImage:'calendar_x24.png'
+			buttonImage:'calendar.png'
 		},
 
 		_create: function() {
