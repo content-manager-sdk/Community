@@ -54,7 +54,8 @@
 				numberOfMonths: 3,
 //				showCurrentAtPos: 1 // bug; use maxDate instead
 				maxDate: 0 // the maximum selectable date is today (also current month is displayed on the last position)
-			}
+			},
+			buttonImage:'calendar_x24.png'
 		},
 
 		_create: function() {
@@ -113,15 +114,15 @@
 
 		function init() {
 			fixReferences();
-			$self = $('<button type="button"></button>')
+			$self = $('<button type="button"><image src="images/record_types/' + options.buttonImage +'" width="24" /></button>')
 				.addClass(classnameContext + '-triggerbutton')
 				.attr({'title': $originalElement.attr('title'), 'tabindex': $originalElement.attr('tabindex'), id: id})
-				.button({
+			/*	.button({
 					icons: {
 						secondary: options.icon
 					},
 					label: options.initialText
-				});
+				});*/
 		}
 
 		function getLabel() {
@@ -129,7 +130,7 @@
 		}
 
 		function setLabel(value) {
-			$self.button('option', 'label', value);
+	//		$self.button('option', 'label', value);
 		}
 
 		function reset() {
@@ -429,7 +430,8 @@
 				.append($('<div class="ui-helper-clearfix"></div>')
 					.append(buttonPanel.getElement()))
 				.hide();
-			$originalElement.hide().after(triggerButton.getElement());
+			//$originalElement.hide().after(triggerButton.getElement());
+			$originalElement.after(triggerButton.getElement());
 			$mask = $('<div></div>', {'class': 'ui-front ' + classname + '-mask'}).hide();
 			$('body').append($mask).append($container);
 		}
