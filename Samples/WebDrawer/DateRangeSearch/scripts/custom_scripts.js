@@ -1,9 +1,17 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/momentjs/2.3.1/moment.min.js"></script>
-<script src="~/scripts/jquery.comiseo.daterangepicker.js" type="text/javascript"></script>
+// link this this script from the bottom of _Layout.cshtml when adding the date picker to Content Manager 8.1.
+// for later versions place customer_scripts.cshtml and custom_head.cshtml in the Views\Shared folder.
+$(function () {
 
-<script>
-    $(function () {
+//this is not related to the date picker, it is only to show a progress icon when searching to let users know
+// something is happening.
+	 $( "form" ).submit(function( event ) {
+		 $("body").css("cursor", "progress");
+	 });
+
+// add CSS so we do not have to di it manually in _Layout.cshtml	 
+	$('head').append('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" type="text/css" />');
+	$('head').append('<link rel="stylesheet" href="css/jquery.comiseo.daterangepicker.css" type="text/css" />');
+
 // switch off the link click behaviour in webdrawer.js, this behaviour breaks the calendar paging and is unnecesary anyway.	
     $(document).off("click", "a");
 
@@ -77,4 +85,3 @@
 
     });
 });
-</script>
