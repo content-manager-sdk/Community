@@ -114,6 +114,7 @@
 
 		function init() {
 			fixReferences();
+
 			$self = $('<button type="button"><image src="images/record_types/' + options.buttonImage +'" width="24" /></button>')
 				.addClass(classnameContext + '-triggerbutton')
 				.attr({'title': $originalElement.attr('title'), 'tabindex': $originalElement.attr('tabindex'), id: id})
