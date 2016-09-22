@@ -48,7 +48,7 @@ $(function () {
         var isDate = function (n) {
             var toReturn = false;
             $.each(searchClauses, function (key, value) {
-                if (value.Name === n) {
+                if (value.Name === n || value.InternalName === n) {
                     toReturn = value.ParameterFormat === 'Datetime' || value.ParameterFormat === 'Date';
                     return false;
                 }
