@@ -22,6 +22,7 @@ This sample has been built against HPE CM 9.0 but will work against 8.x with one
  - HP.HPTRIM.Service.dll
  - HP.HPTRIM.ServiceModel.dll
  - ServiceStack.dll
+ - ServiceStack.Common.dll
  - ServiceStack.Interfaces.dll
  - ServiceStack.ServiceInterface.dll
  - ServiceStack.Text.dll
