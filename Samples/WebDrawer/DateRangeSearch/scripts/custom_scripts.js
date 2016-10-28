@@ -20,24 +20,26 @@ $(function () {
 // first set up the options and the change event to convert the date range from a JSON object to a search compatible string.	
     var rangePickerSettings = {
         buttonImage: 'calendar.png',
-		datepickerOptions:{changeYear: true},
-		presetRanges:[],
-		dateFormat: "MM/DD/YYYY",
-		altFormat: 'mm-dd-yyyy',
-		applyButtonText:"OK",
-		 change: function (event, data) {
-			 var range = $(this).daterangepicker("getRange");
-			 var format = data.instance.options.dateFormat;
-			 var start = moment(range.start).format(format);
-			 var end = moment(range.end).format(format);
+        datepickerOptions: { changeYear: true },
+        presetRanges: [{ "text": "Yesterday" }, { "text": "Today" }],
+        dateFormat: "MM/DD/YYYY",
+        altFormat: 'mm-dd-yyyy',
+        applyButtonText: "OK",
+        change: function (event, data) {
+            var range = $(this).daterangepicker("getRange");
+            if (range) {
+                var format = data.instance.options.dateFormat;
+                var start = moment(range.start).format(format);
+                var end = moment(range.end).format(format);
 
-			 if (start !== end) {
-				 $(this).val(start + ' To ' + end);
-			 } else {
-				 $(this).val(start);
-			 }
-		 }
-	}
+                if (start !== end) {
+                    $(this).val(start + ' To ' + end);
+                } else {
+                    $(this).val(start);
+                }
+            }
+        }
+    }
 
 	// now actually add the picker to the search fields
 	
