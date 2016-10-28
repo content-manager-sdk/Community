@@ -550,15 +550,25 @@
 
 		// callback - used when the user clicks a preset range
 		function usePreset(event) {
-			var $this = $(this),
-				start = $this.data('dateStart')().startOf('day').toDate(),
-				end = $this.data('dateEnd')().startOf('day').toDate();
-			calendar.setRange({ start: start, end: end });
-			if (options.applyOnMenuSelect) {
-				close(event);
-				setRange(null, event);
-			}
-			return false;
+		    var $this = $(this);
+		    if ($this.data('dateStart')) {
+		        var start = $this.data('dateStart')().startOf('day').toDate(),
+                    end = $this.data('dateEnd')().startOf('day').toDate();
+		        calendar.setRange({ start: start, end: end });
+
+		    } else {
+		        var tt = this.innerText;
+		        $originalElement.val(tt).change();
+		        if (options.onChange) {
+		            options.onChange();
+		        }
+		        instance._trigger('change', event, { instance: instance });
+		    }
+		    if (options.applyOnMenuSelect) {
+		        close(event);
+		        setRange(null, event);
+		    }
+		    return false;
 		}
 
 		// adjusts dropdown's position taking into account the available space
