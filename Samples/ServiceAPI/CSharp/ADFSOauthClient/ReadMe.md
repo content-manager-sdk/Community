@@ -9,7 +9,7 @@ To configure the ServiceAPI to use this sample:
 
 ### Allow anonymous access in the IIS
 IIS will not be handling authentication so we use IIS Manager to allow anonymous access only.
-![image 1](images/iis_anon.png)
+![image 1](images/iis_anon.PNG)
 
 ### Prevent anonymous access via the web.config
 We need to force the ServiceAPI to require authentication, this is done by adding the authorization section to <system.web/> in the ServiceAPI web.config.
