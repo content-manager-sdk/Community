@@ -21,7 +21,7 @@ We need to force the ServiceAPI to require authentication, this is done by addin
 ```
 
 ### Configure ADFS in hptrim.config
-In hptrim.config add an authentication section like the one below, ensure they metadataEndpoint points to your ADFS server and the audience matches identifier in your Relying Party Trust exactly.
+In hptrim.config add an authentication section like the one below, ensure they metadataEndpoint points to your ADFS server and the audience matches the identifier in your Relying Party Trust exactly.
 ```
 <authentication allowAnonymous="false">
   <activeDirectory>
@@ -40,7 +40,7 @@ This document describes a simple ADFS Relying Party Trust configuration, dependi
 From the ADFS Management Console create a new Relying Party Trust, for all screens not described below select 'Start' or 'Next'
 
 #### Enter the metadata manually
-![image 1](images/manual.PNG)
+![image 1](images/manual.png)
 
 #### Choose a name
 ![image 1](images/adfs_name.PNG)
