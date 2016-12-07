@@ -4,6 +4,20 @@ This sample authenticates the user with the ADFS server and then passes that aut
 ## Versions
 This sample should work with version 8.3 and later.
 
+## Questions
+Post any questios regarding this sample in the [SDK support forum](https://community.hpe.com/t5/SDK-API-Support/bd-p/sws-RM_SDKAPI)
+
+## Sample application Setup
+This sample application requires that:
+* an ADFS relying party trust be Configure
+* an ADFS client be created for the Relying Party Trust, and that
+* the ServiceAPI be configured to use ADFS for authentication.
+These steps are described later in this document.  Once this has been done you shoud update the App.config of this sample application and:
+* set your ADFS server URL in ida:authority
+* include the same URL you used in the relying party trust in ida:resourceUri
+* put the guid you used when running Add-ADFSClient in ida:clientId
++ put the URL of your ServiceAPI instance in trim:ServiceLocation
+
 ## ServiceAPI Setup
 To configure the ServiceAPI to use this sample:
 
