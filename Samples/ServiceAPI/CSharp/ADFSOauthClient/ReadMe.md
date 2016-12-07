@@ -40,13 +40,13 @@ This document describes a simple ADFS Relying Party Trust configuration, dependi
 From the ADFS Management Console create a new Relying Party Trust, for all screens not described below select 'Start' or 'Next'
 
 #### Enter the metadata manually
-![image 1](images/manual.png.PNG)
+![image 1](images/manual.PNG)
 
 #### Choose a name
-![image 1](images/adfs_name.png.PNG)
+![image 1](images/adfs_name.PNG)
 
 #### Support WS-FederationMetadata
-![image 1](images/ws-fed.png.PNG)
+![image 1](images/ws-fed.PNG)
 
 #### Add a claim rule
 A simple approach is to use a custom rule to return all claims using the custom rule below:
