@@ -29,5 +29,5 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plugin to add a service to allow download of a TR5 reference file. |
 | [AddingGroupMemberships](Samples/ServiceAPI/CSharp/AddingGroupMemberships/) | A C# ServiceAPI client application to add a 'Member Of' association between two Locations. |
 | [Web Drawer DateRangeSearch](Samples/WebDrawer/DateRangeSearch/) | Some sample code to transform WebDrawer date search fields from plain text to a date range picker. |
-| [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth. |
+| [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth, plus instructions to configure the ServiceAPI to use OAuth. |
 
