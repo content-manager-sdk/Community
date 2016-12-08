@@ -26,7 +26,7 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [SampleAddIn](Samples/SDK/CSharp/SampleAddIn/)                              | Custom save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
 | [ImportUsingOrigin](Samples/SDK/CSharp/ImportUsingOrigin/)                  | A WPF application to import documents based on an Origin. |
 | [SimpleServiceAPIPlugin](Samples/ServiceAPI/CSharp/SimpleServiceAPIPlugin/) | A Simple ServiceAPI plugin, demonstrates how to call your plugin from the ServiceAPI client proxy. |
-| [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plugin to add a service to allow download of a TR5 reference file. |
+| [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plugin which adds a service to download a TR5 reference file. |
 | [AddingGroupMemberships](Samples/ServiceAPI/CSharp/AddingGroupMemberships/) | A C# ServiceAPI client application to add a 'Member Of' association between two Locations. |
 | [Web Drawer DateRangeSearch](Samples/WebDrawer/DateRangeSearch/) | Some sample code to transform WebDrawer date search fields from plain text to a date range picker. |
 | [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth, plus instructions to configure the ServiceAPI to use OAuth. |
