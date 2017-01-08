@@ -30,4 +30,6 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [AddingGroupMemberships](Samples/ServiceAPI/CSharp/AddingGroupMemberships/) | A C# ServiceAPI client application to add a 'Member Of' association between two Locations. |
 | [Web Drawer DateRangeSearch](Samples/WebDrawer/DateRangeSearch/) | Some sample code to transform WebDrawer date search fields from plain text to a date range picker. |
 | [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth, plus instructions to configure the ServiceAPI to use OAuth. |
+| [Database pool for web services](Samples/ServiceAPI/CSharp/DatabasePool/)   | Speed up your RM database connections when building a web service. |
+
 
