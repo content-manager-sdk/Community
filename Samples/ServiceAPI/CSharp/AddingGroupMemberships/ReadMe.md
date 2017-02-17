@@ -8,7 +8,6 @@ To use this sample:
  - update the Service URL in the program to your ServiceAPI's IP address
  - update the location URIs in the program to your own data
  - build the sample and run it
- 
 
 ## Testing
 Check your locations Association tab for 'Member of' and/or 'Has Member' associations to see if they have been updated.
