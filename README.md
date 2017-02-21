@@ -31,5 +31,6 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [Web Drawer DateRangeSearch](Samples/WebDrawer/DateRangeSearch/) | Some sample code to transform WebDrawer date search fields from plain text to a date range picker. |
 | [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth, plus instructions to configure the ServiceAPI to use OAuth. |
 | [Database pool for web services](Samples/SDK/CSharp/DatabasePool/)   | Speed up your RM database connections when building a web service. |
+| [ServiceAPI CORS](Samples/ServiceAPI/CSharp/CORSModule/) | Add [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) support to the ServiceAPI. |
 
 

@@ -1,13 +1,13 @@
 # CORS ServiceAPI Plugin
-Cross origin resource sharing (CORS) allows a javascript application in one domain to talk to a web service in anotehyr domain, something which the browser security model usually prevents.  The ServiceAPI documentation mentions a CORS feature which, in theory, will enable CORS support but in most circumstances will not work.  This module adds CORS support by getting into the request pipeline before the standard IIS authentication has had a chance to block the CORS pre-flight request.
+Cross origin resource sharing ([CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) allows a javascript application in one domain to talk to a web service in another domain, something which the browser security model usually prevents.  The ServiceAPI documentation mentions a CORS feature which, in theory, will enable CORS support but in most circumstances will not work.  This module adds CORS support by getting into the request pipeline before the standard IIS authentication has had a chance to block the CORS pre-flight request.
 
 ## Setup
 To use this sample:
  - build the project
  - copy CORSModule.dll to the ServiceAPI bin folder
  - add the module to the web.config, as seen below
- - if you are using windows authentication you may need to explicitly set the supported domains, in fact it is probably a good idea to do this any, set these in appSettings as seen below
- - if you do not set 'allowedOrigins' in app settings than all domains will be allowed to use CORS (Access-Control-Allow-Origin == "*")
+ - if you are using windows authentication you may need to explicitly set the supported domains, in fact it is probably a good idea to do this anyway, set these in appSettings as seen below
+ - if you do not set 'allowedOrigins' in app settings than all domains will be allowed to use CORS (Access-Control-Allow-Origin = "*")
 
 ## Module in web.config
  ```xml
