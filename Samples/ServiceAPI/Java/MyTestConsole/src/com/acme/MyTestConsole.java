@@ -104,7 +104,7 @@ public class MyTestConsole {
 		System.out.println("Hello, world");
 
 		client = new JsonServiceClient("http://192.168.0.19/ServiceAPI91");
-		client.setCredentials("itu_tadmin", "Trim@HP1");
+		client.setCredentials("YOUR_USERNAME", "YOUR_PASSWORD");
 
 		// this next line is important for basic authentication
 		client.setAlwaysSendBasicAuthHeaders(true);
