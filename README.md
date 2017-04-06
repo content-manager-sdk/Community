@@ -33,4 +33,3 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [Database pool for web services](Samples/SDK/CSharp/DatabasePool/)   | Speed up your RM database connections when building a web service. |
 | [ServiceAPI CORS](Samples/ServiceAPI/CSharp/CORSModule/) | Add [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) support to the ServiceAPI. |
 
-
