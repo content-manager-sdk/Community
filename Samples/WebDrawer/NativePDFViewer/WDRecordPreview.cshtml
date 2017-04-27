@@ -1,0 +1,82 @@
+﻿@inherits TrimViewPage<HP.HPTRIM.ServiceModel.RecordsResponse>
+@if (Model.Results.Count > 0)
+{
+    Record record = Model.Results[0];
+	ViewBag.Title = record.Title;
+	ViewBag.HideMenu = true;
+	bool isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
+	
+    Html.Partial("recordBanner", new { TrimObject = record });
+
+	<iframe 
+		 id="preview-frame"
+		 src="~/@("Record/" + @Model.Results[0].Uri + "/file/" + (record.Extension == "PDF" ? "document?inline" : "html"))"
+		  width='100%'
+		  height='100%'
+		  style="border:none; margin-left:10px; visibility:hidden;">
+
+	</iframe>
+	
+
+
+@section customhead {
+    <style>
+        h2 {
+            white-space: normal;
+        }
+
+        #contentcolumn {
+            height: auto;
+            padding-bottom: 0;
+        }
+    </style>
+}
+
+@section scripts {
+    <script>
+        var resizePreview = function () {
+
+			var previewFrame = $('#preview-frame');
+
+			if (previewFrame) {
+
+				previewFrame.show();
+				previewFrame.css({ "visibility": "visible" });
+
+				var previewOffSet = previewFrame.offset();
+				if (previewOffSet) {
+					var height = $(window).height() - (previewOffSet.top + 5);
+					previewFrame.height(height);
+
+					var width = $(window).width() - 10;
+
+					if (width > 630) {
+						width = width - ($('#leftcolumn').width());
+					}
+					previewFrame.width(width);
+				}
+
+			}
+		}
+		$( document ).ready(function() {
+
+            $(window).on("resize", function () {
+                resizePreview();
+            });
+			
+			@if (isIE && record.Extension == "PDF" ) {
+			<text>$('.banner btn.dropdown-toggle').on("click", function () {
+                $('#preview-frame').hide();
+            });
+			
+			$(document).on("click", function () {
+                $('#preview-frame').show();
+
+            });</text>
+			}
+			resizePreview();		
+
+        });
+    </script>
+	}
+	}
