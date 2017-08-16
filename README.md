@@ -32,4 +32,6 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth, plus instructions to configure the ServiceAPI to use OAuth. |
 | [Database pool for web services](Samples/SDK/CSharp/DatabasePool/)   | Speed up your RM database connections when building a web service. |
 | [ServiceAPI CORS](Samples/ServiceAPI/CSharp/CORSModule/) | Add [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) support to the ServiceAPI. |
+| [ServiceAPI Java](Samples/ServiceAPI/Java/MyTestConsole/) | A first sample using Java to connect to the ServiceAPI. |
+| [ServiceAPI Java file upload](Samples/ServiceAPI/Java/MyTestConsole/) | Create a Record and attach a file to it using Java. |
 
