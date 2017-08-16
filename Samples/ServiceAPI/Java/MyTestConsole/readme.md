@@ -14,7 +14,7 @@ http://YOUR_SERVER/ServiceAPI/types/java?Package=com.acme&GlobalNamespace=dto
 ```
 
 # Impersonation
-Java applications are often server sie applications that handle their own authentication, in which case you might need to simply pass the authenticated user name to the ServiceAPI and expect it to trust you.  To allow this follow these steps:
+Java applications are often server side applications that handle their own authentication, in which case you might need to simply pass the authenticated user name to the ServiceAPI and expect it to trust you.  To allow this follow these steps:
 
 ## Set hptrim.config in ServiceAPI
 Set the trustedToImpersonate property to the name that the Java application will authenticate as.
