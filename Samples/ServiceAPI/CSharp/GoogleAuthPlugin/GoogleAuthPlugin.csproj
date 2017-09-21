@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{74E5686E-7F65-4456-A5BE-C0409105177E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GoogleAuthPlugin</RootNamespace>
+    <AssemblyName>GoogleAuthPlugin</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.Ultimate.4.3.4.13329\lib\net45-full\DotNetOpenAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HP.HPTRIM.ServiceAPI.Common">
+      <HintPath>..\lib\HP.HPTRIM.ServiceAPI.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="HP.HPTRIM.ServiceAPI.Model">
+      <HintPath>..\lib\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ServiceStack.4.5.14\lib\net45\ServiceStack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Authentication.OAuth2, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ServiceStack.Authentication.OAuth2.4.5.14\lib\net45\ServiceStack.Authentication.OAuth2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Client, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ServiceStack.Client.4.5.14\lib\net45\ServiceStack.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ServiceStack.Common.4.5.14\lib\net45\ServiceStack.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
+      <HintPath>packages\ServiceStack.Interfaces.4.5.14\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ServiceStack.Text.4.5.14\lib\net45\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GoogleAuthPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\bin\*.*
+copy $(TargetDir)DotNetOpenAuth.dll C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\bin\*.*
+copy $(TargetDir)ServiceStack.Client.dll C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\bin\*.*
+copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\bin\*.*
+
+
+copy $(TargetPath) C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)DotNetOpenAuth.dll C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)ServiceStack.Client.dll C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+
+
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
