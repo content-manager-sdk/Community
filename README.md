@@ -34,4 +34,5 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [ServiceAPI CORS](Samples/ServiceAPI/CSharp/CORSModule/) | Add [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) support to the ServiceAPI. |
 | [ServiceAPI Java](Samples/ServiceAPI/Java/MyTestConsole/) | A first sample using Java to connect to the ServiceAPI. |
 | [ServiceAPI Java file upload](Samples/ServiceAPI/Java/SampleFileUpload/) | Create a Record and attach a file to it using Java. |
+| [ServiceAPI Google OAuth2 Authentication](Samples/ServiceAPI/CSharp/GoogleAuthPlugin/) | Use the ServiceStack Google OAuth2 authentication provider in WebDrawer and the Web Client. |
 
