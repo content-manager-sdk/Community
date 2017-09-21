@@ -45,27 +45,3 @@ At the top of hprmServiceAPI.config (hptrim.config) there is an option to set th
  ... 
   serviceFeatures="Html,Razor,Json,PredefinedRoutes"
 ```
-
-## Sample jQuery
-The following jQuery will make a windows authenticated request on your server, note nothing special needs to be sent from the jQuery to support CORS.
-
-```javascript
-$.ajax({
-    xhrFields :{ withCredentials:true },
-    url: "http://MyDomainOne/ServiceAPI82/Record/1?&properties=RecordTitle",
-    type: 'GET',
-    dataType: 'json',
-})
-.done(function (response, statusText) {
-    
-    if (statusText === "success") {
-        alert("Record named: " + response.Results[0].RecordTitle.Value + " was found.");
-    }
-})
-.fail(function (xhr) {
-    var err = eval("(" + xhr.responseText + ")");
-    alert(err.ResponseStatus.Message);
-
-});
-
-```
