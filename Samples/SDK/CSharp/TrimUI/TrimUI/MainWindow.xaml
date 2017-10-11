@@ -1,0 +1,12 @@
+﻿<Window x:Class="TestWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Button Content="Edit Record!" HorizontalAlignment="Left" Margin="68,124,0,0" VerticalAlignment="Top" Width="100" Click="Button_Click"/>
+        <Button Content="Display Records" HorizontalAlignment="Left" Margin="215,124,0,0" VerticalAlignment="Top" Width="100" Click="Button_Click_1"/>
+        <Button Content="Select Records" HorizontalAlignment="Left" Margin="365,124,0,0" VerticalAlignment="Top" Width="100" Click="Button_Click_2"/>
+        <Button Content="Select Database" HorizontalAlignment="Left" Margin="215,70,0,0" VerticalAlignment="Top" Width="100" Click="Button_Click_3"/>
+
+    </Grid>
+</Window>
