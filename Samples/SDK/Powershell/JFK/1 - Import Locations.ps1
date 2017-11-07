@@ -1,7 +1,7 @@
 ﻿Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
 $db = New-Object HP.HPTRIM.SDK.Database
 $db.Connect
-$metadataFile = "F:\Dropbox\CMRamble\JFK\nara_jfk_2017release.tsv"
+$metadataFile = "$($PSScriptRoot)\nara_jfk_2017release.tsv"
 $owners = Get-Content -Path $metadataFile | ConvertFrom-Csv -Delimiter "`t" | select "Originator" | sort-object -Property "Originator" -Unique
 
 $level = New-Object HP.HPTRIM.SDK.SecurityLevel -ArgumentList $db

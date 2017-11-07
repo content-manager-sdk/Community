@@ -1,7 +1,7 @@
 ﻿Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
 $db = New-Object HP.HPTRIM.SDK.Database
 $db.Connect
-$metadataFile = "F:\Dropbox\CMRamble\JFK\nara_jfk_2017release.tsv"
+$metadataFile = "$($PSScriptRoot)\nara_jfk_2017release.tsv"
 $metaData = Get-Content -Path $metadataFile | ConvertFrom-Csv -Delimiter "`t" 
 
 $fields = @("Formerly Withheld", "Agency", "Doc Type")

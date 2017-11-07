@@ -1,11 +1,13 @@
 ﻿$metadataFile = "$PSScriptRoot\nara_jfk_2017release.tsv"
 $metaData = Get-Content -Path $metadataFile | ConvertFrom-Csv -Delimiter "`t"
+$docsFolder = "$PSScriptRoot\docs"
+if ( Test-Path $docsFolder -eq $false ) { New-Item $docsFolder -ItemType Directory }
 $doc = New-Object HP.HPTRIM.SDK.RecordType -ArgumentList $db, "Document"
 foreach ( $meta in $metaData ) 
 {
     foreach ( $file in $meta.'File Name'.Split(';') ) 
     {
-        $localFileName =  "$PSScriptRoot\$($file)"
+        $localFileName =  "$PSScriptRoot\docs\$($file)"
         Invoke-WebRequest "https://www.archives.gov/files/research/jfk/releases/$(($file).ToLower())" -OutFile $localFileName
         if ( [System.IO.Path]::GetExtension($file).ToLower() -eq 'wav' ) {
             $record.SetDocument($localFileName)
