@@ -1,6 +1,6 @@
 ﻿Clear-Host
 #Import .Net SDK for Content Manager
-Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
+Add-Type -Path "C:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
 #Instantiate a connection to the default dataset
 $Database = New-Object HP.HPTRIM.SDK.Database
 $Database.Connect
