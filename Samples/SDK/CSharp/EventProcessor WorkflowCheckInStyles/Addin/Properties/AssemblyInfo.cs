@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Workflow CheckIn Styles Plugin")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EW Consulting LLC")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Workflow CheckIn Styles Plugin")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
