@@ -1,46 +1,56 @@
-﻿Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
-$db = New-Object HP.HPTRIM.SDK.Database
-$db.Connect
+﻿#Import .Net SDK for Content Manager
+Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
+#Instantiate a connection to the default dataset
+$Database = New-Object HP.HPTRIM.SDK.Database
+$Database.Connect
+#Get document record type
+$DocumentRecordType = [HP.HPTRIM.SDK.RecordType]$Database.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::RecordType, "Document")
 
-$lookupFields = @("NARA Formerly Withheld", "NARA Agency", "NARA Doc Type")
-foreach ( $lookupField  in $lookupFields ) 
+#Loop through and create new lookupset properties
+$LookupSetFieldNames = @("NARA Formerly Withheld", "NARA Agency", "NARA Doc Type")
+foreach ( $LookupSetFieldName  in $LookupSetFieldNames ) 
 {
-    $field = New-Object HP.HPTRIM.SDK.FieldDefinition $db
-    $field.Name = $lookupField
-    $field.LookupSet = New-Object HP.HPTRIM.SDK.LookupSet $db, $lookupField
-    $field.Save()
-
-    Write-Host "Created Property for Lookup Set '$($lookupField)'"
-}
-$stringFields = @("NARA File Num", "NARA To Name", "NARA From Name", "NARA Title", "NARA Originator", "NARA Record Series", "NARA Comments", "NARA Record Num", "NARA File Name")
-foreach ( $stringField  in $stringFields ) 
-{
-    $field = New-Object HP.HPTRIM.SDK.FieldDefinition $db
-    $field.Name = $stringField
-    $field.Format = [HP.HPTRIM.SDK.UserFieldFormats]::String
-    $field.Length = 255
-    $field.Save()
-
-    Write-Host "Created Property '$($stringField)' as String with length $($field.Length)"
-}
-$numberFields = @("NARA Num Pages", "NARA Pages Released")
-foreach ( $numberField  in $numberFields ) 
-{
-    $field = New-Object HP.HPTRIM.SDK.FieldDefinition $db
-    $field.Name = $numberField
-    $field.Format = [HP.HPTRIM.SDK.UserFieldFormats]::Number
-    $field.Save()
-
-    Write-Host "Created Property '$($numberField)' as Number"
+    $Field = New-Object HP.HPTRIM.SDK.FieldDefinition $Database
+    $Field.Name = $LookupSetFieldName
+    $Field.LookupSet = New-Object HP.HPTRIM.SDK.LookupSet($Database, $LookupSetFieldName)
+    $Field.Save()
+    $DocumentRecordType.SetUserFieldUsage($Field,$true)
+    Write-Host "Created Property for Lookup Set '$($LookupSetFieldName)'"
 }
 
-$dateFields = @("NARA Release Date", "NARA Doc Date", "NARA Review Date")
-foreach ( $dateField in $dateFields ) 
+#Loop through and create string properties
+$StringFieldNames = @("NARA File Num", "NARA To Name", "NARA From Name", "NARA Title", "NARA Originator", "NARA Record Series", "NARA Comments", "NARA Record Num", "NARA File Name")
+foreach ( $StringFieldName  in $StringFieldNames ) 
 {
-    $field = New-Object HP.HPTRIM.SDK.FieldDefinition $db
-    $field.Name = $dateField 
-    $field.Format = [HP.HPTRIM.SDK.UserFieldFormats]::Date
-    $field.Save()
+    $Field = New-Object HP.HPTRIM.SDK.FieldDefinition $Database
+    $Field.Name = $StringFieldName
+    $Field.Format = [HP.HPTRIM.SDK.UserFieldFormats]::String
+    $Field.Length = 255
+    $Field.Save()
+    $DocumentRecordType.SetUserFieldUsage($Field,$true)
+    Write-Host "Created Property '$($StringFieldName)' as String with length $($Field.Length)"
+}
 
-    Write-Host "Created Property '$($dateField)' as Date"
+#Loop through and create number properties
+$NumberFieldNames = @("NARA Num Pages", "NARA Pages Released")
+foreach ( $NumberFieldName  in $NumberFieldNames ) 
+{
+    $Field = New-Object HP.HPTRIM.SDK.FieldDefinition $Database
+    $Field.Name = $NumberFieldName
+    $Field.Format = [HP.HPTRIM.SDK.UserFieldFormats]::Number
+    $Field.Save()
+    $DocumentRecordType.SetUserFieldUsage($Field,$true)
+    Write-Host "Created Property '$($NumberFieldName)' as Number"
+}
+
+#Loop through and create date properties
+$DateFieldNames = @("NARA Release Date", "NARA Doc Date", "NARA Review Date")
+foreach ( $DateFieldName in $DateFieldNames ) 
+{
+    $Field = New-Object HP.HPTRIM.SDK.FieldDefinition $Database
+    $Field.Name = $DateFieldName 
+    $Field.Format = [HP.HPTRIM.SDK.UserFieldFormats]::Date
+    $Field.Save()
+    $DocumentRecordType.SetUserFieldUsage($Field,$true)
+    Write-Host "Created Property '$($DateFieldName)' as Date"
 }

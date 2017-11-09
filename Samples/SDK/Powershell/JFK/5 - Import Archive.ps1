@@ -1,51 +1,56 @@
 ﻿Clear-Host
+#Import .Net SDK for Content Manager
 Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
-$db = New-Object HP.HPTRIM.SDK.Database
-$db.Connect
-$metadataFile = "$PSScriptRoot\nara_jfk_2017release.tsv"
+#Instantiate a connection to the default dataset
+$Database = New-Object HP.HPTRIM.SDK.Database
+$Database.Connect
 Write-Progress -Activity "Creating Records" -Status "Loading Metadata" -PercentComplete 0
-$metaData = Get-Content -Path $metadataFile | ConvertFrom-Csv -Delimiter "`t"
-$doc = New-Object HP.HPTRIM.SDK.RecordType -ArgumentList $db, "Document"
-$fields = @("Agency", "Comments", "Doc Date", "Doc Type", "File Name", "File Num", "Formerly Withheld", "From Name", "NARA Release Date", "Num Pages", "Originator", "Record Num", "Record Series", "To Name", "Review Date", "Title")
-$x = 0
-foreach ( $meta in $metaData ) 
+#Import meta-data file from tab delimited and select unique originators (these will be created as locations)
+$MetaDataRowdataFile = "$PSScriptRoot\nara_jfk_2017release.tsv"
+$MetaDataRowData = Get-Content -Path $MetaDataRowdataFile | ConvertFrom-Csv -Delimiter "`t"
+$DocumentRecordType = New-Object HP.HPTRIM.SDK.RecordType -ArgumentList $Database, "Document"
+#Array used during custom property population
+$Fields = @("Agency", "Comments", "Doc Date", "Doc Type", "File Name", "File Num", "Formerly Withheld", "From Name", "NARA Release Date", "Num Pages", "Originator", "Record Num", "Record Series", "To Name", "Review Date", "Title")
+$RowNumber = 0
+foreach ( $MetaDataRow in $MetaDataRowData ) 
 {
-    $existed = $false
-    $x++
-    Write-Progress -Activity "Creating Records" -Status "Record $($meta.'Record Num')" -PercentComplete (($x/$metaData.Length)*100)
-    #check if record already exists
-    $record = $db.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::Record, $meta.'Record Num')
-    if ( $record -ne $null ) {
-       $existed = $true
+    $RecordExisted = $false
+    $RowNumber++
+    Write-Progress -Activity "Creating Records" -Status "Record $($MetaDataRow.'Record Num')" -PercentComplete (($RowNumber/$MetaDataRowData.Length)*100)
+    #Check if record already exists
+    $Record = $Database.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::Record, $MetaDataRow.'Record Num')
+    if ( $Record -ne $null ) {
+       $RecordExisted = $true
     } else {
-        $record = New-Object HP.HPTRIM.SDK.Record -ArgumentList $db, $doc
-        $record.LongNumber = $meta.'Record Num'
+        $Record = New-Object HP.HPTRIM.SDK.Record -ArgumentList $Database, $DocumentRecordType
+        $Record.LongNumber = $MetaDataRow.'Record Num'
     }
-    #correct title
-    $record.TypedTitle = (&{If([String]::IsNullOrWhiteSpace($meta.Title)) { $meta.'File Name' } else { $meta.Title }})
-    #populate custom properties
-    foreach ( $field in $fields ) 
+    #Correct title
+    $Record.TypedTitle = (&{If([String]::IsNullOrWhiteSpace($MetaDataRow.Title)) { $MetaDataRow.'File Name' } else { $MetaDataRow.Title }})
+    #Populate custom properties
+    foreach ( $Field in $Fields ) 
     {
         try {
-            switch ($field) {
-                "NARA Release Date" { $record.SetFieldValue((New-Object HP.HPTRIM.SDK.FieldDefinition -ArgumentList $db, "$($field)"), (New-Object HP.HPTRIM.SDK.UserFieldValue -ArgumentList $(($meta).$field))) }
+            switch ($Field) {
+                "NARA Release Date" { $Record.SetFieldValue((New-Object HP.HPTRIM.SDK.FieldDefinition -ArgumentList $Database, "$($Field)"), (New-Object HP.HPTRIM.SDK.UserFieldValue -ArgumentList $(($MetaDataRow).$Field))) }
                 "Doc Date" { 
-                    $fieldValue = $(($meta).$field)
-                    if ( $fieldValue -ne "00/00/0000" ) {
-                        $record.SetFieldValue((New-Object HP.HPTRIM.SDK.FieldDefinition -ArgumentList $db, "NARA $($field)"), (New-Object HP.HPTRIM.SDK.UserFieldValue -ArgumentList $fieldValue)) 
+                    $FieldValue = $(($MetaDataRow).$Field)
+                    if ( $FieldValue -ne "00/00/0000" ) {
+                        $Record.SetFieldValue((New-Object HP.HPTRIM.SDK.FieldDefinition -ArgumentList $Database, "NARA $($Field)"), (New-Object HP.HPTRIM.SDK.UserFieldValue -ArgumentList $FieldValue)) 
                     }
                 }
-                default { $record.SetFieldValue((New-Object HP.HPTRIM.SDK.FieldDefinition -ArgumentList $db, "NARA $($field)"), (New-Object HP.HPTRIM.SDK.UserFieldValue -ArgumentList $(($meta).$field))) }
+                default { $Record.SetFieldValue((New-Object HP.HPTRIM.SDK.FieldDefinition -ArgumentList $Database, "NARA $($Field)"), (New-Object HP.HPTRIM.SDK.UserFieldValue -ArgumentList $(($MetaDataRow).$Field))) }
             }
         } catch {
-            Write-Error ("Exception $($meta.'Record Num'): $($record.TypedTitle): " + $_)
+            Write-Error ("Exception $($MetaDataRow.'Record Num'): $($Record.TypedTitle): " + $_)
         }
     }
-    $record.Save()
-    if ( $existed ) {
-        Write-Information "Updated Record $($meta.'Record Num'): $($record.TypedTitle)"
+    $Record.Save()
+    #Log what happened
+    if ( $RecordExisted ) {
+        Write-Information "Updated Record $($MetaDataRow.'Record Num'): $($Record.TypedTitle)"
     } else {
-        Write-Information "Imported Record $($meta.'Record Num'): $($record.TypedTitle)"
+        Write-Information "Imported Record $($MetaDataRow.'Record Num'): $($Record.TypedTitle)"
     }
 
 }

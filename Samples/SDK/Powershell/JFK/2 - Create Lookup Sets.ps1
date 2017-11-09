@@ -1,41 +1,46 @@
-﻿Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
-$db = New-Object HP.HPTRIM.SDK.Database
-$db.Connect
-$metadataFile = "$($PSScriptRoot)\nara_jfk_2017release.tsv"
-$metaData = Get-Content -Path $metadataFile | ConvertFrom-Csv -Delimiter "`t" 
-
-$fields = @("Formerly Withheld", "Agency", "Doc Type")
-
-foreach ( $field in $fields ) 
+﻿#Import .Net SDK for Content Manager
+Add-Type -Path "D:\Program Files\Hewlett Packard Enterprise\Content Manager\HP.HPTRIM.SDK.dll"
+#Instantiate a connection to the default dataset
+$Database = New-Object HP.HPTRIM.SDK.Database
+$Database.Connect
+#Import meta-data file from tab delimited and select unique originators (these will be created as locations)
+$MetaDataArrayFileName = "$($PSScriptRoot)\nara_jfk_2017release.tsv"
+$MetaDataArray = Get-Content -Path $MetaDataArrayFileName | ConvertFrom-Csv -Delimiter "`t" 
+#Loop through the creation of three lookup sets
+$Fields = @("Formerly Withheld", "Agency", "Doc Type")
+foreach ( $Field in $Fields ) 
 {
-    $fieldItems = $metaData | select $($field) | sort-object -Property $($field) -Unique | select $($field)
-    $lookupSet = $null
-    $lookupSetName = "NARA $($field)"
-    $lookupSet = $db.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::LookupSet, $lookupSetName)
-    if ( $lookupSet -eq $null ) 
+    #Create the lookup set if missing
+    $LookupSetName = "NARA $($Field)"
+    $LookupSet = $Database.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::LookupSet, $LookupSetName)
+    if ( $LookupSet -eq $null ) 
     { 
-        $lookupSet = New-Object HP.HPTRIM.SDK.LookupSet -ArgumentList $db 
-        $lookupSet.Name = $lookupSetName
-        $lookupSet.Save()
-        Write-Host " Created '$($lookupSetName)' set"
+        $LookupSet = New-Object HP.HPTRIM.SDK.LookupSet -ArgumentList $Database 
+        $LookupSet.Name = $LookupSetName
+        $LookupSet.Save()
+        Write-Host " Created '$($LookupSetName)' set"
     } 
     else 
     {
-        Write-Host " Found '$($lookupSetName)' set"
+        Write-Host " Found '$($LookupSetName)' set"
     }
-    foreach ( $item in $fieldItems ) 
+    #Extract unique values from matching column in meta-data spreadsheet
+    $FieldItems = $MetaDataArray | select $($Field) | sort-object -Property $($Field) -Unique | select $($Field)
+    #Create each unique value as a lookup set item
+    foreach ( $item in $FieldItems ) 
     {
-        $itemValue = $($item.$($field))
-        if ( [String]::IsNullOrWhiteSpace($itemValue) -ne $true ) {
-            $lookupItem = $db.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::LookupItem, $itemValue)
-            if ( $lookupItem -eq $null ) 
+        #Formulate lookupset item value, if valid string create in CM 
+        $ItemValue = $($item.$($Field))
+        if ( [String]::IsNullOrWhiteSpace($ItemValue) -ne $true ) {
+            $LookupItem = $Database.FindTrimObjectByName([HP.HPTRIM.SDK.BaseObjectTypes]::LookupItem, $ItemValue)
+            if ( $LookupItem -eq $null ) 
             {
-                $lookupItem = New-Object HP.HPTRIM.SDK.LookupItem -ArgumentList $lookupSet 
-                $lookupItem.Name = $itemValue
-                $lookupItem.Save() | Out-Null
-                Write-Host " Added '$($itemValue)' item"
+                $LookupItem = New-Object HP.HPTRIM.SDK.LookupItem -ArgumentList $LookupSet 
+                $LookupItem.Name = $ItemValue
+                $LookupItem.Save() | Out-Null
+                Write-Host " Added '$($ItemValue)' item"
             } else {
-                Write-Host " Found '$($itemValue)' item"
+                Write-Host " Found '$($ItemValue)' item"
             }
         }
     }
