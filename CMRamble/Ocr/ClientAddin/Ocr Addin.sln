@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientAddin", "Addin\ClientAddin.csproj", "{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcrTextExtractor", "OcrTextExtractor\OcrTextExtractor.csproj", "{4A186211-44D8-4414-B300-21D542AF68AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug|x64.ActiveCfg = Debug|x64
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug|x64.Build.0 = Debug|x64
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Release|Any CPU.ActiveCfg = Release|x64
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Release|x64.ActiveCfg = Release|x64
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Release|x64.Build.0 = Release|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug|x64.ActiveCfg = Debug|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug|x64.Build.0 = Debug|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Release|Any CPU.ActiveCfg = Release|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Release|x64.ActiveCfg = Release|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5DE3AD5-CE09-43DA-BA61-5121BD28938F}
+	EndGlobalSection
+EndGlobal
