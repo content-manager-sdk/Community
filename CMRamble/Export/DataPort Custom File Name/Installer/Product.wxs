@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="CMRamble DataPort Export Numbered File Name" Language="1033" Version="1.0.0.0" Manufacturer="CMRamble.com" UpgradeCode="6337da35-319a-4fc5-a637-964631f9ca08">
+    <?define IFOLDER = "INSTALLFOLDER"?>
+    <?define sourcebin = $(var.sourcebin)?>
+
+    <?define InfoURL="https://cmramble.com" ?>
+    <Package InstallerVersion="300" Compressed="yes" InstallScope="perUser" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Media Id="1" Cabinet="ExportNumberedFileNameDataFormatter.cab" EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="CMRamble DataPort Export Numbered File Name" Level="1">
+      <ComponentGroupRef Id="ExportComponents" />
+    </Feature>
+
+    <Property Id="ARPHELPLINK" Value="$(var.InfoURL)" />
+    <Property Id="WIXUI_INSTALLDIR" Value="$(var.IFOLDER)"/>
+    <UIRef Id="UtilityUI" />
+
+    <InstallExecuteSequence>
+      <Custom Action='RegisterDataFormatter' After='InstallFiles'/>
+    </InstallExecuteSequence>
+	</Product>
+
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="CMRamble" Name="CMRamble">
+          <Directory Id="INSTALLFOLDER" Name="DataPort Export Numbered File Name" />
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+</Wix>
