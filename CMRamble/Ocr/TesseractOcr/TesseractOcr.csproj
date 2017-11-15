@@ -32,7 +32,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HP.HPTRIM.SDK, Version=8.2.0.0, Culture=neutral, PublicKeyToken=93ab772ef8ad9a2e, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,10 +40,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Util\FileHelper.cs" />
-    <Compile Include="RecordExtensions.cs" />
-    <Compile Include="RecordController.cs" />
-    <Compile Include="TextExtractor.cs" />
+    <Compile Include="FileHelper.cs" />
+    <Compile Include="TesseractOcr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

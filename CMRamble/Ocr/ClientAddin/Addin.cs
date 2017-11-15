@@ -1,4 +1,5 @@
-﻿using HP.HPTRIM.SDK;
+﻿using CMRamble.Ocr.Core;
+using HP.HPTRIM.SDK;
 
 namespace CMRamble.Ocr.ClientAddin
 {
