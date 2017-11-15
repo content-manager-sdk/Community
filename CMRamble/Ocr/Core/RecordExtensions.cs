@@ -1,5 +1,5 @@
 ﻿using HP.HPTRIM.SDK;
-namespace CMRamble.Ocr
+namespace CMRamble.Ocr.Core
 {
     public static class RecordExtensions
     {
