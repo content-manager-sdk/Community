@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLFOLDER" />
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="ExportComponents">
+            <Component Id="cmpB7465CEAF923BC8745E564B085EA192A" Directory="INSTALLFOLDER" Guid="{394AB4EB-09E6-4E53-A2A8-7E15156821F4}">
+                <File Id="filD17B991092962FCA5BE7342E51EB4ADE" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.DataPort.Export.NumberedFileName.dll" />
+            </Component>
+            <Component Id="cmpA0EB7E28BEC9A0622F89A601829900B4" Directory="INSTALLFOLDER" Guid="{BCC65FC0-D830-451F-B890-39198BDF2821}">
+                <File Id="filF770EE0168E81CED3992F348A3CC0034" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.DataPort.Export.NumberedFileName.pdb" />
+            </Component>
+            <Component Id="cmp279DB153651F7CC2666B3EF61BDA6CCF" Directory="INSTALLFOLDER" Guid="{41645190-F80C-4835-8047-8346DE9A6A4B}">
+                <File Id="fil4504F16B12231756B2AB55E9028C30E6" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.DataPort.InstallerActions.CA.dll" />
+            </Component>
+            <Component Id="cmp766E644F1EBCFC1776EA3760727DD904" Directory="INSTALLFOLDER" Guid="{4D080A9D-0AA3-4874-9614-F456CFED6343}">
+                <File Id="fil0D5021589E125E099AD12045B174D5AD" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.DataPort.InstallerActions.dll" />
+            </Component>
+            <Component Id="cmp36315ED343064861204F6E286EFFDB74" Directory="INSTALLFOLDER" Guid="{D8EE1243-7963-4BBD-88B8-043003D9E3A6}">
+                <File Id="fil5EABF5E48908526580AEFB0369CCDEA9" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.DataPort.InstallerActions.pdb" />
+            </Component>
+            <Component Id="cmpF83AAEA6CAB0D05F49E7E5ECEF33F609" Directory="INSTALLFOLDER" Guid="{026ABE57-0333-4E1C-894F-29A373E260DB}">
+                <File Id="filFAE2B4C8823E031607ADFD48FC8EB197" KeyPath="yes" Source="$(var.sourcebin)\HP.HPTRIM.DataPort.Common.dll" />
+            </Component>
+            <Component Id="cmp5ABA49F4879ACBDD3C7B9124BB5DDB9D" Directory="INSTALLFOLDER" Guid="{879F4DCB-7500-4E02-8A7B-F7676CEF40FA}">
+                <File Id="fil5F1B7642A30D9EDF81457443E13F779B" KeyPath="yes" Source="$(var.sourcebin)\HP.HPTRIM.Framework.dll" />
+            </Component>
+            <Component Id="cmp2146AF00DDE52BDF10CBD28469DEE6CE" Directory="INSTALLFOLDER" Guid="{B5325CBB-FEC6-48AF-BE15-A82AEAF5C0B4}">
+                <File Id="fil04EB290A18BE226010D7FD51434C40E8" KeyPath="yes" Source="$(var.sourcebin)\HP.HPTRIM.SDK.dll" />
+            </Component>
+            <Component Id="cmp3949728EA9840BC34724197B368334AC" Directory="INSTALLFOLDER" Guid="{72DAEEB5-D04C-4346-8ABF-E7CB1B092CBA}">
+                <File Id="filDEA4341F561E3B7A80B31531A2FA0E17" KeyPath="yes" Source="$(var.sourcebin)\Microsoft.Deployment.WindowsInstaller.dll" />
+            </Component>
+            <Component Id="cmpD934540173D40242779BB19D5EA1176B" Directory="INSTALLFOLDER" Guid="{F88D8678-0555-4D6F-9A27-444C65560A7A}">
+                <File Id="filDD5FDA3F50ACFEB1CA6EA48EAC195C04" KeyPath="yes" Source="$(var.sourcebin)\Microsoft.Deployment.WindowsInstaller.xml" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

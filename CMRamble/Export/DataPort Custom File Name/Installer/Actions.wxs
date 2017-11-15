@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <CustomAction Id='RegisterDataFormatter' BinaryKey='DFActions' DllEntry='RegisterDataFormatter' Execute='immediate' Return='check' />
+
+    <Binary Id='DFActions' SourceFile='..\Output\ExportFormatter Release\CMRamble.DataPort.InstallerActions.CA.dll' />
+  </Fragment>
+</Wix>
