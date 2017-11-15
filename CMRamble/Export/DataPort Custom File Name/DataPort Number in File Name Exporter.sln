@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFormatter", "DataFormatter\DataFormatter.csproj", "{2542DD9D-13D4-4ADE-94B4-765CCB21BD43}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{EFED2244-1136-47F3-B71A-49651DB19589}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer Actions", "Installer Actions\Installer Actions.csproj", "{493D533A-39A6-43EA-ACC6-71859315316D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2542DD9D-13D4-4ADE-94B4-765CCB21BD43} = {2542DD9D-13D4-4ADE-94B4-765CCB21BD43}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2542DD9D-13D4-4ADE-94B4-765CCB21BD43}.Debug|x64.ActiveCfg = Debug|x64
+		{2542DD9D-13D4-4ADE-94B4-765CCB21BD43}.Debug|x64.Build.0 = Debug|x64
+		{2542DD9D-13D4-4ADE-94B4-765CCB21BD43}.Release|x64.ActiveCfg = Release|x64
+		{2542DD9D-13D4-4ADE-94B4-765CCB21BD43}.Release|x64.Build.0 = Release|x64
+		{EFED2244-1136-47F3-B71A-49651DB19589}.Debug|x64.ActiveCfg = Debug|x64
+		{EFED2244-1136-47F3-B71A-49651DB19589}.Release|x64.ActiveCfg = Release|x64
+		{EFED2244-1136-47F3-B71A-49651DB19589}.Release|x64.Build.0 = Release|x64
+		{493D533A-39A6-43EA-ACC6-71859315316D}.Debug|x64.ActiveCfg = Debug|x64
+		{493D533A-39A6-43EA-ACC6-71859315316D}.Release|x64.ActiveCfg = Release|x64
+		{493D533A-39A6-43EA-ACC6-71859315316D}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
