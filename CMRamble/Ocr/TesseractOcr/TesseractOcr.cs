@@ -1,24 +1,26 @@
-﻿using CMRamble.Ocr.Util;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Tesseract;
-namespace CMRamble.Ocr
+namespace CMRamble.Ocr.Tesseract
 {
-    public static class TextExtractor
+    public static class TesseractOcr
     {
         /// <summary>
         /// Exports all images from PDF and then runs OCR over each image, returning the name of the file on disk holding the OCR results
         /// </summary>
         /// <param name="filePath">Source file to be OCR'd</param>
+        /// <param name="tessData">Tesseract Data Path</param>
         /// <returns>Name of file containing OCR contents</returns>
-        public static string ExtractFromFile(string filePath)
+        public static string ExtractFromFile(string filePath, string tessData)
         {
             var ocrFileName = string.Empty;
             var extension = Path.GetExtension(filePath).ToLower();
             if (extension.Equals(".pdf"))
-            {   
+            {
+                // remove any files that were previously generated but not cleaned-up
+                Directory.GetFiles(Path.GetDirectoryName(filePath), "*.png").ToList().ForEach(x => File.Delete(x));
                 // must break out the original images within the PDF and then OCR those
                 var localDirectory = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath));
                 ocrFileName = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath) + ".txt");
@@ -37,7 +39,7 @@ namespace CMRamble.Ocr
                 foreach (var image in images)
                 {
                     // spin up an OCR engine and have it dump text to the OCR text file
-                    using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
+                    using (var engine = new TesseractEngine(tessData, "eng", EngineMode.Default))
                     {
                         using (var img = Pix.LoadFromFile(image))
                         {
