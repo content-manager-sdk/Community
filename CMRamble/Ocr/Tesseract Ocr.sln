@@ -11,28 +11,59 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventProcessorAddin", "Even
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{3035BB84-1792-4DB2-9246-DC99307F60A9}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ClientAddinInstaller", "ClientAddinInstaller\ClientAddinInstaller.wixproj", "{AFE831D8-9CA9-4258-82B2-2F5C05257B09}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66} = {ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}
+	EndProjectSection
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "EventProcessorAddinInstaller", "EventProcessorAddinInstaller\EventProcessorAddinInstaller.wixproj", "{8F7B66FF-FC15-49BC-B9D3-B94F14915191}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{424A23C7-D51F-440E-9F2A-2DC9FC70974F}"
+	ProjectSection(SolutionItems) = preProject
+		Log4Net.config = Log4Net.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Installer|x64 = Debug Installer|x64
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug Installer|x64.ActiveCfg = Debug Installer|x64
+		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug Installer|x64.Build.0 = Debug Installer|x64
 		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug|x64.ActiveCfg = Debug|x64
 		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Debug|x64.Build.0 = Debug|x64
 		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Release|x64.ActiveCfg = Release|x64
 		{ACC0AEE9-0C48-4E3D-BDB2-58BD4C5F8E66}.Release|x64.Build.0 = Release|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug Installer|x64.ActiveCfg = Debug Installer|x64
+		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug Installer|x64.Build.0 = Debug Installer|x64
 		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug|x64.ActiveCfg = Debug|x64
 		{4A186211-44D8-4414-B300-21D542AF68AD}.Debug|x64.Build.0 = Debug|x64
 		{4A186211-44D8-4414-B300-21D542AF68AD}.Release|x64.ActiveCfg = Release|x64
 		{4A186211-44D8-4414-B300-21D542AF68AD}.Release|x64.Build.0 = Release|x64
+		{F5C8E00B-5202-4694-B2C1-D94AB6C50FDE}.Debug Installer|x64.ActiveCfg = Debug Installer|x64
+		{F5C8E00B-5202-4694-B2C1-D94AB6C50FDE}.Debug Installer|x64.Build.0 = Debug Installer|x64
 		{F5C8E00B-5202-4694-B2C1-D94AB6C50FDE}.Debug|x64.ActiveCfg = Debug|x64
 		{F5C8E00B-5202-4694-B2C1-D94AB6C50FDE}.Debug|x64.Build.0 = Debug|x64
 		{F5C8E00B-5202-4694-B2C1-D94AB6C50FDE}.Release|x64.ActiveCfg = Release|x64
 		{F5C8E00B-5202-4694-B2C1-D94AB6C50FDE}.Release|x64.Build.0 = Release|x64
+		{3035BB84-1792-4DB2-9246-DC99307F60A9}.Debug Installer|x64.ActiveCfg = Debug Installer|x64
+		{3035BB84-1792-4DB2-9246-DC99307F60A9}.Debug Installer|x64.Build.0 = Debug Installer|x64
 		{3035BB84-1792-4DB2-9246-DC99307F60A9}.Debug|x64.ActiveCfg = Debug|x64
 		{3035BB84-1792-4DB2-9246-DC99307F60A9}.Debug|x64.Build.0 = Debug|x64
 		{3035BB84-1792-4DB2-9246-DC99307F60A9}.Release|x64.ActiveCfg = Release|x64
 		{3035BB84-1792-4DB2-9246-DC99307F60A9}.Release|x64.Build.0 = Release|x64
+		{AFE831D8-9CA9-4258-82B2-2F5C05257B09}.Debug Installer|x64.ActiveCfg = Debug|x64
+		{AFE831D8-9CA9-4258-82B2-2F5C05257B09}.Debug Installer|x64.Build.0 = Debug|x64
+		{AFE831D8-9CA9-4258-82B2-2F5C05257B09}.Debug|x64.ActiveCfg = Debug|x64
+		{AFE831D8-9CA9-4258-82B2-2F5C05257B09}.Release|x64.ActiveCfg = Release|x64
+		{AFE831D8-9CA9-4258-82B2-2F5C05257B09}.Release|x64.Build.0 = Release|x64
+		{8F7B66FF-FC15-49BC-B9D3-B94F14915191}.Debug Installer|x64.ActiveCfg = Debug|x64
+		{8F7B66FF-FC15-49BC-B9D3-B94F14915191}.Debug Installer|x64.Build.0 = Debug|x64
+		{8F7B66FF-FC15-49BC-B9D3-B94F14915191}.Debug|x64.ActiveCfg = Debug|x64
+		{8F7B66FF-FC15-49BC-B9D3-B94F14915191}.Release|x64.ActiveCfg = Release|x64
+		{8F7B66FF-FC15-49BC-B9D3-B94F14915191}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

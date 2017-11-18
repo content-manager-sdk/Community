@@ -1,7 +1,8 @@
-﻿using CMRamble.Ocr.Core;
-using HP.HPTRIM.SDK;
-using System;
+﻿using HP.HPTRIM.SDK;
+using CMRamble.Ocr.Core;
 using System.IO;
+using log4net.Config;
+using System;
 using System.Reflection;
 
 namespace CMRamble.Ocr.EventProcessorAddin
@@ -11,8 +12,6 @@ namespace CMRamble.Ocr.EventProcessorAddin
         #region Event Processing
         public override void ProcessEvent(Database db, TrimEvent evt)
         {
-            Record record = null;
-            RecordRendition rendition;
             if (evt.ObjectType == BaseObjectTypes.Record)
             {
                 switch (evt.EventType)
@@ -21,17 +20,14 @@ namespace CMRamble.Ocr.EventProcessorAddin
                     case Events.DocReplaced:
                     case Events.DocAttached:
                     case Events.DocRenditionRemoved:
-                        record = db.FindTrimObjectByUri(BaseObjectTypes.Record, evt.ObjectUri) as Record;
-                        RecordController.UpdateOcrRendition(record, AssemblyDirectory);
-                        break;
                     case Events.DocRenditionAdded:
-                        record = db.FindTrimObjectByUri(BaseObjectTypes.Record, evt.ObjectUri) as Record;
-                        var eventRendition = record.ChildRenditions.FindChildByUri(evt.RelatedObjectUri) as RecordRendition;
-                        if ( eventRendition != null && eventRendition.TypeOfRendition == RenditionType.Original )
-                        {   // if added an original
-                            rendition = eventRendition;
-                            RecordController.OcrRendition(record, rendition, Path.Combine(AssemblyDirectory, "tessdata\\"));
+                        var configFilePath = Path.Combine(AssemblyDirectory, "Log4Net.config");
+                        if (File.Exists(configFilePath))
+                        {
+                            FileInfo fi = new FileInfo(configFilePath);
+                            XmlConfigurator.ConfigureAndWatch(fi);
                         }
+                        TrimEventHandler.HandleEvent(db, evt);
                         break;
                     default:
                         break;

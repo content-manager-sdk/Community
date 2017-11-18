@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="CMRamble Ocr ClientAddin" Language="1033" Version="1.0.0.0" Manufacturer="CMRamble.com" UpgradeCode="05ff6529-a724-4eaf-a199-d920ef03bc20">
+    <?define IFOLDER = "INSTALLFOLDER"?>
+    <?define InfoURL="https://cmramble.com" ?>
+    <Package InstallerVersion="300" Compressed="yes" InstallScope="perUser" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Media Id="1" Cabinet="ClientAddin.cab" EmbedCab="yes"/>
+    <Feature Id="ProductFeature" Title="Installer" Level="1">
+      <ComponentGroupRef Id="AddinComponents" />
+    </Feature>
+    <Property Id="ARPHELPLINK" Value="$(var.InfoURL)" />
+    <Property Id="WIXUI_INSTALLDIR" Value="$(var.IFOLDER)"/>
+    <UIRef Id="AddinUI" />
+	</Product>
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="CMRambleFolder" Name="CMRamble">
+          <Directory Id="OcrFolder" Name="Ocr">
+            <Directory Id="INSTALLFOLDER" Name="ClientAddin" />
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+</Wix>
