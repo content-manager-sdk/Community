@@ -4,4 +4,8 @@
     <StartAction>Program</StartAction>
     <StartProgram>D:\Program Files\Hewlett Packard Enterprise\Content Manager\trim.exe</StartProgram>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Installer|x64'">
+    <StartProgram>D:\Program Files\Hewlett Packard Enterprise\Content Manager\trim.exe</StartProgram>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLFOLDER">
+            <Directory Id="dir06249C254B8FEA6A37A7C6E4984EF433" Name="tessdata" />
+            <Directory Id="dir43FCCFA109FBF584D9155DCE31E452EB" Name="x64" />
+            <Directory Id="dir97F42FF68945B97AAE670945C4FDAE93" Name="x86" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="AddinComponents">
+            <Component Id="cmp6ABD372173EBFFA8A95DAE89991E8DDD" Directory="INSTALLFOLDER" Guid="{710F5ABD-DB13-464B-A572-3C385E9382B7}">
+                <File Id="fil6154C797ABD12AB4CBC7DEF9592C65E2" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.Ocr.ClientAddin.dll" />
+            </Component>
+            <Component Id="cmp0679E03B0BDFD3B8F3E3ECAEE7920127" Directory="INSTALLFOLDER" Guid="{6DB2F9A2-C151-4558-850A-E19F1199F635}">
+                <File Id="filA93367400D27FBA05A756C72AE0FE4F1" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.Ocr.ClientAddin.pdb" />
+            </Component>
+            <Component Id="cmp5AFD19B7BBCB6071B8F716F57ABFA8EA" Directory="INSTALLFOLDER" Guid="{DEF24DBE-4169-428C-8738-F68B55FA8CC8}">
+                <File Id="fil37DADDE73C0AE8B3FF2A764D291295EE" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.Ocr.Core.dll" />
+            </Component>
+            <Component Id="cmp67E22F93ED0D35F4A395426A9A4E0F58" Directory="INSTALLFOLDER" Guid="{CB31562E-35BC-41D0-8DE6-98E9C382B8C6}">
+                <File Id="fil1EDFCDEC2E5389FB62F178ACF7D3EF48" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.Ocr.Core.pdb" />
+            </Component>
+            <Component Id="cmp800224AB698500CA2BA83182AC0AEC74" Directory="INSTALLFOLDER" Guid="{2DBA3269-BD73-4884-B3CB-5FBF0F5AE793}">
+                <File Id="fil309215DEAA8A6935D45991AA2024848F" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.Ocr.TextExtractor.dll" />
+            </Component>
+            <Component Id="cmpF2D4B577887E2D09A06B0D41F93551A8" Directory="INSTALLFOLDER" Guid="{E91180E8-9298-4A8C-85FF-95C51B16F2FF}">
+                <File Id="fil86AC6C90B92BD828D3FAF165586E4199" KeyPath="yes" Source="$(var.sourcebin)\CMRamble.Ocr.TextExtractor.pdb" />
+            </Component>
+            <Component Id="cmp2146AF00DDE52BDF10CBD28469DEE6CE" Directory="INSTALLFOLDER" Guid="{DAC421EA-82F8-41D2-89D5-21659057AF9A}">
+                <File Id="fil04EB290A18BE226010D7FD51434C40E8" KeyPath="yes" Source="$(var.sourcebin)\HP.HPTRIM.SDK.dll" />
+            </Component>
+            <Component Id="cmpC850D395E8686BEC573FFD7C5038D04E" Directory="INSTALLFOLDER" Guid="{36BF8E8F-5D3A-4595-86B9-C1B1CFE90A6F}">
+                <File Id="fil11AA2D58174B3045FE41047B0AB77138" KeyPath="yes" Source="$(var.sourcebin)\HP.HPTRIM.SDK.xml" />
+            </Component>
+            <Component Id="cmp5DD45048A0F61134D66C2E7291749ABB" Directory="INSTALLFOLDER" Guid="{98E94AEC-F7FE-4B04-AFCA-5C687609CED2}">
+                <File Id="fil0FF72A2062F7CAC4CEA1826EC71FB755" KeyPath="yes" Source="$(var.sourcebin)\Log4Net.config" />
+            </Component>
+            <Component Id="cmp13D58469BCB864EB53214ED46E622188" Directory="INSTALLFOLDER" Guid="{CFA1C50D-145A-4070-BDA8-CE04E1303832}">
+                <File Id="fil28F7A9478894C77C5F6C2A95DAA4B459" KeyPath="yes" Source="$(var.sourcebin)\log4net.dll" />
+            </Component>
+            <Component Id="cmp742785C9A7B88BE6B2E81C2322E3D2EE" Directory="INSTALLFOLDER" Guid="{4BE08FCD-F71C-4412-9238-8913342E407E}">
+                <File Id="filA307C00D897BECB908C510DE71A3AD29" KeyPath="yes" Source="$(var.sourcebin)\log4net.xml" />
+            </Component>
+            <Component Id="cmp0E39CC7E4DF8174F295F14507A523505" Directory="INSTALLFOLDER" Guid="{315B7F94-1178-4723-BC21-A6754C60EB8E}">
+                <File Id="fil6BC8A0249B8533E276EBFD2A37790F8F" KeyPath="yes" Source="$(var.sourcebin)\Tesseract.dll" />
+            </Component>
+            <Component Id="cmp7DC0B4A3D562BEDBD0ED6359BC5DB4DC" Directory="INSTALLFOLDER" Guid="{7F200E10-31E0-4AA3-B0FE-EB192808C5D7}">
+                <File Id="fil4269928F663B8B9A825B7CDD7A33A339" KeyPath="yes" Source="$(var.sourcebin)\Tesseract.xml" />
+            </Component>
+            <Component Id="cmpA68C5133B7646CA8AF7C55273A24E8E7" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{CBE3D9A5-DE4E-45A1-BA87-ECDD563566C0}">
+                <File Id="fil9F6DA80ACDD4D47F69B337A9F3EE8F86" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.bigrams" />
+            </Component>
+            <Component Id="cmpD55424DEC967D412182BECA877986E8A" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{D687F0C9-0185-468A-92FE-9C27CEB997DE}">
+                <File Id="fil188CAB3641EA4299F74EDC38798D1746" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.fold" />
+            </Component>
+            <Component Id="cmpD895F68463DA2928EFD2CFEE4BC41C8A" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{7B7FE51F-EC87-466C-966E-455A3A6DA9B8}">
+                <File Id="fil2DAB7B2E1346EDFCF695CAF037BBC6B7" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.lm" />
+            </Component>
+            <Component Id="cmp50B5D9777C7851A8D8FAF354B7827E66" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{9D5E7998-4F9F-4BA1-A487-67230B0DA3D6}">
+                <File Id="filA8F8928706939AFD43FE25044878ACB6" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.nn" />
+            </Component>
+            <Component Id="cmpCAC656FAF1898396BCF8D51EA7B331AC" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{9DDC1902-8D4A-4524-9CF0-F9F205FBCEE2}">
+                <File Id="fil964D187D969AF842BF61288B708FBC60" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.params" />
+            </Component>
+            <Component Id="cmp3C81CD33FB960F6D8E104379C38FC70F" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{17907AED-3DE4-4459-833C-42409D5E85B2}">
+                <File Id="fil0331822368D8793257F745D17959CB20" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.size" />
+            </Component>
+            <Component Id="cmpFFF1BD5952DD65F16FE19A235C808CD1" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{83C57C77-3543-4C50-9799-5858E99F5BD7}">
+                <File Id="fil7BD7654A8F868FF494AA8F637CD9D425" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.cube.word-freq" />
+            </Component>
+            <Component Id="cmpF0FC732D9BCE63E5FF5F768B6065D74F" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{2A471334-AF3D-46A5-8CF6-AA6C4B228A14}">
+                <File Id="fil6A11BA03847C5715988F2605C0AAE1A4" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.tesseract_cube.nn" />
+            </Component>
+            <Component Id="cmp92673DCD3A790F0AE44C8C35A1E2CE7C" Directory="dir06249C254B8FEA6A37A7C6E4984EF433" Guid="{906B67F1-1770-4AF3-91B8-55D0F5341936}">
+                <File Id="fil8A735A93EC1DA3907F32FD0458422B92" KeyPath="yes" Source="$(var.sourcebin)\tessdata\eng.traineddata" />
+            </Component>
+            <Component Id="cmp424A6A0E8BE9B85FD12E0CBB54F3CF3F" Directory="dir43FCCFA109FBF584D9155DCE31E452EB" Guid="{4BF782A2-A187-41DD-BC46-511F57DE040E}">
+                <File Id="fil527255FD9F8B45D3CC14E22AF18F5E39" KeyPath="yes" Source="$(var.sourcebin)\x64\liblept172.dll" />
+            </Component>
+            <Component Id="cmp38212F38F95ABE22FE3830498592FA5F" Directory="dir43FCCFA109FBF584D9155DCE31E452EB" Guid="{9D5F54EE-48A2-4EAF-929B-A76481F5A24A}">
+                <File Id="filCA9748D842B7CA7386AEB07990A7F052" KeyPath="yes" Source="$(var.sourcebin)\x64\libtesseract304.dll" />
+            </Component>
+            <Component Id="cmp7822E36ED8EB051BF83C1B000FEA8FCA" Directory="dir97F42FF68945B97AAE670945C4FDAE93" Guid="{33487046-07FE-4BB8-8952-321FE2547C38}">
+                <File Id="filA85E42A714377769F5886AC1BAD75F05" KeyPath="yes" Source="$(var.sourcebin)\x86\liblept172.dll" />
+            </Component>
+            <Component Id="cmp8D93CD13B0B8654B0F6B09DCCAD5E8BD" Directory="dir97F42FF68945B97AAE670945C4FDAE93" Guid="{5A846DDA-18B3-4EF5-9E50-FEC80AB9074D}">
+                <File Id="fil894B4891CC9D3BCC889A3D1721E9615C" KeyPath="yes" Source="$(var.sourcebin)\x86\libtesseract304.dll" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

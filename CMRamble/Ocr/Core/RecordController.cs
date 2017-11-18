@@ -2,13 +2,16 @@
 using System;
 using HP.HPTRIM.SDK;
 using CMRamble.Ocr.Tesseract;
+using log4net;
 
 namespace CMRamble.Ocr.Core
 {
     public static class RecordController
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RecordController));
+
         #region Update Ocr Rendition
-        public static bool OcrRendition(Record record, RecordRendition sourceRendition, string tessData = @"./tessdata")
+        public static bool GenerateOcrRendition(Record record, RecordRendition sourceRendition)
         {
             bool success = false;
             string extractedFilePath = string.Empty;
@@ -28,7 +31,7 @@ namespace CMRamble.Ocr.Core
                 extract.FileName = Path.GetFileName(extractedFilePath);
                 extract.DoExtract(Path.GetDirectoryName(extractedFilePath), true, false, "");
                 if (!String.IsNullOrWhiteSpace(extract.FileName) && File.Exists(extractedFilePath)) {
-                    ocrFilePath = TesseractOcr.ExtractFromFile(extractedFilePath, tessData);
+                    ocrFilePath = TesseractOcr.ExtractFromFile(extractedFilePath);
                     // use record extension method that removes existing OCR rendition (if exists)
                     record.AddOcrRendition(ocrFilePath);
                     record.Save();
@@ -45,7 +48,7 @@ namespace CMRamble.Ocr.Core
             }
             return success;
         }
-        public static bool UpdateOcrRendition(Record record, string tessData = @"./tessdata")
+        public static bool UpdateOcrRendition(Record record)
         {
             bool success = false;
             string extractedFilePath = string.Empty;
@@ -61,16 +64,22 @@ namespace CMRamble.Ocr.Core
                 FileHelper.Delete(extractedFilePath);
                 FileHelper.Delete(ocrFilePath);
                 // fetch document
+                Log.Debug($"Extracting Record {record.Number}: {extractedFilePath}");
                 record.GetDocument(extractedFilePath, false, "OCR", string.Empty);
                 // get the OCR text
-                ocrFilePath = TesseractOcr.ExtractFromFile(extractedFilePath, tessData);
+                Log.Debug($"Tesseract Ocr Record {record.Number}: {extractedFilePath}");
+                ocrFilePath = TesseractOcr.ExtractFromFile(extractedFilePath);
                 // use record extension method that removes existing OCR rendition (if exists)
                 record.AddOcrRendition(ocrFilePath);
+
+                Log.Debug($"Saving Record {record.Number}");
                 record.Save();
+                Log.Debug($"Saved Record {record.Number}");
                 success = true;
             }
             catch (Exception ex)
             {
+                Log.Error(ex);
             }
             finally
             {

@@ -1,5 +1,9 @@
 ﻿using CMRamble.Ocr.Core;
 using HP.HPTRIM.SDK;
+using log4net.Config;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace CMRamble.Ocr.ClientAddin
 {
@@ -18,6 +22,13 @@ namespace CMRamble.Ocr.ClientAddin
         public override void Initialise(Database db)
         {
             links = new TrimMenuLink[2] { new MenuLinks.UpdateOcrRendition(), new MenuLinks.RemoveOcrRendition() };
+
+            var configFilePath = Path.Combine(AssemblyDirectory, "Log4Net.config");
+            if (File.Exists(configFilePath))
+            {
+                FileInfo fi = new FileInfo(configFilePath);
+                XmlConfigurator.ConfigureAndWatch(fi);
+            }
         }
         public override void Setup(TrimMainObject newObject)
         {
@@ -109,7 +120,18 @@ namespace CMRamble.Ocr.ClientAddin
         public override bool VerifyFieldValue(FieldDefinition field, TrimMainObject trimObject, string newValue)
         {
             return false;
-        } 
+        }
         #endregion
+
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
     }
 }
