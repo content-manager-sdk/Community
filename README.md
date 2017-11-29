@@ -36,4 +36,5 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [ServiceAPI Java file upload](Samples/ServiceAPI/Java/SampleFileUpload/) | Create a Record and attach a file to it using Java. |
 | [ServiceAPI Google OAuth2 Authentication](Samples/ServiceAPI/CSharp/GoogleAuthPlugin/) | Use the ServiceStack Google OAuth2 authentication provider in WebDrawer and the Web Client. |
 | [SDK Create Location WPF UI](Samples/SDK/CSharp/CreateLocation) | A simple WPF user interface to create a Location. |
+| [SDK Record update](Samples/SDK/CSharp/Record_Update_SDKSample) | Find a Record by number and update some of its properties. |
 
