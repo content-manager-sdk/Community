@@ -62,7 +62,6 @@
     <Compile Include="Converters\NotNullVisibilityConverter.cs" />
     <Compile Include="Converters\LocationVisibilityConverter.cs" />
     <Compile Include="DesignTime\CreateLocationDT.cs" />
-    <Compile Include="Models\EnumItem.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CreateLocationVM.cs" />
     <Compile Include="ViewModels\PropertyCaptions.cs" />
