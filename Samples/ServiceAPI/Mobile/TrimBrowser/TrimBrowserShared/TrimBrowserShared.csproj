@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+
+
+
+
+
+
+
+
+
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.Client" Version="4.5.14" />
+    <PackageReference Include="Xam.Plugin.Media" Version="3.0.1" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.77107" />
+  </ItemGroup>
+
+
+
+
+
+
+
+
+
+
+  <ItemGroup>
+    <Reference Include="HP.HPTRIM.ServiceAPI.Model">
+      <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+
+
+
+
+
+
+
+
+  <ItemGroup>
+    <Compile Update="Views\NewItemPage.xaml.cs">
+      <DependentUpon>NewItemPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+
+</Project>

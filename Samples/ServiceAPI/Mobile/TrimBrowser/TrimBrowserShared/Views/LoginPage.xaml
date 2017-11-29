@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="TrimBrowser.LoginPage"
+		Title="Login">
+	<ContentPage.ToolbarItems>
+        <ToolbarItem Text="Login" Clicked="Login_Clicked" />
+	</ContentPage.ToolbarItems>
+	<ContentPage.Content>
+		<StackLayout Spacing="20" Padding="15">
+			<Label Text="Name" FontSize="Medium" />
+            <Entry Placeholder="Enter record title" Text="{Binding Item.Name}" FontSize="Small"  />
+            <Label Text="Password" FontSize="Medium" />
+            <Entry Placeholder="Enter record title" Text="{Binding Item.Password}" FontSize="Small" IsPassword="True" />
+        </StackLayout>
+	</ContentPage.Content>
+</ContentPage>

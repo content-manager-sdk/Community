@@ -1,0 +1,91 @@
+﻿<Window x:Class="CreateLocation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CreateLocation"
+        xmlns:dt="clr-namespace:CreateLocation.DesignTime"
+        xmlns:sdk="clr-namespace:HP.HPTRIM.SDK;assembly=HP.HPTRIM.SDK"
+        xmlns:p="clr-namespace:CreateLocation.Properties"
+        Title="{x:Static p:Resources.Title}"
+        mc:Ignorable="d"
+       d:DataContext="{d:DesignInstance dt:CreateLocationDT, IsDesignTimeCreatable=True}"
+       
+ Height="385.2" Width="525">
+    <Window.Resources>
+        <local:LocationVisibilityConverter x:Key="LocationVisibilityConverter" />
+        <local:LocationNotVisibilityConverter x:Key="LocationNotVisibilityConverter" />
+        <local:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter" />
+
+        <DataTemplate x:Key="CommonFields"
+                      xmlns:sdk2="clr-namespace:HP.HPTRIM.SDK;assembly=HP.HPTRIM.SDK">
+            <StackPanel Orientation="Vertical">
+                <Label></Label>
+                <CheckBox IsChecked="{Binding NewLocation.IsWithin, Mode=TwoWay}" Content="{Binding Path=PropertyCaptions[LocationIsWithin]}" />
+
+                <Label Content="{Binding Path=PropertyCaptions[LocationEmailAddress]}"></Label>
+                <TextBox Text="{Binding NewLocation.EmailAddress, Mode=TwoWay}" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static p:Resources.Label_LocationType}"></Label>
+            <ComboBox 
+                DisplayMemberPath="Caption"
+                SelectedValuePath="Value"
+                SelectedValue="{Binding NewLocationType}"
+                ItemsSource="{Binding LocationTypes}" />
+        </StackPanel>
+
+        <StackPanel 
+            Grid.Row="1" 
+            Orientation="Vertical" 
+            Visibility="{Binding NewLocationType, Converter={StaticResource LocationVisibilityConverter}, ConverterParameter={x:Static sdk:LocationType.Person}}">
+            
+            <Label Content="{Binding Path=PropertyCaptions[LocationGivenNames]}"></Label>
+            
+            <TextBox Text="{Binding NewLocation.GivenNames, Mode=TwoWay}" />
+
+            <Label Content="{Binding Path=PropertyCaptions[LocationSurname]}"></Label>
+            <TextBox Text="{Binding NewLocation.Surname, Mode=TwoWay}" />
+
+            <Label Content="{Binding Path=PropertyCaptions[LocationLogsInAs]}"></Label>
+            <TextBox Text="{Binding NewLocation.LocationLogsInAs, Mode=TwoWay}" />
+
+            <Label Content="{Binding Path=PropertyCaptions[LocationPhoneNumber]}"></Label>
+            <TextBox Text="{Binding NewLocation.PhoneNumber, Mode=TwoWay}" />
+            
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource CommonFields}" />
+            
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" Visibility="{Binding NewLocationType, Converter={StaticResource LocationNotVisibilityConverter}, ConverterParameter={x:Static sdk:LocationType.Person}}">
+            <Label Content="{Binding Path=PropertyCaptions[LocationSortName]}"></Label>
+            <TextBox Text="{Binding NewLocation.SortName, Mode=TwoWay}" />
+
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource CommonFields}" />
+
+        </StackPanel>
+    
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding DisplayName, Converter={StaticResource NotNullVisibilityConverter}}">
+                <TextBlock Text="{x:Static p:Resources.Label_LocationCreated}"></TextBlock>
+                
+            <TextBlock Margin="5,0,0,0" Text="{Binding DisplayName}" />
+            </StackPanel>
+            <Button Grid.Column="1" Content="Save" HorizontalAlignment="Right" Width="40" Command="{Binding SaveCommand}" />
+        </Grid>
+    </Grid>
+</Window>
