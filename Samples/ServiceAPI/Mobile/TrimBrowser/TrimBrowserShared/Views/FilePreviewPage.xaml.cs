@@ -26,8 +26,18 @@ namespace TrimBrowser
             };
 
             viewModel = new FilePreviewViewModel(item);
+            viewModel.Setup(this);// PropertyChanged += ViewModel_PropertyChanged;
             BindingContext = viewModel;
         }
+
+        //private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    if (e.PropertyName == "ErrorMessage" 
+        //        && !string.IsNullOrEmpty(viewModel.ErrorMessage))
+        //    {
+        //        DisplayAlert("Error", viewModel.ErrorMessage, "OK");
+        //    }
+        //}
 
         public FilePreviewPage(FilePreviewViewModel viewModel)
         {
@@ -36,7 +46,6 @@ namespace TrimBrowser
             BindingContext = this.viewModel = viewModel;
 
             ShowPreviewButton.Clicked += ShowPreviewButton_Clicked;
-
 
         }
 

@@ -14,7 +14,8 @@ namespace TrimBrowser
         Task<IEnumerable<T>> GetItemsAsync(string searchText, bool forceRefresh = false);
         Task<Stream> GetDocument(Item item);
         Task<IEnumerable<SearchClauseDef>> GetSearchShortcuts();
-        void Login(LoginDetails item);
+        bool Login(LoginDetails item);
         bool IsAuthenticated();
+
     }
 }

@@ -2,10 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:TrimBrowser.Controls"
+             xmlns:converters="clr-namespace:TrimBrowser.Converters"
              x:Class="TrimBrowser.FilePreviewPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="inverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
+        
         <StackLayout x:Name="RootLayout">
-            <Button x:Name="ShowPreviewButton" Text="ShowPreview" />
+                    
+                    <Button x:Name="ShowPreviewButton" Text="ShowPreview" IsVisible="{Binding PreviewAvailable}" />
+            <Label Text="Preview only available on image and PDF files." HorizontalTextAlignment="Center" IsVisible="{Binding PreviewAvailable, Converter={StaticResource inverter}}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace TrimBrowser
 {
@@ -13,22 +14,30 @@ namespace TrimBrowser
         {
             _item = item;
 
+            PreviewAvailable = new string[] { "png", "jpg", "jpeg", "gif", "pdf"}.Any(s => s.Equals(_item.Extension, StringComparison.InvariantCultureIgnoreCase));
 
             MessagingCenter.Subscribe<FilePreviewPage>(this, "GetFile", async (obj) =>
             {
                 var docsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
                 var filePath = System.IO.Path.Combine(docsPath, $"{item.Id}.{item.Extension}");
 
-                File.Delete(filePath);
-                using (FileStream fileStream = File.Create(filePath))
-                using (Stream stream = await DataStore.GetDocument(_item))
+                try
                 {
-                    stream.CopyTo(fileStream);
+                    File.Delete(filePath);
+                    using (FileStream fileStream = File.Create(filePath))
+                    using (Stream stream = await DataStore.GetDocument(_item))
+                    {
+                        stream.CopyTo(fileStream);
+                    }
+
+                    FileUrl = filePath;
+
+                    obj.ShowFile(filePath);
                 }
-
-                FileUrl = filePath;
-
-                obj.ShowFile(filePath);
+                catch (Exception ex)
+                {
+                    this.ErrorMessage = ex.Message;
+                }
             });
         }
 
@@ -41,6 +50,17 @@ namespace TrimBrowser
             set
             {
                 SetProperty(ref fileUrl, value);
+
+            }
+        }
+
+        private bool previewAvailable;
+        public bool PreviewAvailable
+        {
+            get { return previewAvailable; }
+            set
+            {
+                SetProperty(ref previewAvailable, value);
 
             }
         }

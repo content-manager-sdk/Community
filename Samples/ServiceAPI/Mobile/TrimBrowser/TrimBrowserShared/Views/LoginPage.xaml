@@ -7,9 +7,9 @@
 	<ContentPage.Content>
 		<StackLayout Spacing="20" Padding="15">
 			<Label Text="Name" FontSize="Medium" />
-            <Entry Placeholder="Enter record title" Text="{Binding Item.Name}" FontSize="Small"  />
+            <Entry Placeholder="Enter name" Text="{Binding Item.Name}" FontSize="Small"  />
             <Label Text="Password" FontSize="Medium" />
-            <Entry Placeholder="Enter record title" Text="{Binding Item.Password}" FontSize="Small" IsPassword="True" />
+            <Entry Placeholder="Enter password" Text="{Binding Item.Password}" FontSize="Small" IsPassword="True" />
         </StackLayout>
 	</ContentPage.Content>
 </ContentPage>

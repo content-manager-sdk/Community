@@ -21,6 +21,7 @@ namespace TrimBrowser
 
             SearchTextEntry.SearchButtonPressed += SearchText_Completed;
 
+            viewModel.Setup(this);
 
             SearchTextPicker.SelectedIndexChanged += SearchTextPicker_SelectedIndexChanged;
         }
@@ -59,7 +60,14 @@ namespace TrimBrowser
 
         async void AddItem_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NewItemPage());
+            if (viewModel.LoggedIn)
+            {
+                await Navigation.PushAsync(new NewItemPage());
+            }
+            else
+            {
+                await DisplayAlert("Login error", "Please log in.", "OK" );
+            }
         }
 
         async void LoginItem_Clicked(object sender, EventArgs e)

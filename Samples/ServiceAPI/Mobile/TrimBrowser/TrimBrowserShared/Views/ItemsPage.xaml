@@ -10,9 +10,8 @@
 		<ToolbarItem Text="Add" Clicked="AddItem_Clicked" />
 
     </ContentPage.ToolbarItems>
-	<ContentPage.Content>       
+	<ContentPage.Content>
 
-            
             <ListView x:Name="ItemsListView" 
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
@@ -21,37 +20,40 @@
                  IsPullToRefreshEnabled="true"
                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                  CachingStrategy="RecycleElement"
+                 IsVisible="{Binding LoggedIn}"
+                 IsEnabled="{Binding LoggedIn}"
                  ItemSelected="OnItemSelected">
                 <ListView.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>                    
-                    
-                    <SearchBar Grid.Column="0" x:Name="SearchTextEntry" Text="{Binding SearchText}" FontSize="Small" Placeholder="Search or type number" IsVisible="{Binding IsTextSearchOn}" />
-                    <Picker Grid.Column="0" x:Name="SearchTextPicker" Title="Select to search" IsVisible="{Binding IsQuickSearchOn}" ItemsSource="{Binding QuickSearchItems}" SelectedItem="{Binding SearchClause}" />
-                    <Switch Grid.Column="1" IsToggled="{Binding IsQuickSearchOn}"></Switch>
-                </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-            </ListView.Header>
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<ViewCell>
-							<StackLayout Padding="10">
-								<Label Text="{Binding Text}" 
+                        <SearchBar Grid.Column="0" x:Name="SearchTextEntry" Text="{Binding SearchText}" FontSize="Small" Placeholder="Search or type number" IsVisible="{Binding IsTextSearchOn}" />
+                        <Picker Grid.Column="0" x:Name="SearchTextPicker" Title="Select to search" IsVisible="{Binding IsQuickSearchOn}" ItemsSource="{Binding QuickSearchItems}" SelectedItem="{Binding SearchClause}" />
+                        <Switch Grid.Column="1" IsToggled="{Binding IsQuickSearchOn}"></Switch>
+                    </Grid>
+
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Padding="10">
+                                <Label Text="{Binding Text}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="16" />
-								<Label Text="{Binding Description}" 
+                                <Label Text="{Binding Description}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
-							</StackLayout>
-						</ViewCell>
-					</DataTemplate>
-				</ListView.ItemTemplate>
-			</ListView>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-	</ContentPage.Content>
+
+    </ContentPage.Content>
 </ContentPage>

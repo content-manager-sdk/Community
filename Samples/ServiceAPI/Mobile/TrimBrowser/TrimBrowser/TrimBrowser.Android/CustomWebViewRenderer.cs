@@ -11,6 +11,7 @@ namespace DisplayPDF.Droid
 {
     public class CustomWebViewRenderer : WebViewRenderer
     {
+        public CustomWebViewRenderer(Context context) : base(context) { }
 
         protected override void OnElementChanged(ElementChangedEventArgs<WebView> e)
         {

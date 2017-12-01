@@ -26,8 +26,6 @@ namespace TrimBrowser
             {
                 if (quickSearchItems.Count == 0 && DataStore.IsAuthenticated())
                 {
-                    //  quickSearchItems = new ObservableCollection<HP.HPTRIM.ServiceModel.SearchClauseDef>();
-
                     var items = DataStore.GetSearchShortcuts();
 
                     foreach (var searchClause in items.Result)
@@ -51,6 +49,16 @@ namespace TrimBrowser
                 {
                     IsTextSearchOn = !isQuickSearchOn;
                 }
+            }
+        }
+
+        private bool loggedIn;
+        public bool LoggedIn
+        {
+            get { return loggedIn; }
+            set
+            {
+                SetProperty(ref loggedIn, value);
             }
         }
 
@@ -88,14 +96,24 @@ namespace TrimBrowser
             {
                 var _item = item as LoginDetails;
 
-                await Task.Run(() =>
-                {
-                    DataStore.Login(_item);
-
+               // await Task.Run(() =>
+               // {
+                 //   TaskCompletionSource<bool> doneSource = new TaskCompletionSource<bool>();
+                 //   Device.BeginInvokeOnMainThread(async () =>
+                 //   {
+                        try
+                    {
+                        LoggedIn = DataStore.Login(_item);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ErrorMessage = ex.Message;
+                    }
+                  //  });
                     this.OnPropertyChanged("QuickSearchItems");
                 });
 
-            });
+         //   });
 
             quickSearchItems = new ObservableCollection<SearchClauseDetails>();
         }

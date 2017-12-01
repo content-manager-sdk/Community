@@ -25,6 +25,28 @@ namespace TrimBrowser
             set { SetProperty(ref title, value); }
         }
 
+        private string errorMessage;
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set
+            {
+                SetProperty(ref errorMessage, value);
+
+            }
+        }
+
+        public void Setup(ContentPage contentPage)
+        {
+            this.PropertyChanged += (o, e) => {
+                if (e.PropertyName == "ErrorMessage"
+                    && !string.IsNullOrEmpty(this.ErrorMessage))
+                {
+                    contentPage.DisplayAlert("Error", this.ErrorMessage, "OK");
+                }
+            };
+        }
+
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName]string propertyName = "",
             Action onChanged = null)

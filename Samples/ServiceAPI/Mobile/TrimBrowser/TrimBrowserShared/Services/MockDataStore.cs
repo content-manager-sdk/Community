@@ -17,7 +17,7 @@ namespace TrimBrowser
         private LoginDetails _loginDetails;
 
 
-                List<Item> items = new List<Item>();
+        List<Item> items = new List<Item>();
 
         public MockDataStore()
         {
@@ -41,7 +41,7 @@ namespace TrimBrowser
                 previousSearch = searchText;
             }
             if (hasMoreItems)
-            {             
+            {
                 var client = getClient();
 
                 Records request = new Records();
@@ -72,12 +72,12 @@ namespace TrimBrowser
         private ServiceStack.IJsonServiceClient getClient()
         {
 
-                ServiceStack.JsonServiceClient client = new ServiceStack.JsonServiceClient(SERVICEAPI_URL);
-                client.UserName = _loginDetails.Name;
-                client.Password = _loginDetails.Password;
-                client.AlwaysSendBasicAuthHeader = true;
+            ServiceStack.JsonServiceClient client = new ServiceStack.JsonServiceClient(SERVICEAPI_URL);
+            client.UserName = _loginDetails.Name;
+            client.Password = _loginDetails.Password;
+            client.AlwaysSendBasicAuthHeader = true;
 
-                return client;
+            return client;
         }
 
         public async Task<Item> AddItemAsync(Item item)
@@ -101,7 +101,7 @@ namespace TrimBrowser
 
             record.FilePath = uploadResponse?.FilePath;
 
-            var response = await client.PostAsync<RecordsResponse>( record);
+            var response = await client.PostAsync<RecordsResponse>(record);
             var newRecord = response.Results[0];
             items.Insert(0, new Item() { Id = newRecord.Uri.ToString(), Text = newRecord.Number, Description = newRecord.Title });
 
@@ -115,7 +115,10 @@ namespace TrimBrowser
             var handler = new HttpClientHandler { Credentials = credentials };
             HttpClient httpClient = new HttpClient(handler);
 
+
             return await httpClient.GetStreamAsync($"{SERVICEAPI_URL}/Record/{item.Id}/file/document");
+
+
         }
 
         public async Task<bool> UpdateItemAsync(Item item)
@@ -162,9 +165,39 @@ namespace TrimBrowser
             return await Task.FromResult(selectedClauses);
         }
 
-        public void Login(LoginDetails loginDetails)
+        public bool Login(LoginDetails loginDetails)
         {
             _loginDetails = loginDetails;
+
+            try
+            {
+                var client = getClient();
+
+                Locations request = new Locations();
+                request.q = "me";
+
+                LocationsResponse response = client.Get<LocationsResponse>(request);
+
+
+
+                if (response.Results != null && response.Results.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    _loginDetails = null;
+                    return false;
+                }
+            }
+            catch
+            {
+                _loginDetails = null;
+                throw;
+            }
+
+
+
         }
 
         public bool IsAuthenticated()
