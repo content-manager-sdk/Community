@@ -1,16 +1,22 @@
 package com.acme;
 
 import java.net.HttpURLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import com.acme.dto.Records;
 import com.acme.dto.RecordsResponse;
+import com.acme.dto.StringDisplayType;
 import com.acme.dto.TrimStringProperty;
 import com.acme.dto.FieldDefinition;
+import com.acme.dto.ITrimProperty;
 import com.acme.dto.Location;
 import com.acme.dto.LocationFind;
 import com.acme.dto.LocationsResponse;
+import com.acme.dto.PropertyType;
 import com.acme.dto.Record;
 import com.acme.dto.RecordTypeRef;
 
@@ -78,6 +84,44 @@ public class MyTestConsole {
 			System.out.println(ex.getErrorMessage());
 		}
 	}
+	
+	@SuppressWarnings("unused")
+	private static void recordSearchWithFields()  {
+		// Fetch a record
+		Records request = new Records();
+		request.q = "number:rec_222";
+		
+		// tell the search request to return both string and actual values for the fields and properties
+		request.setPropertyValue(PropertyType.Both);
+		request.setStringDisplayType(StringDisplayType.WebService);		
+
+		request.Properties = makePropertyList("RoadSurface", "DateOfIssue", "PoliceOfficer");
+
+		try {
+			RecordsResponse response = client.get(request);
+
+			Record rec = response.Results.get(0);
+			
+			ITrimProperty roadSurface = rec.Fields.get("RoadSurface");
+			ITrimProperty dateOfIssue = rec.Fields.get("DateOfIssue");
+			
+			SimpleDateFormat parser = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz");
+	        Date date = parser.parse(dateOfIssue.getStringValue());
+			
+			ITrimProperty policeOfficer = rec.Fields.get("PoliceOfficer");
+						
+			System.out.println(roadSurface.getStringValue());
+			System.out.println(date);
+			System.out.println(dateOfIssue.getStringValue());
+			System.out.println(policeOfficer.getStringValue());
+
+		} catch (WebServiceException ex) {
+			System.out.println(ex.getErrorMessage());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@SuppressWarnings("unused")
 	private static void recordCreate() {
@@ -139,8 +183,9 @@ public class MyTestConsole {
 	public static void main(String[] arguments) {
 		System.out.println("Hello, world");
 
-		client = new JsonServiceClient("http://192.168.0.19/ServiceAPI");
+		client = new JsonServiceClient("http://localhost/ServiceAPI");
 		client.setCredentials("YOUR_USERNAME", "YOUR_PASSWORD");
+		
 		
 		// if the user specified in setCredentials has been given permission to impersonate via the hptrim.config
 		// option 'trustedToImpersonate' then you may use the code below to impersonate any user.
@@ -156,7 +201,7 @@ public class MyTestConsole {
 		// this next line is important for basic authentication
 		client.setAlwaysSendBasicAuthHeaders(true);
 
-		getMyName();
+		recordSearchWithFields();
 		
 		// recordSearch();
 		 //recordCreate();
