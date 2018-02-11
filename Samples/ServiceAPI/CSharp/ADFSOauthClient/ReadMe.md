@@ -5,7 +5,7 @@ This sample authenticates the user with the ADFS server and then passes that aut
 This sample should work with version 8.3 and later.
 
 ## Questions
-Post any questios regarding this sample in the [SDK support forum](https://community.hpe.com/t5/SDK-API-Support/bd-p/sws-RM_SDKAPI).
+Post any questions regarding this sample in the [SDK support forum](https://community.hpe.com/t5/SDK-API-Support/bd-p/sws-RM_SDKAPI).
 
 ## Sample application Setup
 This sample application requires that:
