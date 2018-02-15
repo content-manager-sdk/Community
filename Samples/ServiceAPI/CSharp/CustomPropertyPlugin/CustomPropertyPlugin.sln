@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomPropertyPlugin", "CustomPropertyPlugin\CustomPropertyPlugin.csproj", "{AFBA2143-DF9E-4294-8114-1088598658BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFBA2143-DF9E-4294-8114-1088598658BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFBA2143-DF9E-4294-8114-1088598658BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFBA2143-DF9E-4294-8114-1088598658BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFBA2143-DF9E-4294-8114-1088598658BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E7D1466-664C-41EF-91F9-56F6E578CA34}
+	EndGlobalSection
+EndGlobal
