@@ -1,0 +1,30 @@
+{
+
+    "Box": [
+        {
+            "RecordRecordType": 1,
+            "RecordTitle": "Folder A"
+        },
+        {
+            "RecordRecordType": 1,
+            "RecordTitle": "Folder B"
+        },
+        {
+            "RecordRecordType": 1,
+            "RecordTitle": "Folder C"
+
+        },
+        {
+            "RecordRecordType": 1,
+            "RecordTitle": "Folder D"
+
+        }
+
+    ],
+    "Box2": [
+        {
+            "RecordRecordType": 1,
+            "RecordTitle": "Folder A"
+        }
+    ]
+}
