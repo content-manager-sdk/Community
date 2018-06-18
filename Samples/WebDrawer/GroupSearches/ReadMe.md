@@ -1,7 +1,7 @@
 # Group Search Clauses in WebDrawer
 
 ## Overview
-The ebDrawer search form allows you to specify three search clauses and seperate them with either AND or OR boolean operators.  What it does not allow for is explicit grouping, so you will not be sure whether the first two clauses will be evaluated together or th last two..
+The WebDrawer search form allows you to specify three search clauses and seperate them with either AND or OR boolean operators.  What it does not allow for is explicit grouping, so you will not be sure whether the first two clauses will be evaluated together or th last two..
 
 This sample allows parentheses to be added to the search string and also displays the search string so you can know exactly what search will happen before pressing search.
 
