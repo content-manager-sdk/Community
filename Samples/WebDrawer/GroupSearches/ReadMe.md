@@ -19,8 +19,6 @@ To install from the files here:
 ## Add custom elements to search page
 In the file Views\Shared\SearchForm.cshtml add the following HTML before the 'Sort By' heading
 ```
-    <label class="checkbox inline"><input type="checkbox" id="exact-string-searches" checked /> @Translations.lang.search_search_exact</label>
-
     <div>
         <label class="radio inline"><input type="radio" name="clause-grouping" id="group-first-two" checked /> Group first two </label>
         <label class="radio inline"> <input type="radio" name="clause-grouping" id="group-last-two" /> Group last two</label>
