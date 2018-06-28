@@ -93,9 +93,7 @@ namespace FolderGenerator
             {
                 service.Credentials = new WebCredentials(this.Email.Text, this.Password.Password);
             }
-            service.AutodiscoverUrl(this.Email.Text, (arg1) => {
-                return true;
-            });
+            service.AutodiscoverUrl(this.Email.Text);
                              
             
 

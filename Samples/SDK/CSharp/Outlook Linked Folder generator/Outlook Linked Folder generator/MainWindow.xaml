@@ -15,7 +15,7 @@
 
         </DataGrid>
         <Button Content="Create linked folders" HorizontalAlignment="Left" Margin="36,230,0,0" VerticalAlignment="Top" Width="157" Click="Button_Click"/>
-        <TextBox Name="Email" HorizontalAlignment="Left" Height="23" Margin="10,109,0,0" TextWrapping="Wrap" Text="david.churchland@hpe.com" VerticalAlignment="Top" Width="236"/>
+        <TextBox Name="Email" HorizontalAlignment="Left" Height="23" Margin="10,109,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="236"/>
         <PasswordBox Name="Password" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" Width="236" IsEnabled="{Binding ElementName=DefaultCredentials, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="10,172,0,0" VerticalAlignment="Top" IsEnabled="{Binding ElementName=DefaultCredentials, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
         <Label Content="Email address" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.33,-0.236"/>
