@@ -11,5 +11,5 @@ To use this sample:
 ## Authentication ##
 This sample assumes you are able to use either integrated authentication or your SMTP address as your name/domain.  If you need to use the format domain\name then two extra fields will be require to enter these and the domain and name will need to be passwed in the constrcutor for WebCredentials.
 
- ![Mail Options](mailoptions.PNG)
-  ![Mail Profile](mailprofile.PNG)
+ ![Mail Options](mailoptions.png)
+  ![Mail Profile](mailprofile.png)
