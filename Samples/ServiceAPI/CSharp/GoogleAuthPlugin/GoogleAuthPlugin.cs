@@ -2,9 +2,11 @@
 using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Authentication.OAuth2;
+using ServiceStack.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,9 +30,13 @@ namespace GoogleAuthPlugin
                 oauthLogin = "~/auth/GoogleOAuth";
             }
 
+
             appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
-                        new GoogleOAuth2Provider(appSettings),
-                    }, oauthLogin));
+                      //  new MyJwtAuthProvider(appSettings) { },
+                       new GoogleOAuth2Provider(appSettings),
+                      new GoogleOAuth2Provider(appSettings) { Provider = "GoogleOAuthApp", ConsumerKey = appSettings.Get("oauth.GoogleOAuthApp.ConsumerKey")}
+                       
+                    }, oauthLogin) );
         }
     }
 }

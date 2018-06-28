@@ -18,7 +18,7 @@ namespace Record_Update_SDKSample
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new SampleForm());
-            //Calling initialize() loads the HP Records Manager runtime environment and reports errors if there are any.
+            //Calling initialize() loads the Content Manager runtime environment and reports errors if there are any.
             TrimApplication.Initialize();
         }
     }

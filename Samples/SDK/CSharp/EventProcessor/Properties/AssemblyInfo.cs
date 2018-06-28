@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SDKSamples")]
-[assembly: AssemblyDescription("HPTRIM SDK Sample Code")]
+[assembly: AssemblyDescription("Content Manager SDK Sample Code")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard Company")]
-[assembly: AssemblyProduct("HPTRIM")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard Company 2009")]
+[assembly: AssemblyCompany("Micro Focus")]
+[assembly: AssemblyProduct("Content Manager")]
+[assembly: AssemblyCopyright("© Copyright 1994-2018 Micro Focus or one of its affiliates")]
 [assembly: AssemblyTrademark("HPTRIM")]
 [assembly: AssemblyCulture("")]
 

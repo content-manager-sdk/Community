@@ -1,0 +1,27 @@
+﻿<Window x:Class="FolderGenerator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FolderGenerator"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    
+    <Grid>
+        <Grid.Resources>
+            <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </Grid.Resources>
+        <DataGrid HorizontalAlignment="Left" Height="399" Margin="251,10,0,0" AutoGenerateColumns="True" VerticalAlignment="Top" Width="531" ItemsSource="{Binding CheckinStyles}">
+
+        </DataGrid>
+        <Button Content="Create linked folders" HorizontalAlignment="Left" Margin="36,230,0,0" VerticalAlignment="Top" Width="157" Click="Button_Click"/>
+        <TextBox Name="Email" HorizontalAlignment="Left" Height="23" Margin="10,109,0,0" TextWrapping="Wrap" Text="david.churchland@hpe.com" VerticalAlignment="Top" Width="236"/>
+        <PasswordBox Name="Password" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" Width="236" IsEnabled="{Binding ElementName=DefaultCredentials, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="10,172,0,0" VerticalAlignment="Top" IsEnabled="{Binding ElementName=DefaultCredentials, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
+        <Label Content="Email address" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.33,-0.236"/>
+        <CheckBox Name="DefaultCredentials" Content="Use default credentials" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="ProfileName" HorizontalAlignment="Left" Height="23" Margin="10,55,0,0" TextWrapping="Wrap" Text="Outlook" VerticalAlignment="Top" Width="236"/>
+        <Label Content="Outlook profile name" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
