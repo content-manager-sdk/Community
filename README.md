@@ -3,7 +3,7 @@
 To start with this site is mostly about sample code for the .Net SDK.  It may become more than this depending on interest and time.
 
 ## Important
-Before you build the C# samples you must copy any required files (usually at least HP.HPTRIM.SDK.dll and HP.HPTRIM.SDK.xml) from your HPE Content Manager folder to \Samples\CSharp\lib.
+Before you build the C# samples you must copy any required files (usually at least HP.HPTRIM.SDK.dll and HP.HPTRIM.SDK.xml) from your Content Manager folder to \Samples\CSharp\lib.
 
 ## 32 versus 64 bit
 As the SDK is a wrapper around the underlying unmanaged code it needs to know whether to run in 32 or 64 bit.  All samples in this site are built to run 64 bit.  To run in 32 bit mode change enable the option 'Prefer 32-bit' in each Project - Properties - Build settings
