@@ -1,0 +1,12 @@
+{
+  "timeZone": "Australia/Sydney",
+  "dependencies": {
+    "enabledAdvancedServices": [{
+      "userSymbol": "Drive",
+      "serviceId": "drive",
+      "version": "v2"
+    }]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": ["https://www.googleapis.com/auth/script.scriptapp", "https://www.googleapis.com/auth/documents.currentonly", "https://www.googleapis.com/auth/script.container.ui", "https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/drive.apps.readonly", "https://www.googleapis.com/auth/script.external_request", "https://www.googleapis.com/auth/script.locale", "https://www.googleapis.com/auth/userinfo.email"]
+}

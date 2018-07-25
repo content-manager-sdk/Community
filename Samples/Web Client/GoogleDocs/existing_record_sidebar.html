@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <!-- The CSS package above applies Google styling to buttons and other elements. -->
+
+    <style>
+    .branding-below {
+      bottom: 56px;
+      top: 0;
+    }
+    .branding-text {
+      left: 7px;
+      position: relative;
+      top: 3px;
+    }
+    .col-contain {
+      overflow: hidden;
+    }
+    .col-one {
+      float: left;
+      width: 50%;
+    }
+    .logo {
+      vertical-align: middle;
+    }
+    .radio-spacer {
+      height: 20px;
+    }
+    .width-100 { 
+      width: 100%;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar branding-below">
+    <h1>Record details</h1>
+    <div class="block">
+       <span class="gray">Number: </span><span id="record-number"></span>
+    </div>    
+    <div class="block">
+      <span class="gray">Document is in CM: </span><span id="in-cm"></span>
+    </div>
+    <div class="block">
+      <span class="gray">Edit status: </span><span id="edit-status"></span>
+    </div>
+    
+    
+    <div class="block">
+      <span class="gray">Revisions: </span><span id="revisions"></span>
+    </div>
+    
+    <div style="margin-top:16px">
+       <a id="open-record-btn" class="button disabled" target="_blank">Open in CM </a>
+       
+       <button id="checkin" disabled class="button action">Check In</button>
+    </div>
+    
+    <h1 class="block">Make Final</h1>
+    	
+<div>
+  <input type="checkbox" name="remove-revisions" id="remove-revisions">
+  <label for="radio1">Remove previous revisions</label>
+  <div style="margin-top:16px">
+   <button id="make-final" disabled class="button">Make Final</button>
+   </div>
+</div>
+</div>
+    <div class="sidebar bottom">
+      <!--img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27"-->
+      <span class="gray branding-text">Content Manager</span>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+
+      /**
+       * On document load, assign click handlers to each button and try to load the
+       * user's origin and destination language preferences if previously set.
+       */
+      $(function() {
+        this.disabled = true;
+           google.script.run
+            .withSuccessHandler(
+
+              function(recordDetails, element) {   
+        
+                  writeFields(recordDetails);
+
+                 $('#open-record-btn')
+                   .attr("href", "https://mfcm.info/hpecontentmanager?q=uri:" + recordDetails.Uri + "&t=Record")
+                   .removeClass('disabled');
+
+                 if (recordDetails.EnabledCommandIds.includes('RecCheckIn')) {
+                   $('#checkin')
+                     .click(function(){
+                        var checkinButton = $(this);
+                        checkinButton.prop('disabled', true);
+                 
+                        google.script.run
+                          .withSuccessHandler(
+                             function(recDetails, element) { 
+                               writeFields(recDetails);
+                               checkinButton.prop('disabled', false);
+                             })
+                         .checkIn();                   
+                      })
+                      .prop('disabled', false);
+                  }
+                   
+                   
+                  if (recordDetails.EnabledCommandIds.includes('RecDocFinal')) { 
+                  $('#make-final')                    
+                   .click(function(){
+                   var removeOldRevisions = $('#remove-revisions')[0].checked;
+                     var finalButton = $(this);
+                     finalButton.prop('disabled', true);
+                     
+                      google.script.run
+                       .withSuccessHandler(
+                         function(recDetails, element) { 
+                            writeFields(recDetails);
+                            finalButton.prop('disabled', false);
+                         })
+                      .makeFinal(removeOldRevisions);                   
+                   })
+                   .prop('disabled', false);
+                 }
+                 element.disabled = false;
+              })
+            .withFailureHandler(
+              function(msg, element) {
+              console.log(msg);
+               // showError(msg, $('#button-bar'));
+              //  element.disabled = false;
+              })
+              .withUserObject(this)
+            .getRecordDetails();      
+    
+      });
+
+      function writeFields(recordDetails) {
+      console.log('recordDetails');
+        console.log(recordDetails);
+        console.log('recordDetails end');
+         $('#record-number').text(recordDetails.RecordNumber.Value);
+         $('#in-cm').text(recordDetails.RecordIsElectronic.StringValue);
+         $('#revisions').text(recordDetails.RecordRevisionCount.StringValue);
+         $('#edit-status').text(recordDetails.RecordDocumentStatus.StringValue);
+         
+         if (!recordDetails.EnabledCommandIds.includes('RecCheckIn')) {
+             $('#checkin').prop('disabled', true);
+         }
+         
+         if (!recordDetails.EnabledCommandIds.includes('RecDocFinal')) {
+             $('#make-final').prop('disabled', true);
+         }
+         
+      }
+
+    </script>
+  </body>
+</html>
+
+
