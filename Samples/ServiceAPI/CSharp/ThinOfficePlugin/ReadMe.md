@@ -5,9 +5,9 @@ A Thin Office plug-in allows you to modify the HTTP request sent to the web clie
 
 ## Operation 
 The operation of the basic authentication plug-in is as follows:
- 1 the BeforeRequest method displays a user name / password dialog,
- 2 the user name and password are Base64 encoded, then
- 3 the authorization header is set on the request object.
+ 1. the BeforeRequest method displays a user name / password dialog,
+ 2. the user name and password are Base64 encoded, then
+ 3. the authorization header is set on the request object.
  
 The operation of the SAML plugin is similar to the basic except that it:
  * displays the login page in a WebBrowser control, 
