@@ -19,10 +19,10 @@ These are samples only and not intended for commercial use.  One potential enhan
 
 ## Usage
 To use the basic authentication plug-in:
- 1 ensure that the Content Manager Web Client has Basic authentication enabled in IIS Manager,
- 2 build the project,
- 3 copy the file OfficePlugin.dll to the end user's office integration install folder, then
- 4 close and re-open an office application (only works when using the Content Manager web client as the data source).
+ 1. ensure that the Content Manager Web Client has Basic authentication enabled in IIS Manager,
+ 2. build the project,
+ 3. copy the file OfficePlugin.dll to the end user's office integration install folder, then
+ 4. close and re-open an office application (only works when using the Content Manager web client as the data source).
  
 To use the SAML sample follow the above steps except configure SAML on your CM server. 
 
