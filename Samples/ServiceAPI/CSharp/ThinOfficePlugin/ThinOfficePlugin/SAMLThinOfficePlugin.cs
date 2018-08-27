@@ -11,7 +11,6 @@ using System.Windows.Forms;
 
 namespace ThinOfficePlugin
 {
-    /*
     public class SAMLThinOfficePlugin //: IRequestPlugin
     {
         private static List<Cookie> ids = new List<Cookie>();
@@ -130,5 +129,4 @@ namespace ThinOfficePlugin
             return false;
         }
     }
-    */
 }
