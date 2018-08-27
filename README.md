@@ -39,6 +39,5 @@ The .Net SDK documentation is available for version [83](http://sdk.hpecm.xyz/83
 | [SDK Record update](Samples/SDK/CSharp/Record_Update_SDKSample) | Find a Record by number and update some of its properties. |
 | [ServiceAPI / Web Client SAML support](Samples/ServiceAPI/CSharp/ComponentSpaceSAMLPlugin) | Authenticate the ServiceAPi (including Web Client) using SAML. |
 | [Gmail add-on](Samples/Web%20Client/Gmail) | File an email from Gmail with the ability to complete the Record data entry form. |
-| [Google Docs add-on](Samples/Web%20Client/GoogleDocs) | Register a document into Content Manager from Google Docs. |
 
 

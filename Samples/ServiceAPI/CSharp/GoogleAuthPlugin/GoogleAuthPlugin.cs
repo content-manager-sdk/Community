@@ -27,14 +27,14 @@ namespace GoogleAuthPlugin
 
             if (oauthLogin == null)
             {
-                oauthLogin = "~/auth/GoogleOAuth";
+                oauthLogin = "~/auth/PORTALPOCOAuth";
             }
 
 
             appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
                       //  new MyJwtAuthProvider(appSettings) { },
-                       new GoogleOAuth2Provider(appSettings),
-                      new GoogleOAuth2Provider(appSettings) { Provider = "GoogleOAuthApp", ConsumerKey = appSettings.Get("oauth.GoogleOAuthApp.ConsumerKey")}
+                       new MyOAuth2Provider(appSettings)
+                    //  new MyOAuth2Provider(appSettings) { Provider = "GoogleOAuthApp", ConsumerKey = appSettings.Get("oauth.GoogleOAuthApp.ConsumerKey")}
                        
                     }, oauthLogin) );
         }

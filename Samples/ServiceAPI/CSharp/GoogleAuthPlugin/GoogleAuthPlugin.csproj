@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GoogleAuthPlugin.cs" />
+    <Compile Include="MyOAuth2Provider.cs" />
     <Compile Include="MyGoogleOAuth2Provider.cs" />
     <Compile Include="MyJwtAuthProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
