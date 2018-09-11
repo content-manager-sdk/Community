@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3E541C5B-F580-4BFF-9B64-1EB2CCF5AC11}</ProjectGuid>
+    <ProjectGuid>{0E09BE4B-07A9-44E0-AC12-F46E13717AE8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ThinOfficePlugin</RootNamespace>
-    <AssemblyName>OfficePlugin</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <RootNamespace>ServerEditPlugin</RootNamespace>
+    <AssemblyName>ServerEditPlugin</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,50 +30,48 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HP.HPRM.OfficeIntegration, Version=9.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\AnyCPU\Debug\HP.HPRM.OfficeIntegration.dll</HintPath>
+    <Reference Include="HP.HPTRIM.SDK">
+      <HintPath>..\..\lib\HP.HPTRIM.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="HP.HPTRIM.ServiceAPI.Client, Version=9.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\AnyCPU\Debug\HP.HPTRIM.ServiceAPI.Client.dll</HintPath>
+    <Reference Include="HP.HPTRIM.ServiceAPI.Client">
+      <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Client.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="HP.HPTRIM.ServiceAPI.Common">
+      <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="HP.HPTRIM.ServiceAPI.Model">
+      <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack">
+      <HintPath>..\..\lib\ServiceStack.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Client">
       <HintPath>..\..\lib\ServiceStack.Client.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\lib\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PasswordWindow.xaml.cs">
-      <DependentUpon>PasswordWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SAMLThinOfficePlugin.cs" />
-    <Compile Include="ThinOfficePlugin.cs" />
+    <Compile Include="ServerCheckout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="PasswordWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) C:\9.2\AnyCPU\Debug\*.*</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
   </PropertyGroup>
 </Project>

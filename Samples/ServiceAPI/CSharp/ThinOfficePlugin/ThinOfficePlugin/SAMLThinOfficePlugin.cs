@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace ThinOfficePlugin
 {
-    public class SAMLThinOfficePlugin //: IRequestPlugin
+    public class SAMLThinOfficePlugin : IRequestPlugin
     {
         private static List<Cookie> ids = new List<Cookie>();
         private static Form form;
@@ -67,7 +67,7 @@ namespace ThinOfficePlugin
             {
 
                 WebBrowser webBrowser = new WebBrowser();
-                webBrowser.Url = new Uri("https://portalpoc.identityhub.com.au/oamfed/idp/initiatesso?providerid=https://labtest.citadelix.com/HPEContentManager/&redirect=https%3a%2f%2flabtest.citadelix.com%2fHPEContentManager");
+                webBrowser.Url = new Uri("https://portaltest.identityhub.com.au/oamfed/idp/initiatesso?providerid=https://web.oostst.cixenterprise.com.au/HPEContentManager/&amp;redirect=https%3a%2f%2fweb.oostst.cixenterprise.com.au%2fHPEContentManager");
                 webBrowser.Width = 600;
                 webBrowser.Height = 700;
                 webBrowser.Show();
@@ -92,8 +92,6 @@ namespace ThinOfficePlugin
 
         private static void WebBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            Console.WriteLine(e.Url);
-
 
             var cookieContainer = GetUriCookieContainer(e.Url);
 
@@ -118,6 +116,8 @@ namespace ThinOfficePlugin
 
         public bool BeforeRequest(TrimClient trimClient)
         {
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            trimClient.Proxy = new WebProxy("http://localhost:8888");
             var sessionCookies = GessionCookies();
             if (sessionCookies.Count == 2)
             {
