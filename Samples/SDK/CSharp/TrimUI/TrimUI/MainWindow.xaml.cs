@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -21,12 +22,6 @@ namespace TestWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// Retrieves a handle to the desktop window. TRIM UI components require the handle of a parent window
-        /// </summary>
-        /// <returns></returns>
-        [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "GetDesktopWindow")]
-        public static extern IntPtr GetDesktopWindow();
 
         Database _database = null;
 
@@ -53,11 +48,26 @@ namespace TestWPF
             base.BeginInit();
         }
 
+        private IntPtr windowHandle = IntPtr.Zero;
+
+        private IntPtr getWindowHandle()
+        {
+            if (windowHandle == IntPtr.Zero)
+            {
+                windowHandle = new WindowInteropHelper(this).Handle;
+            }
+
+            return windowHandle;
+        }
+
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Record record = new Record(_database, 9000000000);
 
-            if (HP.HPTRIM.SDK.PropertyEditor.EditModal(GetDesktopWindow(), record))
+
+
+            if (HP.HPTRIM.SDK.PropertyEditor.EditModal(getWindowHandle(), record))
             {
                 record.Save();
             }
@@ -79,7 +89,7 @@ namespace TestWPF
             TrimMainObjectSearch search = new TrimMainObjectSearch(_database, BaseObjectTypes.Record);
             search.SelectAll();
 
-            ObjectSelector.DisplayResults(GetDesktopWindow(), search);
+            ObjectSelector.DisplayResults(getWindowHandle(), search);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -95,7 +105,7 @@ namespace TestWPF
 
 
 
-            var selectedSearch = ObjectSelector.SelectOne(GetDesktopWindow(), search);
+            var selectedSearch = ObjectSelector.SelectOne(getWindowHandle(), search);
 
             if (selectedSearch != null)
             {
@@ -106,7 +116,7 @@ namespace TestWPF
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             DesktopHelper helper = new DesktopHelper();
-            Database newDatabase = helper.SelectDatabase(GetDesktopWindow(), false, false);
+            Database newDatabase = helper.SelectDatabase(getWindowHandle(), false, false);
 
             if (newDatabase != null)
             {
