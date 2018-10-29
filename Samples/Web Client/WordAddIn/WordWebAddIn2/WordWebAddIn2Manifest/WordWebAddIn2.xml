@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Created:ce44715c-8c4e-446b-879c-ea9ebe0f09c8-->
+<OfficeApp 
+          xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
+          xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+          xsi:type="TaskPaneApp">
+
+  <!-- Begin Basic Settings: Add-in metadata, used for all versions of Office unless override provided. -->
+
+  <!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
+  <Id>c12322a5-7608-4bd4-a18b-ba8dab86d628</Id>
+
+  <!--Version. Updates from the store only get triggered if there is a version change. -->
+  <Version>1.1.0.0</Version>
+  <ProviderName>Micro Focus</ProviderName>
+  <DefaultLocale>en-AU</DefaultLocale>
+  <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
+  <DisplayName DefaultValue="Content Manager" />
+  <Description DefaultValue="Open and save documents from and to Micro Focus Content Manager"/>
+  <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
+  <!--<IconUrl DefaultValue="~remoteAppUrl/Images/Button32x32.png" />-->
+  <IconUrl DefaultValue="https://localhost/WordAddIn/Images/Button32x32.png" />
+  
+  <SupportUrl DefaultValue="http://www.contoso.com" />
+  <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
+  <AppDomains>
+    <AppDomain>AppDomain1</AppDomain>
+    <AppDomain>AppDomain2</AppDomain>
+    <AppDomain>AppDomain3</AppDomain>
+  </AppDomains>
+  <!--End Basic Settings. -->
+
+  <!--Begin TaskPane Mode integration. This section is used if there are no VersionOverrides or if the Office client version does not support add-in commands. -->
+  <Hosts>
+    <Host Name="Document" />
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://localhost/WordAddIn/Home.html" />
+  <!--<SourceLocation DefaultValue="https://mfcm.info/wordAddin/Home.html" />-->
+  
+  </DefaultSettings>
+  <!-- End TaskPane Mode integration.  -->
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <!-- Begin Add-in Commands Mode integration. -->
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.1">
+        <bt:Set Name="IdentityAPI"/>
+      </bt:Sets>
+    </Requirements>
+    <!-- The Hosts node is required. -->
+    <Hosts>
+      <!-- Each host can have a different set of commands. -->
+      <!-- Excel host is Workbook, Word host is Document, and PowerPoint host is Presentation. -->
+      <!-- Make sure the hosts you override match the hosts declared in the top section of the manifest. -->
+      <Host xsi:type="Document">
+        <!-- Form factor. Currently only DesktopFormFactor is supported. -->
+        <DesktopFormFactor>
+          <!--"This code enables a customizable message to be displayed when the add-in is loaded successfully upon individual install."-->
+          <GetStarted>
+            <!-- Title of the Getting Started callout. The resid attribute points to a ShortString resource -->
+            <Title resid="Contoso.GetStarted.Title"/>
+
+            <!-- Description of the Getting Started callout. resid points to a LongString resource -->
+            <Description resid="Contoso.GetStarted.Description"/>
+
+            <!-- Points to a URL resource which details how the add-in should be used. -->
+            <LearnMoreUrl resid="Contoso.GetStarted.LearnMoreUrl"/>
+          </GetStarted>
+          <!-- Function file is a HTML page that includes the JavaScript where functions for ExecuteAction will be called. 
+            Think of the FunctionFile as the code behind ExecuteFunction. -->
+          <FunctionFile resid="Contoso.DesktopFunctionFile.Url" />
+
+          <!-- PrimaryCommandSurface is the main Office Ribbon. -->
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="TabContentManager">
+           
+              <Group id="GroupTabContentManagerFile">
+                
+                <Label resid="CM.Group.File.Label" />
+
+                <Icon>
+                  <bt:Image size="16" resid="CM.tpicon_16x16" />
+                  <bt:Image size="32" resid="CM.tpicon_32x32" />
+                  <bt:Image size="80" resid="CM.tpicon_80x80" />
+
+                </Icon>
+                <Control xsi:type="Button" id="CM.FileOpenButton">
+                  <Label resid="CM.Open.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource. -->
+                    <Title resid="CM.Open.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource. -->
+                    <Description resid="CM.Open.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CM.Open_tpicon_x16" />
+                    <bt:Image size="32" resid="CM.Open_tpicon_x32" />
+                    <bt:Image size="80" resid="CM.Open_tpicon_x80" />
+                  </Icon>
+
+                  <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>openDocument</FunctionName>
+
+
+                  </Action>
+                </Control>
+
+
+
+                <Control xsi:type="Button" id="CM.RegisterButton">
+                  <Label resid="CM.Register.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource. -->
+                    <Title resid="CM.Register.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource. -->
+                    <Description resid="CM.Register.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CM.Final_tpicon_x16" />
+                    <bt:Image size="32" resid="CM.Final_tpicon_x32" />
+                    <bt:Image size="80" resid="CM.Final_tpicon_x80" />
+                  </Icon>
+
+                  <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>registerInTrim</FunctionName>
+                  </Action>
+                </Control>
+
+
+                
+              </Group>
+              <Group id="GroupTabContentManagerSave">
+
+                <Label resid="CM.Group.Save.Label" />
+
+                <Icon>
+                  <bt:Image size="16" resid="CM.tpicon_16x16" />
+                  <bt:Image size="32" resid="CM.tpicon_32x32" />
+                  <bt:Image size="80" resid="CM.tpicon_80x80" />
+
+                </Icon>
+                <Control xsi:type="Button" id="CM.SaveButton">
+                  <Label resid="CM.Save.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource. -->
+                    <Title resid="CM.Save.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource. -->
+                    <Description resid="CM.Save.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CM.Save_tpicon_x16" />
+                    <bt:Image size="32" resid="CM.Save_tpicon_x32" />
+                    <bt:Image size="80" resid="CM.Save_tpicon_x80" />
+                  </Icon>
+
+                  <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>saveToTrim</FunctionName>
+                  </Action>
+                </Control>
+
+                <Control xsi:type="Button" id="CM.CheckinButton">
+                  <Label resid="CM.Checkin.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource. -->
+                    <Title resid="CM.Checkin.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource. -->
+                    <Description resid="CM.Checkin.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CM.Checkin_tpicon_x16" />
+                    <bt:Image size="32" resid="CM.Checkin_tpicon_x32" />
+                    <bt:Image size="80" resid="CM.Checkin_tpicon_x80" />
+                  </Icon>
+
+                  <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>saveAndCheckinToTrim</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+              
+              <Group id="GroupTabContentManagerOther">
+
+                <Label resid="CM.Group.Other.Label" />
+
+                <Icon>
+                  <bt:Image size="16" resid="CM.tpicon_16x16" />
+                  <bt:Image size="32" resid="CM.tpicon_32x32" />
+                  <bt:Image size="80" resid="CM.tpicon_80x80" />
+
+                </Icon>
+
+                <Control xsi:type="Button" id="CM.PropertiesButton">
+                  <Label resid="CM.Properties.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource. -->
+                    <Title resid="CM.Properties.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource. -->
+                    <Description resid="CM.Properties.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CM.Properties_tpicon_x16" />
+                    <bt:Image size="32" resid="CM.Properties_tpicon_x32" />
+                    <bt:Image size="80" resid="CM.Properties_tpicon_x80" />
+                  </Icon>
+
+                  <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>showProperties</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+              
+              <Label resid="CM.Tab.Label"/>
+            </CustomTab>
+            <!-- Use OfficeTab to extend an existing Tab. Use CustomTab to create a new tab. -->
+
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    
+    <!-- You can use resources across hosts and form factors. -->
+    <Resources>
+      <bt:Images>
+        <!--<bt:Image id="CM.tpicon_16x16" DefaultValue="~remoteAppUrl/Images/trim16.png" />
+        <bt:Image id="CM.tpicon_32x32" DefaultValue="~remoteAppUrl/Images/trim32.png" />
+        <bt:Image id="CM.tpicon_80x80" DefaultValue="~remoteAppUrl/Images/trim80.png" />
+
+        <bt:Image id="CM.Open_tpicon_x16" DefaultValue="~remoteAppUrl/Images/open16.png" />
+        <bt:Image id="CM.Open_tpicon_x32" DefaultValue="~remoteAppUrl/Images/open32.png" />
+        <bt:Image id="CM.Open_tpicon_x80" DefaultValue="~remoteAppUrl/Images/open80.png" />
+
+        <bt:Image id="CM.Save_tpicon_x16" DefaultValue="~remoteAppUrl/Images/save16.png" />
+        <bt:Image id="CM.Save_tpicon_x32" DefaultValue="~remoteAppUrl/Images/save32.png" />
+        <bt:Image id="CM.Save_tpicon_x64" DefaultValue="~remoteAppUrl/Images/save64.png" />
+        <bt:Image id="CM.Save_tpicon_x80" DefaultValue="~remoteAppUrl/Images/save80.png" />-->
+
+        <bt:Image id="CM.tpicon_16x16" DefaultValue="https://localhost/WordAddIn/Images/trim16.png" />
+        <bt:Image id="CM.tpicon_32x32" DefaultValue="https://localhost/WordAddIn/Images/trim32.png" />
+        <bt:Image id="CM.tpicon_80x80" DefaultValue="https://localhost/WordAddIn/Images/trim80.png" />
+
+        <bt:Image id="CM.Open_tpicon_x16" DefaultValue="https://localhost/WordAddIn/Images/open16.png" />
+        <bt:Image id="CM.Open_tpicon_x32" DefaultValue="https://localhost/WordAddIn/Images/open32.png" />
+        <bt:Image id="CM.Open_tpicon_x80" DefaultValue="https://localhost/WordAddIn/Images/open80.png" />
+
+        <bt:Image id="CM.Save_tpicon_x16" DefaultValue="https://localhost/WordAddIn/Images/save16.png" />
+        <bt:Image id="CM.Save_tpicon_x32" DefaultValue="https://localhost/WordAddIn/Images/save32.png" />
+        <bt:Image id="CM.Save_tpicon_x64" DefaultValue="https://localhost/WordAddIn/Images/save64.png" />
+        <bt:Image id="CM.Save_tpicon_x80" DefaultValue="https://localhost/WordAddIn/Images/save80.png" />
+
+        <bt:Image id="CM.Checkin_tpicon_x16" DefaultValue="https://localhost/WordAddIn/Images/file_save_as16.png" />
+        <bt:Image id="CM.Checkin_tpicon_x32" DefaultValue="https://localhost/WordAddIn/Images/file_save_as32.png" />
+        <bt:Image id="CM.Checkin_tpicon_x64" DefaultValue="https://localhost/WordAddIn/Images/file_save_as64.png" />
+        <bt:Image id="CM.Checkin_tpicon_x80" DefaultValue="https://localhost/WordAddIn/Images/file_save_as80.png" />
+
+        <bt:Image id="CM.Properties_tpicon_x16" DefaultValue="https://localhost/WordAddIn/Images/properties16.png" />
+        <bt:Image id="CM.Properties_tpicon_x32" DefaultValue="https://localhost/WordAddIn/Images/properties32.png" />
+        <bt:Image id="CM.Properties_tpicon_x64" DefaultValue="https://localhost/WordAddIn/Images/properties64.png" />
+        <bt:Image id="CM.Properties_tpicon_x80" DefaultValue="https://localhost/WordAddIn/Images/properties80.png" />
+
+        <bt:Image id="CM.Final_tpicon_x16" DefaultValue="https://localhost/WordAddIn/Images/recdocfinal16.png" />
+        <bt:Image id="CM.Final_tpicon_x32" DefaultValue="https://localhost/WordAddIn/Images/recdocfinal32.png" />
+        <bt:Image id="CM.Final_tpicon_x64" DefaultValue="https://localhost/WordAddIn/Images/recdocfinal64.png" />
+        <bt:Image id="CM.Final_tpicon_x80" DefaultValue="https://localhost/WordAddIn/Images/recdocfinal80.png" />
+        
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Contoso.DesktopFunctionFile.Url" DefaultValue="https://localhost/WordAddIn/Functions/FunctionFile.html" />
+        <bt:Url id="Contoso.Taskpane.Url" DefaultValue="https://localhost/WordAddIn/Home.html" />
+        <bt:Url id="Contoso.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
+      </bt:Urls>
+      <!-- ShortStrings max characters==125. -->
+      <bt:ShortStrings>
+        <bt:String id="CM.Tab.Label" DefaultValue="Content Manager*" />
+        <bt:String id="CM.Group.File.Label" DefaultValue="File" />
+        <bt:String id="CM.Group.Save.Label" DefaultValue="Save" />
+        <bt:String id="CM.Group.Other.Label" DefaultValue="Other" />
+        <bt:String id="CM.Group.File" DefaultValue="File" />
+        <bt:String id="CM.Open.Label" DefaultValue="Open" />
+        <bt:String id="CM.Checkin.Label" DefaultValue="Check in" />
+        <bt:String id="CM.Save.Label" DefaultValue="Save" />
+        <bt:String id="CM.Properties.Label" DefaultValue="Properties" />
+        <bt:String id="CM.Register.Label" DefaultValue="Register" />
+        <bt:String id="Contoso.Group1Label" DefaultValue="Commands Group" />
+        <bt:String id="Contoso.GetStarted.Title" DefaultValue="Get started with your sample add-in!" />
+      </bt:ShortStrings>
+      <!-- LongStrings max characters==250. -->
+      <bt:LongStrings>
+        <bt:String id="CM.Open.Tooltip" DefaultValue="Click to open a document." />
+        <bt:String id="CM.Save.Tooltip" DefaultValue="Click to save a document to Content Manager." />
+        <bt:String id="CM.Properties.Tooltip" DefaultValue="Click to open the Record in Content Manager." />
+        <bt:String id="CM.Checkin.Tooltip" DefaultValue="Click to save and check in a document to Content Manager." />
+        <bt:String id="CM.Register.Tooltip" DefaultValue="Click to register in Content Manager (electronic document not stored in CM)." />
+        <bt:String id="Contoso.GetStarted.Description" DefaultValue="Your sample add-in loaded succesfully. Go to the HOME tab and click the 'Show Taskpane' button to get started." />
+      </bt:LongStrings>
+    </Resources>
+    <WebApplicationInfo>
+      <Id>0749e416-cff9-4edc-9880-34fdcfba1465</Id>
+      <Resource>api://localhost/0749e416-cff9-4edc-9880-34fdcfba1465</Resource>
+      <Scopes>
+        <Scope>user.read</Scope>
+        <Scope>files.read</Scope>
+        <Scope>profile</Scope>
+        <Scope>openid</Scope>
+      </Scopes>
+    </WebApplicationInfo>
+  </VersionOverrides>
+  <!-- End Add-in Commands Mode integration. -->
+
+</OfficeApp>
