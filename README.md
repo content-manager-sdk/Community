@@ -18,15 +18,15 @@ The .Net SDK [documentation](http://sdk.mfcm.xyz) is available.
 
 | Project                                                                     | Description                                                                            |
 | --------------------------------------------------------------------------- |----------------------------------------------------------------------------------------|
-| [TrimUI](Samples/SDK/CSharp/TrimUI)                                         | A simple WPF application to demonstrate the user interferface classes in the SDK.      |
+| [TrimUI](Samples/SDK/CSharp/TrimUI)                                         | A simple WPF application to demonstrate the user interface classes in the SDK.      |
 | [CreateNewDocument](Samples/SDK/CSharp/CreateNewDocument/)                  | A simple application demonstrating creation of a new Record from a RecordType.         | 
 | [BulkDataLoader](Samples/SDK/CSharp/BulkDataLoader/)                       | Combines the BulkDataLoader and Origin to create a high performance import of Records. |
-| [ExecutableAddin](Samples/SDK/CSharp/ExecutableAddin/)                      | Sample demonstrates passing parameters via the command line for an EXE addin.          |
+| [ExecutableAddin](Samples/SDK/CSharp/ExecutableAddin/)                      | Sample demonstrates passing parameters via the command line for an EXE add-in.          |
 | [EventProcessor](Samples/SDK/CSharp/EventProcessor/)                        | A custom event to plug into the core event processor and react to object (e.g. Record) related events on the server.|
 | [SampleAddIn](Samples/SDK/CSharp/SampleAddIn/)                              | Custom save and delete behaviour or add items to the menu for various objects (e.g. Records) in the native client. |
 | [ImportUsingOrigin](Samples/SDK/CSharp/ImportUsingOrigin/)                  | A WPF application to import documents based on an Origin. |
-| [SimpleServiceAPIPlugin](Samples/ServiceAPI/CSharp/SimpleServiceAPIPlugin/) | A Simple ServiceAPI plugin, demonstrates how to call your plugin from the ServiceAPI client proxy. |
-| [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plugin which adds a service to download a TR5 reference file. |
+| [SimpleServiceAPIPlugin](Samples/ServiceAPI/CSharp/SimpleServiceAPIPlugin/) | A Simple ServiceAPI plug-in, demonstrates how to call your plug-in from the ServiceAPI client proxy. |
+| [MakeReferencePlugin](Samples/ServiceAPI/CSharp/MakeReferencePlugin/)       | A ServiceAPI plug-in which adds a service to download a TR5 reference file. |
 | [AddingGroupMemberships](Samples/ServiceAPI/CSharp/AddingGroupMemberships/) | A C# ServiceAPI client application to add a 'Member Of' association between two Locations. |
 | [Web Drawer DateRangeSearch](Samples/WebDrawer/DateRangeSearch/) | Some sample code to transform WebDrawer date search fields from plain text to a date range picker. |
 | [ServiceAPI OAuth](Samples/ServiceAPI/CSharp/ADFSOauthClient/) | Console application to connect to the ServiceAPI using ADFS OAuth, plus instructions to configure the ServiceAPI to use OAuth. |
@@ -39,6 +39,7 @@ The .Net SDK [documentation](http://sdk.mfcm.xyz) is available.
 | [SDK Record update](Samples/SDK/CSharp/Record_Update_SDKSample) | Find a Record by number and update some of its properties. |
 | [ServiceAPI / Web Client SAML support](Samples/ServiceAPI/CSharp/ComponentSpaceSAMLPlugin) | Authenticate the ServiceAPi (including Web Client) using SAML. |
 | [Gmail add-on](Samples/Web%20Client/Gmail) | File an email from Gmail with the ability to complete the Record data entry form. |
-| [DataPort Custom Formatter](Samples/SDK/CSharp/DataPortCustomFormatter) | Import an XML file containg Record information in Content Manager. |
+| [DataPort Custom Formatter](Samples/SDK/CSharp/DataPortCustomFormatter) | Import an XML file containing Record information in Content Manager. |
+| [.Net SDK Location Resolver](Samples/SDK/CSharp/SDKLocationResolver) | Dynamically locate the .Net SDK DLL.|
 
 

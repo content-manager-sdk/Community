@@ -1,21 +1,8 @@
-﻿# Import using Origin
-This is a somewhat redundant application as the TRIM client includes the Document Queue feature which is a more comprehensive document import tool.  Origins do have some capabilities not included in the Document Queue so may be of interest.  In addition this demonstrates how easy it is to build a simple windows application using the SDK.
+﻿# .Net SDK Location Resolver
+As of 93 HP.HPTRIM.SDK.dll is not longer installed in the GAC by the Content Manager installer.  Whe writing an SDK application you will either need to ship HP.HPTRIM.SDK.dll in the same folder as your binaries or dynamically load it.  The benefit of dynamic loading is that you are able to run the same application against multiple different versions of Content Manager.
 
 ## Operation
-This sample allows the user to select an Origin and a Windows folder and then have any files in that folder imported to HPE CM and then deleted from the folder on a schedule.  As Origins may only be created by users with elevated priveldges this sample allows the user to select a pre-defined Origin and then choose which folder it will import from.
+The code looks in the registry to find the location of the Content Manager binaries as set by the installation routine.  It then intercepts the assembly loading process to specify the correct location.
 
-## Folder generation
-One thing that Origins allow for that Document Queues do not is the auto creation of new containers based on a set of rules.  This sample shows this in action if you configure the Origin appropriately.
-## SDK Usage
-The parts of the SDK used in this sample include UI components, Origins and TrimMainObjectSearch.
-
-## Running
-To run:
- - download the code
- - copy HP.HPTRIM.SDK.dll to the lib folder
- - if you are running a 32 bit OS select 'Prefer 32-bit' in the project properties
- - run the project
-
-You should see a screen like the one below.
-
-![Importer UI](record_importer.PNG)
+## Important !
+Ensure that your application does not have the file HP.HPTRIM.SDK.dll in the same folder as your binaries otherwise this is the SDK that will always be loaded, for example this project has 'Copy Local' set to false on the HP.HPTRIM.SDK.dll reference.

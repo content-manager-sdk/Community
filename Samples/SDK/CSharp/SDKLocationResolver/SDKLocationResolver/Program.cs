@@ -70,6 +70,8 @@ namespace SDKLocationResolver
             Console.WriteLine(db.CurrentUser.SortName);
         }
 
+
+
         static void Main(string[] args)
         {
             string installDir = FindInstalledTRIMPath();
@@ -77,7 +79,8 @@ namespace SDKLocationResolver
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) => AssemblyResolveEventHandler(sender, e, pathToSdkDll);
 
 
-
+            // ensure that no SDK code is loaded in the method that configures the assembly resolver otherwise the .Net runtime will attempt
+            // to load the SDK prior to the resolver being configured.
             doSomething();
 
         }
