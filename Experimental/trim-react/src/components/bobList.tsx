@@ -1,38 +1,17 @@
 import * as React from "react";
-
+import { TextField } from "office-ui-fabric-react/lib/TextField";
+import { DefaultButton } from "office-ui-fabric-react/lib/Button";
 import {
   DetailsList,
   IColumn,
   Selection
 } from "office-ui-fabric-react/lib/DetailsList";
 
-let _items: IDocument[] = [];
+import "../index.css";
+import { IListProps } from "office-ui-fabric-react/lib/List";
+//import { LocalizedFontFamilies } from "@uifabric/styling/lib/styles/fonts";
 
-const fileIcons: { name: string }[] = [
-  { name: "accdb" },
-  { name: "csv" },
-  { name: "docx" },
-  { name: "dotx" },
-  { name: "mpp" },
-  { name: "mpt" },
-  { name: "odp" },
-  { name: "ods" },
-  { name: "odt" },
-  { name: "one" },
-  { name: "onepkg" },
-  { name: "onetoc" },
-  { name: "potx" },
-  { name: "ppsx" },
-  { name: "pptx" },
-  { name: "pub" },
-  { name: "vsdx" },
-  { name: "vssx" },
-  { name: "vstx" },
-  { name: "xls" },
-  { name: "xlsx" },
-  { name: "xltx" },
-  { name: "xsn" }
-];
+let _items: IDocument[] = [];
 
 export interface IBobListState {
   columns: IColumn[];
@@ -40,18 +19,21 @@ export interface IBobListState {
   selectionDetails: string;
   isModalSelection: boolean;
   isCompactMode: boolean;
+  queryText: string;
+  lastItem: number;
+  morePages: boolean;
 }
 
 export interface IDocument {
   [key: string]: any;
-  name: string;
-  value: string;
+  RecordNumber: string;
+  RecordTitle: string;
   iconName: string;
-  modifiedBy: string;
-  dateModified: string;
-  dateModifiedValue: number;
-  fileSize: string;
-  fileSizeRaw: number;
+  modifiedBy?: string;
+  dateModified?: string;
+  dateModifiedValue?: number;
+  fileSize?: string;
+  fileSizeRaw?: number;
 }
 
 export class BobList extends React.Component<any, IBobListState> {
@@ -59,35 +41,6 @@ export class BobList extends React.Component<any, IBobListState> {
 
   constructor(props: any) {
     super(props);
-
-    if (_items.length === 0) {
-      for (let i = 0; i < 500; i++) {
-        const randomDate = this._randomDate(new Date(2012, 0, 1), new Date());
-        const randomFileSize = this._randomFileSize();
-        const randomFileType = this._randomFileIcon();
-        let fileName: string = "my file name.txt";
-        let userName: string = "my user name";
-
-        fileName =
-          fileName.charAt(0).toUpperCase() +
-          fileName.slice(1).concat(`.${randomFileType.docType}`);
-        userName = userName
-          .split(" ")
-          .map((name: string) => name.charAt(0).toUpperCase() + name.slice(1))
-          .join(" ");
-        _items.push({
-          name: fileName,
-          value: fileName,
-          iconName: randomFileType.url,
-          modifiedBy: userName,
-          dateModified: randomDate.dateFormatted,
-          dateModifiedValue: randomDate.value,
-          fileSize: randomFileSize.value,
-          fileSizeRaw: randomFileSize.rawSize
-        });
-      }
-      _items = this._sortItems(_items, "name");
-    }
 
     const _columns: IColumn[] = [
       {
@@ -108,14 +61,15 @@ export class BobList extends React.Component<any, IBobListState> {
             <img
               src={item.iconName}
               className={"DetailsListExample-documentIconImage"}
+              onError={this._onIconMissing}
             />
           );
         }
       },
       {
         key: "column2",
-        name: "Name",
-        fieldName: "name",
+        name: "Record Number",
+        fieldName: "RecordNumber",
         minWidth: 210,
         maxWidth: 350,
         isRowHeader: true,
@@ -130,46 +84,13 @@ export class BobList extends React.Component<any, IBobListState> {
       },
       {
         key: "column3",
-        name: "Date Modified",
-        fieldName: "dateModifiedValue",
+        name: "Record Title",
+        fieldName: "RecordTitle",
         minWidth: 70,
-        maxWidth: 90,
         isResizable: true,
         onColumnClick: this._onColumnClick,
-        data: "number",
-        onRender: (item: IDocument) => {
-          return <span>{item.dateModified}</span>;
-        },
-        isPadded: true
-      },
-      {
-        key: "column4",
-        name: "Modified By",
-        fieldName: "modifiedBy",
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        isCollapsable: true,
         data: "string",
-        onColumnClick: this._onColumnClick,
-        onRender: (item: IDocument) => {
-          return <span>{item.modifiedBy}</span>;
-        },
         isPadded: true
-      },
-      {
-        key: "column5",
-        name: "File Size",
-        fieldName: "fileSizeRaw",
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        isCollapsable: true,
-        data: "number",
-        onColumnClick: this._onColumnClick,
-        onRender: (item: IDocument) => {
-          return <span>{item.fileSize}</span>;
-        }
       }
     ];
 
@@ -187,18 +108,127 @@ export class BobList extends React.Component<any, IBobListState> {
       columns: _columns,
       selectionDetails: this._getSelectionDetails(),
       isModalSelection: this._selection.isModal(),
-      isCompactMode: false
+      isCompactMode: false,
+      queryText: "",
+      lastItem: 1,
+      morePages: true
     };
   }
 
   public render() {
     const { columns, isCompactMode, items } = this.state;
     return (
-      <div>
-        <DetailsList items={items} compact={isCompactMode} columns={columns} />
+      <div className="ms-Grid">
+        <div className="ms-Grid-row">
+          <div className="ms-Grid-col ms-sm6 ms-lg10">
+            <TextField placeholder="Search CM" onChange={this._onQueryChange} />
+          </div>
+          <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
+            <DefaultButton text="Search" onClick={this._searchClicked} />
+          </div>
+        </div>
+        <DetailsList
+          items={items}
+          compact={isCompactMode}
+          columns={columns}
+          onShouldVirtualize={this._onVirtualize}
+          onRowDidMount={this._rowDidMount}
+          onRenderMissingItem={this._renderMissingItem}
+        />
       </div>
     );
   }
+
+  private _renderMissingItem = (
+    index?: number,
+    rowProps?: any
+  ): React.ReactNode => {
+    console.log("missing");
+
+    return null;
+  };
+
+  private _onVirtualize = (props: IListProps): boolean => {
+    //console.log("fff");
+    return true;
+  };
+
+  private _rowDidMount = (item?: any, index?: number): void => {
+    //  const itemCount: number = this.state.lastItem;
+    console.log(index + "    " + (this.state.items.length - 1));
+    if (
+      this.state.morePages === true &&
+      this.state.items.length - 1 === index
+    ) {
+      this.doSearch(true);
+    }
+  };
+
+  private _searchClicked = (): void => {
+    this.doSearch(false);
+  };
+
+  private doSearch = (nextPage: boolean): void => {
+    let lastItem: number = 0;
+
+    //let items: IDocument[] = [];
+    let items: any[] = [];
+    //   let itemCount: number = 0;
+    var me = this;
+
+    if (nextPage) {
+      items = this.state.items.slice(0, this.state.items.length - 1);
+      lastItem = this.state.lastItem;
+    } else {
+    }
+
+    fetch(
+      "http://localhost/serviceapi/record?properties=RecordTitle,RecordNumber,RecordExtension&q=" +
+        this.state.queryText +
+        "&pageSize=30&resultsOnly=true&format=json&start=" +
+        lastItem,
+      {
+        method: "GET",
+        mode: "cors",
+        credentials: "include"
+      }
+    ).then(function(response) {
+      response.json().then(result => {
+        for (let idx in result.Results) {
+          let record = result.Results[idx];
+
+          const randomFileType = me._randomFileIcon(
+            record.RecordExtension.Value
+          );
+
+          items.push({
+            RecordNumber: record.RecordNumber.Value,
+            RecordTitle: record.RecordTitle.Value,
+            iconName: randomFileType.url
+          });
+        }
+
+        me.setState({
+          items: items,
+          lastItem: me.state.lastItem + result.Results.length,
+          morePages: result.HasMoreItems
+        });
+      });
+    });
+  };
+
+  private _onIconMissing(e: React.FormEvent<HTMLImageElement>) {
+    e.currentTarget.style.display = "none";
+  }
+
+  private _onQueryChange = (
+    ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    text: string
+  ): void => {
+    this.setState({
+      queryText: text
+    });
+  };
 
   private _getSelectionDetails(): string {
     const selectionCount = this._selection.getSelectedCount();
@@ -247,34 +277,10 @@ export class BobList extends React.Component<any, IBobListState> {
     });
   };
 
-  private _randomFileIcon(): { docType: string; url: string } {
-    const docType: string =
-      fileIcons[Math.floor(Math.random() * fileIcons.length) + 0].name;
+  private _randomFileIcon(docType: string): { docType: string; url: string } {
     return {
       docType,
-      url: `https://static2.sharepointonline.com/files/fabric/assets/brand-icons/document/svg/${docType}_16x1.svg`
-    };
-  }
-
-  private _randomDate(
-    start: Date,
-    end: Date
-  ): { value: number; dateFormatted: string } {
-    const date: Date = new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-    const dateData = {
-      value: date.valueOf(),
-      dateFormatted: date.toLocaleDateString()
-    };
-    return dateData;
-  }
-
-  private _randomFileSize(): { value: string; rawSize: number } {
-    const fileSize: number = Math.floor(Math.random() * 100) + 30;
-    return {
-      value: `${fileSize} KB`,
-      rawSize: fileSize
+      url: `http://localhost:3000/images/webicons/${docType.toLocaleLowerCase()}_x16.png`
     };
   }
 
