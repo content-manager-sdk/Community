@@ -1,5 +1,9 @@
 import * as React from "react";
-import { TextField } from "office-ui-fabric-react/lib/TextField";
+import {
+  ContextualMenu,
+  IContextualMenuItem
+} from "office-ui-fabric-react/lib/ContextualMenu";
+import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { DefaultButton } from "office-ui-fabric-react/lib/Button";
 import {
   DetailsList,
@@ -22,6 +26,8 @@ export interface IBobListState {
   queryText: string;
   lastItem: number;
   morePages: boolean;
+  listMenuEvent?: MouseEvent;
+  showContextMenu: boolean;
 }
 
 export interface IDocument {
@@ -111,17 +117,25 @@ export class BobList extends React.Component<any, IBobListState> {
       isCompactMode: false,
       queryText: "",
       lastItem: 1,
-      morePages: true
+      morePages: true,
+      showContextMenu: false
     };
   }
 
   public render() {
+    const menuItems: IContextualMenuItem[] = [
+      { key: "newItem", text: "New", onClick: () => console.log("new clicked") }
+    ];
     const { columns, isCompactMode, items } = this.state;
     return (
       <div className="ms-Grid">
         <div className="ms-Grid-row">
           <div className="ms-Grid-col ms-sm6 ms-lg10">
-            <TextField placeholder="Search CM" onChange={this._onQueryChange} />
+            <SearchBox
+              placeholder="Search CM"
+              onChange={this._onQueryChange}
+              onSearch={this._searchClicked}
+            />
           </div>
           <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
             <DefaultButton text="Search" onClick={this._searchClicked} />
@@ -133,19 +147,22 @@ export class BobList extends React.Component<any, IBobListState> {
           columns={columns}
           onShouldVirtualize={this._onVirtualize}
           onRowDidMount={this._rowDidMount}
-          onRenderMissingItem={this._renderMissingItem}
+          onItemContextMenu={this._onContextMenu}
+          onActiveItemChanged={this._onItemActivated}
         />
+        {this.state.showContextMenu ? (
+          <ContextualMenu target={this.state.listMenuEvent} items={menuItems} />
+        ) : null}
       </div>
     );
   }
 
-  private _renderMissingItem = (
-    index?: number,
-    rowProps?: any
-  ): React.ReactNode => {
-    console.log("missing");
-
-    return null;
+  private _onItemActivated = (): void => {
+    this.setState({ showContextMenu: false });
+  };
+  private _onContextMenu = (item?: any, index?: number, ev?: Event): void => {
+    console.log(ev);
+    this.setState({ showContextMenu: true, listMenuEvent: ev as MouseEvent });
   };
 
   private _onVirtualize = (props: IListProps): boolean => {
@@ -172,7 +189,7 @@ export class BobList extends React.Component<any, IBobListState> {
     let lastItem: number = 0;
 
     //let items: IDocument[] = [];
-    let items: any[] = [];
+    let items: IDocument[] = [];
     //   let itemCount: number = 0;
     var me = this;
 
@@ -181,7 +198,7 @@ export class BobList extends React.Component<any, IBobListState> {
       lastItem = this.state.lastItem;
     } else {
     }
-
+    console.log("Basic " + btoa("itu_tadmin" + ":" + "Trim@HP1"));
     fetch(
       "http://localhost/serviceapi/record?properties=RecordTitle,RecordNumber,RecordExtension&q=" +
         this.state.queryText +
@@ -221,12 +238,9 @@ export class BobList extends React.Component<any, IBobListState> {
     e.currentTarget.style.display = "none";
   }
 
-  private _onQueryChange = (
-    ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    text: string
-  ): void => {
+  private _onQueryChange = (newValue: any): void => {
     this.setState({
-      queryText: text
+      queryText: newValue
     });
   };
 
