@@ -1,0 +1,89 @@
+// /**
+//  * @jest-environment jsdom
+//  */
+
+// import { reducer, fetchRecordsThunk } from "./actions2";
+// const { fetchMock, MATCHED, UNMATCHED } = require('fetch-mock');
+
+// test("empty state", () => {
+//   expect(reducer({}, { type: "RECEIVE_RECORDS" })).toEqual({
+//     items: [],
+//     morePages: false
+//   });
+// });
+
+// test("empty payload", () => {
+//   expect(reducer({}, { type: "RECEIVE_RECORDS", payload: {} })).toEqual({
+//     items: [],
+//     morePages: false
+//   });
+// });
+
+// test("morePages == true", () => {
+//   expect(
+//     reducer({}, { type: "RECEIVE_RECORDS", payload: { HasMoreItems: true } })
+//   ).toEqual({
+//     items: [],
+//     morePages: true
+//   });
+// });
+
+// test("morePages == false", () => {
+//   expect(
+//     reducer({}, { type: "RECEIVE_RECORDS", payload: { HasMoreItems: false } })
+//   ).toEqual({
+//     items: [],
+//     morePages: false
+//   });
+// });
+
+// test("one record icon", () => {
+//   const testResult = reducer(
+//     {},
+//     {
+//       type: "RECEIVE_RECORDS",
+//       payload: {
+//         Results: [
+//           {
+//             RecordExtension: { Value: "doc" }
+//           }
+//         ]
+//       }
+//     }
+//   );
+//   expect(testResult.items[0].iconName).toEqual("images/webIcons/doc_x16.png");
+// });
+
+// test("one record Title", () => {
+//   const testResult = reducer(
+//     {},
+//     {
+//       type: "RECEIVE_RECORDS",
+//       payload: {
+//         Results: [
+//           {
+//             RecordTitle: { Value: "My Title" }
+//           }
+//         ]
+//       }
+//     }
+//   );
+//   expect(testResult.items[0].RecordTitle).toEqual("My Title");
+// });
+
+// test("one record Number", () => {
+//   const testResult = reducer(
+//     {},
+//     {
+//       type: "RECEIVE_RECORDS",
+//       payload: {
+//         Results: [
+//           {
+//             RecordNumber: { Value: "REC_5" }
+//           }
+//         ]
+//       }
+//     }
+//   );
+//   expect(testResult.items[0].RecordNumber).toEqual("REC_5");
+// });
