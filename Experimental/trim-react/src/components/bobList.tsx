@@ -13,10 +13,17 @@ import {
 
 import "../index.css";
 import { IListProps } from "office-ui-fabric-react/lib/List";
+import {
+  IBobListState,
+  IDocument,
+  searchAction,
+  loadNextPageAction
+} from "../redux/actions2";
 //import { LocalizedFontFamilies } from "@uifabric/styling/lib/styles/fonts";
 
 let _items: IDocument[] = [];
 
+/*
 export interface IBobListState {
   columns: IColumn[];
   items: IDocument[];
@@ -30,6 +37,7 @@ export interface IBobListState {
   showContextMenu: boolean;
 }
 
+
 export interface IDocument {
   [key: string]: any;
   RecordNumber: string;
@@ -40,7 +48,7 @@ export interface IDocument {
   dateModifiedValue?: number;
   fileSize?: string;
   fileSizeRaw?: number;
-}
+}*/
 
 export class BobList extends React.Component<any, IBobListState> {
   private _selection: Selection;
@@ -48,6 +56,11 @@ export class BobList extends React.Component<any, IBobListState> {
   constructor(props: any) {
     super(props);
 
+    this._onSearch = this._onSearch.bind(this);
+    this.props.store.subscribe(() => {
+      console.log(this.props.store.getState());
+      this.setState(this.props.store.getState());
+    });
     const _columns: IColumn[] = [
       {
         key: "column1",
@@ -116,9 +129,10 @@ export class BobList extends React.Component<any, IBobListState> {
       isModalSelection: this._selection.isModal(),
       isCompactMode: false,
       queryText: "",
-      lastItem: 1,
+      // lastItem: 1,
       morePages: true,
-      showContextMenu: false
+      showContextMenu: false,
+      loadNextPage: false
     };
   }
 
@@ -127,6 +141,9 @@ export class BobList extends React.Component<any, IBobListState> {
       { key: "newItem", text: "New", onClick: () => console.log("new clicked") }
     ];
     const { columns, isCompactMode, items } = this.state;
+
+    // this.props.store.subscribe(() => console.log(this.props.store.getState()));
+
     return (
       <div className="ms-Grid">
         <div className="ms-Grid-row">
@@ -138,7 +155,7 @@ export class BobList extends React.Component<any, IBobListState> {
             />
           </div>
           <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
-            <DefaultButton text="Search" onClick={this._searchClicked} />
+            <DefaultButton text={"Search"} onClick={this._searchClicked} />
           </div>
         </div>
         <DetailsList
@@ -157,6 +174,13 @@ export class BobList extends React.Component<any, IBobListState> {
     );
   }
 
+  private _onSearch(): void {
+    const { onSearch } = this.props;
+    if (onSearch) {
+      onSearch();
+    }
+  }
+
   private _onItemActivated = (): void => {
     this.setState({ showContextMenu: false });
   };
@@ -171,77 +195,33 @@ export class BobList extends React.Component<any, IBobListState> {
   };
 
   private _rowDidMount = (item?: any, index?: number): void => {
-    //  const itemCount: number = this.state.lastItem;
-    console.log(index + "    " + (this.state.items.length - 1));
+    console.log(
+      this.props.store.getState().items.length - 1 + " -------" + index
+    );
     if (
-      this.state.morePages === true &&
-      this.state.items.length - 1 === index
+      this.props.store.getState().morePages === true &&
+      this.props.store.getState().items.length - 1 === index
     ) {
-      this.doSearch(true);
+      this.props.store.dispatch(loadNextPageAction(true));
+      this._onSearch();
     }
   };
 
   private _searchClicked = (): void => {
-    this.doSearch(false);
+    this.props.store.dispatch(loadNextPageAction(false));
+    this._onSearch();
   };
-
-  private doSearch = (nextPage: boolean): void => {
-    let lastItem: number = 0;
-
-    //let items: IDocument[] = [];
-    let items: IDocument[] = [];
-    //   let itemCount: number = 0;
-    var me = this;
-
-    if (nextPage) {
-      items = this.state.items.slice(0, this.state.items.length - 1);
-      lastItem = this.state.lastItem;
-    } else {
-    }
-    console.log("Basic " + btoa("itu_tadmin" + ":" + "Trim@HP1"));
-    fetch(
-      "http://localhost/serviceapi/record?properties=RecordTitle,RecordNumber,RecordExtension&q=" +
-        this.state.queryText +
-        "&pageSize=30&resultsOnly=true&format=json&start=" +
-        lastItem,
-      {
-        method: "GET",
-        mode: "cors",
-        credentials: "include"
-      }
-    ).then(function(response) {
-      response.json().then(result => {
-        for (let idx in result.Results) {
-          let record = result.Results[idx];
-
-          const randomFileType = me._randomFileIcon(
-            record.RecordExtension.Value
-          );
-
-          items.push({
-            RecordNumber: record.RecordNumber.Value,
-            RecordTitle: record.RecordTitle.Value,
-            iconName: randomFileType.url
-          });
-        }
-
-        me.setState({
-          items: items,
-          lastItem: me.state.lastItem + result.Results.length,
-          morePages: result.HasMoreItems
-        });
-      });
-    });
-  };
+  /*
+  private doSearch = (): void => {
+    this._onSearch();
+  };*/
 
   private _onIconMissing(e: React.FormEvent<HTMLImageElement>) {
     e.currentTarget.style.display = "none";
   }
 
   private _onQueryChange = (newValue: any): void => {
-    this.setState({
-      queryText: newValue
-    });
+    this.props.store.dispatch(searchAction(newValue));
   };
 
   private _getSelectionDetails(): string {
@@ -290,14 +270,14 @@ export class BobList extends React.Component<any, IBobListState> {
       items: newItems
     });
   };
-
+  /*
   private _randomFileIcon(docType: string): { docType: string; url: string } {
     return {
       docType,
       url: `http://localhost:3000/images/webicons/${docType.toLocaleLowerCase()}_x16.png`
     };
   }
-
+*/
   private _sortItems = (
     items: IDocument[],
     sortBy: string,
