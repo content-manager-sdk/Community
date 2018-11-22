@@ -1,31 +1,27 @@
-import { observable, action, computed, flow } from "mobx";
+import { computed, flow, observable } from "mobx";
 
 const BASE_URI = "http://localhost/";
 export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
 
-interface IUserProfile {
+export interface IUserProfile {
   DisplayName: string;
 }
 
 export interface IAppStore {
-  userProfile: IUserProfile;
+  status: string;
+  UserProfile?: IUserProfile;
 }
 
 //configure({ enforceActions: true });
 
 class AppStore implements IAppStore {
-  @observable userProfile: IUserProfile = { DisplayName: "" };
+  //@observable userProfile: IUserProfile = { DisplayName: "" };
   @observable status: string = "WAITING";
   @observable errorMessage: string;
+  @observable messages: any;
+  @observable me: any;
 
-  @action setUserInfo = (data: any) => {
-    this.userProfile = {
-      DisplayName: data.Results[0].LocationFullFormattedName.Value
-    };
-  };
-
-  updateUserInfoGenerator = flow(function*(this: AppStore) {
-    this.status = "SPINNING";
+  private makeUrl = (path: string, query: any) => {
     const toParam = function(a: any): string {
       return Object.keys(a)
         .map(function(k) {
@@ -34,21 +30,39 @@ class AppStore implements IAppStore {
         .join("&");
     };
 
-    let url = new URL(`${SERVICEAPI_BASE_URI}/Location/me`);
-    url.search = toParam({ properties: ["LocationFullFormattedName"] });
+    let url = new URL(`${SERVICEAPI_BASE_URI}/${path}`);
+    url.search = toParam(query);
+    return String(url);
+  };
 
-    const response: Response = yield fetch(String(url), {
+  fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
+    this.status = "SPINNING";
+
+    const fetchOptions: RequestInit = {
       method: "GET",
       mode: "cors",
       credentials: "include",
       headers: { Accept: "application/json" }
+    };
+
+    const userUrl = this.makeUrl("Location/me", {
+      properties: ["LocationFullFormattedName"]
     });
-    if (response.ok) {
+
+    const messagesUrl = this.makeUrl("Localisation", {
+      MatchMessages: ["web_HPRM"]
+    });
+
+    const response: Response = yield fetch(userUrl, fetchOptions);
+    const messagesResponse: Response = yield fetch(messagesUrl, fetchOptions);
+
+    if (response.ok && messagesResponse.ok) {
       const data = yield response.json();
 
-      this.userProfile = {
-        DisplayName: data.Results[0].LocationFullFormattedName.Value
-      };
+      this.me = data.Results[0];
+
+      const messagesData = yield messagesResponse.json();
+      this.messages = messagesData.Messages;
 
       this.status = "WAITING";
     } else {
@@ -60,9 +74,21 @@ class AppStore implements IAppStore {
   });
 
   @computed
-  get someCount() {
-    return 56; // would actually calculate something on from the state
+  get ApplicationDisplayName() {
+    if (this.messages) {
+      return this.messages.web_HPRM; // would actually calculate something on from the state
+    } else {
+      return "";
+    }
+  }
+
+  @computed
+  get UserProfile(): IUserProfile {
+    return {
+      DisplayName: this.me.LocationFullFormattedName.Value
+    };
   }
 }
 
 export const appStore = new AppStore();
+export default AppStore;

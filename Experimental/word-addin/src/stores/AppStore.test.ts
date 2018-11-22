@@ -5,7 +5,7 @@
 import * as fetchMock from "fetch-mock";
 import { appStore, SERVICEAPI_BASE_URI } from "./AppStore";
 
-test("the display name is david", () => {
+describe("Test basic setup from Trim", () => {
   fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Location/me", {
     Results: [
       {
@@ -22,11 +22,29 @@ test("the display name is david", () => {
     TrimType: "Location",
     ResponseStatus: {}
   });
-  expect.assertions(3);
-  expect(appStore.status).toBe("WAITING");
-  return appStore.updateUserInfoGenerator().then(function() {
-    expect(appStore.userProfile.DisplayName).toBe("david");
+
+  fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Localisation", {
+    Messages: {
+      web_HPRM: "Content Manager"
+    },
+    ResponseStatus: {}
+  });
+
+  test("the display name is david", () => {
+    expect.assertions(3);
     expect(appStore.status).toBe("WAITING");
+    return appStore.fetchBaseSettingFromTrim().then(() => {
+      expect(appStore.UserProfile.DisplayName).toBe("david");
+      expect(appStore.status).toBe("WAITING");
+    });
+  });
+
+  test("Content Manager name is returned", () => {
+    expect.assertions(1);
+
+    return appStore.fetchBaseSettingFromTrim().then(() => {
+      expect(appStore.ApplicationDisplayName).toBe("Content Manager");
+    });
   });
 });
 
@@ -51,7 +69,7 @@ test("Error is handled", () => {
   });
   expect.assertions(3);
   expect(appStore.status).toBe("WAITING");
-  return appStore.updateUserInfoGenerator().then(function() {
+  return appStore.fetchBaseSettingFromTrim().then(() => {
     expect(appStore.status).toBe("ERROR");
     expect(appStore.errorMessage).toBe("Unable to find object test");
   });

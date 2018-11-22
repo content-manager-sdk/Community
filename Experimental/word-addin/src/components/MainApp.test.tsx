@@ -1,13 +1,21 @@
-import * as enzyme from "enzyme";
+//import * as enzyme from "enzyme";
 import * as React from "react";
+import { mount } from "enzyme";
 import MainApp from "./MainApp";
 
-it("renders the correct text when no enthusiasm level is given", () => {
-  const hello = enzyme.shallow(<MainApp />);
-  expect(hello.find("div").exists());
-});
+// it("Title exists on page", () => {
+//   const hello = mount(<MainApp appStore={{ ApplicationDisplayName: "CM" }} />);
+//   expect(hello.find("div")).toBe;
+// });
 
-it("renders the correct text when no enthusiasm level is given", () => {
-  const hello = enzyme.shallow(<MainApp />);
-  expect(hello.find("div").text()).toEqual("hello");
+describe("MainApp", function() {
+  it("shows product name", function(this: any) {
+    const wrapper = mount(
+      <MainApp appStore={{ ApplicationDisplayName: "CM" }} />
+    );
+
+    expect(wrapper.find("div.ms-font-l").text()).toMatch("CM");
+    //expect(wrapper.find("ErrorDisplay"));
+    //  expect(wrapper.find("div"));
+  });
 });
