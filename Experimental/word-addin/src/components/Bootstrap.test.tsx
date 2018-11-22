@@ -10,7 +10,9 @@ import { ErrorDisplay } from "./ErrorDisplay";
 describe("BootStrap", function() {
   it("shows error component", function() {
     const wrapper = shallow(
-      <BootStrap.wrappedComponent appStore={{ status: "ERROR" }} />
+      <BootStrap.wrappedComponent
+        appStore={{ status: "ERROR", errorMessage: "test" }}
+      />
     );
     //   expect(wrapper).toMatchSnapshot();
     expect(wrapper.find(ErrorDisplay).exists()).toBeTruthy();

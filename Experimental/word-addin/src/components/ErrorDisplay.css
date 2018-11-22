@@ -1,0 +1,15 @@
+div.error {
+  width: 80%;
+  margin: 0 auto;
+}
+
+div.error-header {
+  margin-top: 100px;
+  background-color: red;
+  padding: 8px;
+  font-weight: bold;
+}
+
+div.error-body {
+  margin-top: 10px;
+}

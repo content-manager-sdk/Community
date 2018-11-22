@@ -1,9 +1,14 @@
 import * as React from "react";
-//import { inject, observer } from "mobx-react";
+import "./ErrorDisplay.css";
 
-export class ErrorDisplay extends React.Component {
+export class ErrorDisplay extends React.Component<{ Message: string }, any> {
   public render() {
-    // const { appStore } = this.props;
-    return null;
+    return (
+      <React.Fragment>
+        <div className="error error-header">Error</div>
+        <div className="error error-body">{this.props.Message}</div>
+      </React.Fragment>
+    );
   }
 }
+export default ErrorDisplay;

@@ -1,17 +1,17 @@
 import * as React from "react";
-//import IAppStore from "../stores/AppStore";
+import IAppStore from "../stores/AppStore";
 import { inject, observer } from "mobx-react";
 import { ErrorDisplay } from "./ErrorDisplay";
-import MainApp from "./MainApp";
+import { MainApp } from "./MainApp";
 
 @inject("appStore")
 @observer
-export class BootStrap extends React.Component<{ appStore?: any }, any> {
+export class BootStrap extends React.Component<{ appStore?: IAppStore }, any> {
   public render() {
     const { appStore } = this.props;
 
-    if (appStore.status === "ERROR") {
-      return <ErrorDisplay />;
+    if (appStore!.status === "ERROR") {
+      return <ErrorDisplay Message={appStore!.errorMessage} />;
     } else {
       return <MainApp />;
     }

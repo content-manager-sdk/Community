@@ -15,6 +15,3 @@ export class MainApp extends React.Component<{ appStore?: any }, any> {
 }
 
 export default MainApp;
-//export default inject("appStore")(observer(MainApp));
-//export const MainAppUndecorated = MainApp;
-//export { MainApp };

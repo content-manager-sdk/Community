@@ -10,6 +10,7 @@ export interface IUserProfile {
 export interface IAppStore {
   status: string;
   UserProfile?: IUserProfile;
+  errorMessage?: string;
 }
 
 //configure({ enforceActions: true });
