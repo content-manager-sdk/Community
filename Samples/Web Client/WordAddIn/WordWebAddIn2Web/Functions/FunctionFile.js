@@ -202,7 +202,7 @@ function getRecordUri() {
        
         return context.sync()
             .then(function () {
-         //       var customProp = customProps.getItem('CM_Record_Uri');
+                //       var customProp = customProps.getItem('CM_Record_Uri');
                 var v = customProp.value;
                 dfd.resolve({ "status": "success", "uri": v });
 
@@ -210,7 +210,7 @@ function getRecordUri() {
                 //otherwise we handle the exception here!
                 showNotification("Error", myError.message);
                 dfd.resolve({ "status": "error" });
-            })
+            });
 
     }).catch(function (myError) {
         showNotification("Error", myError.message);

@@ -1,4 +1,8 @@
 import { computed, flow, observable } from "mobx";
+import {
+  IWordConnector,
+  IGetRecordUriResponse
+} from "../office-coms/word-connector";
 
 const BASE_URI = "http://localhost/";
 export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
@@ -15,12 +19,13 @@ export interface IAppStore {
 
 //configure({ enforceActions: true });
 
-class AppStore implements IAppStore {
-  //@observable userProfile: IUserProfile = { DisplayName: "" };
+export class AppStore implements IAppStore {
+  constructor(private wordConnector: IWordConnector) {}
   @observable status: string = "WAITING";
   @observable errorMessage: string;
   @observable messages: any;
   @observable me: any;
+  @observable documentInfo: IGetRecordUriResponse;
 
   private makeUrl = (path: string, query: any) => {
     const toParam = function(a: any): string {
@@ -54,23 +59,45 @@ class AppStore implements IAppStore {
       MatchMessages: ["web_HPRM"]
     });
 
-    const response: Response = yield fetch(userUrl, fetchOptions);
-    const messagesResponse: Response = yield fetch(messagesUrl, fetchOptions);
+    try {
+      const response: Response = yield fetch(userUrl, fetchOptions);
+      const messagesResponse: Response = yield fetch(messagesUrl, fetchOptions);
+      this.documentInfo = yield this.wordConnector.getUri();
 
-    if (response.ok && messagesResponse.ok) {
-      const data = yield response.json();
+      if (response.ok && messagesResponse.ok) {
+        const data = yield response.json();
 
-      this.me = data.Results[0];
+        this.me = data.Results[0];
 
-      const messagesData = yield messagesResponse.json();
-      this.messages = messagesData.Messages;
+        const messagesData = yield messagesResponse.json();
+        this.messages = messagesData.Messages;
+        // if (document !== undefined) {
+        //   let el = document.getElementById("AppForOfficePanel0-title");
+        //   if (el !== null) {
+        //     el!.innerText = this.ApplicationDisplayName;
+        //   }
+        // }
 
-      this.status = "WAITING";
-    } else {
+        this.status = "WAITING";
+      } else {
+        this.status = "ERROR";
+
+        const data = yield response.json();
+        this.errorMessage = data.ResponseStatus.Message;
+        return;
+      }
+
+      if (this.documentInfo.found || !this.documentInfo.message) {
+        this.status = "WAITING";
+      } else {
+        this.status = "ERROR";
+
+        const data = yield response.json();
+        this.errorMessage = data.ResponseStatus.Message;
+      }
+    } catch (error) {
       this.status = "ERROR";
-
-      const data = yield response.json();
-      this.errorMessage = data.ResponseStatus.Message;
+      this.errorMessage = error.message;
     }
   });
 
@@ -89,7 +116,15 @@ class AppStore implements IAppStore {
       DisplayName: this.me.LocationFullFormattedName.Value
     };
   }
+
+  @computed
+  get RecordUri(): number {
+    if (this.documentInfo != null) {
+      return this.documentInfo.uri;
+    }
+    return -1;
+  }
 }
 
-export const appStore = new AppStore();
+//export const appStore = new AppStore();
 export default AppStore;

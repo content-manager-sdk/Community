@@ -2,9 +2,12 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import BootStrap from "./components/BootStrap";
 import { Provider /* inject, observer  */ } from "mobx-react";
-import { appStore } from "./stores/AppStore";
+import { AppStore } from "./stores/AppStore";
 import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
+import WordConnector from "./office-coms/word-connector";
+
+let appStore = new AppStore(new WordConnector());
 
 const Root = (
   <Provider appStore={appStore}>

@@ -28,6 +28,7 @@
     "webpack",
     "jest",
     "src/setupTests.ts",
-    "src/components/*.test.tsx"
+    "src/components/*.test.tsx",
+    "src/office-coms/*.test.ts"
   ]
 }
