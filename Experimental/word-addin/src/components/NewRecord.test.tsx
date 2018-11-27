@@ -3,7 +3,7 @@ import { mount } from "enzyme";
 import { NewRecord } from "./NewRecord";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-//import {TrimConnector } from "../trim-coms/trim-connector";
+import { TrimConnector } from "../trim-coms/trim-connector";
 import { IRecordType, ITrimMainObject } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 //let TrimConnector = require("../trim-coms/trim-connector");
@@ -11,6 +11,15 @@ import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 describe("New Record layout", function() {
   let resolveRecordTypes;
 
+  let mockTrimConnector = new TrimConnector();
+  mockTrimConnector.search = () => {
+    return new Promise(function(resolve) {
+      resolveRecordTypes = resolve;
+
+      //resolve([{ Uri: 1, NameString: "Document" } as T]);
+    });
+  };
+  /*
   const mockTrimConnector = {
     search<T extends ITrimMainObject>(
       trimType: BaseObjectTypes,
@@ -24,6 +33,8 @@ describe("New Record layout", function() {
       });
     }
   };
+
+  */
 
   // jest.mock("TrimConnector", () => {
   //   return {

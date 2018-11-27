@@ -3,7 +3,7 @@ import { observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-import { /* ITrimConnector, */ IRecordType } from "../trim-coms/trim-connector";
+import { ITrimConnector, IRecordType } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import { initializeIcons } from "@uifabric/icons";
 
@@ -12,13 +12,7 @@ initializeIcons();
 export class NewRecord extends React.Component<
   {
     appStore?: any;
-    trimConnector: {
-      search<T>(
-        trimType: BaseObjectTypes,
-        query: string,
-        purpose: number
-      ): Promise<IRecordType[]>;
-    };
+    trimConnector: ITrimConnector;
   },
   any
 > {
