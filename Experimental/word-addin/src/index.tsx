@@ -6,11 +6,13 @@ import { AppStore } from "./stores/AppStore";
 import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
 import WordConnector from "./office-coms/word-connector";
+import TrimConnector from "./trim-fetch/trim-connector";
 
-let appStore = new AppStore(new WordConnector());
+const trimConnector = new TrimConnector();
+const appStore = new AppStore(new WordConnector(), trimConnector);
 
 const Root = (
-  <Provider appStore={appStore}>
+  <Provider appStore={appStore} trimConector={trimConnector}>
     <BootStrap />
   </Provider>
 );

@@ -2,12 +2,13 @@
  * @jest-environment jsdom
  */
 
-import * as fetchMock from "fetch-mock";
-import { AppStore, SERVICEAPI_BASE_URI } from "./AppStore";
+import { AppStore } from "./AppStore";
 import {
   IWordConnector,
   IGetRecordUriResponse
 } from "../office-coms/word-connector";
+
+import { ITrimConnector, ILocation } from "../trim-coms/trim-connector";
 
 let Mock_Action = "";
 class MockWordConnector implements IWordConnector {
@@ -24,36 +25,55 @@ class MockWordConnector implements IWordConnector {
   }
 }
 
-let appStore = new AppStore(new MockWordConnector());
+let Mock_Trim_Action = "";
+class MockTrimConnector implements ITrimConnector {
+  getMessages(): Promise<any> {
+    return new Promise(function(resolve, reject) {
+      resolve({ web_HPRM: "Content Manager" });
+    });
+  }
+  getMe(): Promise<ILocation> {
+    return new Promise(function(resolve, reject) {
+      if (Mock_Trim_Action === "ERROR") {
+        reject({ message: "error" });
+      } else {
+        resolve({ FullFormattedName: { Value: "david" }, Uri: 1 });
+      }
+    });
+  }
+}
+
+let appStore = new AppStore(new MockWordConnector(), new MockTrimConnector());
 beforeEach(() => {
-  appStore = new AppStore(new MockWordConnector());
+  appStore = new AppStore(new MockWordConnector(), new MockTrimConnector());
   Mock_Action = "";
+  Mock_Trim_Action = "";
 });
 
 describe("Test basic setup from Trim", () => {
-  fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Location/me", {
-    Results: [
-      {
-        LocationFullFormattedName: { Value: "david" },
-        TrimType: "Location",
-        Uri: 1
-      }
-    ],
-    PropertiesAndFields: {},
-    TotalResults: 1,
-    MinimumCount: 0,
-    Count: 0,
-    HasMoreItems: false,
-    TrimType: "Location",
-    ResponseStatus: {}
-  });
+  //   fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Location/me", {
+  //     Results: [
+  //       {
+  //         LocationFullFormattedName: { Value: "david" },
+  //         TrimType: "Location",
+  //         Uri: 1
+  //       }
+  //     ],
+  //     PropertiesAndFields: {},
+  //     TotalResults: 1,
+  //     MinimumCount: 0,
+  //     Count: 0,
+  //     HasMoreItems: false,
+  //     TrimType: "Location",
+  //     ResponseStatus: {}
+  //   });
 
-  fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Localisation", {
-    Messages: {
-      web_HPRM: "Content Manager"
-    },
-    ResponseStatus: {}
-  });
+  //   fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Localisation", {
+  //     Messages: {
+  //       web_HPRM: "Content Manager"
+  //     },
+  //     ResponseStatus: {}
+  //   });
 
   it("the display name is david", () => {
     expect.assertions(3);
@@ -69,6 +89,13 @@ describe("Test basic setup from Trim", () => {
 
     return appStore.fetchBaseSettingFromTrim().then(() => {
       expect(appStore.ApplicationDisplayName).toBe("Content Manager");
+    });
+  });
+
+  it("Message from getMessage", () => {
+    expect.assertions(1);
+    return appStore.fetchBaseSettingFromTrim().then(() => {
+      expect(appStore.messages["web_HPRM"]).toBe("Content Manager");
     });
   });
 
@@ -106,30 +133,15 @@ describe("Test basic setup from Trim", () => {
     });
   });
 
-  test("Error is handled", () => {
-    fetchMock.reset();
-    fetchMock.get("*", {
-      body: {
-        Results: [],
-        PropertiesAndFields: {},
-        TotalResults: 0,
-        MinimumCount: 0,
-        Count: 0,
-        HasMoreItems: false,
-        TrimType: "Location",
-        ResponseStatus: {
-          ErrorCode: "ApplicationException",
-          Message: "Unable to find object test",
-          Errors: []
-        }
-      },
-      status: 500
-    });
+  test("Error handled", () => {
+    Mock_Trim_Action = "ERROR";
+
     expect.assertions(3);
     expect(appStore.status).toBe("WAITING");
     return appStore.fetchBaseSettingFromTrim().then(() => {
+      expect(appStore.errorMessage).toBe("error");
+
       expect(appStore.status).toBe("ERROR");
-      expect(appStore.errorMessage).toBe("Unable to find object test");
     });
   });
 });

@@ -4,8 +4,9 @@ import {
   IGetRecordUriResponse
 } from "../office-coms/word-connector";
 
-const BASE_URI = "http://localhost/";
-export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
+import { ITrimConnector, ILocation } from "../trim-coms/trim-connector";
+
+export const BASE_URI = "http://localhost/";
 
 export interface IUserProfile {
   DisplayName: string;
@@ -17,83 +18,40 @@ export interface IAppStore {
   errorMessage?: string;
 }
 
-//configure({ enforceActions: true });
-
 export class AppStore implements IAppStore {
-  constructor(private wordConnector: IWordConnector) {}
+  constructor(
+    private wordConnector: IWordConnector,
+    private trimConnector: ITrimConnector
+  ) {}
   @observable status: string = "WAITING";
   @observable errorMessage: string;
-  @observable messages: any;
-  @observable me: any;
+  @observable messages: any = {};
+  @observable me: ILocation;
   @observable documentInfo: IGetRecordUriResponse;
-
-  private makeUrl = (path: string, query: any) => {
-    const toParam = function(a: any): string {
-      return Object.keys(a)
-        .map(function(k) {
-          return encodeURIComponent(k) + "=" + encodeURIComponent(a[k]);
-        })
-        .join("&");
-    };
-
-    let url = new URL(`${SERVICEAPI_BASE_URI}/${path}`);
-    url.search = toParam(query);
-    return String(url);
-  };
 
   fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
     this.status = "SPINNING";
-
-    const fetchOptions: RequestInit = {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-      headers: { Accept: "application/json" }
-    };
-
-    const userUrl = this.makeUrl("Location/me", {
-      properties: ["LocationFullFormattedName"]
-    });
-
-    const messagesUrl = this.makeUrl("Localisation", {
-      MatchMessages: ["web_HPRM"]
-    });
-
+    console.log("a");
     try {
-      const response: Response = yield fetch(userUrl, fetchOptions);
-      const messagesResponse: Response = yield fetch(messagesUrl, fetchOptions);
+      const response: ILocation = yield this.trimConnector.getMe();
+      const messagesResponse: any = yield this.trimConnector.getMessages();
       this.documentInfo = yield this.wordConnector.getUri();
 
-      if (response.ok && messagesResponse.ok) {
-        const data = yield response.json();
+      if (response != null && messagesResponse != null) {
+        this.me = response;
 
-        this.me = data.Results[0];
+        this.messages = messagesResponse;
 
-        const messagesData = yield messagesResponse.json();
-        this.messages = messagesData.Messages;
-        // if (document !== undefined) {
-        //   let el = document.getElementById("AppForOfficePanel0-title");
-        //   if (el !== null) {
-        //     el!.innerText = this.ApplicationDisplayName;
-        //   }
-        // }
+        // temporary - need to go in TRIM Messages
+        this.messages["web_Register"] = "Register in Content Manager";
 
         this.status = "WAITING";
-      } else {
-        this.status = "ERROR";
-
-        const data = yield response.json();
-        this.errorMessage = data.ResponseStatus.Message;
-        return;
       }
 
       if (this.documentInfo.found || !this.documentInfo.message) {
         this.status = "WAITING";
       } else {
         this.status = "ERROR";
-
-        const data = yield response.json();
-        this.errorMessage = data.ResponseStatus.Message;
       }
     } catch (error) {
       this.status = "ERROR";
@@ -104,7 +62,7 @@ export class AppStore implements IAppStore {
   @computed
   get ApplicationDisplayName() {
     if (this.messages) {
-      return this.messages.web_HPRM; // would actually calculate something on from the state
+      return this.messages.web_HPRM;
     } else {
       return "";
     }
@@ -113,7 +71,7 @@ export class AppStore implements IAppStore {
   @computed
   get UserProfile(): IUserProfile {
     return {
-      DisplayName: this.me.LocationFullFormattedName.Value
+      DisplayName: this.me.FullFormattedName.Value
     };
   }
 
