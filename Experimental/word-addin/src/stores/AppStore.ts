@@ -1,4 +1,4 @@
-import { computed, flow, observable } from "mobx";
+import { computed, flow, observable, configure } from "mobx";
 import {
   IWordConnector,
   IGetRecordUriResponse
@@ -17,6 +17,8 @@ export interface IAppStore {
   UserProfile?: IUserProfile;
   errorMessage?: string;
 }
+
+configure({ enforceActions: "observed" });
 
 export class AppStore implements IAppStore {
   constructor(
@@ -44,6 +46,7 @@ export class AppStore implements IAppStore {
 
         // temporary - need to go in TRIM Messages
         this.messages["web_Register"] = "Register in Content Manager";
+        this.messages["web_SelectRecordType"] = "Select a Record Type";
 
         this.status = "WAITING";
       }

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 import { inject, observer } from "mobx-react";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
+import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { ITrimConnector, IRecordType } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import { initializeIcons } from "@uifabric/icons";
@@ -16,7 +16,13 @@ export class NewRecord extends React.Component<
   },
   any
 > {
-  @observable recordTypes: any[] = [];
+  @observable recordTypes: IDropdownOption[] = [];
+  recordTypeUri: 0;
+
+  @action.bound
+  setRecordTypes(recTypes: IDropdownOption[]) {
+    this.recordTypes = recTypes;
+  }
 
   componentDidMount() {
     const { trimConnector } = this.props;
@@ -25,11 +31,21 @@ export class NewRecord extends React.Component<
     return trimConnector
       .search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
       .then(function(response: IRecordType[]) {
-        me.recordTypes = response.map(function(o: IRecordType) {
-          return { key: o.Uri, text: o.NameString };
-        });
+        me.setRecordTypes(
+          response.map(function(o: IRecordType) {
+            return { key: o.Uri, text: o.NameString } as IDropdownOption;
+          })
+        );
       });
   }
+
+  private _onChange = (
+    event: React.FormEvent<HTMLDivElement>,
+    option: IDropdownOption,
+    index: number
+  ) => {
+    this.recordTypeUri = this.recordTypes[index].key;
+  };
 
   public render() {
     const { appStore } = this.props;
@@ -37,7 +53,11 @@ export class NewRecord extends React.Component<
     return (
       <div>
         <PrimaryButton>{appStore.messages.web_Register} </PrimaryButton>
-        <Dropdown options={this.recordTypes} />
+        <Dropdown
+          options={this.recordTypes}
+          placeholder={appStore.messages.web_SelectRecordType}
+          onChange={this._onChange}
+        />
       </div>
     );
   }
