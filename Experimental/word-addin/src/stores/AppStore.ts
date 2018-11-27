@@ -31,7 +31,7 @@ export class AppStore implements IAppStore {
 
   fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
     this.status = "SPINNING";
-    console.log("a");
+
     try {
       const response: ILocation = yield this.trimConnector.getMe();
       const messagesResponse: any = yield this.trimConnector.getMessages();

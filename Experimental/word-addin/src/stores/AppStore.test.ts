@@ -10,6 +10,9 @@ import {
 
 import { ITrimConnector, ILocation } from "../trim-coms/trim-connector";
 
+import { ITrimMainObject } from "../trim-coms/trim-connector";
+import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
+
 let Mock_Action = "";
 class MockWordConnector implements IWordConnector {
   getUri(): Promise<IGetRecordUriResponse> {
@@ -39,6 +42,26 @@ class MockTrimConnector implements ITrimConnector {
       } else {
         resolve({ FullFormattedName: { Value: "david" }, Uri: 1 });
       }
+    });
+  }
+  search<T extends ITrimMainObject>(
+    trimType: BaseObjectTypes,
+    query: string,
+    purpose: number = 0
+  ): Promise<T[]> {
+    return new Promise(function(resolve, reject) {
+      //   fetch(url, options)
+      //     .then(response => response.json())
+      //     .then(data => {
+      //       if (data.Results && data.Results.length > 0) {
+      //         const trimObjects = data.Results.map(function(trimObject: T) {
+      //           return trimObject;
+      //         });
+      //         resolve(trimObjects);
+      //       } else {
+      //         reject({ message: data.ResponseStatus.Message });
+      //       }
+      //     });
     });
   }
 }

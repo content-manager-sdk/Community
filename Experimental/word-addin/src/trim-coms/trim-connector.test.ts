@@ -1,8 +1,40 @@
-import { TrimConnector, SERVICEAPI_BASE_URI } from "./trim-connector";
+import {
+  TrimConnector,
+  SERVICEAPI_BASE_URI,
+  IRecordType
+} from "./trim-connector";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+
 import * as fetchMock from "fetch-mock";
 
 describe("Test fetch from TRIM", () => {
   const trimConnector = new TrimConnector();
+
+  const recordTypeSearchMatch = function(url: string, opts: any) {
+    return (
+      url.startsWith(SERVICEAPI_BASE_URI + "/RecordType") &&
+      url.indexOf("q=all") > -1 &&
+      url.indexOf("properties=NameString") > -1 &&
+      url.indexOf("purpose=3") > -1
+    );
+  };
+
+  fetchMock.get(recordTypeSearchMatch, {
+    Results: [
+      {
+        NameString: "Document",
+        TrimType: "RecordType",
+        Uri: 1
+      }
+    ],
+    PropertiesAndFields: {},
+    TotalResults: 1,
+    MinimumCount: 0,
+    Count: 0,
+    HasMoreItems: false,
+    TrimType: "RecordType",
+    ResponseStatus: {}
+  });
 
   fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Location/me", {
     Results: [
@@ -24,6 +56,15 @@ describe("Test fetch from TRIM", () => {
   fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Localisation", {
     Messages: { web_HPRM: "Content Manager" },
     ResponseStatus: {}
+  });
+
+  it("Record Types are returned", () => {
+    expect.assertions(1);
+    return trimConnector
+      .search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
+      .then(data => {
+        expect(data[0].NameString).toBe("Document");
+      });
   });
 
   it("the FullFormattedName is david", () => {
