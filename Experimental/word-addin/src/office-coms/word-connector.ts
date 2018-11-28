@@ -13,9 +13,14 @@ export interface IGetRecordUriResponse {
 
 export interface IWordConnector {
   getUri(): Promise<IGetRecordUriResponse>;
+  getName(): string;
 }
 
 export class WordConnector implements IWordConnector {
+  getName(): string {
+    const tokens = Office.context.document.url.split("/");
+    return tokens[tokens.length - 1];
+  }
   getUri(): Promise<IGetRecordUriResponse> {
     return new Promise(function(resolve, reject) {
       let response = { found: false, uri: 0, message: "" };

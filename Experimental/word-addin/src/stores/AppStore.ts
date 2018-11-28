@@ -89,7 +89,9 @@ export class AppStore implements IAppStore {
   }
 
   @action.bound
-  createRecord(recordType: number) {}
+  createRecord(recordType: number) {
+    this.wordConnector.registerInTrim();
+  }
 }
 
 //export const appStore = new AppStore();

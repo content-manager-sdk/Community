@@ -61,6 +61,25 @@ describe("Test fetch from TRIM", () => {
     }
   );
 
+  fetchMock.get(
+    "begin:" +
+      SERVICEAPI_BASE_URI +
+      "/RecordType/123?properties=dataentryformdefinition",
+    {
+      Results: [
+        {
+          TrimType: "RecordType",
+          DataEntryFormDefinition: {
+            Version: "1",
+            SupportsElectronicDocs: true,
+            TitlingMethod: "FreeText",
+            Pages: [{}]
+          }
+        }
+      ]
+    }
+  );
+
   it("Record Types are returned", () => {
     expect.assertions(1);
     return trimConnector
@@ -81,6 +100,13 @@ describe("Test fetch from TRIM", () => {
     expect.assertions(1);
     return trimConnector.getMessages().then(data => {
       expect(data.web_HPRM).toBe("Content Manager");
+    });
+  });
+
+  it("Property sheet requested from Record Type", () => {
+    expect.assertions(1);
+    return trimConnector.getPropertySheet(123).then(data => {
+      expect(data.Pages.length).toBe(1);
     });
   });
 

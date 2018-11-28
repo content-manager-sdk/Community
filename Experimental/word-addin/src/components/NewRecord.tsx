@@ -22,6 +22,7 @@ export class NewRecord extends React.Component<
   @action.bound
   setRecordTypes(recTypes: IDropdownOption[]) {
     this.recordTypes = recTypes;
+    this.recordTypeUri = 0;
   }
 
   componentDidMount() {
@@ -47,6 +48,10 @@ export class NewRecord extends React.Component<
     this.recordTypeUri = Number(this.recordTypes[index].key);
   };
 
+  private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    this.props.appStore.createRecord(this.recordTypeUri);
+  };
+
   public render() {
     const { appStore } = this.props;
 
@@ -57,7 +62,9 @@ export class NewRecord extends React.Component<
           placeholder={appStore.messages.web_SelectRecordType}
           onChange={this._onChange}
         />
-        <PrimaryButton>{appStore.messages.web_Register} </PrimaryButton>
+        <PrimaryButton onClick={this._onClick}>
+          {appStore.messages.web_Register}{" "}
+        </PrimaryButton>
       </div>
     );
   }

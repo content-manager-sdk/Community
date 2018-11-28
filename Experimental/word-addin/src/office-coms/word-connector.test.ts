@@ -53,6 +53,15 @@ export namespace Word {
 }
 (<any>global).Word = Word;
 
+export namespace Office {
+	export const context = {
+    document: {
+      url: "https://hperm-my.sharepoint.com/personal/alex_hperm_info/Documents/Document8";
+    }
+  }
+}
+
+(<any>global).Office = Office;
 // export namespace Office {
 //   export const initialize = function() {};
 // }
@@ -112,6 +121,10 @@ describe("word apis", () => {
       expect(data.found).toBeFalsy();
       expect(data.message).toEqual("big error");
     });
+  });
+
+  it("name from document URL", () => {
+    expect(wordConnector.getName()).toEqual("Document8");
   });
 });
 //   jest.mock("../../node_modules/@microsoft/office-js/dist/word-15.js", () => {

@@ -14,71 +14,31 @@ describe("New Record layout", function() {
   mockTrimConnector.search = () => {
     return new Promise(function(resolve) {
       resolveRecordTypes = resolve;
-
-      //resolve([{ Uri: 1, NameString: "Document" } as T]);
     });
   };
-  /*
-  const mockTrimConnector = {
-    search<T extends ITrimMainObject>(
-      trimType: BaseObjectTypes,
-      query: string,
-      purpose: number = 0
-    ): Promise<T[]> {
-      return new Promise(function(resolve) {
-        resolveRecordTypes = resolve;
 
-        //resolve([{ Uri: 1, NameString: "Document" } as T]);
-      });
+  const mockStore = {
+    RecordUri: 0,
+    messages: {
+      web_Register: "Register",
+      web_SelectRecordType: "Select a Record Type"
+    },
+
+    createRecord: recordUri => {
+      mockStore.RecordUri = recordUri;
     }
   };
 
-  */
-
-  // jest.mock("TrimConnector", () => {
-  //   return {
-  // 	search: jest.fn((arg1, arg2,arg3) =>{
-  // 	resolveReordTypes = resolve;
-  //    //   Promise.resolve([{ Uri: 1, NameString: "Document" } as IRecordType])
-  // 	 } )
-  //   };
-  // });
-  //let trimConnector = new TrimConnector();
-
-  // trimConnector.search = () =>  {
-  // 	return new Promise(function(resolve) {
-  // 	  resolveReordTypes = resolve;
-
-  // 	  //resolve([{ Uri: 1, NameString: "Document" } as T]);
-  // 	})};
+  const wrapper = mount<NewRecord>(
+    <NewRecord appStore={mockStore} trimConnector={mockTrimConnector} />
+  );
 
   it("contains a button", () => {
-    const wrapper = mount(
-      <NewRecord
-        appStore={{ messages: { web_Register: "Register" } }}
-        trimConnector={mockTrimConnector}
-      />
-    );
-
     expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
     expect(wrapper.find(PrimaryButton).text()).toMatch("Register");
   });
 
   it("contains a Record Type dropdown", async done => {
-    // const ss = mockTrimConnector.search(BaseObjectTypes.RecordType, "all", 3);
-
-    const wrapper = mount<NewRecord>(
-      <NewRecord
-        appStore={{
-          messages: {
-            web_Register: "Register",
-            web_SelectRecordType: "Select a Record Type"
-          }
-        }}
-        trimConnector={mockTrimConnector}
-      />
-    );
-
     resolveRecordTypes([{ Uri: 1, NameString: "Document" } as IRecordType]);
 
     expect(wrapper.find(Dropdown).exists()).toBeTruthy();
@@ -96,23 +56,41 @@ describe("New Record layout", function() {
     });
   });
 
-  it("Sets the Record Uri from onChange", () => {
-    const wrapper = mount<NewRecord>(
-      <NewRecord
-        appStore={{
-          messages: {
-            web_Register: "Register",
-            web_SelectRecordType: "Select a Record Type"
-          }
-        }}
-        trimConnector={mockTrimConnector}
-      />
-    );
-
+  it("Sets the Record Uri from on load and onChange", () => {
     //   wrapper
     //   .update()
     //   .find(Dropdown).props().onChange({ type:null, timeStamp:null, target:null, persist:null, isPropagationStopped:null, stopPropagation:null, isDefaultPrevented:null, preventDefault:null, bubbles:false, currentTarget:null, cancelable:false, defaultPrevented:false, eventPhase:null, isTrusted:true, nativeEvent:null});
 
+    const instance = wrapper.instance();
+    instance.setRecordTypes([]);
+
+    expect(instance.recordTypeUri).toEqual(0);
+
+    // should be zero after the record types list has been changed
+    instance.setRecordTypes([
+      { key: 1, text: "Document" },
+      { key: 5, text: "Document 5" }
+    ]);
+    wrapper
+      .update()
+      .find(Dropdown)
+      .props()
+      .onChange(null, null, 1);
+
+    instance.setRecordTypes([{ key: 1, text: "Document" }]);
+
+    expect(instance.recordTypeUri).toEqual(0);
+
+    wrapper
+      .update()
+      .find(Dropdown)
+      .props()
+      .onChange(null, null, 0);
+
+    expect(instance.recordTypeUri).toEqual(1);
+  });
+
+  it("calls create record on button press", () => {
     const instance = wrapper.instance();
     instance.setRecordTypes([
       { key: 1, text: "Document" },
@@ -123,8 +101,14 @@ describe("New Record layout", function() {
       .update()
       .find(Dropdown)
       .props()
-      .onChange(null, null, 1);
+      .onChange(null, null, 0);
 
-    expect(instance.recordTypeUri).toEqual(5);
+    wrapper
+      .update()
+      .find(PrimaryButton)
+      .props()
+      .onClick(null);
+
+    expect(mockStore.RecordUri).toEqual(1);
   });
 });

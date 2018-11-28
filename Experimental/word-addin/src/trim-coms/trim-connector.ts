@@ -27,6 +27,7 @@ export interface ITrimConnector {
     query: string,
     purpose: number
   ): Promise<ITrimMainObject[]>;
+  getPropertySheet(recordTypeUri: number): Promise<any>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -53,11 +54,31 @@ export class TrimConnector implements ITrimConnector {
     return String(url);
   };
 
+  getPropertySheet(recordTypeUri: number): Promise<any> {
+    const url = this.makeUrl(`RecordType/${recordTypeUri}`, {
+      properties: ["dataentryformdefinition"]
+    });
+
+    const options = this.makeOptions();
+
+    return new Promise(function(resolve, reject) {
+      fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+          if (data.Results && data.Results.length > 0) {
+            resolve(data.Results[0].DataEntryFormDefinition);
+          } else {
+            reject({ message: data.ResponseStatus.Message });
+          }
+        });
+    });
+  }
+
   getMessages(): Promise<any> {
     const url = this.makeUrl("Localisation", {
       MatchMessages: [Object.keys(new TrimMessages()).join("|")]
     });
-    console.log(url);
+
     const options = this.makeOptions();
 
     return new Promise(function(resolve, reject) {

@@ -15,6 +15,9 @@ import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 
 let Mock_Action = "";
 class MockWordConnector implements IWordConnector {
+  registerInTrim(): Promise<IGetRecordUriResponse> {
+    throw new Error("Method not implemented.");
+  }
   getUri(): Promise<IGetRecordUriResponse> {
     return new Promise(function(resolve, reject) {
       if (Mock_Action == "NOT_FOUND") {

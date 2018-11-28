@@ -8,7 +8,7 @@ export class ExistingRecord extends React.Component<{ appStore?: any }, any> {
   public render() {
     //  const { appStore } = this.props;
 
-    return <PrimaryButton> </PrimaryButton>;
+    return <PrimaryButton>Existing Record </PrimaryButton>;
   }
 }
 
