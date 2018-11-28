@@ -1,8 +1,10 @@
-import { computed, flow, observable, configure } from "mobx";
+import { computed, flow, observable, configure, action } from "mobx";
 import {
   IWordConnector,
   IGetRecordUriResponse
 } from "../office-coms/word-connector";
+
+import TrimMessages from "../trim-coms/trim-messages";
 
 import { ITrimConnector, ILocation } from "../trim-coms/trim-connector";
 
@@ -27,7 +29,7 @@ export class AppStore implements IAppStore {
   ) {}
   @observable status: string = "WAITING";
   @observable errorMessage: string;
-  @observable messages: any = {};
+  @observable messages: TrimMessages = {};
   @observable me: ILocation;
   @observable documentInfo: IGetRecordUriResponse;
 
@@ -45,8 +47,8 @@ export class AppStore implements IAppStore {
         this.messages = messagesResponse;
 
         // temporary - need to go in TRIM Messages
-        this.messages["web_Register"] = "Register in Content Manager";
-        this.messages["web_SelectRecordType"] = "Select a Record Type";
+        this.messages.web_Register = "Register in Content Manager";
+        this.messages.web_SelectRecordType = "Select a Record Type";
 
         this.status = "WAITING";
       }
@@ -85,6 +87,9 @@ export class AppStore implements IAppStore {
     }
     return -1;
   }
+
+  @action.bound
+  createRecord(recordType: number) {}
 }
 
 //export const appStore = new AppStore();

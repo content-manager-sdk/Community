@@ -53,10 +53,13 @@ describe("Test fetch from TRIM", () => {
     ResponseStatus: {}
   });
 
-  fetchMock.get("begin:" + SERVICEAPI_BASE_URI + "/Localisation", {
-    Messages: { web_HPRM: "Content Manager" },
-    ResponseStatus: {}
-  });
+  fetchMock.get(
+    "begin:" + SERVICEAPI_BASE_URI + "/Localisation?MatchMessages=w",
+    {
+      Messages: { web_HPRM: "Content Manager" },
+      ResponseStatus: {}
+    }
+  );
 
   it("Record Types are returned", () => {
     expect.assertions(1);

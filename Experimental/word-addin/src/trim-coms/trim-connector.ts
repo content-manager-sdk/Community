@@ -55,9 +55,9 @@ export class TrimConnector implements ITrimConnector {
 
   getMessages(): Promise<any> {
     const url = this.makeUrl("Localisation", {
-      MatchMessages: [TrimMessages.web_HPRM]
+      MatchMessages: [Object.keys(new TrimMessages()).join("|")]
     });
-
+    console.log(url);
     const options = this.makeOptions();
 
     return new Promise(function(resolve, reject) {

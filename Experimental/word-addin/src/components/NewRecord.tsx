@@ -12,12 +12,12 @@ initializeIcons();
 export class NewRecord extends React.Component<
   {
     appStore?: any;
-    trimConnector: ITrimConnector;
+    trimConnector?: ITrimConnector;
   },
   any
 > {
   @observable recordTypes: IDropdownOption[] = [];
-  recordTypeUri: 0;
+  recordTypeUri: number = 0;
 
   @action.bound
   setRecordTypes(recTypes: IDropdownOption[]) {
@@ -28,7 +28,7 @@ export class NewRecord extends React.Component<
     const { trimConnector } = this.props;
 
     let me = this;
-    return trimConnector
+    return trimConnector!
       .search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
       .then(function(response: IRecordType[]) {
         me.setRecordTypes(
@@ -44,7 +44,7 @@ export class NewRecord extends React.Component<
     option: IDropdownOption,
     index: number
   ) => {
-    this.recordTypeUri = this.recordTypes[index].key;
+    this.recordTypeUri = Number(this.recordTypes[index].key);
   };
 
   public render() {
@@ -52,12 +52,12 @@ export class NewRecord extends React.Component<
 
     return (
       <div>
-        <PrimaryButton>{appStore.messages.web_Register} </PrimaryButton>
         <Dropdown
           options={this.recordTypes}
           placeholder={appStore.messages.web_SelectRecordType}
           onChange={this._onChange}
         />
+        <PrimaryButton>{appStore.messages.web_Register} </PrimaryButton>
       </div>
     );
   }
