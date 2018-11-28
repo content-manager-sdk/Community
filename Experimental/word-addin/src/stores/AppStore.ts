@@ -29,7 +29,7 @@ export class AppStore implements IAppStore {
   ) {}
   @observable status: string = "WAITING";
   @observable errorMessage: string;
-  @observable messages: TrimMessages = {};
+  @observable messages: TrimMessages = new TrimMessages();
   @observable me: ILocation;
   @observable documentInfo: IGetRecordUriResponse;
 
