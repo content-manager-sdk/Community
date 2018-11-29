@@ -1,7 +1,7 @@
 export class TrimMessages {
-  web_HPRM = "";
-  web_Register = "";
-  web_SelectRecordType = "";
+  public web_HPRM = ""; // tslint:disable-line
+  public web_Register = ""; // tslint:disable-line
+  public web_SelectRecordType = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

@@ -1,11 +1,12 @@
 import * as React from "react";
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
 import { NewRecord } from "./NewRecord";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { TrimConnector } from "../trim-coms/trim-connector";
 import { IRecordType, ITrimMainObject } from "../trim-coms/trim-connector";
-import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
+import { PropertySheet } from "./PropertySheet";
+import { IWordConnector } from "../office-coms/word-connector";
 
 describe("New Record layout", function() {
   let resolveRecordTypes;
@@ -17,28 +18,46 @@ describe("New Record layout", function() {
     });
   };
 
-  const mockStore = {
-    RecordUri: 0,
-    messages: {
-      web_Register: "Register",
-      web_SelectRecordType: "Select a Record Type"
-    },
-
-    createRecord: recordUri => {
-      mockStore.RecordUri = recordUri;
-    }
+  mockTrimConnector.getPropertySheet = () => {
+    return new Promise(function(resolve) {
+      resolve({ PageItems: [] });
+    });
   };
 
-  const wrapper = mount<NewRecord>(
-    <NewRecord appStore={mockStore} trimConnector={mockTrimConnector} />
+  const mockStore = {
+    RecordUri: 0,
+    RecordProps: {},
+    messages: {
+      web_Register: "Register",
+      web_SelectRecordType: "Select a Record Type",
+    },
+
+    createRecord: (recordUri, recordProps) => {
+      mockStore.RecordUri = recordUri;
+      mockStore.RecordProps = recordProps;
+    },
+  };
+
+  class MockWordConnector implements IWordConnector {
+    getUri(): Promise<
+      import("d:/Community/Experimental/word-addin/src/office-coms/word-connector").IGetRecordUriResponse
+    > {
+      throw new Error("Method not implemented.");
+    }
+    getName(): string {
+      return "default title";
+    }
+  }
+
+  const wrapper = shallow<NewRecord>(
+    <NewRecord
+      appStore={mockStore}
+      trimConnector={mockTrimConnector}
+      wordConnector={new MockWordConnector()}
+    />
   );
 
-  it("contains a button", () => {
-    expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
-    expect(wrapper.find(PrimaryButton).text()).toMatch("Register");
-  });
-
-  it("contains a Record Type dropdown", async done => {
+  it("contains a Record Type dropdown", async (done) => {
     resolveRecordTypes([{ Uri: 1, NameString: "Document" } as IRecordType]);
 
     expect(wrapper.find(Dropdown).exists()).toBeTruthy();
@@ -56,11 +75,17 @@ describe("New Record layout", function() {
     });
   });
 
-  it("Sets the Record Uri from on load and onChange", () => {
-    //   wrapper
-    //   .update()
-    //   .find(Dropdown).props().onChange({ type:null, timeStamp:null, target:null, persist:null, isPropagationStopped:null, stopPropagation:null, isDefaultPrevented:null, preventDefault:null, bubbles:false, currentTarget:null, cancelable:false, defaultPrevented:false, eventPhase:null, isTrusted:true, nativeEvent:null});
+  it("contains a button", () => {
+    expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
+    expect(
+      wrapper
+        .find(PrimaryButton)
+        .childAt(0)
+        .text()
+    ).toMatch("Register");
+  });
 
+  it("Sets the Record Uri from on load and onChange", () => {
     const instance = wrapper.instance();
     instance.setRecordTypes([]);
 
@@ -69,7 +94,7 @@ describe("New Record layout", function() {
     // should be zero after the record types list has been changed
     instance.setRecordTypes([
       { key: 1, text: "Document" },
-      { key: 5, text: "Document 5" }
+      { key: 5, text: "Document 5" },
     ]);
     wrapper
       .update()
@@ -94,7 +119,7 @@ describe("New Record layout", function() {
     const instance = wrapper.instance();
     instance.setRecordTypes([
       { key: 1, text: "Document" },
-      { key: 5, text: "Document 5" }
+      { key: 5, text: "Document 5" },
     ]);
 
     wrapper
@@ -110,5 +135,83 @@ describe("New Record layout", function() {
       .onClick(null);
 
     expect(mockStore.RecordUri).toEqual(1);
+  });
+
+  it("sends the default on click even if no fields on the form have been modified", () => {
+    const instance = wrapper.instance();
+    instance.setRecordTypes([
+      { key: 1, text: "Document" },
+      { key: 5, text: "Document 5" },
+    ]);
+
+    wrapper
+      .update()
+      .find(PrimaryButton)
+      .props()
+      .onClick(null);
+
+    expect(mockStore.RecordProps).toEqual({
+      RecordTypedTitle: "default title",
+    });
+  });
+
+  it("sends updated properties button press", () => {
+    const instance = wrapper.instance();
+    instance.setRecordTypes([
+      { key: 1, text: "Document" },
+      { key: 5, text: "Document 5" },
+    ]);
+
+    // wrapper
+    //   .update()
+    //   .find(Dropdown)
+    //   .props()
+    //   .onChange(null, null, 0);
+
+    wrapper
+      .update()
+      .find(PropertySheet)
+      .props()
+      .onChange(null, { RecordTypedTitle: "test title" });
+
+    wrapper
+      .update()
+      .find(PrimaryButton)
+      .props()
+      .onClick(null);
+
+    expect(mockStore.RecordProps).toEqual({ RecordTypedTitle: "test title" });
+  });
+
+  it("displays a property sheet when Record Type is set", async (done) => {
+    const shallowWrapper = shallow<NewRecord>(
+      <NewRecord
+        appStore={mockStore}
+        trimConnector={mockTrimConnector}
+        wordConnector={new MockWordConnector()}
+      />
+    );
+
+    const instance = wrapper.instance();
+    // no property sheet before recordtype uri sey
+    expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+
+    wrapper
+      .update()
+      .find(Dropdown)
+      .props()
+      .onChange(null, null, 1);
+
+    setImmediate(() => {
+      //expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+      expect(instance.formDefinition).toEqual({ PageItems: [] });
+      expect(
+        wrapper
+          .update()
+          .find(PropertySheet)
+          .props().formDefinition
+      ).toEqual({ PageItems: [] });
+      done();
+    });
   });
 });

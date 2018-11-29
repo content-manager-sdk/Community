@@ -15,6 +15,9 @@ import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 
 let Mock_Action = "";
 class MockWordConnector implements IWordConnector {
+  getName(): string {
+    throw new Error("Method not implemented.");
+  }
   registerInTrim(): Promise<IGetRecordUriResponse> {
     throw new Error("Method not implemented.");
   }
@@ -33,6 +36,15 @@ class MockWordConnector implements IWordConnector {
 
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+  registerInTrim(
+    recordTypeUri: number,
+    properties: any
+  ): Promise<ITrimMainObject> {
+    throw new Error("Method not implemented.");
+  }
+  getPropertySheet(recordTypeUri: number): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
   getMessages(): Promise<any> {
     return new Promise(function(resolve, reject) {
       resolve({ web_HPRM: "Content Manager" });

@@ -9,10 +9,15 @@ import WordConnector from "./office-coms/word-connector";
 import TrimConnector from "./trim-coms/trim-connector";
 
 const trimConnector = new TrimConnector();
-const appStore = new AppStore(new WordConnector(), trimConnector);
+const wordConnector = new WordConnector();
+const appStore = new AppStore(wordConnector, trimConnector);
 
 const Root = (
-  <Provider appStore={appStore} trimConnector={trimConnector}>
+  <Provider
+    appStore={appStore}
+    trimConnector={trimConnector}
+    wordConnector={wordConnector}
+  >
     <BootStrap />
   </Provider>
 );

@@ -3,6 +3,7 @@
   "defaultSeverity": "warning",
   "jsRules": {},
   "rules": {
+    "indent": [true, "tabs", 2],
     "variable-name": [
       true,
       "ban-keywords",

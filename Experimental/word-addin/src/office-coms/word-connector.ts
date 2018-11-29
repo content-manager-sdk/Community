@@ -19,7 +19,7 @@ export interface IWordConnector {
 export class WordConnector implements IWordConnector {
   getName(): string {
     const tokens = Office.context.document.url.split("/");
-    return tokens[tokens.length - 1];
+    return tokens[tokens.length - 1].split(".")[0];
   }
   getUri(): Promise<IGetRecordUriResponse> {
     return new Promise(function(resolve, reject) {

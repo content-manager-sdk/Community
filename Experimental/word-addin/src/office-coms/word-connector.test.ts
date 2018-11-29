@@ -56,7 +56,7 @@ export namespace Word {
 export namespace Office {
 	export const context = {
     document: {
-      url: "https://hperm-my.sharepoint.com/personal/alex_hperm_info/Documents/Document8";
+      url: "https://hperm-my.sharepoint.com/personal/alex_hperm_info/Documents/Document8.docx";
     }
   }
 }

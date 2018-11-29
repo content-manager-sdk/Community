@@ -1,7 +1,7 @@
 import { computed, flow, observable, configure, action } from "mobx";
 import {
   IWordConnector,
-  IGetRecordUriResponse
+  IGetRecordUriResponse,
 } from "../office-coms/word-connector";
 
 import TrimMessages from "../trim-coms/trim-messages";
@@ -76,7 +76,7 @@ export class AppStore implements IAppStore {
   @computed
   get UserProfile(): IUserProfile {
     return {
-      DisplayName: this.me.FullFormattedName.Value
+      DisplayName: this.me.FullFormattedName.Value,
     };
   }
 
@@ -89,8 +89,8 @@ export class AppStore implements IAppStore {
   }
 
   @action.bound
-  createRecord(recordType: number) {
-    this.wordConnector.registerInTrim();
+  createRecord(recordType: number, properties: any) {
+    this.trimConnector.registerInTrim(recordType, properties);
   }
 }
 
