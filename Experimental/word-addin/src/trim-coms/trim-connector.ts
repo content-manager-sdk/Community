@@ -25,19 +25,19 @@ export interface ITrimConnector {
 	search<T>(
 		trimType: BaseObjectTypes,
 		query: string,
-		purpose: number,
+		purpose: number
 	): Promise<ITrimMainObject[]>;
 	getPropertySheet(recordTypeUri: number): Promise<any>;
 	registerInTrim(
 		recordTypeUri: number,
-		properties: any,
+		properties: any
 	): Promise<ITrimMainObject>;
 }
 
 export class TrimConnector implements ITrimConnector {
 	public registerInTrim(
 		recordTypeUri: number,
-		properties: any,
+		properties: any
 	): Promise<ITrimMainObject> {
 		const url = this.makeUrl(`Record`);
 		const body = { ...properties, RecordRecordType: recordTypeUri };
@@ -100,7 +100,7 @@ export class TrimConnector implements ITrimConnector {
 	public search<T extends ITrimMainObject>(
 		trimType: BaseObjectTypes,
 		q: string,
-		purpose: number = 0,
+		purpose: number = 0
 	): Promise<T[]> {
 		const url = this.makeUrl(trimType, {
 			properties: ["NameString"],
@@ -149,17 +149,20 @@ export class TrimConnector implements ITrimConnector {
 
 	private makeOptions = (
 		method: string = "GET",
-		body: any = undefined,
+		body: any = undefined
 	): RequestInit => {
+		const headers = { Accept: "application/json" };
+		if (method === "POST") {
+			headers["Content-Type"] = "application/json";
+		}
 		return {
 			body: JSON.stringify(body),
 			credentials: "include",
-			headers: { Accept: "application/json" },
+			headers: headers,
 			method,
 			mode: "cors",
-			
 		};
-	}
+	};
 
 	private makeUrl = (path: string, query: any = {}) => {
 		const toParam = (a: any): string => {
@@ -173,7 +176,7 @@ export class TrimConnector implements ITrimConnector {
 		const url = new URL(`${SERVICEAPI_BASE_URI}/${path}`);
 		url.search = toParam(query);
 		return String(url);
-	}
+	};
 }
 
 export default TrimConnector;

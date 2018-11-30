@@ -12,97 +12,97 @@ import { IWordConnector } from "src/office-coms/word-connector";
 initializeIcons();
 
 export class NewRecord extends React.Component<
-  {
-    appStore?: any;
-    trimConnector?: ITrimConnector;
-    wordConnector?: IWordConnector;
-  },
-  any
+	{
+		appStore?: any;
+		trimConnector?: ITrimConnector;
+		wordConnector?: IWordConnector;
+	},
+	any
 > {
-  @observable recordTypes: IDropdownOption[] = [];
-  @observable formDefinition: any = {};
-  recordTypeUri: number = 0;
-  recordProps: any = {};
+	@observable recordTypes: IDropdownOption[] = [];
+	@observable formDefinition: any = {};
+	recordTypeUri: number = 0;
+	recordProps: any = {};
 
-  @action.bound
-  setRecordTypes(recTypes: IDropdownOption[]) {
-    this.recordTypes = recTypes;
-    this.recordTypeUri = 0;
-  }
+	@action.bound
+	setRecordTypes(recTypes: IDropdownOption[]) {
+		this.recordTypes = recTypes;
+		this.recordTypeUri = 0;
+	}
 
-  @action.bound
-  setPropertySheet() {
-    if (this.recordTypeUri > 0) {
-      this.props
-        .trimConnector!.getPropertySheet(this.recordTypeUri)
-        .then((data) => {
-          runInAction(() => {
-            this.formDefinition = data;
-          });
-        });
-    }
-  }
+	@action.bound
+	setPropertySheet() {
+		if (this.recordTypeUri > 0) {
+			this.props
+				.trimConnector!.getPropertySheet(this.recordTypeUri)
+				.then((data) => {
+					runInAction(() => {
+						this.formDefinition = data;
+					});
+				});
+		}
+	}
 
-  componentDidMount() {
-    const { trimConnector, wordConnector } = this.props;
-    this.recordProps["RecordTypedTitle"] = wordConnector!.getName();
+	componentDidMount() {
+		const { trimConnector, wordConnector } = this.props;
+		this.recordProps["RecordTypedTitle"] = wordConnector!.getName();
 
-    let me = this;
-    return trimConnector!
-      .search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
-      .then(function(response: IRecordType[]) {
-        me.setRecordTypes(
-          response.map(function(o: IRecordType) {
-            return { key: o.Uri, text: o.NameString } as IDropdownOption;
-          })
-        );
-      });
-  }
+		let me = this;
+		return trimConnector!
+			.search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
+			.then(function(response: IRecordType[]) {
+				me.setRecordTypes(
+					response.map(function(o: IRecordType) {
+						return { key: o.Uri, text: o.NameString } as IDropdownOption;
+					})
+				);
+			});
+	}
 
-  private _onChange = (
-    event: React.FormEvent<HTMLDivElement>,
-    option: IDropdownOption,
-    index: number
-  ) => {
-    this.recordTypeUri = Number(this.recordTypes[index].key);
-    this.setPropertySheet();
-  };
+	private _onChange = (
+		event: React.FormEvent<HTMLDivElement>,
+		option: IDropdownOption,
+		index: number
+	) => {
+		this.recordTypeUri = Number(this.recordTypes[index].key);
+		this.setPropertySheet();
+	};
 
-  private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    this.props.appStore.createRecord(this.recordTypeUri, this.recordProps);
-  };
+	private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+		this.props.appStore.createRecord(this.recordTypeUri, this.recordProps);
+	};
 
-  private _onPropertySheetChange = (
-    event: React.FormEvent<HTMLElement>,
-    newProps: any
-  ) => {
-    this.recordProps = newProps;
-  };
+	private _onPropertySheetChange = (
+		event: React.FormEvent<HTMLElement>,
+		newProps: any
+	) => {
+		this.recordProps = newProps;
+	};
 
-  public render() {
-    const { appStore } = this.props;
+	public render() {
+		const { appStore } = this.props;
 
-    return (
-      <div>
-        <Dropdown
-          options={this.recordTypes}
-          placeholder={appStore.messages.web_SelectRecordType}
-          onChange={this._onChange}
-        />
-        <PropertySheet
-          formDefinition={this.formDefinition}
-          defaultRecordTitle={this.recordProps["RecordTypedTitle"]}
-          onChange={this._onPropertySheetChange}
-        />
-        <PrimaryButton onClick={this._onClick}>
-          {appStore.messages.web_Register}{" "}
-        </PrimaryButton>
-      </div>
-    );
-  }
+		return (
+			<div>
+				<Dropdown
+					options={this.recordTypes}
+					placeholder={appStore.messages.web_SelectRecordType}
+					onChange={this._onChange}
+				/>
+				<PropertySheet
+					formDefinition={this.formDefinition}
+					defaultRecordTitle={this.recordProps["RecordTypedTitle"]}
+					onChange={this._onPropertySheetChange}
+				/>
+				<PrimaryButton onClick={this._onClick}>
+					{appStore.messages.web_Register}
+				</PrimaryButton>
+			</div>
+		);
+	}
 }
 
 export default inject("appStore", "trimConnector", "wordConnector")(
-  observer(NewRecord)
+	observer(NewRecord)
 );
 //export default NewRecord;

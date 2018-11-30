@@ -1,98 +1,115 @@
-import { computed, flow, observable, configure, action } from "mobx";
+import { computed, configure, flow, observable } from "mobx";
 import {
-  IWordConnector,
-  IGetRecordUriResponse,
+	IGetRecordUriResponse,
+	IWordConnector,
 } from "../office-coms/word-connector";
 
 import TrimMessages from "../trim-coms/trim-messages";
 
-import { ITrimConnector, ILocation } from "../trim-coms/trim-connector";
+import {
+	ILocation,
+	ITrimConnector,
+	ITrimMainObject,
+} from "../trim-coms/trim-connector";
 
 export const BASE_URI = "http://localhost/";
 
 export interface IUserProfile {
-  DisplayName: string;
+	DisplayName: string;
 }
 
 export interface IAppStore {
-  status: string;
-  UserProfile?: IUserProfile;
-  errorMessage?: string;
+	status: string;
+	UserProfile?: IUserProfile;
+	errorMessage?: string;
 }
-
-configure({ enforceActions: "observed" });
 
 export class AppStore implements IAppStore {
-  constructor(
-    private wordConnector: IWordConnector,
-    private trimConnector: ITrimConnector
-  ) {}
-  @observable status: string = "WAITING";
-  @observable errorMessage: string;
-  @observable messages: TrimMessages = new TrimMessages();
-  @observable me: ILocation;
-  @observable documentInfo: IGetRecordUriResponse;
+	@observable public errorMessage: string;
+	@observable public documentInfo: IGetRecordUriResponse;
+	@observable public me: ILocation;
+	@observable public messages: TrimMessages = new TrimMessages();
+	@observable public status: string = "WAITING";
 
-  fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
-    this.status = "SPINNING";
+	constructor(
+		private wordConnector: IWordConnector,
+		private trimConnector: ITrimConnector
+	) {
+		configure({ enforceActions: "observed" });
+	}
 
-    try {
-      const response: ILocation = yield this.trimConnector.getMe();
-      const messagesResponse: any = yield this.trimConnector.getMessages();
-      this.documentInfo = yield this.wordConnector.getUri();
+	// tslint:disable-next-line
+	public fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
+		this.status = "SPINNING";
 
-      if (response != null && messagesResponse != null) {
-        this.me = response;
+		try {
+			const response: ILocation = yield this.trimConnector.getMe();
+			const messagesResponse: any = yield this.trimConnector.getMessages();
+			this.documentInfo = yield this.wordConnector.getUri();
 
-        this.messages = messagesResponse;
+			if (response != null && messagesResponse != null) {
+				this.me = response;
 
-        // temporary - need to go in TRIM Messages
-        this.messages.web_Register = "Register in Content Manager";
-        this.messages.web_SelectRecordType = "Select a Record Type";
+				this.messages = messagesResponse;
 
-        this.status = "WAITING";
-      }
+				// temporary - need to go in TRIM Messages
+				this.messages.web_Register = "Register in Content Manager";
+				this.messages.web_SelectRecordType = "Select a Record Type";
 
-      if (this.documentInfo.found || !this.documentInfo.message) {
-        this.status = "WAITING";
-      } else {
-        this.status = "ERROR";
-      }
-    } catch (error) {
-      this.status = "ERROR";
-      this.errorMessage = error.message;
-    }
-  });
+				this.status = "WAITING";
+			}
 
-  @computed
-  get ApplicationDisplayName() {
-    if (this.messages) {
-      return this.messages.web_HPRM;
-    } else {
-      return "";
-    }
-  }
+			this.status =
+				this.documentInfo.found || !this.documentInfo.message
+					? "WAITING"
+					: "ERROR";
+		} catch (error) {
+			this.status = "ERROR";
+			this.errorMessage = error.message;
+		}
+	});
 
-  @computed
-  get UserProfile(): IUserProfile {
-    return {
-      DisplayName: this.me.FullFormattedName.Value,
-    };
-  }
+	@computed
+	get ApplicationDisplayName() {
+		if (this.messages) {
+			return this.messages.web_HPRM;
+		} else {
+			return "";
+		}
+	}
 
-  @computed
-  get RecordUri(): number {
-    if (this.documentInfo != null) {
-      return this.documentInfo.uri;
-    }
-    return -1;
-  }
+	@computed
+	get UserProfile(): IUserProfile {
+		return {
+			DisplayName: this.me.FullFormattedName.Value,
+		};
+	}
 
-  @action.bound
-  createRecord(recordType: number, properties: any) {
-    this.trimConnector.registerInTrim(recordType, properties);
-  }
+	@computed
+	get RecordUri(): number {
+		if (this.documentInfo != null) {
+			return this.documentInfo.uri;
+		}
+		return -1;
+	}
+
+	// tslint:disable-next-line
+	public createRecord = flow(function*(
+		this: AppStore,
+		recordType: number,
+		properties: any
+	) {
+		const newRecord: ITrimMainObject = yield this.trimConnector.registerInTrim(
+			recordType,
+			properties
+		);
+
+		this.wordConnector.setUri(newRecord.Uri);
+
+		if (newRecord.Uri > 0) {
+			this.documentInfo = { uri: newRecord.Uri, found: true };
+		}
+	});
 }
 
-//export const appStore = new AppStore();
 export default AppStore;

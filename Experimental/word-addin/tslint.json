@@ -1,22 +1,23 @@
 {
-  "extends": ["tslint:recommended"],
-  "defaultSeverity": "warning",
-  "jsRules": {},
-  "rules": {
-    "indent": [true, "tabs", 2],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-leading-underscore"
-    ]
-  },
-  "rulesDirectory": [],
-  "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
-    ]
-  }
+	"extends": ["tslint:latest", "tslint-config-prettier"],
+	"defaultSeverity": "warning",
+	"jsRules": {},
+	"rules": {
+		"indent": [true, "tabs", 2],
+		"variable-name": [
+			true,
+			"ban-keywords",
+			"check-format",
+			"allow-leading-underscore"
+		]
+	},
+	"rulesDirectory": [],
+	"linterOptions": {
+		"exclude": [
+			"config/**/*.js",
+			"node_modules/**/*.ts",
+			"coverage/lcov-report/*.js",
+			"src/**/*.test.ts"
+		]
+	}
 }

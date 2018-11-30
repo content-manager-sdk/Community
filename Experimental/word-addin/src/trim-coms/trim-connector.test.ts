@@ -190,6 +190,8 @@ describe("Test fetch from TRIM", () => {
 
 		expect(calls.length).toBe(1);
 		expect (calls[0][1].body).toEqual(JSON.stringify({RecordTypedTitle:"test", RecordRecordType:1}));
+		expect (calls[0][1].headers!["Content-Type"]).toEqual("application/json");
+		expect (data.Uri).toEqual(123);
 	  });
 
   });

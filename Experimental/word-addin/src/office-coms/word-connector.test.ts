@@ -14,6 +14,8 @@ import { WordConnector } from "./word-connector";
 
 let Mock_Action = "";
 let uriProp = { key: "", value: "" };
+let addedItem = { key: "", value: "" };
+let addedItemSynced:any = {};
 export namespace Word {
   export const run = function(callback) {
     return callback({
@@ -23,7 +25,11 @@ export namespace Word {
             getItem: function(itemName) {
               uriProp.key = itemName;
               return uriProp;
-            }
+			},
+			add:(key:string, value:any) =>{
+				addedItem = {key, value};
+			return uriProp;
+			}
           }
         }
       },
@@ -34,10 +40,15 @@ export namespace Word {
         } else if (Mock_Action == "URI_NULL") {
           uriProp.value = null;
         } else if (Mock_Action == "URI_0") {
-          uriProp.value = "0";
+		  uriProp.value = "0";
+		} else if (Mock_Action === "Add_Uri") {
+			uriProp.value = addedItem.value;
+
         } else {
           uriProp.value = "1";
-        }
+		}
+		
+		addedItemSynced = addedItem;
         return new Promise(function(resolve, reject) {
           if (Mock_Action == "URI_ERROR") {
             reject("an error");
@@ -126,57 +137,14 @@ describe("word apis", () => {
   it("name from document URL", () => {
     expect(wordConnector.getName()).toEqual("Document8");
   });
-});
-//   jest.mock("../../node_modules/@microsoft/office-js/dist/word-15.js", () => {
-//     return {
-//       run: jest.fn()
-//     };
-//   });
 
-//   jest.mock("../../node_modules/@microsoft/office-js/dist/office.js", () => {
-//     return {
-//       initialize: jest.fn()
-//     };
-//   });
-
-//const MockObject = require("../../node_modules/@microsoft/office-js/dist/word-15.js");
-
-/* describe("mock function", () => {
-    // jest.mock("../../node_modules/@microsoft/office-js/dist/word-15.js", () => {
-    //   return {
-    //     run: jest.fn()
-    //   };
-    // });
-    // it("should create mock", () => {
-    //   expect(jest.isMockFunction(MockObject.run)).toBeTruthy();
-    // });
-
-    // it("should return mock values", () => {
-    //   jest.mock<Word.RequestContext>(wordjs, () => {
-    //     return {
-    //       run: jest.fn()
-    //     };
-    //   });
-
-    //   return getUri().then(data => {
-    //     expect(data.ok).toBeFalsy();
-    //   });
-    // });
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-
-    // jest.mock(wordjs, () => {
-    //   return {
-    //     run: jest.fn()
-    //   };
-    // });
-
-    it("should return mock values", () => {
-      console.log("rrrrrrrrrrrrrrrrrrrrrrr");
-
-      return getUri().then(data => {
-        console.log(data);
-        expect(data.ok).toBeTruthy();
-      });
+  test("Set uri in custom prop", () => {
+	Mock_Action = "Add_Uri";
+    expect.assertions(3);
+    return wordConnector.setUri(9).then(data => {
+    	expect(data.uri).toBe(9);
+		expect(uriProp.key).toEqual("CM_Record_Uri");
+	  	expect(uriProp.value).toEqual("9");
     });
-  });*/
-//});
+  });
+});
