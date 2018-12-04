@@ -25,11 +25,12 @@ export interface IAppStore {
 }
 
 export class AppStore implements IAppStore {
+	@observable public accessToken: string;
 	@observable public errorMessage: string;
 	@observable public documentInfo: IGetRecordUriResponse;
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
-	@observable public status: string = "WAITING";
+	@observable public status: string = "STARTING";
 
 	constructor(
 		private wordConnector: IWordConnector,
@@ -40,12 +41,11 @@ export class AppStore implements IAppStore {
 
 	// tslint:disable-next-line
 	public fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
-		this.status = "SPINNING";
+		//	this.status = "SPINNING";
 
 		try {
 			const response: ILocation = yield this.trimConnector.getMe();
 			const messagesResponse: any = yield this.trimConnector.getMessages();
-			this.documentInfo = yield this.wordConnector.getUri();
 
 			if (response != null && messagesResponse != null) {
 				this.me = response;
@@ -59,10 +59,12 @@ export class AppStore implements IAppStore {
 				this.status = "WAITING";
 			}
 
+			this.documentInfo = yield this.wordConnector.getUri();
 			this.status =
 				this.documentInfo.found || !this.documentInfo.message
 					? "WAITING"
 					: "ERROR";
+					
 		} catch (error) {
 			this.status = "ERROR";
 			this.errorMessage = error.message;

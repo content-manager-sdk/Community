@@ -99,14 +99,21 @@ describe("Test fetch from TRIM", () => {
     });
   });
 
-  it("does not send a body with a GET", () =>{
-    return trimConnector.getMe().then((data) => {
-		let calls =	fetchMock.calls("GetMe")
+  it("does not send a body with a GET", async () =>{
+    await trimConnector.getMe()
+	let calls =	fetchMock.calls("GetMe")
+	expect (calls[calls.length - 1][1].body).toBeUndefined();
+  });
 
+  it("sends a bearer header with each request", async () =>{
 
-		expect (calls[0][1].body).toBeUndefined();
-	  });
+	trimConnector.setAccessToken("mytoken");
+	
+	await trimConnector.getMe();
 
+	const calls = fetchMock.calls("GetMe")
+
+	expect (calls[calls.length - 1][1].headers!["Authorization"]).toEqual("Bearer mytoken");
 
   });
 
@@ -190,9 +197,11 @@ describe("Test fetch from TRIM", () => {
 
 		expect(calls.length).toBe(1);
 		expect (calls[0][1].body).toEqual(JSON.stringify({RecordTypedTitle:"test", RecordRecordType:1}));
+		expect (calls[0][1].headers!["Accept"]).toEqual("application/json");
 		expect (calls[0][1].headers!["Content-Type"]).toEqual("application/json");
 		expect (data.Uri).toEqual(123);
 	  });
-
   });
+
+
 });

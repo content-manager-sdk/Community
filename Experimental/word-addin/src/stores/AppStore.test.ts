@@ -16,6 +16,9 @@ import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 let Mock_Action = "";
 let testSetUri: number = 0;
 class MockWordConnector implements IWordConnector {
+	getAccessToken(): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
 	setUri(uri: number): Promise<IGetRecordUriResponse> {
 		testSetUri = uri;
 		return new Promise(function(resolve, reject) {
@@ -41,6 +44,9 @@ class MockWordConnector implements IWordConnector {
 
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	setAccessToken(accessToken: string) {
+		throw new Error("Method not implemented.");
+	}
 	registerInTrim(
 		recordTypeUri: number,
 		properties: any
@@ -85,7 +91,7 @@ beforeEach(() => {
 describe("Test basic setup from Trim", () => {
 	it("the display name is david", () => {
 		expect.assertions(3);
-		expect(appStore.status).toBe("WAITING");
+		expect(appStore.status).toBe("STARTING");
 		return appStore.fetchBaseSettingFromTrim().then(() => {
 			expect(appStore.UserProfile.DisplayName).toBe("david");
 			expect(appStore.status).toBe("WAITING");
@@ -145,7 +151,7 @@ describe("Test basic setup from Trim", () => {
 		Mock_Trim_Action = "ERROR";
 
 		expect.assertions(3);
-		expect(appStore.status).toBe("WAITING");
+		expect(appStore.status).toBe("STARTING");
 		await appStore.fetchBaseSettingFromTrim();
 		expect(appStore.errorMessage).toBe("error");
 

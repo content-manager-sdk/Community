@@ -7,15 +7,18 @@ import { MainApp } from "./MainApp";
 @inject("appStore")
 @observer
 export class BootStrap extends React.Component<{ appStore?: IAppStore }, any> {
-  public render() {
-    const { appStore } = this.props;
+	public render() {
+		const { appStore } = this.props;
 
-    if (appStore!.status === "ERROR") {
-      return <ErrorDisplay Message={appStore!.errorMessage} />;
-    } else {
-      return <MainApp />;
-    }
-  }
+		if (appStore!.status === "ERROR") {
+			return <ErrorDisplay Message={appStore!.errorMessage} />;
+		} else if (appStore!.status !== "STARTING") {
+			return <MainApp />;
+		}
+		{
+			return null;
+		}
+	}
 }
 
 export default BootStrap;

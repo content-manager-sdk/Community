@@ -20,6 +20,7 @@ export interface ILocation extends ITrimMainObject {
 export interface IRecordType extends ITrimMainObject {}
 
 export interface ITrimConnector {
+	setAccessToken(accessToken: string): any;
 	getMe(): Promise<ILocation>;
 	getMessages(): Promise<any>;
 	search<T>(
@@ -35,11 +36,12 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
+	private _accessToken: string;
 	public registerInTrim(
 		recordTypeUri: number,
 		properties: any
 	): Promise<ITrimMainObject> {
-		const url = this.makeUrl(`Record`);
+		const url = this.makeUrl("Record", {});
 		const body = { ...properties, RecordRecordType: recordTypeUri };
 
 		const options = this.makeOptions("POST", body);
@@ -56,7 +58,9 @@ export class TrimConnector implements ITrimConnector {
 				});
 		});
 	}
-
+	public setAccessToken(accessToken: string): any {
+		this._accessToken = accessToken;
+	}
 	public getPropertySheet(recordTypeUri: number): Promise<any> {
 		const url = this.makeUrl(`RecordType/${recordTypeUri}`, {
 			properties: ["dataentryformdefinition"],
@@ -152,13 +156,19 @@ export class TrimConnector implements ITrimConnector {
 		body: any = undefined
 	): RequestInit => {
 		const headers = { Accept: "application/json" };
+
 		if (method === "POST") {
 			headers["Content-Type"] = "application/json";
 		}
+
+		if (this._accessToken) {
+			headers["Authorization"] = `Bearer ${this._accessToken}`;
+		}
+
 		return {
 			body: JSON.stringify(body),
 			credentials: "include",
-			headers: headers,
+			headers,
 			method,
 			mode: "cors",
 		};

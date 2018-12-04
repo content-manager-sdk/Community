@@ -15,52 +15,51 @@ import { WordConnector } from "./word-connector";
 let Mock_Action = "";
 let uriProp = { key: "", value: "" };
 let addedItem = { key: "", value: "" };
-let addedItemSynced:any = {};
+let addedItemSynced: any = {};
 export namespace Word {
-  export const run = function(callback) {
-    return callback({
-      document: {
-        properties: {
-          customProperties: {
-            getItem: function(itemName) {
-              uriProp.key = itemName;
-              return uriProp;
+	export const run = function(callback) {
+		return callback({
+			document: {
+				properties: {
+					customProperties: {
+						getItem: function(itemName) {
+							uriProp.key = itemName;
+							return uriProp;
+						},
+						add: (key: string, value: any) => {
+							addedItem = { key, value };
+							return uriProp;
+						},
+					},
+				},
 			},
-			add:(key:string, value:any) =>{
-				addedItem = {key, value};
-			return uriProp;
-			}
-          }
-        }
-      },
-      load: function() {},
-      sync: function() {
-        if (Mock_Action == "ERROR_IN_SYNC") {
-          throw new Error("big error");
-        } else if (Mock_Action == "URI_NULL") {
-          uriProp.value = null;
-        } else if (Mock_Action == "URI_0") {
-		  uriProp.value = "0";
-		} else if (Mock_Action === "Add_Uri") {
-			uriProp.value = addedItem.value;
+			load: function() {},
+			sync: function() {				
+				if (Mock_Action == "ERROR_IN_SYNC") {
+					throw new Error("big error");
+				} else if (Mock_Action == "URI_NULL") {
+					uriProp.value = null;
+				} else if (Mock_Action == "URI_0") {
+					uriProp.value = "0";
+				} else if (Mock_Action === "Add_Uri") {
+					uriProp.value = addedItem.value;
+				} else {
+					uriProp.value = "1";
+				}
 
-        } else {
-          uriProp.value = "1";
-		}
-		
-		addedItemSynced = addedItem;
-        return new Promise(function(resolve, reject) {
-          if (Mock_Action == "URI_ERROR") {
-            reject("an error");
-          } else if (Mock_Action == "URI_ERROR_WITH_MESSAGE_PROP") {
-            reject({ message: "an error" });
-          } else {
-            resolve();
-          }
-        });
-      }
-    });
-  };
+				addedItemSynced = addedItem;
+				return new Promise(function(resolve, reject) {
+					if (Mock_Action == "URI_ERROR") {
+						reject("an error");
+					} else if (Mock_Action == "URI_ERROR_WITH_MESSAGE_PROP") {
+						reject({ message: "an error" });
+					} else {
+						resolve();
+					}
+				});
+			},
+		});
+	};
 }
 (<any>global).Word = Word;
 
@@ -79,72 +78,72 @@ export namespace Office {
 // (<any>global).Office = Office;
 
 describe("word apis", () => {
-  const wordConnector = new WordConnector();
+	const wordConnector = new WordConnector();
 
-  test("the default is not OK", () => {
-    Mock_Action = "URI_NULL";
-    expect.assertions(1);
-    return wordConnector.getUri().then(data => {
-      expect(data.found).toBeFalsy();
-    });
-  });
+	test("the default is not OK", async () => {
+		Mock_Action = "URI_NULL";
+		expect.assertions(1);
 
-  test("the record Uri == 1", () => {
-    Mock_Action = "URI_0";
-    expect.assertions(2);
-    return wordConnector.getUri().then(data => {
-      expect(data.found).toBeFalsy();
-      expect(data.uri).toEqual(0);
-    });
-  });
+		let data = await wordConnector.getUri();
+		expect(data.found).toBeFalsy();
 
-  test("the record Uri == 1", () => {
-    Mock_Action = "URI_1";
-    expect.assertions(2);
-    return wordConnector.getUri().then(data => {
-      expect(data.found).toBeTruthy();
-      expect(data.uri).toEqual(1);
-    });
-  });
+	});
 
-  test("Error on get Uri", () => {
-    Mock_Action = "URI_ERROR";
-    expect.assertions(2);
-    return wordConnector.getUri().then(data => {
-      expect(data.found).toBeFalsy();
-      expect(data.message).toEqual("");
-    });
-  });
+	test("the record Uri == 1", async () => {
+		Mock_Action = "URI_0";
+		expect.assertions(2);
+		const data = await wordConnector.getUri();
+		expect(data.found).toBeFalsy();
+		expect(data.uri).toEqual(0);
 
-  test("Error on get Uri, with message in message property", () => {
-    Mock_Action = "URI_ERROR_WITH_MESSAGE_PROP";
-    expect.assertions(2);
-    return wordConnector.getUri().then(data => {
-      expect(data.found).toBeFalsy();
-      expect(data.message).toEqual("");
-    });
-  });
+	});
 
-  test("Error in sync, probably not able to find custom prop", () => {
-    Mock_Action = "ERROR_IN_SYNC";
-    expect.assertions(2);
-    return wordConnector.getUri().catch(data => {
-      expect(data.found).toBeFalsy();
-      expect(data.message).toEqual("big error");
-    });
-  });
+	test("the record Uri == 1", async () => {
+		Mock_Action = "URI_1";
+		expect.assertions(2);
+		const data = await wordConnector.getUri();
+		expect(data.found).toBeTruthy();
+		expect(data.uri).toEqual(1);
 
-  it("name from document URL", () => {
-    expect(wordConnector.getName()).toEqual("Document8");
-  });
+	});
 
-  test("Set uri in custom prop", () => {
-	Mock_Action = "Add_Uri";
-    expect.assertions(3);
-    return wordConnector.setUri(9).then(data => {
-    	expect(data.uri).toBe(9);
+	test("Error on get Uri", async () => {
+		Mock_Action = "URI_ERROR";
+		expect.assertions(2);
+		const data = await wordConnector.getUri();
+		expect(data.found).toBeFalsy();
+		expect(data.message).toEqual("");
+
+	});
+
+	test("Error on get Uri, with message in message property", async () => {
+		Mock_Action = "URI_ERROR_WITH_MESSAGE_PROP";
+		expect.assertions(2);
+		const data = await wordConnector.getUri();
+			expect(data.found).toBeFalsy();
+			expect(data.message).toEqual("");
+
+	});
+
+	test("Error in sync, probably not able to find custom prop", () => {
+		Mock_Action = "ERROR_IN_SYNC";
+		expect.assertions(2);
+		return wordConnector.getUri().catch((data) => {
+			expect(data.found).toBeFalsy();
+			expect(data.message).toEqual("big error");
+		});
+	});
+
+	it("name from document URL", async () => {
+		expect(wordConnector.getName()).toEqual("Document8");
+	});
+
+	test("Set uri in custom prop", async () => {
+		Mock_Action = "Add_Uri";
+		expect.assertions(3);
+		const data = await wordConnector.setUri(9)
+		expect(data.uri).toBe(9);
 		expect(uriProp.key).toEqual("CM_Record_Uri");
-	  	expect(uriProp.value).toEqual("9");
-    });
-  });
+		expect(uriProp.value).toEqual("9");
+	});
 });

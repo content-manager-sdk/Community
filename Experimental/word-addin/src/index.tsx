@@ -13,21 +13,29 @@ const wordConnector = new WordConnector();
 const appStore = new AppStore(wordConnector, trimConnector);
 
 const Root = (
-  <Provider
-    appStore={appStore}
-    trimConnector={trimConnector}
-    wordConnector={wordConnector}
-  >
-    <BootStrap />
-  </Provider>
+	<Provider
+		appStore={appStore}
+		trimConnector={trimConnector}
+		wordConnector={wordConnector}
+	>
+		<BootStrap />
+	</Provider>
 );
 
 ReactDOM.render(Root, document.getElementById("root") as HTMLElement);
 //ReactDOM.render(<BootStrap />, document.getElementById("root") as HTMLElement);
 registerServiceWorker();
 
-appStore.fetchBaseSettingFromTrim();
+(function() {
+	wordConnector
+		.getAccessToken()
+		.then((accessToken: string) => {
+			trimConnector.setAccessToken(accessToken);
+			appStore.fetchBaseSettingFromTrim();
+		})
+		.catch(() => {});
+})();
 
 if (module.hot) {
-  module.hot.accept();
+	module.hot.accept();
 }
