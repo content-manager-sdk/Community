@@ -12,7 +12,7 @@
   <Id>edc27695-a13f-4394-8447-7ba90e045985</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.0.0.1</Version>
+  <Version>1.5.0.1</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -152,6 +152,7 @@
       <Scopes>
         <Scope>user.read</Scope>
         <Scope>files.read</Scope>
+		<Scope>files.read.all</Scope>
         <Scope>profile</Scope>
         <Scope>openid</Scope>
       </Scopes>

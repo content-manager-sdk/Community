@@ -16,6 +16,9 @@ import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 let Mock_Action = "";
 let testSetUri: number = 0;
 class MockWordConnector implements IWordConnector {
+	getWebUrl(): string {
+		throw new Error("Method not implemented.");
+	}
 	getAccessToken(): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
@@ -44,6 +47,11 @@ class MockWordConnector implements IWordConnector {
 
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	getDriveId(token: string, webUrl: string): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
+	CredentialsResolver: () => string;
+
 	setAccessToken(accessToken: string) {
 		throw new Error("Method not implemented.");
 	}

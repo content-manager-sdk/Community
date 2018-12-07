@@ -25,7 +25,6 @@ export interface IAppStore {
 }
 
 export class AppStore implements IAppStore {
-	@observable public accessToken: string;
 	@observable public errorMessage: string;
 	@observable public documentInfo: IGetRecordUriResponse;
 	@observable public me: ILocation;

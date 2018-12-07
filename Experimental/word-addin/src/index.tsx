@@ -8,8 +8,12 @@ import registerServiceWorker from "./registerServiceWorker";
 import WordConnector from "./office-coms/word-connector";
 import TrimConnector from "./trim-coms/trim-connector";
 
-const trimConnector = new TrimConnector();
+
 const wordConnector = new WordConnector();
+const trimConnector = new TrimConnector();
+trimConnector.CredentialsResolver = new Promise((resolve) =>{
+	wordConnector.getAccessToken().then(token => resolve(token));
+});
 const appStore = new AppStore(wordConnector, trimConnector);
 
 const Root = (
@@ -27,13 +31,13 @@ ReactDOM.render(Root, document.getElementById("root") as HTMLElement);
 registerServiceWorker();
 
 (function() {
-	wordConnector
-		.getAccessToken()
-		.then((accessToken: string) => {
-			trimConnector.setAccessToken(accessToken);
-			appStore.fetchBaseSettingFromTrim();
-		})
-		.catch(() => {});
+	Office.initialize = function(reason) {
+		// If you need to initialize something you can do so here.
+
+
+				appStore.fetchBaseSettingFromTrim();
+
+	};
 })();
 
 if (module.hot) {

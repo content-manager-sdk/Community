@@ -16,12 +16,17 @@ export interface IWordConnector {
 	getUri(): Promise<IGetRecordUriResponse>;
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	getName(): string;
+	getWebUrl(): string;
 }
 
 export class WordConnector implements IWordConnector {
+	public getWebUrl() {
+		return Office.context.document.url;
+	}
 	public getName(): string {
-		const tokens = Office.context.document.url.split("/");
+		const tokens = this.getWebUrl().split("/");
 		return tokens[tokens.length - 1].split(".")[0];
+
 	}
 
 	public setUri(uri: number): Promise<IGetRecordUriResponse> {
@@ -29,7 +34,7 @@ export class WordConnector implements IWordConnector {
 			const response = { found: false, uri: 0, message: "" };
 
 			Word.run((context) => {
-				let customProp = context.document.properties.customProperties.add(
+				const customProp = context.document.properties.customProperties.add(
 					"CM_Record_Uri",
 					String(uri)
 				);
@@ -97,7 +102,6 @@ export class WordConnector implements IWordConnector {
 					}
 				}
 			);
-			//}
 		});
 	}
 }
