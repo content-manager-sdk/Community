@@ -15,20 +15,19 @@ namespace OneDriveAuthPlugin
 	[Route("/RegisterFile", "GET")]
 	public class RegisterFile : IReturn<RegisterFileResponse>
 	{
-		public long Uri { get; set; }
+		public string WebUrl { get; set; }
 	}
 
 	public class RegisterFileResponse
 	{
-		public string Name { get; set; }
-		public string RecordTitle { get; set; }
+		public string Id { get; set; }
 	}
 
 	public class RegisterFileService : TrimServiceBase
 	{
-		public async Task<RegisterFileResponse> Get(RegisterFile request)
+		public async Task<object> Get(RegisterFile request)
 		{
-			RegisterFileResponse response = new RegisterFileResponse() { Name = "test" };
+			RegisterFileResponse response = new RegisterFileResponse() { Id = "test" };
 
 			string[] addinScopes = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/scope").Value.Split(' ');
 
@@ -39,10 +38,11 @@ namespace OneDriveAuthPlugin
 			
 			//// Get the access token for MS Graph. 
 					ClientCredential clientCred = new ClientCredential(ConfigurationManager.AppSettings["ida:Password"]);
+
 			ConfidentialClientApplication cca =
 				new ConfidentialClientApplication(ConfigurationManager.AppSettings["ida:ClientID"],
-												  "https://localhost:3000", clientCred, null, null);
-			response.Name = bootstrapContext.Token;
+												  ConfigurationManager.AppSettings["ida:RedirectUri"], clientCred, null, null);
+			response.Id = bootstrapContext.Token;
 
 			string[] graphScopes = { "Files.Read.All" };
 			AuthenticationResult result = null;
@@ -55,28 +55,29 @@ namespace OneDriveAuthPlugin
 			}
 			catch (MsalServiceException e)
 			{
-				response.Name = e.Message;
+				response.Id = e.Message;
 			}
 
-			var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveItemNamesUrl("?$select=name&$top=3");
+		
 
-			IEnumerable<OneDriveItem> filesResult;
+			OneDriveItem fileResult;
 			try
 			{
-				filesResult = await ODataHelper.GetItems<OneDriveItem>(fullOneDriveItemsUrl, result.AccessToken);
+				var driveDetails = await ODataHelper.GetItem<OneDriveDrive>(GraphApiHelper.GetMyOneDriveUrl(), result.AccessToken);
+
+				string filePath = request.WebUrl.Substring(driveDetails.WebUrl.Length);
+
+				var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveItemPathsUrl(filePath);
+				fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, result.AccessToken);
 			}
 			catch
 			{
 				throw;
 			}
 
-			List<string> itemNames = new List<string>();
-			foreach (OneDriveItem item in filesResult)
-			{
-				itemNames.Add(item.Name);
-			}
 
-			response.Name = string.Join(",", itemNames);
+			response.Id = fileResult.Id;
+
 			//if (request.Uri > 0)
 			//{
 			//	Record record = new Record(this.Database, request.Uri);

@@ -10,6 +10,7 @@ namespace OneDriveAuthPlugin
 	public abstract class MSGraphObject
 	{
 		public string Name { get; set; }
+		public string Id { get; set; }
 	}
 
 	/// <summary>
@@ -29,5 +30,13 @@ namespace OneDriveAuthPlugin
 	public class OneDriveItem : MSGraphObject, IEtagable
 	{
 		public string Etag { get; set; }
+	}
+
+	/// <summary>
+	/// A OneDriveItem can be a file or folder.
+	/// </summary>
+	public class OneDriveDrive : MSGraphObject
+	{
+		public string WebUrl { get; set; }
 	}
 }
