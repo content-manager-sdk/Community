@@ -40,8 +40,6 @@ export class AppStore implements IAppStore {
 
 	// tslint:disable-next-line
 	public fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
-		//	this.status = "SPINNING";
-
 		try {
 			const response: ILocation = yield this.trimConnector.getMe();
 			const messagesResponse: any = yield this.trimConnector.getMessages();
@@ -63,7 +61,6 @@ export class AppStore implements IAppStore {
 				this.documentInfo.found || !this.documentInfo.message
 					? "WAITING"
 					: "ERROR";
-					
 		} catch (error) {
 			this.status = "ERROR";
 			this.errorMessage = error.message;

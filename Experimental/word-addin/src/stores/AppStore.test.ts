@@ -47,10 +47,10 @@ class MockWordConnector implements IWordConnector {
 
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	credentialsResolver: Promise<string>;
 	getDriveId(token: string, webUrl: string): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
-	CredentialsResolver: () => string;
 
 	setAccessToken(accessToken: string) {
 		throw new Error("Method not implemented.");

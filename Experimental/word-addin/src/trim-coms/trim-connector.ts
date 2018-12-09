@@ -1,12 +1,19 @@
+import Axios, { AxiosRequestConfig } from "axios";
 import { BASE_URI } from "../stores/AppStore";
 import { BaseObjectTypes } from "./trim-baseobjecttypes";
 import TrimMessages from "./trim-messages";
-import Axios, { AxiosRequestConfig } from "axios";
 
 export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
 
 export interface ITrimString {
 	Value: string;
+}
+
+interface IOptionsInterface {
+	accessToken: string;
+	path: string;
+	method: string;
+	data: any;
 }
 
 export interface ITrimMainObject {
@@ -21,6 +28,7 @@ export interface ILocation extends ITrimMainObject {
 export interface IRecordType extends ITrimMainObject {}
 
 export interface ITrimConnector {
+	credentialsResolver: Promise<string>;
 	getMe(): Promise<ILocation>;
 	getMessages(): Promise<any>;
 	search<T>(
@@ -34,26 +42,18 @@ export interface ITrimConnector {
 		properties: any
 	): Promise<ITrimMainObject>;
 	getDriveId(token: string, webUrl: string): Promise<string>;
-	CredentialsResolver: Promise<string>;
 }
 
 export class TrimConnector implements ITrimConnector {
-	CredentialsResolver: Promise<string>;
+	public credentialsResolver: Promise<string>;
 
 	public getDriveId(webUrl: string): Promise<string> {
-		return new Promise((resolve, reject) => {
-			this.CredentialsResolver.then((token) => {
-				const options = this.makeOptions(token, "RegisterFile", "get", {
-					webUrl,
-				});
-
-				Axios(options)
-					.then((response) => resolve(response.data.Id))
-					.catch((error) => {
-						console.log(JSON.stringify(error.response.statusText));
-					});
-			});
-		});
+		return this.makeRequest(
+			{ path: "RegisterFile", method: "get", data: { webUrl } },
+			(data: any) => {
+				return data.Results[0].Id;
+			}
+		);
 	}
 
 	public registerInTrim(
@@ -62,52 +62,24 @@ export class TrimConnector implements ITrimConnector {
 	): Promise<ITrimMainObject> {
 		const body = { ...properties, RecordRecordType: recordTypeUri };
 
-		//	const options = this.makeOptions("POST", body);
-
-		return new Promise((resolve, reject) => {
-			this.CredentialsResolver.then((token) => {
-				const options = this.makeOptions(token, "Record", "post", body);
-
-				Axios(options).then((response) => {
-					if (response.data.Results && response.data.Results.length > 0) {
-						resolve(response.data.Results[0]);
-					} else {
-						reject({ message: response.data.ResponseStatus.Message });
-					}
-				});
-			});
-		});
+		return this.makeRequest(
+			{ path: "Record", method: "post", data: body },
+			(data: any) => {
+				return data.Results[0];
+			}
+		);
 	}
 
 	public getPropertySheet(recordTypeUri: number): Promise<any> {
 		const params = {
 			properties: ["dataentryformdefinition"],
 		};
-
-		return new Promise((resolve, reject) => {
-			this.CredentialsResolver.then((token) => {
-				const options = this.makeOptions(
-					token,
-					`RecordType/${recordTypeUri}`,
-					"get",
-					params
-				);
-
-				Axios(options)
-					.then((response) => {
-						if (response.data.Results && response.data.Results.length > 0) {
-							resolve(response.data.Results[0].DataEntryFormDefinition);
-						} else {
-							reject({ message: "No results found" }); // needs to come from TrimMessages
-						}
-					})
-					.catch((response) => {
-						reject({
-							message: response.response.data.ResponseStatus.Message,
-						});
-					});
-			});
-		});
+		return this.makeRequest(
+			{ path: `RecordType/${recordTypeUri}`, method: "get", data: params },
+			(data: any) => {
+				return data.Results[0].DataEntryFormDefinition;
+			}
+		);
 	}
 
 	public getMessages(): Promise<any> {
@@ -115,19 +87,12 @@ export class TrimConnector implements ITrimConnector {
 			MatchMessages: [Object.keys(new TrimMessages()).join("|")],
 		};
 
-		return new Promise((resolve, reject) => {
-			this.CredentialsResolver.then((token) => {
-				const options = this.makeOptions(token, "Localisation", "get", params);
-
-				Axios(options).then((response) => {
-					if (response.data.Messages) {
-						resolve(response.data.Messages);
-					} else {
-						reject({ message: response.data.ResponseStatus.Message });
-					}
-				});
-			});
-		});
+		return this.makeRequest(
+			{ path: "Localisation", method: "get", data: params },
+			(data: any) => {
+				return data.Messages;
+			}
+		);
 	}
 
 	public search<T extends ITrimMainObject>(
@@ -141,22 +106,14 @@ export class TrimConnector implements ITrimConnector {
 			q,
 		};
 
-		return new Promise((resolve, reject) => {
-			this.CredentialsResolver.then((token) => {
-				const options = this.makeOptions(token, trimType, "get", params);
-
-				Axios(options).then((response) => {
-					if (response.data.Results && response.data.Results.length > 0) {
-						const trimObjects = response.data.Results.map((trimObject: T) => {
-							return trimObject;
-						});
-						resolve(trimObjects);
-					} else {
-						reject({ message: response.data.ResponseStatus.Message });
-					}
+		return this.makeRequest(
+			{ path: trimType, method: "get", data: params },
+			(data: any) => {
+				return data.Results.map((trimObject: T) => {
+					return trimObject;
 				});
-			});
-		});
+			}
+		);
 	}
 
 	public getMe(): Promise<ILocation> {
@@ -164,59 +121,71 @@ export class TrimConnector implements ITrimConnector {
 			properties: ["LocationFullFormattedName"],
 		};
 
+		return this.makeRequest(
+			{ path: "Location/me", method: "get", data: params },
+			(data: any) => {
+				return {
+					FullFormattedName: data.Results[0].LocationFullFormattedName,
+					Uri: data.Results[0].Uri,
+				};
+			}
+		);
+	}
+
+	private makeOptions = (config: IOptionsInterface): AxiosRequestConfig => {
+		const headers = { Accept: "application/json", Authorization: "" };
+
+		if (config.accessToken) {
+			headers.Authorization = `Bearer ${config.accessToken}`;
+		}
+
+		if (config.method === "post") {
+			headers["Content-Type"] = "application/json";
+		}
+
+		const options = {
+			headers,
+			method: config.method,
+			url: `${SERVICEAPI_BASE_URI}/${config.path}`,
+		};
+
+		if (config.method === "post") {
+			return { ...options, ...{ data: config.data } };
+		} else {
+			return { ...options, ...{ params: config.data } };
+		}
+	};
+
+	private makeRequest<T>(config: any, parseCallback: any): Promise<T> {
 		return new Promise((resolve, reject) => {
-			this.CredentialsResolver.then((token) => {
-				const options = this.makeOptions(token, "Location/me", "get", params);
+			this.credentialsResolver.then((accessToken) => {
+				const options = this.makeOptions({ ...{ accessToken }, ...config });
 
 				Axios(options)
 					.then((response) => {
-						if (response.data.Results && response.data.Results[0]) {
-							resolve({
-								FullFormattedName:
-									response.data.Results[0].LocationFullFormattedName,
-								Uri: response.data.Results[0].Uri,
-							});
+						if (
+							response.data.Messages ||
+							(response.data.Results && response.data.Results.length > 0)
+						) {
+							resolve(parseCallback(response.data));
 						} else {
-							reject({ message: response.data.ResponseStatus.Message });
+							reject({ message: "No results found" }); // needs to come from TrimMessages
 						}
 					})
-					.catch((response) => {
-						reject({
-							message: response.data.ResponseStatus.Message,
-						});
+					.catch((error) => {
+						if (error.response) {
+							reject({
+								message: error.response.data.ResponseStatus.Message,
+							});
+						} else {
+							reject({
+								message: error.message,
+							});
+						}
 					});
 			});
 		});
 	}
-
-	private makeOptions = (
-		accessToken: string,
-		path: string,
-		method: string = "get",
-		data: any = undefined
-	): AxiosRequestConfig => {
-		const headers = { Accept: "application/json" };
-
-		if (accessToken) {
-			headers["Authorization"] = `Bearer ${accessToken}`;
-		}
-
-		if (method === "POST") {
-			headers["Content-Type"] = "application/json";
-		}
-
-		let options = {
-			url: `${SERVICEAPI_BASE_URI}/${path}`,
-			headers,
-			method,
-		};
-
-		if (method === "POST") {
-			return { ...options, ...{ data } };
-		} else {
-			return { ...options, ...{ params: data } };
-		}
-	};
 }
 
 export default TrimConnector;

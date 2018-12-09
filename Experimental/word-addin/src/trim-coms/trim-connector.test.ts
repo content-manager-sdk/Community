@@ -15,7 +15,7 @@ const mock = new MockAdapter(axios);
 
 describe("Test fetch from TRIM", () => {
 	const trimConnector = new TrimConnector();
-	trimConnector.CredentialsResolver = new Promise<string>((resolve) => {
+	trimConnector.credentialsResolver = new Promise<string>((resolve) => {
 		resolve("token123");
 	});
 
@@ -236,38 +236,37 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
-	/*
-
 	it("has posted a new Record", () => {
-		fetchMock.post(
-			"begin:" + SERVICEAPI_BASE_URI + "/Record",
-			{
-				Results: [
-					{
-						Uri: 123,
-					},
-				],
-			},
-			{ name: "NewRecord" }
-		);
+		let postConfig: any;
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			postConfig = config;
+
+			return [
+				200,
+				{
+					Results: [
+						{
+							Uri: 123,
+						},
+					],
+				},
+			];
+		});
+
+		expect.assertions(4);
 
 		return trimConnector
 			.registerInTrim(1, { RecordTypedTitle: "test" })
 			.then((data) => {
-				let calls = fetchMock.calls("NewRecord");
-
-				expect(calls.length).toBe(1);
-				expect(calls[0][1].body).toEqual(
+				expect(postConfig.data).toEqual(
 					JSON.stringify({ RecordTypedTitle: "test", RecordRecordType: 1 })
 				);
-				expect(calls[0][1].headers!["Accept"]).toEqual("application/json");
-				expect(calls[0][1].headers!["Content-Type"]).toEqual(
-					"application/json"
-				);
+				expect(postConfig.headers!["Accept"]).toEqual("application/json");
+				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
 				expect(data.Uri).toEqual(123);
 			});
 	});
-*/
+
 	it("sends the token with a request", () => {
 		let token = "";
 		mock
@@ -275,7 +274,7 @@ describe("Test fetch from TRIM", () => {
 			.reply(function(config: any) {
 				token = config.headers["Authorization"];
 
-				return [200, { Id: "0123" }];
+				return [200, { Results: [{ Id: "0123" }] }];
 			});
 		expect.assertions(2);
 
@@ -283,5 +282,17 @@ describe("Test fetch from TRIM", () => {
 			expect(id).toEqual("0123");
 			expect(token).toEqual("Bearer token123");
 		});
+	});
+
+	it("handles an error response without a body", async () => {
+		mock.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`).networkError();
+
+		expect.assertions(1);
+
+		try {
+			await trimConnector.getDriveId("");
+		} catch (error) {
+			expect(error.message).toEqual("Network Error");
+		}
 	});
 });
