@@ -1,16 +1,12 @@
 import { computed, configure, flow, observable } from "mobx";
+import { IWordUrl } from "../office-coms/word-connector";
 import {
-	IGetRecordUriResponse,
-	IWordConnector,
-} from "../office-coms/word-connector";
-
-import TrimMessages from "../trim-coms/trim-messages";
-
-import {
+	IDriveInformation,
 	ILocation,
 	ITrimConnector,
 	ITrimMainObject,
 } from "../trim-coms/trim-connector";
+import TrimMessages from "../trim-coms/trim-messages";
 
 export const BASE_URI = "http://localhost/";
 
@@ -26,13 +22,13 @@ export interface IAppStore {
 
 export class AppStore implements IAppStore {
 	@observable public errorMessage: string;
-	@observable public documentInfo: IGetRecordUriResponse;
+	@observable public documentInfo: IDriveInformation = { Id: "", Uri: 0 };
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
 	@observable public status: string = "STARTING";
 
 	constructor(
-		private wordConnector: IWordConnector,
+		private wordConnector: IWordUrl,
 		private trimConnector: ITrimConnector
 	) {
 		configure({ enforceActions: "observed" });
@@ -56,11 +52,15 @@ export class AppStore implements IAppStore {
 				this.status = "WAITING";
 			}
 
-			this.documentInfo = yield this.wordConnector.getUri();
-			this.status =
-				this.documentInfo.found || !this.documentInfo.message
-					? "WAITING"
-					: "ERROR";
+			this.documentInfo = yield this.trimConnector.getDriveId(
+				this.wordConnector.getWebUrl()
+			);
+
+			this.status = "WAITING";
+			// this.status =
+			// 	this.documentInfo.found || !this.documentInfo.message
+			// 		? "WAITING"
+			// 		: "ERROR";
 		} catch (error) {
 			this.status = "ERROR";
 			this.errorMessage = error.message;
@@ -86,9 +86,9 @@ export class AppStore implements IAppStore {
 	@computed
 	get RecordUri(): number {
 		if (this.documentInfo != null) {
-			return this.documentInfo.uri;
+			return this.documentInfo.Uri;
 		}
-		return -1;
+		return 0;
 	}
 
 	// tslint:disable-next-line
@@ -102,10 +102,10 @@ export class AppStore implements IAppStore {
 			properties
 		);
 
-		this.wordConnector.setUri(newRecord.Uri);
+		properties.RecordExternalReference = this.documentInfo.Id;
 
 		if (newRecord.Uri > 0) {
-			this.documentInfo = { uri: newRecord.Uri, found: true };
+			this.documentInfo.Uri = newRecord.Uri;
 		}
 	});
 }

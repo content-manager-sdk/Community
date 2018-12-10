@@ -19,82 +19,6 @@ describe("Test fetch from TRIM", () => {
 		resolve("token123");
 	});
 
-	/*
-	const recordTypeSearchMatch = (url: string, opts: any) => {
-		return (
-			url.startsWith(SERVICEAPI_BASE_URI + "/RecordType") &&
-			url.indexOf("q=all") > -1 &&
-			url.indexOf("properties=NameString") > -1 &&
-			url.indexOf("purpose=3") > -1
-		);
-	};
-
-	fetchMock.get(recordTypeSearchMatch, {
-		Count: 0,
-		MinimumCount: 0,
-		HasMoreItems: false,
-		PropertiesAndFields: {},
-		ResponseStatus: {},
-		Results: [
-			{
-				NameString: "Document",
-				TrimType: "RecordType",
-				Uri: 1,
-			},
-		],
-		TotalResults: 1,
-		TrimType: "RecordType",
-	});
-
-	fetchMock.get(
-		"begin:" + SERVICEAPI_BASE_URI + "/Location/me",
-		{
-			Results: [
-				{
-					LocationFullFormattedName: { Value: "david" },
-					TrimType: "Location",
-					Uri: 1,
-				},
-			],
-			PropertiesAndFields: {},
-			TotalResults: 1,
-			MinimumCount: 0,
-			Count: 0,
-			HasMoreItems: false,
-			TrimType: "Location",
-			ResponseStatus: {},
-		},
-		{ name: "GetMe" }
-	);
-
-	fetchMock.get(
-		"begin:" + SERVICEAPI_BASE_URI + "/Localisation?MatchMessages=w",
-		{
-			Messages: { web_HPRM: "Content Manager" },
-			ResponseStatus: {},
-		}
-	);
-
-	fetchMock.get(
-		"begin:" +
-			SERVICEAPI_BASE_URI +
-			"/RecordType/123?properties=dataentryformdefinition",
-		{
-			Results: [
-				{
-					TrimType: "RecordType",
-					DataEntryFormDefinition: {
-						Version: "1",
-						SupportsElectronicDocs: true,
-						TitlingMethod: "FreeText",
-						Pages: [{}],
-					},
-				},
-			],
-		}
-	);
-*/
-
 	it("Record Types are returned", () => {
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
@@ -269,17 +193,21 @@ describe("Test fetch from TRIM", () => {
 
 	it("sends the token with a request", () => {
 		let token = "";
+		let webUrl = "";
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
 			.reply(function(config: any) {
 				token = config.headers["Authorization"];
+				webUrl = config.params["webUrl"];
 
-				return [200, { Results: [{ Id: "0123" }] }];
+				return [200, { Results: [{ Id: "0123", Uri: 567 }] }];
 			});
-		expect.assertions(2);
 
-		return trimConnector.getDriveId("").then((id) => {
-			expect(id).toEqual("0123");
+		expect.assertions(4);
+		return trimConnector.getDriveId("abc").then((data) => {
+			expect(webUrl).toEqual("abc");
+			expect(data.Id).toEqual("0123");
+			expect(data.Uri).toEqual(567);
 			expect(token).toEqual("Bearer token123");
 		});
 	});

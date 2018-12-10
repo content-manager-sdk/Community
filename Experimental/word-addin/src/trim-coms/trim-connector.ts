@@ -16,6 +16,11 @@ interface IOptionsInterface {
 	data: any;
 }
 
+export interface IDriveInformation {
+	Id: string;
+	Uri: number;
+}
+
 export interface ITrimMainObject {
 	Uri: number;
 	NameString?: string;
@@ -41,17 +46,17 @@ export interface ITrimConnector {
 		recordTypeUri: number,
 		properties: any
 	): Promise<ITrimMainObject>;
-	getDriveId(token: string, webUrl: string): Promise<string>;
+	getDriveId(webUrl: string): Promise<IDriveInformation>;
 }
 
 export class TrimConnector implements ITrimConnector {
 	public credentialsResolver: Promise<string>;
 
-	public getDriveId(webUrl: string): Promise<string> {
+	public getDriveId(webUrl: string): Promise<IDriveInformation> {
 		return this.makeRequest(
 			{ path: "RegisterFile", method: "get", data: { webUrl } },
 			(data: any) => {
-				return data.Results[0].Id;
+				return data.Results[0];
 			}
 		);
 	}

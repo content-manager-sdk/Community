@@ -3,62 +3,50 @@
  */
 
 import { AppStore } from "./AppStore";
-import {
-	IWordConnector,
-	IGetRecordUriResponse,
-} from "../office-coms/word-connector";
 
-import { ITrimConnector, ILocation } from "../trim-coms/trim-connector";
+import {
+	IDriveInformation,
+	ITrimConnector,
+	ILocation,
+} from "../trim-coms/trim-connector";
 
 import { ITrimMainObject } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
+import { IWordUrl } from "src/office-coms/word-connector";
 
 let Mock_Action = "";
-let testSetUri: number = 0;
-class MockWordConnector implements IWordConnector {
-	getWebUrl(): string {
-		throw new Error("Method not implemented.");
-	}
-	getAccessToken(): Promise<string> {
-		throw new Error("Method not implemented.");
-	}
-	setUri(uri: number): Promise<IGetRecordUriResponse> {
-		testSetUri = uri;
-		return new Promise(function(resolve, reject) {
-			resolve();
-		});
-	}
-	getName(): string {
-		throw new Error("Method not implemented.");
-	}
 
-	getUri(): Promise<IGetRecordUriResponse> {
-		return new Promise(function(resolve, reject) {
-			if (Mock_Action == "NOT_FOUND") {
-				resolve({ found: false, uri: 0 });
-			} else if (Mock_Action == "ERROR") {
-				resolve({ found: false, uri: 0, message: "" });
-			} else {
-				resolve({ found: true, uri: 1 });
-			}
-		});
+class MockWordConnector implements IWordUrl {
+	getWebUrl(): string {
+		return "My.Url";
 	}
 }
 
+let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
 	credentialsResolver: Promise<string>;
-	getDriveId(token: string, webUrl: string): Promise<string> {
-		throw new Error("Method not implemented.");
+	getDriveId(webUrl: string): Promise<IDriveInformation> {
+		return new Promise(function(resolve, reject) {
+			if (Mock_Action == "NOT_FOUND") {
+				resolve({ Uri: 0, Id: "abc" });
+			} else if (Mock_Action == "ERROR") {
+				reject({ message: "some message" });
+			} else {
+				resolve({ Uri: 567, Id: "abc" });
+			}
+		});
 	}
 
 	setAccessToken(accessToken: string) {
-		throw new Error("Method not implemented.");
+		//	throw new Error("Method not implemented.");
 	}
 	registerInTrim(
 		recordTypeUri: number,
 		properties: any
 	): Promise<ITrimMainObject> {
+		postedProperties = properties;
+
 		return new Promise(function(resolve, reject) {
 			resolve({ Uri: 567 });
 		});
@@ -106,53 +94,47 @@ describe("Test basic setup from Trim", () => {
 		});
 	});
 
-	it("Content Manager name is returned", () => {
+	it("Content Manager name is returned", async () => {
 		expect.assertions(1);
 
-		return appStore.fetchBaseSettingFromTrim().then(() => {
-			expect(appStore.ApplicationDisplayName).toBe("Content Manager");
-		});
+		await appStore.fetchBaseSettingFromTrim();
+		expect(appStore.ApplicationDisplayName).toBe("Content Manager");
 	});
 
-	it("Message from getMessage", () => {
+	it("Message from getMessage", async () => {
 		expect.assertions(1);
-		return appStore.fetchBaseSettingFromTrim().then(() => {
-			expect(appStore.messages["web_HPRM"]).toBe("Content Manager");
-		});
+		await appStore.fetchBaseSettingFromTrim();
+		expect(appStore.messages["web_HPRM"]).toBe("Content Manager");
 	});
 
-	test("Error in Word Connector is handled", () => {
+	test("Error in Word Connector is handled", async () => {
 		Mock_Action = "ERROR";
 
 		expect.assertions(1);
 
-		return appStore.fetchBaseSettingFromTrim().then(() => {
-			expect(appStore.status).toBe("WAITING");
-		});
+		await appStore.fetchBaseSettingFromTrim();
+		expect(appStore.status).toBe("ERROR");
 	});
 
-	test("word conector URI found", () => {
+	test("word conector URI found", async () => {
 		Mock_Action = "";
 
 		expect.assertions(3);
-		expect(appStore.RecordUri).toBe(-1);
-		return appStore.fetchBaseSettingFromTrim().then(() => {
-			expect(appStore.RecordUri).toBe(1);
+		expect(appStore.RecordUri).toBe(0);
+		await appStore.fetchBaseSettingFromTrim();
+		expect(appStore.RecordUri).toBe(567);
 
-			expect(appStore.status).toBe("WAITING");
-		});
+		expect(appStore.status).toBe("WAITING");
 	});
 
-	test("word conector URI not found", () => {
+	test("word conector URI not found", async () => {
 		Mock_Action = "NOT_FOUND";
 
 		expect.assertions(3);
-		expect(appStore.RecordUri).toBe(-1);
-		return appStore.fetchBaseSettingFromTrim().then(() => {
-			expect(appStore.RecordUri).toBe(0);
-
-			expect(appStore.status).toBe("WAITING");
-		});
+		expect(appStore.RecordUri).toBe(0);
+		await appStore.fetchBaseSettingFromTrim();
+		expect(appStore.RecordUri).toBe(0);
+		expect(appStore.status).toBe("WAITING");
 	});
 
 	test("Error handled", async () => {
@@ -169,12 +151,14 @@ describe("Test basic setup from Trim", () => {
 	it("updates the store after a document has been registered in TRIM", async () => {
 		// appStore.dcTest("ffff");
 		await appStore.createRecord(2, {});
-		expect(appStore.documentInfo.uri).toBe(567);
+		expect(appStore.documentInfo.Uri).toBe(567);
 	});
 
-	it("writes the Record Uri to a  custom property in the document when the record is created in CM", async () => {
-		// appStore.dcTest("ffff");
+	it("sets the Drive Id in the TRIM External ID when stored in TRIM", async () => {
+		postedProperties = null;
+
+		await appStore.fetchBaseSettingFromTrim();
 		await appStore.createRecord(2, {});
-		expect(testSetUri).toBe(567);
+		expect(postedProperties["RecordExternalReference"]).toBe("abc");
 	});
 });

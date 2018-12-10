@@ -11,12 +11,15 @@ export interface IGetRecordUriResponse {
 	message?: string;
 }
 
-export interface IWordConnector {
+export interface IWordUrl {
+	getWebUrl(): string;
+}
+
+export interface IWordConnector extends IWordUrl {
 	getAccessToken(): Promise<string>;
 	getUri(): Promise<IGetRecordUriResponse>;
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	getName(): string;
-	getWebUrl(): string;
 }
 
 export class WordConnector implements IWordConnector {
@@ -26,7 +29,6 @@ export class WordConnector implements IWordConnector {
 	public getName(): string {
 		const tokens = this.getWebUrl().split("/");
 		return tokens[tokens.length - 1].split(".")[0];
-
 	}
 
 	public setUri(uri: number): Promise<IGetRecordUriResponse> {
