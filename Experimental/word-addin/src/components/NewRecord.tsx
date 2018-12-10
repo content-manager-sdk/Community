@@ -105,4 +105,3 @@ export class NewRecord extends React.Component<
 export default inject("appStore", "trimConnector", "wordConnector")(
 	observer(NewRecord)
 );
-//export default NewRecord;

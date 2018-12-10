@@ -1,10 +1,3 @@
-// (function() {
-// 	Office.initialize = function(reason) {
-// 		// If you need to initialize something you can do so here.
-// 		//  loadProps();typescript class
-// 	};
-// })();
-
 export interface IGetRecordUriResponse {
 	found: boolean;
 	uri: number;

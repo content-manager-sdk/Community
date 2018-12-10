@@ -5,6 +5,7 @@ import {
 	TrimConnector,
 } from "./trim-connector";
 import MockAdapter from "axios-mock-adapter";
+import TrimMessages from "./trim-messages";
 
 //import * as fetchMock from "fetch-mock";
 
@@ -19,21 +20,31 @@ describe("Test fetch from TRIM", () => {
 		resolve("token123");
 	});
 
-	it("Record Types are returned", () => {
+	it("Record Types are returned", async () => {
+		let props: string = "";
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
-				params: { q: "all", properties: ["NameString"], purpose: 3 },
+				params: { q: "all", properties: "NameString", purpose: 3 },
 			})
-			.reply(200, {
-				Results: [{ NameString: "Document" }],
+			.reply(function(config: any) {
+				props = config.params.properties;
+
+				return [
+					200,
+					{
+						Results: [{ NameString: "Document" }],
+					},
+				];
 			});
 
-		expect.assertions(1);
-		return trimConnector
-			.search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
-			.then((data) => {
-				expect(data[0].NameString).toBe("Document");
-			});
+		expect.assertions(2);
+		const data = await trimConnector.search<IRecordType>(
+			BaseObjectTypes.RecordType,
+			"all",
+			3
+		);
+		expect(props).toEqual("NameString");
+		expect(data[0].NameString).toBe("Document");
 	});
 
 	it("the FullFormattedName is david", () => {
@@ -68,22 +79,32 @@ describe("Test fetch from TRIM", () => {
 		expect(body).toBeUndefined();
 	});
 
-	it("Application name is Content Manager", () => {
-		mock.onGet(`${SERVICEAPI_BASE_URI}/Localisation`).reply(200, {
-			Messages: { web_HPRM: "Content Manager" },
-			ResponseStatus: {},
-		});
+	it("Application name is Content Manager", async () => {
+		let messageMatch: string = "";
 
-		expect.assertions(1);
-		return trimConnector.getMessages().then((data) => {
-			expect(data.web_HPRM).toBe("Content Manager");
-		});
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/Localisation`)
+			.reply(function(config: any) {
+				messageMatch = config.params.MatchMessages;
+				return [
+					200,
+					{
+						Messages: { web_HPRM: "Content Manager" },
+						ResponseStatus: {},
+					},
+				];
+			});
+
+		expect.assertions(2);
+		const data = await trimConnector.getMessages();
+		expect(data.web_HPRM).toBe("Content Manager");
+		expect(messageMatch).toEqual(Object.keys(new TrimMessages()).join("|"));
 	});
 
 	it("Property sheet requested from Record Type", () => {
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType/123`, {
-				params: { properties: ["dataentryformdefinition"] },
+				params: { properties: "dataentryformdefinition" },
 			})
 			.reply(200, {
 				Results: [

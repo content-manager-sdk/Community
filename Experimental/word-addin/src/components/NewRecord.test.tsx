@@ -9,209 +9,222 @@ import { PropertySheet } from "./PropertySheet";
 import { IWordConnector } from "../office-coms/word-connector";
 
 describe("New Record layout", function() {
-  let resolveRecordTypes;
+	let resolveRecordTypes;
 
-  let mockTrimConnector = new TrimConnector();
-  mockTrimConnector.search = () => {
-    return new Promise(function(resolve) {
-      resolveRecordTypes = resolve;
-    });
-  };
+	let mockTrimConnector = new TrimConnector();
+	mockTrimConnector.search = () => {
+		return new Promise(function(resolve) {
+			resolveRecordTypes = resolve;
+		});
+	};
 
-  mockTrimConnector.getPropertySheet = () => {
-    return new Promise(function(resolve) {
-      resolve({ PageItems: [] });
-    });
-  };
+	mockTrimConnector.getPropertySheet = () => {
+		return new Promise(function(resolve) {
+			resolve({ PageItems: [] });
+		});
+	};
 
-  const mockStore = {
-    RecordUri: 0,
-    RecordProps: {},
-    messages: {
-      web_Register: "Register",
-      web_SelectRecordType: "Select a Record Type",
-    },
+	const mockStore = {
+		RecordUri: 0,
+		RecordProps: {},
+		messages: {
+			web_Register: "Register",
+			web_SelectRecordType: "Select a Record Type",
+		},
 
-    createRecord: (recordUri, recordProps) => {
-      mockStore.RecordUri = recordUri;
-      mockStore.RecordProps = recordProps;
-    },
-  };
+		createRecord: (recordUri, recordProps) => {
+			mockStore.RecordUri = recordUri;
+			mockStore.RecordProps = recordProps;
+		},
+	};
 
-  class MockWordConnector implements IWordConnector {
-    getUri(): Promise<
-      import("d:/Community/Experimental/word-addin/src/office-coms/word-connector").IGetRecordUriResponse
-    > {
-      throw new Error("Method not implemented.");
-    }
-    getName(): string {
-      return "default title";
-    }
-  }
+	class MockWordConnector implements IWordConnector {
+		getAccessToken(): Promise<string> {
+			throw new Error("Method not implemented.");
+		}
+		setUri(
+			uri: number
+		): Promise<
+			import("d:/Community/Experimental/word-addin/src/office-coms/word-connector").IGetRecordUriResponse
+		> {
+			throw new Error("Method not implemented.");
+		}
+		getWebUrl(): string {
+			throw new Error("Method not implemented.");
+		}
+		getUri(): Promise<
+			import("d:/Community/Experimental/word-addin/src/office-coms/word-connector").IGetRecordUriResponse
+		> {
+			throw new Error("Method not implemented.");
+		}
+		getName(): string {
+			return "default title";
+		}
+	}
 
-  const wrapper = shallow<NewRecord>(
-    <NewRecord
-      appStore={mockStore}
-      trimConnector={mockTrimConnector}
-      wordConnector={new MockWordConnector()}
-    />
-  );
+	const wrapper = shallow<NewRecord>(
+		<NewRecord
+			appStore={mockStore}
+			trimConnector={mockTrimConnector}
+			wordConnector={new MockWordConnector()}
+		/>
+	);
 
-  it("contains a Record Type dropdown", async (done) => {
-    resolveRecordTypes([{ Uri: 1, NameString: "Document" } as IRecordType]);
+	it("contains a Record Type dropdown", async (done) => {
+		resolveRecordTypes([{ Uri: 1, NameString: "Document" } as IRecordType]);
 
-    expect(wrapper.find(Dropdown).exists()).toBeTruthy();
-    expect(wrapper.find(Dropdown).props().placeholder).toEqual(
-      "Select a Record Type"
-    );
-    setImmediate(() => {
-      expect(
-        wrapper
-          .update()
-          .find(Dropdown)
-          .props().options
-      ).toEqual([{ key: 1, text: "Document" }]);
-      done();
-    });
-  });
+		expect(wrapper.find(Dropdown).exists()).toBeTruthy();
+		expect(wrapper.find(Dropdown).props().placeholder).toEqual(
+			"Select a Record Type"
+		);
+		setImmediate(() => {
+			expect(
+				wrapper
+					.update()
+					.find(Dropdown)
+					.props().options
+			).toEqual([{ key: 1, text: "Document" }]);
+			done();
+		});
+	});
 
-  it("contains a button", () => {
-    expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
-    expect(
-      wrapper
-        .find(PrimaryButton)
-        .childAt(0)
-        .text()
-    ).toMatch("Register");
-  });
+	it("contains a button", () => {
+		expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
+		expect(
+			wrapper
+				.find(PrimaryButton)
+				.childAt(0)
+				.text()
+		).toMatch("Register");
+	});
 
-  it("Sets the Record Uri from on load and onChange", () => {
-    const instance = wrapper.instance();
-    instance.setRecordTypes([]);
+	it("Sets the Record Uri from on load and onChange", () => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([]);
 
-    expect(instance.recordTypeUri).toEqual(0);
+		expect(instance.recordTypeUri).toEqual(0);
 
-    // should be zero after the record types list has been changed
-    instance.setRecordTypes([
-      { key: 1, text: "Document" },
-      { key: 5, text: "Document 5" },
-    ]);
-    wrapper
-      .update()
-      .find(Dropdown)
-      .props()
-      .onChange(null, null, 1);
+		// should be zero after the record types list has been changed
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
 
-    instance.setRecordTypes([{ key: 1, text: "Document" }]);
+		instance.setRecordTypes([{ key: 1, text: "Document" }]);
 
-    expect(instance.recordTypeUri).toEqual(0);
+		expect(instance.recordTypeUri).toEqual(0);
 
-    wrapper
-      .update()
-      .find(Dropdown)
-      .props()
-      .onChange(null, null, 0);
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 0);
 
-    expect(instance.recordTypeUri).toEqual(1);
-  });
+		expect(instance.recordTypeUri).toEqual(1);
+	});
 
-  it("calls create record on button press", () => {
-    const instance = wrapper.instance();
-    instance.setRecordTypes([
-      { key: 1, text: "Document" },
-      { key: 5, text: "Document 5" },
-    ]);
+	it("calls create record on button press", () => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
 
-    wrapper
-      .update()
-      .find(Dropdown)
-      .props()
-      .onChange(null, null, 0);
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 0);
 
-    wrapper
-      .update()
-      .find(PrimaryButton)
-      .props()
-      .onClick(null);
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
 
-    expect(mockStore.RecordUri).toEqual(1);
-  });
+		expect(mockStore.RecordUri).toEqual(1);
+	});
 
-  it("sends the default on click even if no fields on the form have been modified", () => {
-    const instance = wrapper.instance();
-    instance.setRecordTypes([
-      { key: 1, text: "Document" },
-      { key: 5, text: "Document 5" },
-    ]);
+	it("sends the default on click even if no fields on the form have been modified", () => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
 
-    wrapper
-      .update()
-      .find(PrimaryButton)
-      .props()
-      .onClick(null);
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
 
-    expect(mockStore.RecordProps).toEqual({
-      RecordTypedTitle: "default title",
-    });
-  });
+		expect(mockStore.RecordProps).toEqual({
+			RecordTypedTitle: "default title",
+		});
+	});
 
-  it("sends updated properties button press", () => {
-    const instance = wrapper.instance();
-    instance.setRecordTypes([
-      { key: 1, text: "Document" },
-      { key: 5, text: "Document 5" },
-    ]);
+	it("sends updated properties button press", () => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
 
-    // wrapper
-    //   .update()
-    //   .find(Dropdown)
-    //   .props()
-    //   .onChange(null, null, 0);
+		// wrapper
+		//   .update()
+		//   .find(Dropdown)
+		//   .props()
+		//   .onChange(null, null, 0);
 
-    wrapper
-      .update()
-      .find(PropertySheet)
-      .props()
-      .onChange(null, { RecordTypedTitle: "test title" });
+		wrapper
+			.update()
+			.find(PropertySheet)
+			.props()
+			.onChange(null, { RecordTypedTitle: "test title" });
 
-    wrapper
-      .update()
-      .find(PrimaryButton)
-      .props()
-      .onClick(null);
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
 
-    expect(mockStore.RecordProps).toEqual({ RecordTypedTitle: "test title" });
-  });
+		expect(mockStore.RecordProps).toEqual({ RecordTypedTitle: "test title" });
+	});
 
-  it("displays a property sheet when Record Type is set", async (done) => {
-    const shallowWrapper = shallow<NewRecord>(
-      <NewRecord
-        appStore={mockStore}
-        trimConnector={mockTrimConnector}
-        wordConnector={new MockWordConnector()}
-      />
-    );
+	it("displays a property sheet when Record Type is set", async (done) => {
+		const shallowWrapper = shallow<NewRecord>(
+			<NewRecord
+				appStore={mockStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={new MockWordConnector()}
+			/>
+		);
 
-    const instance = wrapper.instance();
-    // no property sheet before recordtype uri sey
-    expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+		const instance = wrapper.instance();
+		// no property sheet before recordtype uri sey
+		expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
 
-    wrapper
-      .update()
-      .find(Dropdown)
-      .props()
-      .onChange(null, null, 1);
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
 
-    setImmediate(() => {
-      //expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
-      expect(instance.formDefinition).toEqual({ PageItems: [] });
-      expect(
-        wrapper
-          .update()
-          .find(PropertySheet)
-          .props().formDefinition
-      ).toEqual({ PageItems: [] });
-      done();
-    });
-  });
+		setImmediate(() => {
+			//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+			expect(instance.formDefinition).toEqual({ PageItems: [] });
+			expect(
+				wrapper
+					.update()
+					.find(PropertySheet)
+					.props().formDefinition
+			).toEqual({ PageItems: [] });
+			done();
+		});
+	});
 });

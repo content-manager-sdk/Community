@@ -3,18 +3,18 @@ import { inject, observer } from "mobx-react";
 import NewRecord from "./NewRecord";
 import ExistingRecord from "./ExistingRecord";
 
-@inject("appStore")
-@observer
 export class MainApp extends React.Component<{ appStore?: any }, any> {
-  public render() {
-    const { appStore } = this.props;
+	public render() {
+		const { appStore } = this.props;
 
-    if (appStore!.RecordUri > 0) {
-      return <ExistingRecord />;
-    } else {
-      return <NewRecord />;
-    }
-  }
+		if (appStore!.RecordUri > 0) {
+			return <ExistingRecord />;
+		} else if (appStore!.DriveId !== "") {
+			return <NewRecord />;
+		} else {
+			return null;
+		}
+	}
 }
 
-export default MainApp;
+export default inject("appStore")(observer(MainApp));

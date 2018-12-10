@@ -48,8 +48,6 @@ export class AppStore implements IAppStore {
 				// temporary - need to go in TRIM Messages
 				this.messages.web_Register = "Register in Content Manager";
 				this.messages.web_SelectRecordType = "Select a Record Type";
-
-				this.status = "WAITING";
 			}
 
 			this.documentInfo = yield this.trimConnector.getDriveId(
@@ -91,6 +89,14 @@ export class AppStore implements IAppStore {
 		return 0;
 	}
 
+	@computed
+	get DriveId(): string {
+		if (this.documentInfo != null) {
+			return this.documentInfo.Id;
+		}
+		return "";
+	}
+
 	// tslint:disable-next-line
 	public createRecord = flow(function*(
 		this: AppStore,
@@ -99,10 +105,11 @@ export class AppStore implements IAppStore {
 	) {
 		const newRecord: ITrimMainObject = yield this.trimConnector.registerInTrim(
 			recordType,
-			properties
+			{
+				...properties,
+				...{ RecordExternalReference: this.documentInfo.Id },
+			}
 		);
-
-		properties.RecordExternalReference = this.documentInfo.Id;
 
 		if (newRecord.Uri > 0) {
 			this.documentInfo.Uri = newRecord.Uri;

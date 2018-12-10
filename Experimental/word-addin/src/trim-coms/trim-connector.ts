@@ -77,7 +77,7 @@ export class TrimConnector implements ITrimConnector {
 
 	public getPropertySheet(recordTypeUri: number): Promise<any> {
 		const params = {
-			properties: ["dataentryformdefinition"],
+			properties: "dataentryformdefinition",
 		};
 		return this.makeRequest(
 			{ path: `RecordType/${recordTypeUri}`, method: "get", data: params },
@@ -89,7 +89,7 @@ export class TrimConnector implements ITrimConnector {
 
 	public getMessages(): Promise<any> {
 		const params = {
-			MatchMessages: [Object.keys(new TrimMessages()).join("|")],
+			MatchMessages: Object.keys(new TrimMessages()).join("|"),
 		};
 
 		return this.makeRequest(
@@ -106,7 +106,7 @@ export class TrimConnector implements ITrimConnector {
 		purpose: number = 0
 	): Promise<T[]> {
 		const params = {
-			properties: ["NameString"],
+			properties: "NameString",
 			purpose,
 			q,
 		};

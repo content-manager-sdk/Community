@@ -2,7 +2,7 @@ import * as React from "react";
 import IAppStore from "../stores/AppStore";
 import { inject, observer } from "mobx-react";
 import { ErrorDisplay } from "./ErrorDisplay";
-import { MainApp } from "./MainApp";
+import MainApp from "./MainApp";
 
 @inject("appStore")
 @observer

@@ -157,6 +157,7 @@ describe("Test basic setup from Trim", () => {
 	it("sets the Drive Id in the TRIM External ID when stored in TRIM", async () => {
 		postedProperties = null;
 
+		expect.assertions(1);
 		await appStore.fetchBaseSettingFromTrim();
 		await appStore.createRecord(2, {});
 		expect(postedProperties["RecordExternalReference"]).toBe("abc");

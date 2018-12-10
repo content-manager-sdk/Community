@@ -1,35 +1,35 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 import { BootStrap } from "./BootStrap";
-import { MainApp } from "./MainApp";
+import MainApp from "./MainApp";
 import { ErrorDisplay } from "./ErrorDisplay";
 
 describe("BootStrap", function() {
-  it("shows error component", function() {
-    const wrapper = shallow(
-      <BootStrap.wrappedComponent
-        appStore={{ status: "ERROR", errorMessage: "test" }}
-      />
-    );
-    //   expect(wrapper).toMatchSnapshot();
-    expect(wrapper.find(ErrorDisplay).exists()).toBeTruthy();
-    //expect(wrapper.find("ErrorDisplay"));
-    //  expect(wrapper.find("div"));
-  });
+	it("shows error component", function() {
+		const wrapper = shallow(
+			<BootStrap.wrappedComponent
+				appStore={{ status: "ERROR", errorMessage: "test" }}
+			/>
+		);
+		//   expect(wrapper).toMatchSnapshot();
+		expect(wrapper.find(ErrorDisplay).exists()).toBeTruthy();
+		//expect(wrapper.find("ErrorDisplay"));
+		//  expect(wrapper.find("div"));
+	});
 });
 
 describe("BootStrap", function() {
-  //   beforeEach(function(this: any) {
-  //     this.appStore = { status: "WAITING" };
-  //   });
+	//   beforeEach(function(this: any) {
+	//     this.appStore = { status: "WAITING" };
+	//   });
 
-  it("shows Main component", function() {
-    const wrapper = shallow(
-      <BootStrap.wrappedComponent appStore={{ status: "WAITING" }} />
-    );
+	it("shows Main component", function() {
+		const wrapper = shallow(
+			<BootStrap.wrappedComponent appStore={{ status: "WAITING" }} />
+		);
 
-    expect(wrapper.find(MainApp).exists()).toBeTruthy();
-    //expect(wrapper.find("ErrorDisplay"));
-    //  expect(wrapper.find("div"));
-  });
+		expect(wrapper.find(MainApp).exists()).toBeTruthy();
+		//expect(wrapper.find("ErrorDisplay"));
+		//  expect(wrapper.find("div"));
+	});
 });
