@@ -11,6 +11,10 @@ namespace OneDriveAuthPlugin
 	{
 		public string Name { get; set; }
 		public string Id { get; set; }
+		public string WebUrl { get; set; }
+
+		[JsonProperty("@microsoft.graph.downloadUrl")]
+		string DownloadUrl { get; set; }
 	}
 
 	/// <summary>
@@ -30,6 +34,7 @@ namespace OneDriveAuthPlugin
 	public class OneDriveItem : MSGraphObject, IEtagable
 	{
 		public string Etag { get; set; }
+
 	}
 
 	/// <summary>
@@ -37,6 +42,6 @@ namespace OneDriveAuthPlugin
 	/// </summary>
 	public class OneDriveDrive : MSGraphObject
 	{
-		public string WebUrl { get; set; }
+
 	}
 }

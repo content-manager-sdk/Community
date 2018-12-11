@@ -35,6 +35,9 @@
     <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetOpenAuth.Ultimate.4.3.4.13329\lib\net45-full\DotNetOpenAuth.dll</HintPath>
     </Reference>
+    <Reference Include="HP.HPTRIM.SDK">
+      <HintPath>..\..\lib\HP.HPTRIM.SDK.dll</HintPath>
+    </Reference>
     <Reference Include="HP.HPTRIM.ServiceAPI.Common">
       <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Common.dll</HintPath>
     </Reference>
@@ -82,6 +85,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.identitymodel.services" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.2.2\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
@@ -103,6 +107,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
     <Compile Include="GraphApiHelper.cs" />
     <Compile Include="models.cs" />
@@ -139,6 +144,17 @@ copy $(TargetDir)System.Net.Http.Primitives.dll D:\trunk\trim\CSharp\HP.HPTRIM.S
 copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 
-</PostBuildEvent>
+copy $(TargetPath) D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)DotNetOpenAuth.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.IdentityModel.Logging.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.IdentityModel.Protocols.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.IdentityModel.Protocols.OpenIdConnect.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.IdentityModel.Tokens.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Newtonsoft.Json.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)System.IdentityModel.Tokens.Jwt.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)System.Net.Http.Extensions.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)System.Net.Http.Primitives.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
   </PropertyGroup>
 </Project>

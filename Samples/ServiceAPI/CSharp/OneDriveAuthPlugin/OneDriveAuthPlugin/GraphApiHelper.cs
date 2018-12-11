@@ -21,7 +21,13 @@ namespace OneDriveAuthPlugin
 		internal static string GetOneDriveItemPathsUrl(string selectedPath)
 		{
 			// Construct URL for the names of the folders and files.
-			return BaseGraphUrl + "/drive/root:/" + selectedPath;
+			return $"{BaseGraphUrl}/drive/root:/{selectedPath}";
+		}
+
+		internal static string GetOneDriveItemIdsUrl(string id)
+		{
+			// Construct URL for the names of the folders and files.
+			return $"{BaseGraphUrl}/drive/items/{id}";
 		}
 
 		internal static string GetMyOneDriveUrl()
