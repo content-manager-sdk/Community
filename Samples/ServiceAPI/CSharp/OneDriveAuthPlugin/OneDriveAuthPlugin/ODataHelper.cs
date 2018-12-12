@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ServiceStack;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -23,6 +25,10 @@ namespace OneDriveAuthPlugin
 		{
 			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken);
 
+			if (typeof(T) == typeof(string))
+			{
+				return jsonData;
+			}
 			// Convert to .NET class and populate the properties of the model objects,
 			// and then populate the IEnumerable object and return it.
 			JObject jsonArray = jsonData;
@@ -69,14 +75,80 @@ namespace OneDriveAuthPlugin
 						if (response.IsSuccessStatusCode)
 						{
 							HttpContent content = response.Content;
-							string responseContent = await content.ReadAsStringAsync();
 
-							jsonData = JsonConvert.DeserializeObject(responseContent);
+							if (itemsUrl.EndsWith("content"))
+							{
+								string filePath = Path.ChangeExtension(Path.GetTempFileName(), "docx");
+									var contentStream = await content.ReadAsStreamAsync(); // get the actual content stream
+								using (var file = System.IO.File.Create(filePath))
+								{
+									contentStream.CopyTo(file);
+								}
+								return filePath;// File(contentStream, content_type, filename);
+							} else { 
+								string responseContent = await content.ReadAsStringAsync();
+
+								jsonData = JsonConvert.DeserializeObject(responseContent);
+							} 
+						} 
+					}
+				}
+			}
+			return jsonData;
+		}
+
+		internal static async Task<dynamic> DeleteWithToken(string itemsUrl, string accessToken)
+		{
+			dynamic jsonData = null;
+
+			using (var client = new HttpClient())
+			{
+				// Create and send the HTTP Request
+				using (var request = new HttpRequestMessage(HttpMethod.Delete, itemsUrl))
+				{
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+					using (HttpResponseMessage response = await client.SendAsync(request))
+					{
+						if (!response.IsSuccessStatusCode)
+						{
+							throw new HttpError(response.StatusCode);
 						}
 					}
 				}
 			}
 			return jsonData;
 		}
+
+		//internal static async Task<dynamic> PostRequestWithAccessToken(string itemsUrl, string accessToken, string json)
+		//{
+		//	dynamic jsonData = null;
+
+		//	using (var client = new HttpClient())
+		//	{
+		//		// Create and send the HTTP Request
+		//		using (var request = new HttpRequestMessage(HttpMethod.Post, itemsUrl))
+		//		{
+		//			request.Content = new System.Net.Http.StringContent()
+		//			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+		//			using (HttpResponseMessage response = await client.SendAsync(request))
+		//			{
+		//				if (response.IsSuccessStatusCode)
+		//				{
+		//					HttpContent content = response.Content;
+		//					string responseContent = await content.ReadAsStringAsync();
+
+		//					jsonData = JsonConvert.DeserializeObject(responseContent);
+		//				}
+		//				else if (response.StatusCode == System.Net.HttpStatusCode.Redirect)
+		//				{
+		//					return response.Headers.GetValues("Location").First();
+		//				}
+		//			}
+		//		}
+		//	}
+		//	return jsonData;
+		//}
 	}
 }

@@ -19,19 +19,24 @@ namespace OneDriveAuthPlugin
 			{
 				appHost.Plugins.Remove(appHost.Plugins.First(p => p is AuthFeature));
 			}
+			var appSettings = new ServiceStack.Configuration.AppSettings();
 
 			if (!AppHostConfig.Instance.IsInWebClient)
 			{							   
 
 				appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
-					new TokenAuthProvider()
-				}));
+					new TokenAuthProvider(),
+					new AadAuthProvider(appSettings)
+					
+				}, "~/auth/aad"));
 
 				appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept", allowedOrigins: "https://localhost:3000", allowCredentials: true));
 			}
 			else
 			{
-				var appSettings = new ServiceStack.Configuration.AppSettings();
+				appHost.Config.DefaultRedirectPath = "~/cm";
+
+				
 
 				string oauthLogin = appSettings.GetString("oauth.login");
 
@@ -42,8 +47,10 @@ namespace OneDriveAuthPlugin
 
 				
 				appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
-					new AadAuthProvider(appSettings)
+					new AadAuthProvider(appSettings) 
 				}, "~/auth/aad")
+				
+				
 				);
 			}
 		}

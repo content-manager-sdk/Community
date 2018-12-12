@@ -67,13 +67,17 @@ namespace OneDriveAuthPlugin
 
 			HttpContext context = System.Web.HttpContext.Current;
 			string authHeader = context.Request.Headers["Authorization"];
-			string userName = getUserName(authHeader.Substring(authHeader.IndexOf(' ') + 1));
+			if (!string.IsNullOrWhiteSpace(authHeader))
+			{
+				string userName = getUserName(authHeader.Substring(authHeader.IndexOf(' ') + 1));
 
 
-			Log.Debug("user name: " + userName);
-			session.UserAuthName = userName;
+				Log.Debug("user name: " + userName);
+				session.UserAuthName = userName;
 
-			return !string.IsNullOrEmpty(userName);
+				return !string.IsNullOrEmpty(userName);
+			}
+			return false;
 
 		}
 	}
