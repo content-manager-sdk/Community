@@ -12,7 +12,7 @@
   <Id>edc27695-a13f-4394-8447-7ba90e045985</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.5.0.1</Version>
+  <Version>1.6.0.1</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -125,9 +125,9 @@
     <!-- You can use resources across hosts and form factors. -->
     <Resources>
       <bt:Images>
-        <bt:Image id="Contoso.tpicon_16x16" DefaultValue="https://localhost:3000/assets/icon-16.png" />
-        <bt:Image id="Contoso.tpicon_32x32" DefaultValue="https://localhost:3000/assets/icon-32.png" />
-        <bt:Image id="Contoso.tpicon_80x80" DefaultValue="https://localhost:3000/assets/icon-80.png" />
+        <bt:Image id="Contoso.tpicon_16x16" DefaultValue="https://localhost:3000/assets/trim16.png" />
+        <bt:Image id="Contoso.tpicon_32x32" DefaultValue="https://localhost:3000/assets/trim32.png" />
+        <bt:Image id="Contoso.tpicon_80x80" DefaultValue="https://localhost:3000/assets/trim80.png" />
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Contoso.Taskpane.Url" DefaultValue="https://localhost:3000/index.html" />
@@ -136,14 +136,14 @@
       </bt:Urls>
       <!-- ShortStrings max characters==125. -->
       <bt:ShortStrings>
-        <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="Show Taskpane" />
+        <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="Content Manager" />
         <bt:String id="Contoso.Group1Label" DefaultValue="Commands Group" />
-        <bt:String id="Contoso.GetStarted.Title" DefaultValue="Get started with your sample add-in!" />
+        <bt:String id="Contoso.GetStarted.Title" DefaultValue="Manage this document in Content Manager" />
       </bt:ShortStrings>
       <!-- LongStrings max characters==250. -->
       <bt:LongStrings>
-        <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane" />
-        <bt:String id="Contoso.GetStarted.Description" DefaultValue="Your sample add-in loaded succesfully. Go to the HOME tab and click the 'Show Taskpane' button to get started." />
+        <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="Click to Show the Content Manager Taskpane" />
+        <bt:String id="Contoso.GetStarted.Description" DefaultValue="Content " />
       </bt:LongStrings>
     </Resources>
 	    <WebApplicationInfo>

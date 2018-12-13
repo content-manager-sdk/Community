@@ -5,7 +5,11 @@ import TrimMessages from "./trim-messages";
 
 export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
 
-export interface ITrimString {
+export interface ITrimProperty {
+	StringValue?: string;
+}
+
+export interface ITrimString extends ITrimProperty {
 	Value: string;
 }
 
@@ -16,6 +20,16 @@ interface IOptionsInterface {
 	data: any;
 }
 
+interface IPropertyOrFieldDef {
+	Caption: string;
+	Id: string;
+}
+
+export interface IObjectDetails {
+	results: ITrimDetailsObject[];
+	propertiesAndFields: IPropertyOrFieldDef[];
+}
+
 export interface IDriveInformation {
 	Id: string;
 	Uri: number;
@@ -24,6 +38,16 @@ export interface IDriveInformation {
 export interface ITrimMainObject {
 	Uri: number;
 	NameString?: string;
+}
+
+export interface ITrimField {
+	StringValue: string;
+}
+
+export interface ITrimDetailsObject {
+	Uri: number;
+	Fields?: { [fieldName: string]: ITrimField };
+	[x: string]: any;
 }
 
 export interface ILocation extends ITrimMainObject {
@@ -47,10 +71,36 @@ export interface ITrimConnector {
 		properties: any
 	): Promise<ITrimMainObject>;
 	getDriveId(webUrl: string): Promise<IDriveInformation>;
+	getObjectDetails(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<IObjectDetails>;
 }
 
 export class TrimConnector implements ITrimConnector {
 	public credentialsResolver: Promise<string>;
+
+	getObjectDetails(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<IObjectDetails> {
+		const params = {
+			propertySets: "Details",
+			propertyValue: "String",
+			stringDisplayType: "ViewPane",
+			includePropertyDefs: true,
+		};
+
+		return this.makeRequest(
+			{ path: `${trimType}/${uri}`, method: "get", data: params },
+			(data: any) => {
+				return {
+					results: data.Results,
+					propertiesAndFields: data.PropertiesAndFields[trimType],
+				};
+			}
+		);
+	}
 
 	public getDriveId(webUrl: string): Promise<IDriveInformation> {
 		return this.makeRequest(

@@ -244,4 +244,73 @@ describe("Test fetch from TRIM", () => {
 			expect(error.message).toEqual("Network Error");
 		}
 	});
+
+	describe("Test object details fetch from TRIM", () => {
+		beforeEach(() => {
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/Record/678`, {
+					params: {
+						propertySets: "Details",
+						propertyValue: "String",
+						stringDisplayType: "ViewPane",
+						includePropertyDefs: true,
+					},
+				})
+				.reply((config) => {
+					return [
+						200,
+						{
+							Results: [
+								{
+									TrimType: "RecordType",
+									RecordTitle: { StringValue: "test" },
+									Fields: {
+										Visibility: {
+											StringValue: "High",
+										},
+									},
+								},
+							],
+							PropertiesAndFields: {
+								Record: [
+									{
+										Id: "RecordTitle",
+										Caption: "Title",
+									},
+									{
+										Id: "Visibility",
+										Caption: "Visibility Caption",
+									},
+								],
+							},
+						},
+					];
+				});
+		});
+
+		it("requests details in a Record details request", async () => {
+			expect.assertions(5);
+			const data = await trimConnector.getObjectDetails(
+				BaseObjectTypes.Record,
+				678
+			);
+			expect(data.results.length).toBe(1);
+			expect(data.propertiesAndFields.length).toBe(2);
+			expect(data.results[0].RecordTitle.StringValue).toEqual("test");
+			expect(data.propertiesAndFields[0].Caption).toEqual("Title");
+			expect(data.propertiesAndFields[0].Id).toEqual("RecordTitle");
+		});
+
+		it("handles fields in response", async () => {
+			expect.assertions(3);
+			const data = await trimConnector.getObjectDetails(
+				BaseObjectTypes.Record,
+				678
+			);
+
+			expect(data.results[0].Fields!.Visibility.StringValue).toEqual("High");
+			expect(data.propertiesAndFields[1].Id).toEqual("Visibility");
+			expect(data.propertiesAndFields[1].Caption).toEqual("Visibility Caption");
+		});
+	});
 });

@@ -25,6 +25,12 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	getObjectDetails(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<import("../trim-coms/trim-connector").IObjectDetails> {
+		throw new Error("Method not implemented.");
+	}
 	credentialsResolver: Promise<string>;
 	getDriveId(webUrl: string): Promise<IDriveInformation> {
 		return new Promise(function(resolve, reject) {

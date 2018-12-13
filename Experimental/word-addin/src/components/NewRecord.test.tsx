@@ -98,7 +98,7 @@ describe("New Record layout", function() {
 		).toMatch("Register");
 	});
 
-	it("Sets the Record Uri from on load and onChange", () => {
+	it("Sets the Record Type Uri from on load and onChange", () => {
 		const instance = wrapper.instance();
 		instance.setRecordTypes([]);
 

@@ -27,7 +27,10 @@ const root = (
 
 ReactDOM.render(root, document.getElementById("root") as HTMLElement);
 
-registerServiceWorker();
+Office.initialize = function(reason) {
+	registerServiceWorker();
+};
+
 appStore.fetchBaseSettingFromTrim();
 
 if (module.hot) {

@@ -13,15 +13,29 @@ export interface IWordConnector extends IWordUrl {
 	getUri(): Promise<IGetRecordUriResponse>;
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	getName(): string;
+	insertText(textToInsert: string): void;
 }
 
 export class WordConnector implements IWordConnector {
 	public getWebUrl() {
 		return Office.context.document.url;
 	}
+
 	public getName(): string {
 		const tokens = this.getWebUrl().split("/");
 		return tokens[tokens.length - 1].split(".")[0];
+	}
+
+	public insertText(textToInsert: string): void {
+		Office.context.document.setSelectedDataAsync(
+			textToInsert,
+			{},
+			(asyncResult: any) => {
+				if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+					//write(asyncResult.error.message);
+				}
+			}
+		);
 	}
 
 	public setUri(uri: number): Promise<IGetRecordUriResponse> {
