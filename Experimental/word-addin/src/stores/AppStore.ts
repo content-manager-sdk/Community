@@ -1,4 +1,4 @@
-import { computed, configure, flow, observable } from "mobx";
+import { action, computed, configure, flow, observable } from "mobx";
 import { IWordUrl } from "../office-coms/word-connector";
 import {
 	IDriveInformation,
@@ -22,7 +22,11 @@ export interface IAppStore {
 
 export class AppStore implements IAppStore {
 	@observable public errorMessage: string;
-	@observable public documentInfo: IDriveInformation = { Id: "", Uri: 0 };
+	@observable public documentInfo: IDriveInformation = {
+		Id: "",
+		Uri: 0,
+		CommandDefs: [],
+	};
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
 	@observable public status: string = "STARTING";
@@ -48,6 +52,9 @@ export class AppStore implements IAppStore {
 				// temporary - need to go in TRIM Messages
 				this.messages.web_Register = "Register in Content Manager";
 				this.messages.web_SelectRecordType = "Select a Record Type";
+				this.messages.web_Actions = "Actions";
+				this.messages.web_Checkin = "Check In";
+				this.messages.web_Finalize = "Make Final";
 			}
 
 			this.documentInfo = yield this.trimConnector.getDriveId(
@@ -97,6 +104,10 @@ export class AppStore implements IAppStore {
 		return "";
 	}
 
+	@action.bound
+	setDocumentInfo(documentInfo: IDriveInformation) {
+		this.documentInfo = documentInfo;
+	}
 	// tslint:disable-next-line
 	public createRecord = flow(function*(
 		this: AppStore,

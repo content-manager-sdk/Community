@@ -101,6 +101,7 @@ export class WordConnector implements IWordConnector {
 			// if (Office.context.requirements.isSetSupported("IdentityAPI", 1.1)) {
 			// 	reject({ message: "Identity not supported." });
 			// } else {
+
 			(Office.context["auth"] as any).getAccessTokenAsync(
 				{ forceConsent: false },
 				(result: any) => {

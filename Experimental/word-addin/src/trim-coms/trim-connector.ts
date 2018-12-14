@@ -1,6 +1,7 @@
 import Axios, { AxiosRequestConfig } from "axios";
 import { BASE_URI } from "../stores/AppStore";
 import { BaseObjectTypes } from "./trim-baseobjecttypes";
+import { CommandIds } from "./trim-command-ids";
 import TrimMessages from "./trim-messages";
 
 export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
@@ -33,6 +34,7 @@ export interface IObjectDetails {
 export interface IDriveInformation {
 	Id: string;
 	Uri: number;
+	CommandDefs: ICommandDef[];
 }
 
 export interface ITrimMainObject {
@@ -55,6 +57,13 @@ export interface ILocation extends ITrimMainObject {
 }
 
 export interface IRecordType extends ITrimMainObject {}
+export interface ICommandDef {
+	CommandId: string;
+	MenuEntryString: string;
+	Tooltip: string;
+	StatusBarMessage: string;
+	IsEnabled: boolean;
+}
 
 export interface ITrimConnector {
 	credentialsResolver: Promise<string>;
@@ -75,9 +84,38 @@ export interface ITrimConnector {
 		trimType: BaseObjectTypes,
 		uri: number
 	): Promise<IObjectDetails>;
+
+	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation>;
 }
 
 export class TrimConnector implements ITrimConnector {
+	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation> {
+		let path = "DriveFile";
+
+		const postBodies = {
+			[CommandIds.RecCheckIn]: { Uri, Action: "checkin" },
+			[CommandIds.RecDocFinal]: {
+				Uri,
+				Action: "finalize",
+			},
+			[CommandIds.AddToFavorites]: {
+				Uri,
+				Action: "AddToFavorites",
+			},
+			[CommandIds.RemoveFromFavorites]: {
+				Uri,
+				Action: "RemoveFromFavorites",
+			},
+		};
+
+		return this.makeRequest(
+			{ path, method: "post", data: postBodies[commandId] },
+			(data: any) => {
+				return data.Results[0];
+			}
+		);
+	}
+
 	public credentialsResolver: Promise<string>;
 
 	getObjectDetails(
@@ -219,6 +257,7 @@ export class TrimConnector implements ITrimConnector {
 				Axios(options)
 					.then((response) => {
 						if (
+							response.data.CommandDefs ||
 							response.data.Messages ||
 							(response.data.Results && response.data.Results.length > 0)
 						) {

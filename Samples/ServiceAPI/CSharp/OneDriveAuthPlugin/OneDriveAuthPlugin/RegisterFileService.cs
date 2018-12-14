@@ -37,6 +37,8 @@ namespace OneDriveAuthPlugin
 		public string Id { get; set; }
 		public long Uri { get; set; }
 		public OneDriveItem DriveItem { get; set; }
+		public IList<MyCommandDef> CommandDefs { get; set; }
+
 	}
 
 	public class RegisterFileResponse : IHasResponseStatus
@@ -101,21 +103,65 @@ namespace OneDriveAuthPlugin
 			return null;
 		}
 
+		private MyCommandDef makeCommand(CommandIds commandId, Record fromRecord)
+		{
+
+			CommandDef commandDef = new CommandDef(commandId, this.Database);
+			var myCommandDef = new MyCommandDef();
+			myCommandDef.CommandId = (HP.HPTRIM.ServiceModel.CommandIds)commandId;
+			myCommandDef.MenuEntryString = commandDef.GetMenuEntryString(fromRecord.TrimType);
+			myCommandDef.Tooltip = commandDef.GetTooltip(fromRecord.TrimType);
+			myCommandDef.StatusBarMessage = commandDef.GetStatusBarMessage(fromRecord.TrimType);
+			myCommandDef.IsEnabled = commandDef.IsEnabled(fromRecord);
+
+			return myCommandDef;
+		}
+
+		private void updateFromRecord(RegisterdFileResponse fileToUpdate, Record fromRecord)
+		{
+			fileToUpdate.Uri = fromRecord.Uri;
+			fileToUpdate.CommandDefs = new List<MyCommandDef>();
+
+			foreach (var commandId in new CommandIds[] { CommandIds.RecDocFinal, CommandIds.RecCheckIn, CommandIds.AddToFavorites, CommandIds.RemoveFromFavorites })
+			{
+				fileToUpdate.CommandDefs.Add(makeCommand(commandId, fromRecord));
+			}
+		}
+
 		public async Task<object> Post(DriveFileOperation request)
 		{
 			string token = await getToken();
-			string driveId = getDriveIdFromTrim(request);
+			
 
-			RegisterFileResponse response = new RegisterFileResponse();
-			var registeredFile = new RegisterdFileResponse() { Id = driveId };
-
-			var driveDetails = await ODataHelper.GetItem<string>(GraphApiHelper.GetOneDriveItemContentIdUrl(driveId), token);
+			RegisterFileResponse response = new RegisterFileResponse();				
 
 			Record record = new Record(this.Database, request.Uri);
-			record.SetDocument( new InputDocument( driveDetails), true, false, "checkin from Word Online");
+
+			string driveId = record.ExternalReference;
+
+			var registeredFile = new RegisterdFileResponse() { Id = driveId };
+
 
 			request.Action = request.Action ?? "";
-			if ( request.Action.IndexOf("delete", StringComparison.InvariantCultureIgnoreCase) > -1)
+
+			if (request.Action.IndexOf("AddToFavorites", StringComparison.InvariantCultureIgnoreCase) > -1)
+			{
+				record.AddToFavorites();
+			}
+
+			if (request.Action.IndexOf("RemoveFromFavorites", StringComparison.InvariantCultureIgnoreCase) > -1)
+			{
+				record.RemoveFromFavorites();
+			}
+
+
+			if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1)
+			{
+				var driveDetails = await ODataHelper.GetItem<string>(GraphApiHelper.GetOneDriveItemContentIdUrl(driveId), token);
+				record.SetDocument(new InputDocument(driveDetails), true, false, "checkin from Word Online");
+			}
+
+			if (request.Action.IndexOf("delete", StringComparison.InvariantCultureIgnoreCase) > -1)
 			{
 				await ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token);
 				record.ExternalReference = "";
@@ -123,18 +169,19 @@ namespace OneDriveAuthPlugin
 
 			if (request.Action.IndexOf("finalize", StringComparison.InvariantCultureIgnoreCase) > -1)
 			{
+				
 				record.SetAsFinal(false);
 			}
 
-			
-			
 			record.Save();
+
+			updateFromRecord(registeredFile, record);
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };
 			return response;
 		}
 
-			public async Task<object> Get(RegisterFile request)
+		public async Task<object> Get(RegisterFile request)
 		{
 			RegisterFileResponse response = new RegisterFileResponse();
 
@@ -159,7 +206,7 @@ namespace OneDriveAuthPlugin
 				}
 				else if (!string.IsNullOrWhiteSpace(driveId))
 				{
-					
+
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token);
 
 
@@ -184,7 +231,7 @@ namespace OneDriveAuthPlugin
 
 			if (uris.Count == 1)
 			{
-				registeredFile.Uri = uris[0];
+				updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
 			}
 			//if (request.Uri > 0)
 			//{

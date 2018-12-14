@@ -6,6 +6,7 @@ import {
 } from "./trim-connector";
 import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
+import CommandIds from "./trim-command-ids";
 
 //import * as fetchMock from "fetch-mock";
 
@@ -233,6 +234,32 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
+	it("gets command def details", async () => {
+		const replyValue = [
+			{
+				CommandId: "RecDocFinal",
+				MenuEntryString: "Final",
+				Tooltip: "Make Final",
+				StatusBarMessage: "Make Final",
+				IsEnabled: true,
+			},
+		];
+
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
+			.reply(function(config: any) {
+				return [
+					200,
+					{ Results: [{ Id: "0123", Uri: 567, CommandDefs: replyValue }] },
+				];
+			});
+
+		expect.assertions(2);
+		const data = await trimConnector.getDriveId("test");
+		expect(data.CommandDefs.length).toEqual(1);
+		expect(data.CommandDefs).toEqual(replyValue);
+	});
+
 	it("handles an error response without a body", async () => {
 		mock.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`).networkError();
 
@@ -311,6 +338,55 @@ describe("Test fetch from TRIM", () => {
 			expect(data.results[0].Fields!.Visibility.StringValue).toEqual("High");
 			expect(data.propertiesAndFields[1].Id).toEqual("Visibility");
 			expect(data.propertiesAndFields[1].Caption).toEqual("Visibility Caption");
+		});
+	});
+
+	describe("TRIM Actions", () => {
+		let postBody: any;
+		beforeEach(() => {
+			mock.reset();
+			postBody = null;
+			mock.onPost(`${SERVICEAPI_BASE_URI}/DriveFile`).reply((config) => {
+				postBody = config.data;
+				return [200, { Results: [{}] }];
+			});
+		});
+
+		it("sends a Uri for the Check in", async () => {
+			await trimConnector.runAction(CommandIds.RecCheckIn, 786);
+			expect(postBody).toEqual(JSON.stringify({ Uri: 786, Action: "checkin" }));
+		});
+
+		it("sends an action the Set as Final", async () => {
+			const expectedResponse = {
+				Uri: 999,
+				Action: "finalize",
+			};
+
+			await trimConnector.runAction(CommandIds.RecDocFinal, 999);
+			expect(postBody).toEqual(JSON.stringify(expectedResponse));
+		});
+
+		it("sends an action for add to favourites", async () => {
+			expect.assertions(1);
+			const expectedResponse = {
+				Uri: 9000000001,
+				Action: "AddToFavorites",
+			};
+
+			await trimConnector.runAction(CommandIds.AddToFavorites, 9000000001);
+			expect(postBody).toEqual(JSON.stringify(expectedResponse));
+		});
+
+		it("sends an action for remove from favourites", async () => {
+			expect.assertions(1);
+			const expectedResponse = {
+				Uri: 9000000001,
+				Action: "RemoveFromFavorites",
+			};
+
+			await trimConnector.runAction(CommandIds.RemoveFromFavorites, 9000000001);
+			expect(postBody).toEqual(JSON.stringify(expectedResponse));
 		});
 	});
 });

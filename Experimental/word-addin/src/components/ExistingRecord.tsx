@@ -1,13 +1,55 @@
 import * as React from "react";
-import { observer } from "mobx-react";
-//import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
+import { inject, observer } from "mobx-react";
 import DetailsView from "./DetailsView";
+import { DefaultButton } from "office-ui-fabric-react/lib/Button";
+import { ITrimConnector, ICommandDef } from "src/trim-coms/trim-connector";
+import { IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
+import { CommandIds } from "../trim-coms/trim-command-ids";
 
-export class ExistingRecord extends React.Component<{ appStore?: any }, any> {
+export class ExistingRecord extends React.Component<
+	{ appStore?: any; trimConnector?: ITrimConnector },
+	any
+> {
+	private _onActionclickClick = (
+		evt: React.MouseEvent<HTMLElement>,
+		item: IContextualMenuItem
+	) => {
+		const { trimConnector, appStore } = this.props;
+
+		trimConnector!
+			.runAction(item.key as CommandIds, appStore!.RecordUri)
+			.then((data) => {
+				appStore.setDocumentInfo(data);
+			});
+	};
+
 	public render() {
-		//  const { appStore } = this.props;
-
-		return <DetailsView />;
+		const { appStore } = this.props;
+		const menuItems = appStore.documentInfo.CommandDefs.map(
+			(commandDef: ICommandDef) => {
+				return {
+					key: commandDef.CommandId,
+					text: commandDef.Tooltip,
+					onClick: this._onActionclickClick,
+					disabled: !commandDef.IsEnabled,
+				};
+			}
+		);
+		return (
+			<React.Fragment>
+				<DefaultButton
+					className="trim-action-button"
+					primary
+					split={true}
+					text={appStore.messages.web_Actions}
+					menuProps={{
+						items: menuItems,
+					}}
+				/>
+				<DetailsView />
+			</React.Fragment>
+		);
 	}
 }
-export default observer(ExistingRecord);
+
+export default inject("appStore", "trimConnector")(observer(ExistingRecord));

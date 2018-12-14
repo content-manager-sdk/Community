@@ -43,27 +43,30 @@ export class DetailsView extends React.Component<
 
 	public render() {
 		return (
-			<div className="details-view ms-Grid">
-				{this.state.propertiesAndFields.map((propDef) => {
-					return (
-						<div key={propDef.Id} className="details-item ms-Grid-row">
-							<Label className="ms-Grid-col ms-sm4 ms-md4 ms-lg2">
-								{propDef.Caption}
-							</Label>
-							<span className="ms-Grid-col ms-sm7 ms-md7 ms-lg9 ms-fontWeight-semibold">
-								{this.getText(propDef.Id)}
-							</span>
-							<i
-								onClick={() => {
-									this._onTxtInsertClick(this.getText(propDef.Id));
-								}}
-								className="ms-Icon ms-Icon--PasteAsText ms-Grid-col ms-sm1 ms-md1 ms-lg1"
-								aria-hidden="true"
-							/>
-						</div>
-					);
-				})}
-			</div>
+			<React.Fragment>
+				<h3>Record Properties</h3>
+				<div className="details-view ms-Grid">
+					{this.state.propertiesAndFields.map((propDef) => {
+						return (
+							<div key={propDef.Id} className="details-item ms-Grid-row">
+								<Label className="ms-Grid-col ms-sm4 ms-md4 ms-lg2">
+									{propDef.Caption}
+								</Label>
+								<span className="ms-Grid-col ms-sm7 ms-md7 ms-lg9 ms-fontWeight-semibold">
+									{this.getText(propDef.Id)}
+								</span>
+								<i
+									onClick={() => {
+										this._onTxtInsertClick(this.getText(propDef.Id));
+									}}
+									className="ms-Icon ms-Icon--PasteAsText ms-Grid-col ms-sm1 ms-md1 ms-lg1"
+									aria-hidden="true"
+								/>
+							</div>
+						);
+					})}
+				</div>
+			</React.Fragment>
 		);
 	}
 }

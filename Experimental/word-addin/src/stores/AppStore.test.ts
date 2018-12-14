@@ -8,11 +8,13 @@ import {
 	IDriveInformation,
 	ITrimConnector,
 	ILocation,
+	IObjectDetails,
 } from "../trim-coms/trim-connector";
 
 import { ITrimMainObject } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import { IWordUrl } from "src/office-coms/word-connector";
+import { CommandIds } from "src/trim-coms/trim-command-ids";
 
 let Mock_Action = "";
 
@@ -25,21 +27,25 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation> {
+		throw new Error("Method not implemented.");
+	}
+
 	getObjectDetails(
 		trimType: BaseObjectTypes,
 		uri: number
-	): Promise<import("../trim-coms/trim-connector").IObjectDetails> {
+	): Promise<IObjectDetails> {
 		throw new Error("Method not implemented.");
 	}
 	credentialsResolver: Promise<string>;
 	getDriveId(webUrl: string): Promise<IDriveInformation> {
 		return new Promise(function(resolve, reject) {
 			if (Mock_Action == "NOT_FOUND") {
-				resolve({ Uri: 0, Id: "abc" });
+				resolve({ Uri: 0, Id: "abc", CommandDefs: [] });
 			} else if (Mock_Action == "ERROR") {
 				reject({ message: "some message" });
 			} else {
-				resolve({ Uri: 567, Id: "abc" });
+				resolve({ Uri: 567, Id: "abc", CommandDefs: [] });
 			}
 		});
 	}

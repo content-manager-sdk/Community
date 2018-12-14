@@ -4,6 +4,16 @@ body {
 	font-family: sans-serif;
 }
 
-/* .details-item label {
-	background-color: lightgray;
-} */
+.details-view > div {
+	border-bottom: solid 1px lightgray;
+	margin-bottom: 2px;
+	padding-bottom: 2px;
+}
+
+.details-view > div:last-child {
+	border-bottom: none;
+}
+
+.trim-action-button {
+	float: right;
+}
