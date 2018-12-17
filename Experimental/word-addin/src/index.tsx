@@ -7,12 +7,15 @@ import WordConnector from "./office-coms/word-connector";
 import registerServiceWorker from "./registerServiceWorker";
 import { AppStore } from "./stores/AppStore";
 import TrimConnector from "./trim-coms/trim-connector";
+import { initializeIcons } from "@uifabric/icons";
+
+initializeIcons();
 
 const wordConnector = new WordConnector();
 const trimConnector = new TrimConnector();
-trimConnector.credentialsResolver = new Promise((resolve) => {
-	wordConnector.getAccessToken().then((token) => resolve(token));
-});
+ trimConnector.credentialsResolver = new Promise((resolve) => {
+ 	wordConnector.getAccessToken().then((token) => resolve(token));
+ });
 const appStore = new AppStore(wordConnector, trimConnector);
 
 const root = (
@@ -27,11 +30,7 @@ const root = (
 
 ReactDOM.render(root, document.getElementById("root") as HTMLElement);
 
-Office.initialize = function(reason) {
-	registerServiceWorker();
-};
-
-appStore.fetchBaseSettingFromTrim();
+registerServiceWorker();
 
 if (module.hot) {
 	module.hot.accept();

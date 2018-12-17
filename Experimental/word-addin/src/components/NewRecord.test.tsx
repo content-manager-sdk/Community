@@ -39,21 +39,22 @@ describe("New Record layout", function() {
 	};
 
 	class MockWordConnector implements IWordConnector {
+		insertText(textToInsert: string): void {
+			throw new Error("Method not implemented.");
+		}
 		getAccessToken(): Promise<string> {
 			throw new Error("Method not implemented.");
 		}
 		setUri(
 			uri: number
-		): Promise<
-			import("d:/Community/Experimental/word-addin/src/office-coms/word-connector").IGetRecordUriResponse
-		> {
+		): Promise<import("../office-coms/word-connector").IGetRecordUriResponse> {
 			throw new Error("Method not implemented.");
 		}
 		getWebUrl(): string {
 			throw new Error("Method not implemented.");
 		}
 		getUri(): Promise<
-			import("d:/Community/Experimental/word-addin/src/office-coms/word-connector").IGetRecordUriResponse
+			import("../office-coms/word-connector").IGetRecordUriResponse
 		> {
 			throw new Error("Method not implemented.");
 		}

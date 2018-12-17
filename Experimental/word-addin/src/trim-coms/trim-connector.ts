@@ -89,22 +89,27 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
-	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation> {
-		let path = "DriveFile";
+	public credentialsResolver: Promise<string>;
+
+	public runAction(
+		commandId: CommandIds,
+		Uri: number
+	): Promise<IDriveInformation> {
+		const path = "DriveFile";
 
 		const postBodies = {
 			[CommandIds.RecCheckIn]: { Uri, Action: "checkin" },
 			[CommandIds.RecDocFinal]: {
-				Uri,
 				Action: "finalize",
+				Uri,
 			},
 			[CommandIds.AddToFavorites]: {
-				Uri,
 				Action: "AddToFavorites",
+				Uri,
 			},
 			[CommandIds.RemoveFromFavorites]: {
-				Uri,
 				Action: "RemoveFromFavorites",
+				Uri,
 			},
 		};
 
@@ -116,25 +121,23 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public credentialsResolver: Promise<string>;
-
-	getObjectDetails(
+	public getObjectDetails(
 		trimType: BaseObjectTypes,
 		uri: number
 	): Promise<IObjectDetails> {
 		const params = {
+			includePropertyDefs: true,
 			propertySets: "Details",
 			propertyValue: "String",
 			stringDisplayType: "ViewPane",
-			includePropertyDefs: true,
 		};
 
 		return this.makeRequest(
 			{ path: `${trimType}/${uri}`, method: "get", data: params },
 			(data: any) => {
 				return {
-					results: data.Results,
 					propertiesAndFields: data.PropertiesAndFields[trimType],
+					results: data.Results,
 				};
 			}
 		);

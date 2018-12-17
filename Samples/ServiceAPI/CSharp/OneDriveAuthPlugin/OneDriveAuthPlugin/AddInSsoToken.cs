@@ -10,6 +10,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
+//https://github.com/OfficeDev/Outlook-Add-In-Token-Viewer/blob/master/TokenValidationService/Models/AddInSsoToken.cs
+
 namespace OneDriveAuthPlugin
 {
 	public class AddInSsoToken : JwtSecurityToken

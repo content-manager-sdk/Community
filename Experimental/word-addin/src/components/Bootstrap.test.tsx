@@ -8,7 +8,11 @@ describe("BootStrap", function() {
 	it("shows error component", function() {
 		const wrapper = shallow(
 			<BootStrap.wrappedComponent
-				appStore={{ status: "ERROR", errorMessage: "test" }}
+				appStore={{
+					status: "ERROR",
+					errorMessage: "test",
+					fetchBaseSettingFromTrim: () => {},
+				}}
 			/>
 		);
 		//   expect(wrapper).toMatchSnapshot();
@@ -25,7 +29,9 @@ describe("BootStrap", function() {
 
 	it("shows Main component", function() {
 		const wrapper = shallow(
-			<BootStrap.wrappedComponent appStore={{ status: "WAITING" }} />
+			<BootStrap.wrappedComponent
+				appStore={{ status: "WAITING", fetchBaseSettingFromTrim: () => {} }}
+			/>
 		);
 
 		expect(wrapper.find(MainApp).exists()).toBeTruthy();

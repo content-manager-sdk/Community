@@ -1,0 +1,10 @@
+.trim-ObjectPicker-event--without-label {
+	color: rgb(102, 102, 102);
+	font-size: 16px;
+	line-height: 18px;
+	pointer-events: initial;
+	position: absolute;
+	right: 9px;
+	top: 7px;
+	cursor: pointer;
+}

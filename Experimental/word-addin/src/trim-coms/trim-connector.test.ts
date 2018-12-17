@@ -359,8 +359,8 @@ describe("Test fetch from TRIM", () => {
 
 		it("sends an action the Set as Final", async () => {
 			const expectedResponse = {
-				Uri: 999,
 				Action: "finalize",
+				Uri: 999,
 			};
 
 			await trimConnector.runAction(CommandIds.RecDocFinal, 999);
@@ -370,8 +370,8 @@ describe("Test fetch from TRIM", () => {
 		it("sends an action for add to favourites", async () => {
 			expect.assertions(1);
 			const expectedResponse = {
-				Uri: 9000000001,
 				Action: "AddToFavorites",
+				Uri: 9000000001,
 			};
 
 			await trimConnector.runAction(CommandIds.AddToFavorites, 9000000001);
@@ -381,8 +381,8 @@ describe("Test fetch from TRIM", () => {
 		it("sends an action for remove from favourites", async () => {
 			expect.assertions(1);
 			const expectedResponse = {
-				Uri: 9000000001,
 				Action: "RemoveFromFavorites",
+				Uri: 9000000001,
 			};
 
 			await trimConnector.runAction(CommandIds.RemoveFromFavorites, 9000000001);

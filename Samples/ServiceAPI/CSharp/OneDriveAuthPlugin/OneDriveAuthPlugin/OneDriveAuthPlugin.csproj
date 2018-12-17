@@ -109,7 +109,6 @@
   <ItemGroup>
     <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
-    <Compile Include="CheckinFromDriveAction.cs" />
     <Compile Include="GraphApiHelper.cs" />
     <Compile Include="models.cs" />
     <Compile Include="MyCommandDef.cs" />

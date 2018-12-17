@@ -7,6 +7,10 @@ import MainApp from "./MainApp";
 @inject("appStore")
 @observer
 export class BootStrap extends React.Component<{ appStore?: IAppStore }, any> {
+	componentDidMount() {
+		const { appStore } = this.props;
+		appStore!.fetchBaseSettingFromTrim();
+	}
 	public render() {
 		const { appStore } = this.props;
 

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { observable, action } from "mobx";
 import { observer } from "mobx-react";
+import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
+import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
 
-//@inject("appStore")
-//@observer
 export class PropertySheet extends React.Component<
 	{
 		formDefinition: any;
@@ -47,12 +47,13 @@ export class PropertySheet extends React.Component<
 			const formItems = form.PageItems || [];
 
 			const pageItems = formItems.map((pageItem: any) => {
+				const commonProps = { key: pageItem.Name, label: pageItem.Caption };
+
 				if (pageItem.Format === "String") {
 					return (
 						<TextField
-							key={pageItem.Name}
+							{...commonProps}
 							multiline={this.isTextFieldMultiline[pageItem.Name]}
-							label={pageItem.Caption}
 							defaultValue={
 								pageItem.Name === "RecordTypedTitle"
 									? this.props.defaultRecordTitle
@@ -60,6 +61,22 @@ export class PropertySheet extends React.Component<
 							}
 							onChange={this._onTextChange(pageItem.Name)}
 						/>
+					);
+				}
+				if (pageItem.Format === "Datetime") {
+					return (
+						<DatePicker
+							{...commonProps}
+							value={
+								pageItem.Value.IsClear
+									? undefined
+									: new Date(pageItem.Value.DateTime)
+							}
+						/>
+					);
+				} else if (pageItem.Format === "Object") {
+					return (
+						<TrimObjectPicker {...commonProps} trimType={pageItem.ObjectType} />
 					);
 				} else {
 					return null;

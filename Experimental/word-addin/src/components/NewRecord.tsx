@@ -5,11 +5,8 @@ import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { ITrimConnector, IRecordType } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
-import { initializeIcons } from "@uifabric/icons";
 import PropertySheet from "./PropertySheet";
 import { IWordConnector } from "src/office-coms/word-connector";
-
-initializeIcons();
 
 export class NewRecord extends React.Component<
 	{
