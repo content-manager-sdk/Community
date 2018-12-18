@@ -17,11 +17,11 @@ const mock = new MockAdapter(axios);
 
 describe("Test fetch from TRIM", () => {
 	const trimConnector = new TrimConnector();
-	trimConnector.credentialsResolver = new Promise<string>((resolve) => {
-		resolve("token123");
-	});
+	trimConnector.credentialsResolver = (callback) => {
+		callback("token123");
+	};
 
-	it("Record Types are returned", async () => {
+	it("Record Types are returned", () => {
 		let props: string = "";
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
@@ -38,14 +38,17 @@ describe("Test fetch from TRIM", () => {
 				];
 			});
 
-		expect.assertions(2);
-		const data = await trimConnector.search<IRecordType>(
-			BaseObjectTypes.RecordType,
-			"all",
-			3
-		);
-		expect(props).toEqual("NameString");
-		expect(data[0].NameString).toBe("Document");
+		trimConnector
+			.search<IRecordType>({
+				trimType: BaseObjectTypes.RecordType,
+				q: "all",
+				purpose: 3,
+			})
+			.then((data) => {
+				expect.assertions(2);
+				expect(props).toEqual("NameString");
+				expect(data[0].NameString).toBe("Document");
+			});
 	});
 
 	it("the FullFormattedName is david", () => {

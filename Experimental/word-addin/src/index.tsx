@@ -13,9 +13,9 @@ initializeIcons();
 
 const wordConnector = new WordConnector();
 const trimConnector = new TrimConnector();
- trimConnector.credentialsResolver = new Promise((resolve) => {
- 	wordConnector.getAccessToken().then((token) => resolve(token));
- });
+trimConnector.credentialsResolver = (callback) => {
+	wordConnector.getAccessToken().then((token) => callback(token));
+};
 const appStore = new AppStore(wordConnector, trimConnector);
 
 const root = (

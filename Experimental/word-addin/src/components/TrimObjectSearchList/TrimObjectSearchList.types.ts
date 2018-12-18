@@ -17,6 +17,8 @@ export interface ITrimObjectSearchListProps
 
 	trimType?: BaseObjectTypes;
 
+	purpose?: number;
+
 	trimConnector?: ITrimConnector;
 
 	/**

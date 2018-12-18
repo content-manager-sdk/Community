@@ -3,7 +3,11 @@ import { observable, action, runInAction } from "mobx";
 import { inject, observer } from "mobx-react";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
-import { ITrimConnector, IRecordType } from "../trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	IRecordType,
+	ISearchResults,
+} from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
 import { IWordConnector } from "src/office-coms/word-connector";
@@ -46,10 +50,14 @@ export class NewRecord extends React.Component<
 
 		let me = this;
 		return trimConnector!
-			.search<IRecordType>(BaseObjectTypes.RecordType, "all", 3)
-			.then(function(response: IRecordType[]) {
+			.search<IRecordType>({
+				trimType: BaseObjectTypes.RecordType,
+				q: "all",
+				purpose: 3,
+			})
+			.then(function(response: ISearchResults<IRecordType>) {
 				me.setRecordTypes(
-					response.map(function(o: IRecordType) {
+					response.results.map(function(o: IRecordType) {
 						return { key: o.Uri, text: o.NameString } as IDropdownOption;
 					})
 				);

@@ -72,7 +72,9 @@ describe("New Record layout", function() {
 	);
 
 	it("contains a Record Type dropdown", async (done) => {
-		resolveRecordTypes([{ Uri: 1, NameString: "Document" } as IRecordType]);
+		resolveRecordTypes({
+			results: [{ Uri: 1, NameString: "Document" } as IRecordType],
+		});
 
 		expect(wrapper.find(Dropdown).exists()).toBeTruthy();
 		expect(wrapper.find(Dropdown).props().placeholder).toEqual(

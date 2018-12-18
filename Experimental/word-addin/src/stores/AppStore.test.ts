@@ -6,9 +6,12 @@ import { AppStore } from "./AppStore";
 
 import {
 	IDriveInformation,
+	ISearchParamaters,
 	ITrimConnector,
 	ILocation,
 	IObjectDetails,
+	ITokenCallback,
+	ISearchResults,
 } from "../trim-coms/trim-connector";
 
 import { ITrimMainObject } from "../trim-coms/trim-connector";
@@ -27,6 +30,12 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	search<T>(
+		options: ISearchParamaters
+	): Promise<ISearchResults<ITrimMainObject>> {
+		return new Promise(function(resolve, reject) {});
+	}
+	credentialsResolver: (callback: ITokenCallback) => void;
 	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation> {
 		throw new Error("Method not implemented.");
 	}
@@ -37,7 +46,7 @@ class MockTrimConnector implements ITrimConnector {
 	): Promise<IObjectDetails> {
 		throw new Error("Method not implemented.");
 	}
-	credentialsResolver: Promise<string>;
+
 	getDriveId(webUrl: string): Promise<IDriveInformation> {
 		return new Promise(function(resolve, reject) {
 			if (Mock_Action == "NOT_FOUND") {
@@ -79,13 +88,6 @@ class MockTrimConnector implements ITrimConnector {
 				resolve({ FullFormattedName: { Value: "david" }, Uri: 1 });
 			}
 		});
-	}
-	search<T extends ITrimMainObject>(
-		trimType: BaseObjectTypes,
-		query: string,
-		purpose: number = 0
-	): Promise<T[]> {
-		return new Promise(function(resolve, reject) {});
 	}
 }
 

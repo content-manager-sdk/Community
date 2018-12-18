@@ -8,7 +8,12 @@ import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
 
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
-import { TrimConnector, ITrimMainObject } from "../../trim-coms/trim-connector";
+import {
+	TrimConnector,
+	ITrimMainObject,
+	ISearchResults,
+	ISearchParamaters,
+} from "../../trim-coms/trim-connector";
 import { Provider } from "mobx-react";
 
 initializeIcons();
@@ -17,12 +22,13 @@ describe("TrimObjectPicker", function() {
 	let trimConnector = new TrimConnector();
 
 	const doSearch = function<T extends ITrimMainObject>(
-		trimType: BaseObjectTypes,
-		q: string,
-		purpose: number = 0
-	): Promise<T[]> {
+		options: ISearchParamaters
+	): Promise<ISearchResults<T>> {
 		return new Promise(function(resolve) {
-			resolve([{ Uri: 1, NameString: "test" } as T]);
+			resolve({
+				results: [{ Uri: 1, NameString: "test" } as T],
+				hasMoreItems: false,
+			});
 		});
 	};
 

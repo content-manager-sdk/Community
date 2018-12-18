@@ -1,0 +1,58 @@
+/* .trim-search-list-outer > div {
+	float: left;
+}
+.trim-list {
+	width: auto;
+}
+
+.trim-search-shortcuts {
+	width: 36px;
+} */
+
+.trim-search-list-outer {
+	height: 260px;
+	overflow: hidden;
+	width: 200px;
+	display: flex;
+}
+/* .trim-search-list-outer > div {
+	display: inline-block;
+	box-sizing: border-box;
+} */
+.trim-list-container {
+	/* position: relative;
+	display: block;
+	width: 100%; */
+
+	flex-grow: 1;
+	overflow-y: auto;
+	border-left: 1px solid;
+	padding-left: 4px;
+	max-height: 40vh;
+	/* height: 260px; */
+}
+
+/* .trim-list {
+	height: 200px;
+} */
+
+.trim-search-shortcuts {
+	position: relative;
+	display: block;
+	width: 40px;
+}
+
+.trim-search-shortcuts ul {
+	list-style: none;
+	padding: 0;
+	padding-left: 4px;
+}
+
+.trim-search-shortcuts li {
+	margin-top: 4px;
+}
+
+.trim-list {
+	height: 100px;
+	overflow-y: auto;
+}

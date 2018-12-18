@@ -6,12 +6,20 @@ import TrimMessages from "./trim-messages";
 
 export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
 
+export type ITokenCallback = (accessToken: string) => void;
+
 export interface ITrimProperty {
 	StringValue?: string;
 }
 
 export interface ITrimString extends ITrimProperty {
 	Value: string;
+}
+
+export interface ISearchParamaters {
+	trimType: BaseObjectTypes;
+	q: string;
+	purpose: number;
 }
 
 interface IOptionsInterface {
@@ -29,6 +37,11 @@ interface IPropertyOrFieldDef {
 export interface IObjectDetails {
 	results: ITrimDetailsObject[];
 	propertiesAndFields: IPropertyOrFieldDef[];
+}
+
+export interface ISearchResults<T extends ITrimMainObject> {
+	hasMoreItems: boolean;
+	results: T[];
 }
 
 export interface IDriveInformation {
@@ -66,14 +79,12 @@ export interface ICommandDef {
 }
 
 export interface ITrimConnector {
-	credentialsResolver: Promise<string>;
+	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
 	getMessages(): Promise<any>;
 	search<T>(
-		trimType: BaseObjectTypes,
-		query: string,
-		purpose: number
-	): Promise<ITrimMainObject[]>;
+		options: ISearchParamaters
+	): Promise<ISearchResults<ITrimMainObject>>;
 	getPropertySheet(recordTypeUri: number): Promise<any>;
 	registerInTrim(
 		recordTypeUri: number,
@@ -89,7 +100,7 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
-	public credentialsResolver: Promise<string>;
+	public credentialsResolver: (callback: ITokenCallback) => void;
 
 	public runAction(
 		commandId: CommandIds,
@@ -192,11 +203,12 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public search<T extends ITrimMainObject>(
-		trimType: BaseObjectTypes,
-		q: string,
-		purpose: number = 0
-	): Promise<T[]> {
+		options: ISearchParamaters
+	): Promise<ISearchResults<T>> {
+		const { q, purpose, trimType } = options;
+
 		const params = {
+			pageSize: 20,
 			properties: "NameString",
 			purpose,
 			q,
@@ -205,9 +217,12 @@ export class TrimConnector implements ITrimConnector {
 		return this.makeRequest(
 			{ path: trimType, method: "get", data: params },
 			(data: any) => {
-				return data.Results.map((trimObject: T) => {
-					return trimObject;
-				});
+				return {
+					hasMoreItems: data.HasMoreItems,
+					results: data.Results.map((trimObject: T) => {
+						return trimObject;
+					}),
+				};
 			}
 		);
 	}
@@ -254,7 +269,7 @@ export class TrimConnector implements ITrimConnector {
 
 	private makeRequest<T>(config: any, parseCallback: any): Promise<T> {
 		return new Promise((resolve, reject) => {
-			this.credentialsResolver.then((accessToken) => {
+			this.credentialsResolver((accessToken) => {
 				const options = this.makeOptions({ ...{ accessToken }, ...config });
 
 				Axios(options)
