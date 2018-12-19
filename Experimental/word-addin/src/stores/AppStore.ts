@@ -124,6 +124,7 @@ export class AppStore implements IAppStore {
 
 		if (newRecord.Uri > 0) {
 			this.documentInfo.Uri = newRecord.Uri;
+			this.documentInfo.CommandDefs = newRecord.CommandDefs!;
 		}
 	});
 }

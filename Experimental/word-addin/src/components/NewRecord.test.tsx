@@ -188,7 +188,7 @@ describe("New Record layout", function() {
 			.update()
 			.find(PropertySheet)
 			.props()
-			.onChange(null, { RecordTypedTitle: "test title" });
+			.onChange({ RecordTypedTitle: "test title" });
 
 		wrapper
 			.update()

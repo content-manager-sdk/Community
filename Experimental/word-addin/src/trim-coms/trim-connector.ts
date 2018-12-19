@@ -20,6 +20,7 @@ export interface ISearchParamaters {
 	trimType: BaseObjectTypes;
 	q: string;
 	purpose: number;
+	start?: number;
 }
 
 interface IOptionsInterface {
@@ -53,6 +54,7 @@ export interface IDriveInformation {
 export interface ITrimMainObject {
 	Uri: number;
 	NameString?: string;
+	CommandDefs?: [];
 }
 
 export interface ITrimField {
@@ -167,7 +169,11 @@ export class TrimConnector implements ITrimConnector {
 		recordTypeUri: number,
 		properties: any
 	): Promise<ITrimMainObject> {
-		const body = { ...properties, RecordRecordType: recordTypeUri };
+		const body = {
+			...properties,
+			RecordRecordType: recordTypeUri,
+			properties: "CommandDefs",
+		};
 
 		return this.makeRequest(
 			{ path: "Record", method: "post", data: body },
@@ -205,13 +211,14 @@ export class TrimConnector implements ITrimConnector {
 	public search<T extends ITrimMainObject>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<T>> {
-		const { q, purpose, trimType } = options;
+		const { q, purpose, trimType, start } = options;
 
 		const params = {
 			pageSize: 20,
 			properties: "NameString",
 			purpose,
 			q,
+			start,
 		};
 
 		return this.makeRequest(
@@ -229,7 +236,7 @@ export class TrimConnector implements ITrimConnector {
 
 	public getMe(): Promise<ILocation> {
 		const params = {
-			properties: ["LocationFullFormattedName"],
+			properties: "LocationFullFormattedName",
 		};
 
 		return this.makeRequest(

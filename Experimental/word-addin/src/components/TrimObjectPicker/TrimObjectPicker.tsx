@@ -10,6 +10,7 @@ import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
+import { ITrimMainObject } from "src/trim-coms/trim-connector";
 
 export interface IObjectPickerState {
 	isObjectPickerShown?: boolean;
@@ -68,6 +69,7 @@ export class TrimObjectPicker
 									componentRef={this._searchList}
 									onDismiss={this._calendarDismissed}
 									trimType={trimType}
+									onTrimObjectSelected={this._trimObjectSelected}
 								/>
 							</FocusTrapZone>
 						}
@@ -76,6 +78,8 @@ export class TrimObjectPicker
 			</div>
 		);
 	}
+
+	private _trimObjectSelected = (trimObject: ITrimMainObject): void => {};
 
 	/**
 	 * Callback for closing the calendar callout

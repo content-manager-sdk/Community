@@ -208,7 +208,11 @@ describe("Test fetch from TRIM", () => {
 			.registerInTrim(1, { RecordTypedTitle: "test" })
 			.then((data) => {
 				expect(postConfig.data).toEqual(
-					JSON.stringify({ RecordTypedTitle: "test", RecordRecordType: 1 })
+					JSON.stringify({
+						RecordTypedTitle: "test",
+						RecordRecordType: 1,
+						properties: "CommandDefs",
+					})
 				);
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
 				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");

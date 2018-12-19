@@ -56,3 +56,12 @@
 	height: 100px;
 	overflow-y: auto;
 }
+
+.trim-list-row {
+	padding: 4px 0 4px 0;
+}
+
+.trim-list-row:hover {
+	background-color: #f4f4f4;
+	cursor: pointer;
+}

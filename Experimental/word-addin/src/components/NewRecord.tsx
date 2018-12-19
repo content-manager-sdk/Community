@@ -77,11 +77,8 @@ export class NewRecord extends React.Component<
 		this.props.appStore.createRecord(this.recordTypeUri, this.recordProps);
 	};
 
-	private _onPropertySheetChange = (
-		event: React.FormEvent<HTMLElement>,
-		newProps: any
-	) => {
-		this.recordProps = newProps;
+	private _onPropertySheetChange = (newProps: any) => {
+		this.recordProps = { ...this.recordProps, ...newProps };
 	};
 
 	public render() {

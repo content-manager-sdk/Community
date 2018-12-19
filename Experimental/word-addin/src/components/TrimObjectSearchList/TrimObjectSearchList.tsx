@@ -22,6 +22,9 @@ export class TrimObjectSearchList extends React.Component<
 > {
 	constructor(props: ITrimObjectSearchListProps) {
 		super(props);
+
+		this._onTrimObjectSelected = this._onTrimObjectSelected.bind(this);
+
 		this.state = this._getDefaultState();
 	}
 
@@ -30,8 +33,16 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	private _newQuery = "";
-
-	private doSearch(): void {
+	private _searchRunning = false;
+	private _hasMore = true;
+	private doSearch(start: number = 1): void {
+		if (start < 2) {
+			this._hasMore = true;
+		}
+		if (this._searchRunning === true || this._hasMore === false) {
+			return;
+		}
+		this._searchRunning = true;
 		const { trimConnector, trimType, q, purpose } = this.props;
 
 		if (trimConnector && trimType) {
@@ -40,11 +51,41 @@ export class TrimObjectSearchList extends React.Component<
 					trimType: trimType,
 					q: this._newQuery || q || "unkAll",
 					purpose: purpose || 0,
+					start,
 				})
 				.then((response: ISearchResults<ITrimMainObject>) => {
-					this.setState({ items: response.results });
+					this._hasMore = response.hasMoreItems;
+					if (start > 1) {
+						this.setState((prevState) => ({
+							items: [...prevState.items, ...response.results],
+						}));
+					} else {
+						this.setState({ items: response.results });
+					}
+					this._searchRunning = false;
+				})
+				.catch(() => {
+					this._searchRunning = false;
 				});
 		}
+	}
+
+	private _onTrimObjectSelected(uri: number): void {
+		const { onTrimObjectSelected } = this.props;
+		if (onTrimObjectSelected && uri > 0) {
+			const trimObject = this.state.items.find((i) => {
+				return i.Uri == uri;
+			});
+			onTrimObjectSelected(trimObject);
+		}
+		// const { item, itemIndex } = row.props;
+		// const itemKey = this._getItemKey(item, itemIndex);
+		// this._activeRows[itemKey] = row; // this is used for column auto resize
+		// this._setFocusToRowIfPending(row);
+		// const { onRowDidMount } = this.props;
+		// if (onRowDidMount) {
+		//   onRowDidMount(item, itemIndex);
+		// }
 	}
 
 	private _onShortcutClick = (query: string) => {
@@ -104,11 +145,18 @@ export class TrimObjectSearchList extends React.Component<
 						items={this.state.items}
 						onRenderCell={this._onRenderCell}
 						onShouldVirtualize={this._onVirtualize}
+						onClick={this._onListClick}
 					/>
 				</div>
 			</div>
 		);
 	}
+
+	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+		this._onTrimObjectSelected(
+			Number(event.currentTarget.attributes.getNamedItem("data-trim-uri"))
+		);
+	};
 
 	private _onScroll = (event: React.UIEvent<HTMLDivElement>): void => {
 		if (this.state.lastScrollPos > event.currentTarget.scrollTop) {
@@ -125,7 +173,6 @@ export class TrimObjectSearchList extends React.Component<
 	};
 
 	private _onVirtualize = (props: IListProps): boolean => {
-		//console.log("fff");
 		return true;
 	};
 
@@ -136,17 +183,15 @@ export class TrimObjectSearchList extends React.Component<
 	): JSX.Element => {
 		if (
 			this.state.scrollDirection === "down" &&
-			index! > 0 &&
 			index! + 1 === this.state.items.length
 		) {
-			console.log(
-				"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    " +
-					item.NameString
-			);
-		} else {
-			//	console.log(`${index} -- ${this.state.items.length}`);
+			this.doSearch(this.state.items.length + 1);
 		}
-		return <div>{item.NameString}</div>;
+		return (
+			<div className="trim-list-row" data-trim-uri={item.Uri}>
+				{item.NameString}
+			</div>
+		);
 	};
 
 	private _getDefaultState(

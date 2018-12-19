@@ -15,12 +15,15 @@ export class ExistingRecord extends React.Component<
 		item: IContextualMenuItem
 	) => {
 		const { trimConnector, appStore } = this.props;
-
-		trimConnector!
-			.runAction(item.key as CommandIds, appStore!.RecordUri)
-			.then((data) => {
-				appStore.setDocumentInfo(data);
-			});
+		if (item.key === "Properties") {
+			open(`https://localhost/cm?uri=${appStore.documentInfo.Uri}`, "_blank");
+		} else {
+			trimConnector!
+				.runAction(item.key as CommandIds, appStore!.RecordUri)
+				.then((data) => {
+					appStore.setDocumentInfo(data);
+				});
+		}
 	};
 
 	public render() {

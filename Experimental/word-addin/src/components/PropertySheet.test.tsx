@@ -91,7 +91,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(ev, newForm) {
+				onChange={function(newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -117,6 +117,44 @@ describe("Property Sheet", function() {
 			.onChange(null, "abc");
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
+	});
+
+	it("fires the onChange event when a date picker changes", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							PageItems: [
+								{
+									Format: "Datetime",
+									Name: "RecordDateCreated",
+									Caption: "a date",
+									Value: {
+										DateTime: "0001-01-01T00:00:00.0000000+11:00",
+										IsClear: true,
+									},
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		const testDate = new Date();
+
+		wrapperWithForm
+			.find(DatePicker)
+			.props()
+			.onSelectDate(testDate);
+
+		expect(onChangeForm).toEqual({ RecordDateCreated: testDate.toISOString() });
 	});
 
 	describe("Date properties", () => {
