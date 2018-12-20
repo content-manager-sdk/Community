@@ -9,7 +9,9 @@ import MainApp from "./MainApp";
 export class BootStrap extends React.Component<{ appStore?: IAppStore }, any> {
 	componentDidMount() {
 		const { appStore } = this.props;
-		appStore!.fetchBaseSettingFromTrim();
+		Office.initialize = function(reason) {
+			appStore!.fetchBaseSettingFromTrim();
+		};
 	}
 	public render() {
 		const { appStore } = this.props;
