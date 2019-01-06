@@ -4,15 +4,24 @@ import { BootStrap } from "./BootStrap";
 import MainApp from "./MainApp";
 import { ErrorDisplay } from "./ErrorDisplay";
 
+(global as any).Office = {};
+
 describe("BootStrap", function() {
+	const mockWordConnector = {
+		getAutoOpen(): boolean {
+			return false;
+		},
+	};
+
 	it("shows error component", function() {
 		const wrapper = shallow(
-			<BootStrap.wrappedComponent
+			<BootStrap
 				appStore={{
 					status: "ERROR",
 					errorMessage: "test",
 					fetchBaseSettingFromTrim: () => {},
 				}}
+				wordConnector={mockWordConnector}
 			/>
 		);
 		//   expect(wrapper).toMatchSnapshot();
@@ -20,17 +29,16 @@ describe("BootStrap", function() {
 		//expect(wrapper.find("ErrorDisplay"));
 		//  expect(wrapper.find("div"));
 	});
-});
 
-describe("BootStrap", function() {
 	//   beforeEach(function(this: any) {
 	//     this.appStore = { status: "WAITING" };
 	//   });
 
 	it("shows Main component", function() {
 		const wrapper = shallow(
-			<BootStrap.wrappedComponent
+			<BootStrap
 				appStore={{ status: "WAITING", fetchBaseSettingFromTrim: () => {} }}
+				wordConnector={mockWordConnector}
 			/>
 		);
 

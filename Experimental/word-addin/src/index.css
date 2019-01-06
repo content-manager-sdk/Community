@@ -28,3 +28,20 @@ body {
 	top: 7px;
 	cursor: pointer;
 }
+
+.trim-footer {
+	border-top: 1px solid;
+	width: 95%;
+	position: absolute;
+	bottom: 0;
+	height: 80px;
+}
+.trim-main {
+	position: absolute;
+	top: 0px;
+	bottom: 90px;
+	right: 0px;
+	left: 0px;
+	padding: 0 6px 0 6px;
+	overflow-y: scroll;
+}

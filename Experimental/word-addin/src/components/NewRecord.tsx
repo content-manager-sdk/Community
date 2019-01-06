@@ -17,6 +17,7 @@ export class NewRecord extends React.Component<
 		appStore?: any;
 		trimConnector?: ITrimConnector;
 		wordConnector?: IWordConnector;
+		className?: string;
 	},
 	any
 > {
@@ -82,10 +83,10 @@ export class NewRecord extends React.Component<
 	};
 
 	public render() {
-		const { appStore } = this.props;
+		const { appStore, className } = this.props;
 
 		return (
-			<div>
+			<div className={className}>
 				<Dropdown
 					options={this.recordTypes}
 					placeholder={appStore.messages.web_SelectRecordType}

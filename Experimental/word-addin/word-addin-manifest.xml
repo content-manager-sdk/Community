@@ -110,7 +110,7 @@
 
                   <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
                   <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <TaskpaneId>Office.AutoShowTaskpaneWithDocument</TaskpaneId>
                     <!-- Provide a url resource id for the location that will be displayed on the task pane. -->
                     <SourceLocation resid="Contoso.Taskpane.Url" />
                   </Action>

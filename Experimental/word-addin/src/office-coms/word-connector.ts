@@ -14,9 +14,23 @@ export interface IWordConnector extends IWordUrl {
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	getName(): string;
 	insertText(textToInsert: string): void;
+	setAutoOpen(autoOpen: boolean): void;
+	getAutoOpen(): boolean;
 }
 
 export class WordConnector implements IWordConnector {
+	setAutoOpen(autoOpen: boolean): void {
+		Office.context.document.settings.set(
+			"Office.AutoShowTaskpaneWithDocument",
+			autoOpen
+		);
+		Office.context.document.settings.saveAsync();
+	}
+	getAutoOpen(): boolean {
+		return Office.context.document.settings.get(
+			"Office.AutoShowTaskpaneWithDocument"
+		);
+	}
 	public getWebUrl() {
 		return Office.context.document.url;
 	}
