@@ -8,8 +8,6 @@ import {
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
 
-export const BASE_URI = "http://localhost/";
-
 export interface IUserProfile {
 	DisplayName: string;
 }

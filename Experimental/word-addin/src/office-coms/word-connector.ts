@@ -27,9 +27,11 @@ export class WordConnector implements IWordConnector {
 		Office.context.document.settings.saveAsync();
 	}
 	getAutoOpen(): boolean {
-		return Office.context.document.settings.get(
+		const autoOpen = Office.context.document.settings.get(
 			"Office.AutoShowTaskpaneWithDocument"
 		);
+
+		return autoOpen;
 	}
 	public getWebUrl() {
 		return Office.context.document.url;

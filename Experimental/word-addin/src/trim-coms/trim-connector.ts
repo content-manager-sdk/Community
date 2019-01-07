@@ -1,10 +1,14 @@
 import Axios, { AxiosRequestConfig } from "axios";
-import { BASE_URI } from "../stores/AppStore";
 import { BaseObjectTypes } from "./trim-baseobjecttypes";
 import { CommandIds } from "./trim-command-ids";
 import TrimMessages from "./trim-messages";
 
-export const SERVICEAPI_BASE_URI = BASE_URI + "ServiceAPI";
+const config = (global as any).config;
+const BASE_URI = config.BASE_URL.endsWith("/")
+	? config.BASE_URL
+	: config.BASE_URL + "/";
+
+export const SERVICEAPI_BASE_URI = BASE_URI + config.SERVICEAPI_PATH;
 
 export type ITokenCallback = (accessToken: string) => void;
 
