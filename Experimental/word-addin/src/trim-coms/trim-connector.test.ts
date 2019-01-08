@@ -1,3 +1,4 @@
+(global as any).config = { BASE_URL: "", SERVICEAPI_PATH: "ServiceAPI" };
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import {
 	IRecordType,
@@ -25,7 +26,13 @@ describe("Test fetch from TRIM", () => {
 		let props: string = "";
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
-				params: { q: "all", properties: "NameString", purpose: 3 },
+				params: {
+					q: "all",
+					properties: "NameString",
+					purpose: 3,
+					pageSize: 20,
+					start: 1,
+				},
 			})
 			.reply(function(config: any) {
 				props = config.params.properties;
@@ -33,21 +40,53 @@ describe("Test fetch from TRIM", () => {
 				return [
 					200,
 					{
-						Results: [{ NameString: "Document" }],
+						Results: [{ NameString: "Document", Uri: 1 }],
 					},
 				];
 			});
 
-		trimConnector
+		expect.assertions(2);
+		return trimConnector
 			.search<IRecordType>({
 				trimType: BaseObjectTypes.RecordType,
 				q: "all",
 				purpose: 3,
 			})
 			.then((data) => {
-				expect.assertions(2);
 				expect(props).toEqual("NameString");
-				expect(data[0].NameString).toBe("Document");
+				expect(data.results[0].NameString).toBe("Document");
+			});
+	});
+
+	it("returns success when no results found.", () => {
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
+				params: {
+					q: "all",
+					properties: "NameString",
+					purpose: 3,
+					pageSize: 20,
+					start: 1,
+				},
+			})
+			.reply(function(config: any) {
+				return [
+					200,
+					{
+						Results: [],
+					},
+				];
+			});
+		expect.assertions(1);
+
+		return trimConnector
+			.search<IRecordType>({
+				trimType: BaseObjectTypes.RecordType,
+				q: "all",
+				purpose: 3,
+			})
+			.then((data) => {
+				expect(data.results.length).toBe(0);
 			});
 	});
 
@@ -394,6 +433,37 @@ describe("Test fetch from TRIM", () => {
 
 			await trimConnector.runAction(CommandIds.RemoveFromFavorites, 9000000001);
 			expect(postBody).toEqual(JSON.stringify(expectedResponse));
+		});
+	});
+
+	describe("Search Clauses", () => {
+		it("returns the search clause definitions", async () => {
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/SearchClauseDef`)
+				.reply(function(config: any) {
+					return [
+						200,
+						{
+							SearchClauseDefs: [
+								{
+									InternalName: "Acl",
+									Caption: "test caption",
+									ToolTip: "test tooltip",
+								},
+							],
+						},
+					];
+				});
+
+			expect.assertions(4);
+			const data = await trimConnector.getSearchClauseDefinitions(
+				BaseObjectTypes.Record
+			);
+
+			expect(data.length).toBe(1);
+			expect(data[0].Caption).toEqual("test caption");
+			expect(data[0].InternalName).toEqual("Acl");
+			expect(data[0].ToolTip).toEqual("test tooltip");
 		});
 	});
 });

@@ -1,4 +1,5 @@
-//import * as enzyme from "enzyme";
+(global as any).config = { BASE_URL: "" };
+
 import * as React from "react";
 import { shallow } from "enzyme";
 import { TrimObjectSearchList } from "./TrimObjectSearchList";
@@ -8,8 +9,10 @@ import {
 	ITrimMainObject,
 	ISearchParamaters,
 	ISearchResults,
+	ISearchClauseDef,
 } from "../../trim-coms/trim-connector";
 import { List } from "office-ui-fabric-react/lib/List";
+import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 
 describe("Trim object search list", function() {
 	let testPurpose = 0;
@@ -59,7 +62,29 @@ describe("Trim object search list", function() {
 		});
 	};
 
+	const doClauseDefs = function(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseDef[]> {
+		return new Promise(function(resolve) {
+			resolve([
+				{
+					InternalName: "unkFavorite",
+					Caption: "",
+					ToolTip: "fav",
+					Id: "Favorite",
+				},
+				{
+					InternalName: "recMyContainers",
+					Caption: "My Containers",
+					ToolTip: "My Containers tooltip",
+					Id: "RecordMyContainers",
+				},
+			]);
+		});
+	};
+
 	trimConnector.search = doSearch.bind(trimConnector);
+	trimConnector.getSearchClauseDefinitions = doClauseDefs.bind(trimConnector);
 
 	it("list element found", function(this: any) {
 		expect(wrapper.find(List).exists()).toBeTruthy();
@@ -155,5 +180,23 @@ describe("Trim object search list", function() {
 		expect.assertions(1);
 
 		expect(testObject.Uri).toBe(1);
+	});
+
+	it("Tool tip set", () => {
+		const tt = wrapper.find(TooltipHost);
+
+		expect.assertions(1);
+
+		expect(
+			tt
+				.at(0)
+				.props()
+				.tooltipProps.onRenderContent()
+		).toEqual(
+			<div>
+				<div className="ms-fontWeight-semibold">My Containers</div>
+				<div>My Containers tooltip</div>
+			</div>
+		);
 	});
 });

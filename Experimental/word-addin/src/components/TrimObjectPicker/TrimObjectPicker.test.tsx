@@ -1,3 +1,4 @@
+(global as any).config = { BASE_URL: "" };
 import * as React from "react";
 import { mount, shallow } from "enzyme";
 import { initializeIcons } from "@uifabric/icons";

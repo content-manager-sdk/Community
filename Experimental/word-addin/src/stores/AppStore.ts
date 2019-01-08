@@ -47,12 +47,13 @@ export class AppStore implements IAppStore {
 
 				this.messages = messagesResponse;
 
-				// temporary - need to go in TRIM Messages
-				this.messages.web_Register = "Register in Content Manager";
-				this.messages.web_SelectRecordType = "Select a Record Type";
-				this.messages.web_Actions = "Actions";
-				this.messages.web_Checkin = "Check In";
-				this.messages.web_Finalize = "Make Final";
+				// // temporary - need to go in TRIM Messages
+				// this.messages.web_Register = "Register in Content Manager";
+				// this.messages.web_SelectRecordType = "Select a Record Type";
+				// this.messages.web_Actions = "Actions";
+				// this.messages.web_Checkin = "Check In";
+				// this.messages.web_Finalize = "Make Final";
+				// this.messages.bob_sbMe = "Me";
 			}
 
 			this.documentInfo = yield this.trimConnector.getDriveId(

@@ -8,12 +8,14 @@ import {
 	ISearchResults,
 } from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 
 export interface ITrimObjectSearchListState {
 	q?: string;
 	items: ITrimMainObject[];
 	lastScrollPos: number;
 	scrollDirection: string;
+	searchShortCuts: any;
 }
 
 export class TrimObjectSearchList extends React.Component<
@@ -29,6 +31,28 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	componentDidMount() {
+		const { trimConnector, trimType } = this.props;
+		if (trimConnector) {
+			trimConnector!.getSearchClauseDefinitions(trimType!).then((data) => {
+				const sc = { ...this.state.searchShortCuts };
+
+				data.forEach((clauseDef) => {
+					if (sc[trimType!][clauseDef.Id]) {
+						sc[trimType!][clauseDef.Id].ToolTip = clauseDef.ToolTip;
+						sc[trimType!][clauseDef.Id].Caption = clauseDef.Caption;
+					}
+				});
+
+				this.setState({ searchShortCuts: sc });
+			});
+
+			if (trimType === BaseObjectTypes.Location) {
+				trimConnector!.getMessages().then((messages) => {
+					const sc = { ...this.state.searchShortCuts };
+					sc[trimType!]["Me"].Caption = messages.bob_sbMe;
+				});
+			}
+		}
 		this.doSearch();
 	}
 
@@ -78,14 +102,6 @@ export class TrimObjectSearchList extends React.Component<
 			});
 			onTrimObjectSelected(trimObject);
 		}
-		// const { item, itemIndex } = row.props;
-		// const itemKey = this._getItemKey(item, itemIndex);
-		// this._activeRows[itemKey] = row; // this is used for column auto resize
-		// this._setFocusToRowIfPending(row);
-		// const { onRowDidMount } = this.props;
-		// if (onRowDidMount) {
-		//   onRowDidMount(item, itemIndex);
-		// }
 	}
 
 	private _onShortcutClick = (query: string) => {
@@ -94,46 +110,45 @@ export class TrimObjectSearchList extends React.Component<
 	};
 
 	public render(): JSX.Element {
-		const searchShortCuts = {
-			[BaseObjectTypes.Record]: [
-				{
-					src: "recmycontainerstray",
-					key: "myContainers",
-					q: "recMyContainers",
-				},
-				{
-					src: "recrecentdocstray",
-					key: "recentDocuments",
-					q: "recMyDocuments",
-				},
-				{ src: "recfavoritestray", key: "favourite", q: "unkFavorite" },
-				{ src: "recworktray", key: "workTray", q: "recWorkTray" },
-				{ src: "recintray", key: "inTray", q: "recInTray" },
-				{ src: "recinduetray", key: "dueTray", q: "recDueOrInTray" },
-			],
-			[BaseObjectTypes.Location]: [
-				{ src: "recfavoritestray", key: "favourite", q: "unkFavorite" },
-				{ src: "User", key: "me", q: "me" },
-				{ src: "loc_list", key: "all", q: "unkAll" },
-			],
-		};
-
 		return (
 			<div className="trim-search-list-outer">
 				<div className="trim-search-shortcuts">
 					<ul>
-						{searchShortCuts[this.props.trimType!].map((sc: any) => {
-							return (
-								<li
-									key={sc.key}
-									onClick={() => {
-										this._onShortcutClick(sc.q);
-									}}
-								>
-									<img src={`/assets/${sc.src}_x32.png`} />
-								</li>
-							);
-						})}
+						{Object.keys(this.state.searchShortCuts[this.props.trimType!]).map(
+							(key: any, index: number) => {
+								const sc = this.state.searchShortCuts[this.props.trimType!][
+									key
+								];
+								return (
+									<TooltipHost
+										key={key}
+										tooltipProps={{
+											onRenderContent: () => {
+												return (
+													<div>
+														<div className="ms-fontWeight-semibold">
+															{sc.Caption}
+														</div>
+														<div>{sc.ToolTip}</div>
+													</div>
+												);
+											},
+										}}
+										id="myID"
+										calloutProps={{ gapSpace: 0 }}
+									>
+										<li
+											key={key}
+											onClick={() => {
+												this._onShortcutClick(sc.q);
+											}}
+										>
+											<img src={`/assets/${sc.src}_x32.png`} />
+										</li>
+									</TooltipHost>
+								);
+							}
+						)}
 					</ul>
 				</div>
 				<div
@@ -202,6 +217,29 @@ export class TrimObjectSearchList extends React.Component<
 			items: [],
 			lastScrollPos: 0,
 			scrollDirection: "",
+			searchShortCuts: {
+				[BaseObjectTypes.Record]: {
+					RecordMyContainers: {
+						src: "recmycontainerstray",
+
+						q: "recMyContainers",
+					},
+					RecordMyDocuments: {
+						src: "recrecentdocstray",
+
+						q: "recMyDocuments",
+					},
+					Favorite: { src: "recfavoritestray", q: "unkFavorite" },
+					RecordWorkTray: { src: "recworktray", q: "recWorkTray" },
+					RecordInTray: { src: "recintray", q: "recInTray" },
+					RecordDueOrInTray: { src: "recinduetray", q: "recDueOrInTray" },
+				},
+				[BaseObjectTypes.Location]: {
+					Favorite: { src: "recfavoritestray", q: "unkFavorite" },
+					Me: { src: "User", q: "me" },
+					All: { src: "loc_list", q: "unkAll" },
+				},
+			},
 		};
 	}
 }

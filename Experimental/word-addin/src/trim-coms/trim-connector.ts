@@ -4,6 +4,7 @@ import { CommandIds } from "./trim-command-ids";
 import TrimMessages from "./trim-messages";
 
 const config = (global as any).config;
+
 const BASE_URI = config.BASE_URL.endsWith("/")
 	? config.BASE_URL
 	: config.BASE_URL + "/";
@@ -84,10 +85,20 @@ export interface ICommandDef {
 	IsEnabled: boolean;
 }
 
+export interface ISearchClauseDef {
+	Id: string;
+	InternalName: string;
+	Caption: string;
+	ToolTip: string;
+}
+
 export interface ITrimConnector {
 	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
 	getMessages(): Promise<any>;
+	getSearchClauseDefinitions(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseDef[]>;
 	search<T>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<ITrimMainObject>>;
@@ -106,6 +117,31 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
+	private _searchClauseCache = {};
+
+	public getSearchClauseDefinitions(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseDef[]> {
+		const params = {
+			TrimType: trimType,
+		};
+
+		const cachedResults = this._searchClauseCache[trimType];
+
+		if (cachedResults) {
+			return new Promise((resolve) => {
+				resolve(cachedResults);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: "SearchClauseDef", method: "get", data: params },
+				(data: any) => {
+					this._searchClauseCache[trimType] = data.SearchClauseDefs;
+					return data.SearchClauseDefs;
+				}
+			);
+		}
+	}
 	public credentialsResolver: (callback: ITokenCallback) => void;
 
 	public runAction(
@@ -199,17 +235,34 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
+	private _messageCache: any;
 	public getMessages(): Promise<any> {
 		const params = {
 			MatchMessages: Object.keys(new TrimMessages()).join("|"),
 		};
 
-		return this.makeRequest(
-			{ path: "Localisation", method: "get", data: params },
-			(data: any) => {
-				return data.Messages;
-			}
-		);
+		if (this._messageCache) {
+			return new Promise((resolve) => {
+				resolve(this._messageCache);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: "Localisation", method: "get", data: params },
+				(data: any) => {
+					// temporary - need to go in TRIM Messages
+					data.Messages.web_Register = "Register in Content Manager";
+					data.Messages.web_SelectRecordType = "Select a Record Type";
+					data.Messages.web_Actions = "Actions";
+					data.Messages.web_Checkin = "Check In";
+					data.Messages.web_Finalize = "Make Final";
+					data.Messages.bob_sbMe = "Me";
+
+					this._messageCache = data.Messages;
+
+					return data.Messages;
+				}
+			);
+		}
 	}
 
 	public search<T extends ITrimMainObject>(
@@ -224,6 +277,7 @@ export class TrimConnector implements ITrimConnector {
 			q,
 			start,
 		};
+		params.start = params.start || 1;
 
 		return this.makeRequest(
 			{ path: trimType, method: "get", data: params },
@@ -288,7 +342,8 @@ export class TrimConnector implements ITrimConnector {
 						if (
 							response.data.CommandDefs ||
 							response.data.Messages ||
-							(response.data.Results && response.data.Results.length > 0)
+							response.data.SearchClauseDefs ||
+							response.data.Results
 						) {
 							resolve(parseCallback(response.data));
 						} else {

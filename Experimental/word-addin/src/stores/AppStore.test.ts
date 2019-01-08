@@ -1,20 +1,21 @@
 /**
  * @jest-environment jsdom
  */
-
+(global as any).config = { BASE_URL: "" };
 import { AppStore } from "./AppStore";
 
 import {
 	IDriveInformation,
 	ISearchParamaters,
+	ISearchClauseDef,
 	ITrimConnector,
+	ITrimMainObject,
 	ILocation,
 	IObjectDetails,
 	ITokenCallback,
 	ISearchResults,
 } from "../trim-coms/trim-connector";
 
-import { ITrimMainObject } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import { IWordUrl } from "src/office-coms/word-connector";
 import { CommandIds } from "src/trim-coms/trim-command-ids";
@@ -30,6 +31,11 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	getSearchClauseDefinitions(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseDef[]> {
+		throw new Error("Method not implemented.");
+	}
 	search<T>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<ITrimMainObject>> {

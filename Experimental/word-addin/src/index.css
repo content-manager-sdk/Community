@@ -45,3 +45,7 @@ body {
 	padding: 0 6px 0 6px;
 	overflow-y: scroll;
 }
+
+.trim-search-shortcuts li {
+	cursor: pointer;
+}
