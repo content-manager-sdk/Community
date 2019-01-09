@@ -168,9 +168,10 @@ describe("Trim object search list", function() {
 
 	it("event fires when row clicked", () => {
 		wrapper.find(List).simulate("click", {
-			currentTarget: {
-				attributes: {
-					getNamedItem: function() {
+			preventDefault: function() {},
+			nativeEvent: {
+				target: {
+					getAttribute: function() {
 						return "1";
 					},
 				},

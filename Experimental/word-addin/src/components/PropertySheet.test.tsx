@@ -2,9 +2,10 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
-import { TrimObjectPicker } from "./TrimObjectPicker/TrimObjectPicker";
+import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
 import { PropertySheet } from "./PropertySheet";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import { Provider } from "mobx-react";
 
 describe("Property Sheet", function() {
 	it("displays nothing when form definition is null", () => {
@@ -250,11 +251,12 @@ describe("Property Sheet", function() {
 
 		it("adds a TrimObjectPicker to the property sheet", () => {
 			const objectPicker = wrapper.find(TrimObjectPicker).at(0);
-			expect.assertions(3);
+			expect.assertions(4);
 			expect(objectPicker.exists()).toBeTruthy();
 
 			expect(objectPicker.props().label).toEqual("Container");
 			expect(objectPicker.props().trimType).toEqual(BaseObjectTypes.Record);
+			expect(objectPicker.props().propertyName).toEqual("RecordContainer");
 		});
 	});
 });

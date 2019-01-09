@@ -92,6 +92,13 @@ export interface ISearchClauseDef {
 	ToolTip: string;
 }
 
+export interface ISearchOptions {
+	StartPointForContainers: string;
+	StartPointForLocations: string;
+	StartPointRecordDefault: string;
+	StartPointDefault: string;
+}
+
 export interface ITrimConnector {
 	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
@@ -99,6 +106,7 @@ export interface ITrimConnector {
 	getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]>;
+	getSearchOptions(): Promise<ISearchOptions>;
 	search<T>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<ITrimMainObject>>;
@@ -117,6 +125,31 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
+	private _searchOptionsCache: ISearchOptions;
+	public getSearchOptions(): Promise<ISearchOptions> {
+		if (this._searchOptionsCache) {
+			return new Promise((resolve) => {
+				resolve(this._searchOptionsCache);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: "UserOptions/Search", method: "get" },
+				(data: any) => {
+					this._searchClauseCache = {
+						StartPointForContainers:
+							data.UserOptions.SearchUserOptionsStartPointForContainers.Value,
+						StartPointForLocations:
+							data.UserOptions.SearchUserOptionsStartPointForLocations.Value,
+						StartPointRecordDefault:
+							data.UserOptions.SearchUserOptionsStartPointRecordDefault.Value,
+						StartPointDefault:
+							data.UserOptions.SearchUserOptionsStartPointDefault.Value,
+					};
+					return this._searchClauseCache;
+				}
+			);
+		}
+	}
 	private _searchClauseCache = {};
 
 	public getSearchClauseDefinitions(
@@ -343,6 +376,7 @@ export class TrimConnector implements ITrimConnector {
 							response.data.CommandDefs ||
 							response.data.Messages ||
 							response.data.SearchClauseDefs ||
+							response.data.UserOptions ||
 							response.data.Results
 						) {
 							resolve(parseCallback(response.data));

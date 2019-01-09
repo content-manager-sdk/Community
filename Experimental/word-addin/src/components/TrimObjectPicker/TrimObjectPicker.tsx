@@ -4,16 +4,25 @@ import {
 	ITrimObjectPickerProps,
 	ITrimObjectPicker,
 } from "./TrimObjectPicker.types";
-import { TextField, ITextField } from "office-ui-fabric-react/lib/TextField";
+import {
+	TextField,
+	ITextField,
+	ITextFieldProps,
+} from "office-ui-fabric-react/lib/TextField";
 import { Callout, DirectionalHint } from "office-ui-fabric-react/lib/Callout";
 import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
 import { ITrimMainObject } from "src/trim-coms/trim-connector";
+import { IconButton } from "office-ui-fabric-react/lib/Button";
+import { inject } from "mobx-react";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 
 export interface IObjectPickerState {
 	isObjectPickerShown?: boolean;
+	selectedItems: ITrimMainObject[];
+	searchStartPoint: string;
 }
 
 export class TrimObjectPicker
@@ -32,9 +41,56 @@ export class TrimObjectPicker
 		this.state = this._getDefaultState();
 	}
 
+	componentDidMount() {
+		const { trimConnector, trimType, propertyName } = this.props;
+		const startSearches = {
+			Containers: "recMyContainers",
+			FavRecords: "unkFavorite",
+			Favorites: "unkFavorite",
+			All: "unkAll",
+			ContentBlocks: "recMyContent",
+			Templates: "recMyTemplates",
+			DueOrIn: "recDueOrInTray",
+			In: "recInTray",
+			Due: "recDueTray",
+			Search: "unkFavorite",
+			Offline: "unkFavorite",
+			RecentDocs: "recMyDocuments",
+			ClassBrowser: "unkFavorite",
+			Worktray: "recWorkTray",
+		};
+		trimConnector!.getSearchOptions().then((data) => {
+			let key =
+				{
+					[BaseObjectTypes.Record]: data.StartPointRecordDefault,
+					[BaseObjectTypes.Location]: data.StartPointForLocations,
+				}[trimType] || data.StartPointDefault;
+
+			// switch (trimType) {
+			// 	case BaseObjectTypes.Record:
+			// 		key = data.StartPointRecordDefault;
+			// 		break;
+
+			// 	case BaseObjectTypes.Location:
+			// 		key = data.StartPointForLocations;
+			// 		break;
+			// 	default:
+			// 		key = data.StartPointDefault;
+			// }
+
+			if (propertyName === "RecordContainer") {
+				key = data.StartPointForContainers;
+			}
+
+			const startSearch = startSearches[key] || "unkFavorite";
+			this.setState({ searchStartPoint: startSearch });
+		});
+		//	}
+	}
+
 	public render(): JSX.Element {
 		const { label, disabled, trimType } = this.props;
-		const { isObjectPickerShown } = this.state;
+		const { isObjectPickerShown, searchStartPoint } = this.state;
 
 		return (
 			<div>
@@ -48,10 +104,12 @@ export class TrimObjectPicker
 							className: "trim-ObjectPicker-event--without-label",
 						}}
 						componentRef={this._textField}
+						className="trim-object-picker"
+						onRenderPrefix={this._renderPrefix}
 					/>
 				</div>
 
-				{isObjectPickerShown && (
+				{isObjectPickerShown && searchStartPoint && (
 					<Callout
 						id="Trim-ObjectPicker-Callout"
 						role="dialog"
@@ -67,9 +125,10 @@ export class TrimObjectPicker
 							<FocusTrapZone isClickableOutsideFocusTrap={true}>
 								<TrimObjectSearchList
 									componentRef={this._searchList}
-									onDismiss={this._calendarDismissed}
+									onDismiss={this._listDismissed}
 									trimType={trimType}
 									onTrimObjectSelected={this._trimObjectSelected}
+									q={this.state.searchStartPoint}
 								/>
 							</FocusTrapZone>
 						}
@@ -79,7 +138,13 @@ export class TrimObjectPicker
 		);
 	}
 
-	private _trimObjectSelected = (trimObject: ITrimMainObject): void => {};
+	private _trimObjectSelected = (trimObject: ITrimMainObject): void => {
+		this.setState({
+			selectedItems: [trimObject],
+		});
+
+		this._dismissObjectPickerPopup();
+	};
 
 	/**
 	 * Callback for closing the calendar callout
@@ -103,7 +168,7 @@ export class TrimObjectPicker
 	/**
 	 * Callback for closing the search callout
 	 */
-	private _calendarDismissed = (): void => {
+	private _listDismissed = (): void => {
 		//   this._preventFocusOpeningPicker = true;
 		this._dismissObjectPickerPopup();
 		// don't need to focus the text box, if necessary the focusTrapZone will do it
@@ -112,6 +177,34 @@ export class TrimObjectPicker
 	private _onIconClick = (ev: React.MouseEvent<HTMLElement>): void => {
 		ev.stopPropagation();
 		this._onTextFieldClick(ev);
+	};
+
+	private _renderPrefix = (
+		props?: ITextFieldProps,
+		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
+	): JSX.Element => {
+		return (
+			<div className="trim-object-pills">
+				{this.state.selectedItems.map((selectedItem) => {
+					return (
+						<div className="trim-pill-container" key={selectedItem.Uri}>
+							<div className="trim-pill-content">{selectedItem.NameString}</div>
+							<IconButton
+								className="ms-fontSize-sPlus"
+								iconProps={{ iconName: "Cancel" }}
+								onClick={this._removeSelectedItem}
+							/>
+						</div>
+					);
+				})}
+			</div>
+		);
+	};
+
+	private _removeSelectedItem = () => {
+		this.setState({
+			selectedItems: [],
+		});
 	};
 
 	private _onTextFieldClick = (ev: React.MouseEvent<HTMLElement>): void => {
@@ -141,8 +234,10 @@ export class TrimObjectPicker
 	): IObjectPickerState {
 		return {
 			isObjectPickerShown: false,
+			selectedItems: [],
+			searchStartPoint: "",
 		};
 	}
 }
 
-export default TrimObjectPicker;
+export default inject("trimConnector")(TrimObjectPicker);

@@ -49,3 +49,45 @@ body {
 .trim-search-shortcuts li {
 	cursor: pointer;
 }
+
+.trim-object-picker .ms-TextField-prefix {
+	background-color: white;
+	padding-left: 5px;
+}
+
+.trim-object-pills {
+	line-height: 25px;
+}
+.trim-pill-container {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	margin-top: 1px;
+	margin-right: 2px;
+	margin-bottom: 1px;
+	cursor: default;
+	max-width: 300px;
+	vertical-align: middle;
+	user-select: none;
+	outline: transparent;
+	border-radius: 10px;
+	background: rgb(244, 244, 244);
+}
+
+.trim-pill-content {
+	min-width: 0px;
+	max-width: 100%;
+	flex: 0 1 auto;
+	flex-grow: 0;
+	flex-shrink: 1;
+	flex-basis: auto;
+	overflow: hidden;
+	margin-left: 5px;
+}
+.trim-pill-container i {
+	font-size: 13px;
+}
+
+.trim-pill-container button {
+	height: 25px;
+}

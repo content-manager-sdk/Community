@@ -466,4 +466,47 @@ describe("Test fetch from TRIM", () => {
 			expect(data[0].ToolTip).toEqual("test tooltip");
 		});
 	});
+
+	describe("User Options", () => {
+		it("returns the search user options", async () => {
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/UserOptions/Search`)
+				.reply(function(config: any) {
+					return [
+						200,
+						{
+							UserOptions: {
+								__type:
+									"HP.HPTRIM.ServiceModel.SearchUserOptions, HP.HPTRIM.ServiceAPI.Model",
+								SearchUserOptionsStartPointForContainers: {
+									Value: "Containers",
+									StringValue: "Recent Containers",
+								},
+								SearchUserOptionsStartPointForDocuments: {
+									Value: "RecentDocs",
+									StringValue: "Recent Documents",
+								},
+								SearchUserOptionsStartPointForLocations: {
+									Value: "Favorites",
+									StringValue: "Favorite Items",
+								},
+								SearchUserOptionsStartPointRecordDefault: {
+									Value: "FavRecords",
+									StringValue: "Favorite records",
+								},
+								SearchUserOptionsStartPointDefault: {
+									Value: "All",
+									StringValue: "All Items",
+								},
+							},
+						},
+					];
+				});
+			expect.assertions(2);
+
+			const data = await trimConnector.getSearchOptions();
+			expect(data.StartPointForContainers).toEqual("Containers");
+			expect(data.StartPointForLocations).toEqual("Favorites");
+		});
+	});
 });

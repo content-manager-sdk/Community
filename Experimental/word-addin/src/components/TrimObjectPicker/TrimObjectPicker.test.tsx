@@ -1,6 +1,6 @@
 (global as any).config = { BASE_URL: "" };
 import * as React from "react";
-import { mount, shallow } from "enzyme";
+import { mount, shallow, ShallowWrapper } from "enzyme";
 import { initializeIcons } from "@uifabric/icons";
 
 import { TrimObjectPicker } from "./TrimObjectPicker";
@@ -14,13 +14,20 @@ import {
 	ITrimMainObject,
 	ISearchResults,
 	ISearchParamaters,
+	ISearchOptions,
 } from "../../trim-coms/trim-connector";
 import { Provider } from "mobx-react";
 
 initializeIcons();
 
 describe("TrimObjectPicker", function() {
+	let startPoint = "Containers";
+	let _searchStartPointRecord = "";
+	let _searchStartPointLocation = "";
+	let _searchStartPointDefault = "";
 	let trimConnector = new TrimConnector();
+
+	trimConnector.credentialsResolver = (callback) => {};
 
 	const doSearch = function<T extends ITrimMainObject>(
 		options: ISearchParamaters
@@ -33,48 +40,69 @@ describe("TrimObjectPicker", function() {
 		});
 	};
 
-	trimConnector.search = doSearch.bind(trimConnector);
+	const getSearchOptions = function(): Promise<ISearchOptions> {
+		return new Promise(function(resolve) {
+			resolve({
+				StartPointForContainers: startPoint,
+				StartPointForLocations: _searchStartPointLocation,
+				StartPointRecordDefault: _searchStartPointRecord,
+				StartPointDefault: _searchStartPointDefault,
+			});
+		});
+	};
 
-	const mountDatePicker = (props: any) => {
+	trimConnector.search = doSearch.bind(trimConnector);
+	trimConnector.getSearchOptions = getSearchOptions.bind(trimConnector);
+
+	const mountObjectPicker = (props: any) => {
 		const wrapper = mount(
-			<Provider trimConnector={undefined}>
-				<TrimObjectPicker {...props} trimType={BaseObjectTypes.Record} />
+			<Provider trimConnector={trimConnector}>
+				<TrimObjectPicker
+					{...props}
+					trimType={BaseObjectTypes.Record}
+					trimConnector={trimConnector}
+				/>
 			</Provider>
 		);
 		return wrapper.find(TrimObjectPicker);
 	};
 
 	it("should not open ObjectPicker when disabled, no label", () => {
-		const wrapper = mountDatePicker({ disabled: true });
+		const wrapper = mountObjectPicker({ disabled: true });
 
 		wrapper.find("i").simulate("click");
 
 		expect(wrapper.state("isObjectPickerShown")).toBe(false);
 	});
 
-	it("should not open DatePicker when disabled, with label", () => {
-		const wrapper = mountDatePicker({ disabled: true, label: "label" });
+	it("should not open Object Picker when disabled, with label", () => {
+		const wrapper = mountObjectPicker({ disabled: true, label: "label" });
 
 		wrapper.find("i").simulate("click");
 		expect(wrapper.state("isObjectPickerShown")).toBe(false);
 	});
 
-	it("should open DatePicker ", () => {
-		const wrapper = mountDatePicker({ label: "label" });
+	it("should open Object Picker ", () => {
+		const wrapper = mountObjectPicker({ label: "label" });
 
 		wrapper.find("i").simulate("click");
 		expect(wrapper.state("isObjectPickerShown")).toBe(true);
 	});
 
-	it("should close DatePicker ", () => {
+	it("should close Object Picker ", async (done) => {
 		expect.assertions(1);
-		const wrapper = mountDatePicker({ label: "label" });
+		const wrapper = mountObjectPicker({ label: "label" });
 
 		wrapper.find("i").simulate("click");
 		wrapper.find("i").simulate("click");
-		expect(wrapper.find(TrimObjectPicker).state("isObjectPickerShown")).toBe(
-			false
-		);
+
+		setImmediate(() => {
+			expect(wrapper.find(TrimObjectPicker).state("isObjectPickerShown")).toBe(
+				false
+			);
+
+			done();
+		});
 	});
 
 	describe("props passed through", () => {
@@ -83,6 +111,7 @@ describe("TrimObjectPicker", function() {
 				disabled
 				label="test"
 				trimType={BaseObjectTypes.Record}
+				trimConnector={trimConnector}
 			/>
 		);
 		const textField = wrapper.find(TextField);
@@ -97,18 +126,55 @@ describe("TrimObjectPicker", function() {
 	});
 
 	describe("show UI", () => {
-		const wrapper = shallow(
-			<TrimObjectPicker label="test" trimType={BaseObjectTypes.Record} />
-		);
-		wrapper.setState({ isObjectPickerShown: true });
-		const callout = wrapper.find({ id: "Trim-ObjectPicker-Callout" });
+		const makeWrapper = (
+			searchStartPointContainer: string = "",
+			searchStartPointLocation: string = "All",
+			searchStartPointRecord: string = "FavRecords",
+			searchStartPointDefault = "Search",
+			propertyName = "RecordContainer",
+			trimType = BaseObjectTypes.Record
+		) => {
+			startPoint = searchStartPointContainer || startPoint;
+			_searchStartPointLocation = searchStartPointLocation;
+			_searchStartPointRecord = searchStartPointRecord;
+			_searchStartPointDefault = searchStartPointDefault;
+			const wrapper = shallow<TrimObjectPicker>(
+				<TrimObjectPicker
+					label="test"
+					trimType={trimType}
+					trimConnector={trimConnector}
+					propertyName={propertyName}
+				/>
+			);
+			wrapper.setState({
+				isObjectPickerShown: true,
+			});
+
+			return wrapper;
+		};
+		let wrapper: ShallowWrapper;
+
+		beforeEach(() => {
+			wrapper = shallow(
+				<TrimObjectPicker
+					label="test"
+					trimType={BaseObjectTypes.Record}
+					trimConnector={trimConnector}
+				/>
+			);
+			wrapper.setState({
+				isObjectPickerShown: true,
+			});
+		});
 
 		it("includes a Callout", () => {
+			const callout = wrapper.find({ id: "Trim-ObjectPicker-Callout" });
 			expect.assertions(1);
 			expect(callout.length).toEqual(1);
 		});
 
 		it("includes a FocusTrapZone", () => {
+			const callout = wrapper.find({ id: "Trim-ObjectPicker-Callout" });
 			expect.assertions(2);
 			expect(callout.find(FocusTrapZone).length).toEqual(1);
 			expect(
@@ -118,7 +184,235 @@ describe("TrimObjectPicker", function() {
 
 		it("includes a trim object list", () => {
 			expect.assertions(1);
+			const callout = wrapper.find({ id: "Trim-ObjectPicker-Callout" });
 			expect(callout.find(TrimObjectSearchList).length).toEqual(1);
+		});
+
+		it("adds an item to the selected list", async (done) => {
+			expect.assertions(1);
+
+			setTimeout(() => {
+				const list = wrapper.find(TrimObjectSearchList);
+
+				list.props().onTrimObjectSelected!({ Uri: 1 });
+
+				expect(wrapper.state("selectedItems")).toEqual([{ Uri: 1 }]);
+				done();
+			});
+		});
+
+		[
+			{
+				LocationStart: "All",
+				PropName: "LocationTest",
+				TrimType: BaseObjectTypes.Location,
+				Expected: "unkAll",
+			},
+			{
+				LocationStart: "Favorite",
+				PropName: "LocationTest",
+				TrimType: BaseObjectTypes.Location,
+				Expected: "unkFavorite",
+			},
+			{
+				LocationStart: "Search",
+				PropName: "LocationTest",
+				TrimType: BaseObjectTypes.Location,
+				Expected: "unkFavorite",
+			},
+			{
+				ContainerStart: "Worktray",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recWorkTray",
+			},
+			{
+				ContainerStart: "ClassBrowser",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				ContainerStart: "RecentDocs",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyDocuments",
+			},
+			{
+				ContainerStart: "Offline",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				ContainerStart: "Search",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				ContainerStart: "FavRecords",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				ContainerStart: "Containers",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyContainers",
+			},
+			{
+				ContainerStart: "Due",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recDueTray",
+			},
+			{
+				ContainerStart: "In",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recInTray",
+			},
+			{
+				ContainerStart: "DueOrIn",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recDueOrInTray",
+			},
+			{
+				ContainerStart: "Templates",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyTemplates",
+			},
+			{
+				ContainerStart: "ContentBlocks",
+				PropName: "RecordContainer",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyContent",
+			},
+
+			{
+				RecordStart: "Worktray",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recWorkTray",
+			},
+			{
+				RecordStart: "ClassBrowser",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				RecordStart: "RecentDocs",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyDocuments",
+			},
+			{
+				RecordStart: "Offline",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				RecordStart: "Search",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				RecordStart: "FavRecords",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "unkFavorite",
+			},
+			{
+				RecordStart: "Containers",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyContainers",
+			},
+			{
+				RecordStart: "Due",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recDueTray",
+			},
+			{
+				RecordStart: "In",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recInTray",
+			},
+			{
+				RecordStart: "DueOrIn",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recDueOrInTray",
+			},
+			{
+				RecordStart: "Templates",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyTemplates",
+			},
+			{
+				RecordStart: "ContentBlocks",
+				PropName: "RecordRelatedRecord",
+				TrimType: BaseObjectTypes.Record,
+				Expected: "recMyContent",
+			},
+
+			{
+				DefaultStart: "All",
+				PropName: "RecordRecordType",
+				TrimType: BaseObjectTypes.RecordType,
+				Expected: "unkAll",
+			},
+			{
+				DefaultStart: "Favorites",
+				PropName: "RecordRecordType",
+				TrimType: BaseObjectTypes.RecordType,
+				Expected: "unkFavorite",
+			},
+			{
+				DefaultStart: "Search",
+				PropName: "RecordRecordType",
+				TrimType: BaseObjectTypes.RecordType,
+				Expected: "unkFavorite",
+			},
+		].forEach((val, index) => {
+			const {
+				RecordStart,
+				ContainerStart,
+				LocationStart,
+				DefaultStart,
+				PropName,
+				TrimType,
+				Expected,
+			} = val;
+
+			it(`passes the default query to the list - ${TrimType} ${Expected}`, async (done) => {
+				expect.assertions(1);
+				const wrapper2 = makeWrapper(
+					ContainerStart,
+					LocationStart,
+					RecordStart,
+					DefaultStart,
+					PropName,
+					TrimType
+				);
+
+				setTimeout(() => {
+					const list = wrapper2.find(TrimObjectSearchList);
+
+					expect(list.props().q).toEqual(Expected);
+					done();
+				});
+			});
 		});
 	});
 
@@ -148,7 +442,7 @@ describe("TrimObjectPicker", function() {
 				trimConnector={trimConnector}
 			/>
 		);
-		wrapper.setState({ isObjectPickerShown: true });
+		wrapper.setState({ isObjectPickerShown: true, searchStartPoint: "all" });
 		const callout = wrapper.find({ id: "Trim-ObjectPicker-Callout" }).at(0);
 		callout.simulate("dismiss");
 

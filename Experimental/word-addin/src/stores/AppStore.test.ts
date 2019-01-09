@@ -14,6 +14,7 @@ import {
 	IObjectDetails,
 	ITokenCallback,
 	ISearchResults,
+	ISearchOptions,
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
@@ -31,6 +32,9 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	getSearchOptions(): Promise<ISearchOptions> {
+		throw new Error("Method not implemented.");
+	}
 	getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {

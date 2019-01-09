@@ -86,7 +86,11 @@ export class PropertySheet extends React.Component<
 					);
 				} else if (pageItem.Format === "Object") {
 					return (
-						<TrimObjectPicker {...commonProps} trimType={pageItem.ObjectType} />
+						<TrimObjectPicker
+							{...commonProps}
+							trimType={pageItem.ObjectType}
+							propertyName={pageItem.Name}
+						/>
 					);
 				} else {
 					return null;

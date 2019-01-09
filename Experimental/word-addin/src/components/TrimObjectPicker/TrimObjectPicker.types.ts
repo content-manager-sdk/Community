@@ -24,4 +24,5 @@ export interface ITrimObjectPickerProps
 	disabled?: boolean;
 
 	trimType: BaseObjectTypes;
+	propertyName?: string;
 }

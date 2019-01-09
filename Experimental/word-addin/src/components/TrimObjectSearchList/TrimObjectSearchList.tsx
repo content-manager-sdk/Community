@@ -168,8 +168,13 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+		event.preventDefault();
 		this._onTrimObjectSelected(
-			Number(event.currentTarget.attributes.getNamedItem("data-trim-uri"))
+			Number(
+				(event.nativeEvent.target! as HTMLDivElement).getAttribute(
+					"data-trim-uri"
+				)
+			)
 		);
 	};
 

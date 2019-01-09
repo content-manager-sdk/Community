@@ -41,6 +41,12 @@ describe("New Record layout", function() {
 	};
 
 	class MockWordConnector implements IWordConnector {
+		setAutoOpen(autoOpen: boolean): void {
+			throw new Error("Method not implemented.");
+		}
+		getAutoOpen(): boolean {
+			throw new Error("Method not implemented.");
+		}
 		insertText(textToInsert: string): void {
 			throw new Error("Method not implemented.");
 		}
