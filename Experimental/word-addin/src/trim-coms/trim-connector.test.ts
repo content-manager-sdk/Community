@@ -28,7 +28,7 @@ describe("Test fetch from TRIM", () => {
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
 				params: {
 					q: "all",
-					properties: "NameString",
+					properties: "NameString,PossiblyHasSubordinates",
 					purpose: 3,
 					pageSize: 20,
 					start: 1,
@@ -53,7 +53,7 @@ describe("Test fetch from TRIM", () => {
 				purpose: 3,
 			})
 			.then((data) => {
-				expect(props).toEqual("NameString");
+				expect(props).toEqual("NameString,PossiblyHasSubordinates");
 				expect(data.results[0].NameString).toBe("Document");
 			});
 	});
@@ -63,10 +63,11 @@ describe("Test fetch from TRIM", () => {
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
 				params: {
 					q: "all",
-					properties: "NameString",
+					properties: "NameString,PossiblyHasSubordinates",
 					purpose: 3,
 					pageSize: 20,
 					start: 1,
+					purposeExtra: 123,
 				},
 			})
 			.reply(function(config: any) {
@@ -84,6 +85,7 @@ describe("Test fetch from TRIM", () => {
 				trimType: BaseObjectTypes.RecordType,
 				q: "all",
 				purpose: 3,
+				purposeExtra: 123,
 			})
 			.then((data) => {
 				expect(data.results.length).toBe(0);

@@ -59,9 +59,29 @@
 
 .trim-list-row {
 	padding: 4px 0 4px 0;
+	display: flex;
 }
 
 .trim-list-row:hover {
 	background-color: #f4f4f4;
 	cursor: pointer;
+}
+
+/* .trim-list-row > div {
+	display: inline-block;
+} */
+
+.trim-list-row > i {
+	position: absolute;
+
+	right: 6px;
+	top: 8px;
+}
+
+.trim-find-children {
+	width: 15px;
+}
+
+.trim-list-row-label {
+	width: 100%;
 }

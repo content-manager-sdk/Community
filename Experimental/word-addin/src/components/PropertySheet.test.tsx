@@ -241,6 +241,8 @@ describe("Property Sheet", function() {
 										Uri: 1,
 									},
 									ObjectType: "Record",
+									EditPurpose: 1,
+									EditPurposeExtra: 9000000500,
 								},
 							],
 						},
@@ -251,12 +253,14 @@ describe("Property Sheet", function() {
 
 		it("adds a TrimObjectPicker to the property sheet", () => {
 			const objectPicker = wrapper.find(TrimObjectPicker).at(0);
-			expect.assertions(4);
+			expect.assertions(6);
 			expect(objectPicker.exists()).toBeTruthy();
 
 			expect(objectPicker.props().label).toEqual("Container");
 			expect(objectPicker.props().trimType).toEqual(BaseObjectTypes.Record);
 			expect(objectPicker.props().propertyName).toEqual("RecordContainer");
+			expect(objectPicker.props().purpose).toEqual(1);
+			expect(objectPicker.props().purposeExtra).toEqual(9000000500);
 		});
 	});
 });

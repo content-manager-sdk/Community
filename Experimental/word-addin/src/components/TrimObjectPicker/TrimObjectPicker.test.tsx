@@ -160,6 +160,8 @@ describe("TrimObjectPicker", function() {
 					label="test"
 					trimType={BaseObjectTypes.Record}
 					trimConnector={trimConnector}
+					purpose={1}
+					purposeExtra={345}
 				/>
 			);
 			wrapper.setState({
@@ -188,13 +190,27 @@ describe("TrimObjectPicker", function() {
 			expect(callout.find(TrimObjectSearchList).length).toEqual(1);
 		});
 
+		it("passes purpose to list", () => {
+			expect.assertions(1);
+			expect(wrapper.find(TrimObjectSearchList).props().purpose).toEqual(1);
+		});
+
+		it("passes purpose extra to list", () => {
+			expect.assertions(1);
+			expect(wrapper.find(TrimObjectSearchList).props().purposeExtra).toEqual(
+				345
+			);
+		});
+
 		it("adds an item to the selected list", async (done) => {
 			expect.assertions(1);
 
 			setTimeout(() => {
 				const list = wrapper.find(TrimObjectSearchList);
 
-				list.props().onTrimObjectSelected!({ Uri: 1 });
+				list.props().onTrimObjectSelected!({
+					Uri: 1,
+				});
 
 				expect(wrapper.state("selectedItems")).toEqual([{ Uri: 1 }]);
 				done();

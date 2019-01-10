@@ -9,6 +9,7 @@ import {
 } from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
+import { Icon } from "office-ui-fabric-react/lib/Icon";
 
 export interface ITrimObjectSearchListState {
 	q?: string;
@@ -67,7 +68,7 @@ export class TrimObjectSearchList extends React.Component<
 			return;
 		}
 		this._searchRunning = true;
-		const { trimConnector, trimType, q, purpose } = this.props;
+		const { trimConnector, trimType, q, purpose, purposeExtra } = this.props;
 
 		if (trimConnector && trimType) {
 			trimConnector!
@@ -75,6 +76,7 @@ export class TrimObjectSearchList extends React.Component<
 					trimType: trimType,
 					q: this._newQuery || q || "unkAll",
 					purpose: purpose || 0,
+					purposeExtra: purposeExtra || 0,
 					start,
 				})
 				.then((response: ISearchResults<ITrimMainObject>) => {
@@ -102,6 +104,10 @@ export class TrimObjectSearchList extends React.Component<
 			});
 			onTrimObjectSelected(trimObject);
 		}
+	}
+
+	private _onTrimObjectContainerSearch(uri: number): void {
+		this._onShortcutClick(`recContainer:${uri}`);
 	}
 
 	private _onShortcutClick = (query: string) => {
@@ -167,15 +173,28 @@ export class TrimObjectSearchList extends React.Component<
 		);
 	}
 
+	private findAncestor(el: HTMLElement): HTMLElement | null {
+		let elReturn: HTMLElement | null = el;
+		while (
+			(elReturn = elReturn.parentElement) &&
+			!elReturn.getAttribute("data-trim-uri")
+		);
+		return elReturn;
+	}
+
 	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
 		event.preventDefault();
-		this._onTrimObjectSelected(
-			Number(
-				(event.nativeEvent.target! as HTMLDivElement).getAttribute(
-					"data-trim-uri"
-				)
-			)
-		);
+
+		const target = event.nativeEvent.target as HTMLElement;
+		const el = this.findAncestor(target!);
+		if (el) {
+			const uri = Number(el.getAttribute("data-trim-uri"));
+			if (target.classList && target.classList.contains("trim-find-children")) {
+				this._onTrimObjectContainerSearch(uri);
+			} else {
+				this._onTrimObjectSelected(uri);
+			}
+		}
 	};
 
 	private _onScroll = (event: React.UIEvent<HTMLDivElement>): void => {
@@ -209,7 +228,10 @@ export class TrimObjectSearchList extends React.Component<
 		}
 		return (
 			<div className="trim-list-row" data-trim-uri={item.Uri}>
-				{item.NameString}
+				<div className="trim-list-row-label">{item.NameString}</div>
+				{item.PossiblyHasSubordinates && (
+					<Icon iconName="NavigateForward" className="trim-find-children" />
+				)}
 			</div>
 		);
 	};

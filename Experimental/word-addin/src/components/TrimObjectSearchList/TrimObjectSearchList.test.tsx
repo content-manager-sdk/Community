@@ -16,6 +16,7 @@ import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 
 describe("Trim object search list", function() {
 	let testPurpose = 0;
+	let testPurposeExtra = 0;
 	let testTrimType = BaseObjectTypes.Location;
 	let testQ = "";
 	let wrapper: any;
@@ -25,10 +26,11 @@ describe("Trim object search list", function() {
 
 	beforeEach(() => {
 		testPurpose = 0;
+		testPurposeExtra = 0;
 		testTrimType = BaseObjectTypes.Location;
 		testQ = "";
 		testStart = 0;
-		testObject = { Uri: 0, NameString: "" };
+		testObject = { Uri: 0, NameString: "", PossiblyHasSubordinates: false };
 		hasMore = true;
 
 		wrapper = shallow<TrimObjectSearchList>(
@@ -36,6 +38,7 @@ describe("Trim object search list", function() {
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				purpose={5}
+				purposeExtra={789}
 				q="all"
 				onTrimObjectSelected={(trimObject) => {
 					testObject = trimObject!;
@@ -50,6 +53,7 @@ describe("Trim object search list", function() {
 		options: ISearchParamaters
 	): Promise<ISearchResults<T>> {
 		testPurpose = options.purpose;
+		testPurposeExtra = Number(options.purposeExtra);
 		testTrimType = options.trimType;
 		testQ = options.q;
 		testStart = options.start!;
@@ -102,6 +106,7 @@ describe("Trim object search list", function() {
 	it("sends the correct parameters", () => {
 		expect(testTrimType).toBe(BaseObjectTypes.Record);
 		expect(testPurpose).toBe(5);
+		expect(testPurposeExtra).toBe(789);
 		expect(testQ).toBe("all");
 	});
 
@@ -171,8 +176,10 @@ describe("Trim object search list", function() {
 			preventDefault: function() {},
 			nativeEvent: {
 				target: {
-					getAttribute: function() {
-						return "1";
+					parentElement: {
+						getAttribute: function() {
+							return "1";
+						},
 					},
 				},
 			},
@@ -181,6 +188,30 @@ describe("Trim object search list", function() {
 		expect.assertions(1);
 
 		expect(testObject.Uri).toBe(1);
+	});
+
+	it("search event fires when navigate clicked", () => {
+		wrapper.find(List).simulate("click", {
+			preventDefault: function() {},
+			nativeEvent: {
+				target: {
+					classList: {
+						contains: () => {
+							return true;
+						},
+					},
+					parentElement: {
+						getAttribute: function() {
+							return "1";
+						},
+					},
+				},
+			},
+		});
+
+		expect.assertions(1);
+
+		expect(testQ).toBe("recContainer:1");
 	});
 
 	it("Tool tip set", () => {

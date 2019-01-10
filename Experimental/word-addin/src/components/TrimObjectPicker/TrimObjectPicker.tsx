@@ -66,18 +66,6 @@ export class TrimObjectPicker
 					[BaseObjectTypes.Location]: data.StartPointForLocations,
 				}[trimType] || data.StartPointDefault;
 
-			// switch (trimType) {
-			// 	case BaseObjectTypes.Record:
-			// 		key = data.StartPointRecordDefault;
-			// 		break;
-
-			// 	case BaseObjectTypes.Location:
-			// 		key = data.StartPointForLocations;
-			// 		break;
-			// 	default:
-			// 		key = data.StartPointDefault;
-			// }
-
 			if (propertyName === "RecordContainer") {
 				key = data.StartPointForContainers;
 			}
@@ -89,7 +77,7 @@ export class TrimObjectPicker
 	}
 
 	public render(): JSX.Element {
-		const { label, disabled, trimType } = this.props;
+		const { label, disabled, trimType, purpose, purposeExtra } = this.props;
 		const { isObjectPickerShown, searchStartPoint } = this.state;
 
 		return (
@@ -129,6 +117,8 @@ export class TrimObjectPicker
 									trimType={trimType}
 									onTrimObjectSelected={this._trimObjectSelected}
 									q={this.state.searchStartPoint}
+									purpose={purpose}
+									purposeExtra={purposeExtra}
 								/>
 							</FocusTrapZone>
 						}

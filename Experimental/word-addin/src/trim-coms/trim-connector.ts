@@ -25,6 +25,7 @@ export interface ISearchParamaters {
 	trimType: BaseObjectTypes;
 	q: string;
 	purpose: number;
+	purposeExtra?: number;
 	start?: number;
 }
 
@@ -60,6 +61,7 @@ export interface ITrimMainObject {
 	Uri: number;
 	NameString?: string;
 	CommandDefs?: [];
+	PossiblyHasSubordinates?: boolean;
 }
 
 export interface ITrimField {
@@ -301,15 +303,19 @@ export class TrimConnector implements ITrimConnector {
 	public search<T extends ITrimMainObject>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<T>> {
-		const { q, purpose, trimType, start } = options;
+		const { q, purpose, trimType, start, purposeExtra } = options;
 
 		const params = {
 			pageSize: 20,
-			properties: "NameString",
+			properties: "NameString,PossiblyHasSubordinates",
 			purpose,
 			q,
 			start,
 		};
+
+		if (purposeExtra) {
+			params["purposeExtra"] = purposeExtra;
+		}
 		params.start = params.start || 1;
 
 		return this.makeRequest(

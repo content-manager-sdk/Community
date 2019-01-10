@@ -25,4 +25,6 @@ export interface ITrimObjectPickerProps
 
 	trimType: BaseObjectTypes;
 	propertyName?: string;
+	purpose?: number;
+	purposeExtra?: number;
 }

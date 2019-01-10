@@ -90,6 +90,8 @@ export class PropertySheet extends React.Component<
 							{...commonProps}
 							trimType={pageItem.ObjectType}
 							propertyName={pageItem.Name}
+							purpose={pageItem.EditPurpose}
+							purposeExtra={pageItem.EditPurposeExtra}
 						/>
 					);
 				} else {
