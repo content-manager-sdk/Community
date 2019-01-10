@@ -47,6 +47,7 @@ describe("TrimObjectPicker", function() {
 				StartPointForLocations: _searchStartPointLocation,
 				StartPointRecordDefault: _searchStartPointRecord,
 				StartPointDefault: _searchStartPointDefault,
+				IncludeAlternateWhenShowingFolderContents: true,
 			});
 		});
 	};
@@ -200,6 +201,14 @@ describe("TrimObjectPicker", function() {
 			expect(wrapper.find(TrimObjectSearchList).props().purposeExtra).toEqual(
 				345
 			);
+		});
+
+		it("passes IncludeAlternate to list", () => {
+			expect.assertions(1);
+			expect(
+				wrapper.find(TrimObjectSearchList).props()
+					.includeAlternateWhenShowingFolderContents
+			).toBeTruthy();
 		});
 
 		it("adds an item to the selected list", async (done) => {

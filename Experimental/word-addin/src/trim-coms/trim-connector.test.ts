@@ -500,6 +500,10 @@ describe("Test fetch from TRIM", () => {
 									Value: "All",
 									StringValue: "All Items",
 								},
+								SearchUserOptionsIncludeAlternateWhenShowingFolderContents: {
+									Value: false,
+									StringValue: "No",
+								},
 							},
 						},
 					];

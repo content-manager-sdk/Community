@@ -23,6 +23,7 @@ export interface IObjectPickerState {
 	isObjectPickerShown?: boolean;
 	selectedItems: ITrimMainObject[];
 	searchStartPoint: string;
+	includeAlternateWhenShowingFolderContents: boolean;
 }
 
 export class TrimObjectPicker
@@ -71,7 +72,11 @@ export class TrimObjectPicker
 			}
 
 			const startSearch = startSearches[key] || "unkFavorite";
-			this.setState({ searchStartPoint: startSearch });
+			this.setState({
+				searchStartPoint: startSearch,
+				includeAlternateWhenShowingFolderContents:
+					data.IncludeAlternateWhenShowingFolderContents,
+			});
 		});
 		//	}
 	}
@@ -119,6 +124,9 @@ export class TrimObjectPicker
 									q={this.state.searchStartPoint}
 									purpose={purpose}
 									purposeExtra={purposeExtra}
+									includeAlternateWhenShowingFolderContents={
+										this.state.includeAlternateWhenShowingFolderContents
+									}
 								/>
 							</FocusTrapZone>
 						}
@@ -226,6 +234,7 @@ export class TrimObjectPicker
 			isObjectPickerShown: false,
 			selectedItems: [],
 			searchStartPoint: "",
+			includeAlternateWhenShowingFolderContents: false,
 		};
 	}
 }

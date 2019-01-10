@@ -1,7 +1,7 @@
 (global as any).config = { BASE_URL: "" };
 
 import * as React from "react";
-import { shallow } from "enzyme";
+import { shallow, ShallowWrapper } from "enzyme";
 import { TrimObjectSearchList } from "./TrimObjectSearchList";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import {
@@ -23,6 +23,7 @@ describe("Trim object search list", function() {
 	let testStart = 0;
 	let testObject: ITrimMainObject;
 	let hasMore = true;
+	let includeAlternateWhenShowingFolderContents = false;
 
 	beforeEach(() => {
 		testPurpose = 0;
@@ -33,7 +34,10 @@ describe("Trim object search list", function() {
 		testObject = { Uri: 0, NameString: "", PossiblyHasSubordinates: false };
 		hasMore = true;
 
-		wrapper = shallow<TrimObjectSearchList>(
+		wrapper = makeWrapper();
+	});
+	const makeWrapper = (): any => {
+		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
@@ -43,9 +47,12 @@ describe("Trim object search list", function() {
 				onTrimObjectSelected={(trimObject) => {
 					testObject = trimObject!;
 				}}
+				includeAlternateWhenShowingFolderContents={
+					includeAlternateWhenShowingFolderContents
+				}
 			/>
 		);
-	});
+	};
 
 	let trimConnector = new TrimConnector();
 
@@ -90,11 +97,11 @@ describe("Trim object search list", function() {
 	trimConnector.search = doSearch.bind(trimConnector);
 	trimConnector.getSearchClauseDefinitions = doClauseDefs.bind(trimConnector);
 
-	it("list element found", function(this: any) {
+	it("list element found", () => {
 		expect(wrapper.find(List).exists()).toBeTruthy();
 	});
 
-	it("contains the starting list", function(this: any) {
+	it("contains the starting list", () => {
 		expect(
 			wrapper
 				.find(List)
@@ -163,6 +170,7 @@ describe("Trim object search list", function() {
 		wrapper.instance()._onRenderCell({}, 1);
 
 		expect.assertions(2);
+
 		expect(testStart).toBe(2);
 
 		setImmediate(() => {
@@ -190,28 +198,51 @@ describe("Trim object search list", function() {
 		expect(testObject.Uri).toBe(1);
 	});
 
-	it("search event fires when navigate clicked", () => {
-		wrapper.find(List).simulate("click", {
-			preventDefault: function() {},
-			nativeEvent: {
-				target: {
-					classList: {
-						contains: () => {
-							return true;
+	[
+		{ includeAlt: false, expected: "recContainer:1" },
+		{ includeAlt: true, expected: "recContainerEx:1" },
+	].forEach((spec) => {
+		it(`search event fires when navigate clicked ${
+			spec.includeAlt
+		}`, async (done) => {
+			const wrapper = shallow<TrimObjectSearchList>(
+				<TrimObjectSearchList
+					trimConnector={trimConnector}
+					trimType={BaseObjectTypes.Record}
+					purpose={5}
+					purposeExtra={789}
+					q="all"
+					onTrimObjectSelected={(trimObject) => {
+						testObject = trimObject!;
+					}}
+					includeAlternateWhenShowingFolderContents={spec.includeAlt}
+				/>
+			);
+			setTimeout(() => {
+				wrapper.find(List).simulate("click", {
+					preventDefault: function() {},
+					nativeEvent: {
+						target: {
+							classList: {
+								contains: () => {
+									return true;
+								},
+							},
+							parentElement: {
+								getAttribute: function() {
+									return "1";
+								},
+							},
 						},
 					},
-					parentElement: {
-						getAttribute: function() {
-							return "1";
-						},
-					},
-				},
-			},
+				});
+
+				expect.assertions(1);
+
+				expect(testQ).toBe(spec.expected);
+				done();
+			});
 		});
-
-		expect.assertions(1);
-
-		expect(testQ).toBe("recContainer:1");
 	});
 
 	it("Tool tip set", () => {

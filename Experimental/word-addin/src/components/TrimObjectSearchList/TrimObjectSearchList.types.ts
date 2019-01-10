@@ -24,6 +24,7 @@ export interface ITrimObjectSearchListProps
 	purposeExtra?: number;
 
 	trimConnector?: ITrimConnector;
+	includeAlternateWhenShowingFolderContents: boolean;
 
 	/**
 	 * Callback issued when search is closed

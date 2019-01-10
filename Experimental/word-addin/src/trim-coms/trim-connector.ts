@@ -99,6 +99,7 @@ export interface ISearchOptions {
 	StartPointForLocations: string;
 	StartPointRecordDefault: string;
 	StartPointDefault: string;
+	IncludeAlternateWhenShowingFolderContents: boolean;
 }
 
 export interface ITrimConnector {
@@ -146,6 +147,10 @@ export class TrimConnector implements ITrimConnector {
 							data.UserOptions.SearchUserOptionsStartPointRecordDefault.Value,
 						StartPointDefault:
 							data.UserOptions.SearchUserOptionsStartPointDefault.Value,
+						IncludeAlternateWhenShowingFolderContents:
+							data.UserOptions
+								.SearchUserOptionsIncludeAlternateWhenShowingFolderContents
+								.Value,
 					};
 					return this._searchClauseCache;
 				}

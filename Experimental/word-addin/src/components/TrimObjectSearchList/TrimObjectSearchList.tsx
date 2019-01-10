@@ -107,7 +107,13 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	private _onTrimObjectContainerSearch(uri: number): void {
-		this._onShortcutClick(`recContainer:${uri}`);
+		const { includeAlternateWhenShowingFolderContents } = this.props;
+
+		const clause = includeAlternateWhenShowingFolderContents
+			? "recContainerEx"
+			: "recContainer";
+
+		this._onShortcutClick(`${clause}:${uri}`);
 	}
 
 	private _onShortcutClick = (query: string) => {
