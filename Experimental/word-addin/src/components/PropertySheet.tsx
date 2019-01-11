@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
+import { ITrimMainObject } from "src/trim-coms/trim-connector";
 
 export class PropertySheet extends React.Component<
 	{
@@ -19,6 +20,16 @@ export class PropertySheet extends React.Component<
 	setMultiLine(propName: string, multiline: boolean) {
 		this.isTextFieldMultiline[propName] = multiline;
 	}
+
+	private _onSelectObject = (propName: string) => (
+		trimObject: ITrimMainObject
+	) => {
+		const { onChange } = this.props;
+		if (onChange) {
+			this.formValues[propName] = trimObject.Uri;
+			onChange(this.formValues);
+		}
+	};
 
 	private _onSelectDate = (propName: string) => (date: Date) => {
 		const { onChange } = this.props;
@@ -92,6 +103,7 @@ export class PropertySheet extends React.Component<
 							propertyName={pageItem.Name}
 							purpose={pageItem.EditPurpose}
 							purposeExtra={pageItem.EditPurposeExtra}
+							onTrimObjectSelected={this._onSelectObject(pageItem.Name)}
 						/>
 					);
 				} else {

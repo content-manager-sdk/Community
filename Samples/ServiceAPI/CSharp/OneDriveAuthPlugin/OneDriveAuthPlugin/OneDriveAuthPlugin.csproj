@@ -109,6 +109,8 @@
   <ItemGroup>
     <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
+    <Compile Include="CommandDefCustomProp.cs" />
+    <Compile Include="CustomRecord.cs" />
     <Compile Include="GraphApiHelper.cs" />
     <Compile Include="models.cs" />
     <Compile Include="MyCommandDef.cs" />

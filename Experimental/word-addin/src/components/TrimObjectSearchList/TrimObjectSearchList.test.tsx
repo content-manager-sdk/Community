@@ -10,9 +10,11 @@ import {
 	ISearchParamaters,
 	ISearchResults,
 	ISearchClauseDef,
+	IClassification,
 } from "../../trim-coms/trim-connector";
 import { List } from "office-ui-fabric-react/lib/List";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
+import { Breadcrumb } from "office-ui-fabric-react/lib/Breadcrumb";
 
 describe("Trim object search list", function() {
 	let testPurpose = 0;
@@ -55,8 +57,9 @@ describe("Trim object search list", function() {
 	};
 
 	let trimConnector = new TrimConnector();
+	trimConnector.credentialsResolver = (callback) => {};
 
-	const doSearch = function<T extends ITrimMainObject>(
+	const doSearch = function<T extends IClassification>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<T>> {
 		testPurpose = options.purpose;
@@ -67,7 +70,7 @@ describe("Trim object search list", function() {
 
 		return new Promise(function(resolve) {
 			resolve({
-				results: [{ Uri: 1, NameString: "test" } as T],
+				results: [{ Uri: 1, NameString: "test", Name: { Value: "test" } } as T],
 				hasMoreItems: hasMore,
 			});
 		});
@@ -140,6 +143,15 @@ describe("Trim object search list", function() {
 		).toBe(1);
 	});
 
+	it("clears the ancestors when a new search run", () => {
+		const shortCut = wrapper.find("li");
+		wrapper.setState({ ancestors: [{ Uri: 3, NameString: "test" }] });
+
+		shortCut.at(0).simulate("click");
+
+		expect(wrapper.state("ancestors")).toEqual([]);
+	});
+
 	it("loads a second page on scroll down", async (done) => {
 		const listContainer = wrapper.find("div.trim-list-container");
 
@@ -198,48 +210,150 @@ describe("Trim object search list", function() {
 		expect(testObject.Uri).toBe(1);
 	});
 
+	const getWrapper = function(
+		spec = { trimType: BaseObjectTypes.Record, includeAlt: false }
+	) {
+		return shallow<TrimObjectSearchList>(
+			<TrimObjectSearchList
+				trimConnector={trimConnector}
+				trimType={spec.trimType}
+				purpose={5}
+				purposeExtra={789}
+				q="all"
+				onTrimObjectSelected={(trimObject) => {
+					testObject = trimObject!;
+				}}
+				includeAlternateWhenShowingFolderContents={spec.includeAlt}
+			/>
+		);
+	};
+
+	const clickNavigateOnListItem = function(wrapper: ShallowWrapper) {
+		wrapper.find(List).simulate("click", {
+			preventDefault: function() {},
+			nativeEvent: {
+				target: {
+					classList: {
+						contains: () => {
+							return true;
+						},
+					},
+					parentElement: {
+						getAttribute: function() {
+							return "1";
+						},
+					},
+				},
+			},
+		});
+	};
+
 	[
-		{ includeAlt: false, expected: "recContainer:1" },
-		{ includeAlt: true, expected: "recContainerEx:1" },
+		{
+			includeAlt: false,
+			expected: "recContainer:1",
+			trimType: BaseObjectTypes.Record,
+		},
+		{
+			includeAlt: true,
+			expected: "recContainerEx:1",
+			trimType: BaseObjectTypes.Record,
+		},
+		{
+			includeAlt: true,
+			expected: "plnParent:1",
+			trimType: BaseObjectTypes.Classification,
+		},
+		{
+			includeAlt: true,
+			expected: "locMembers:1",
+			trimType: BaseObjectTypes.Location,
+		},
 	].forEach((spec) => {
 		it(`search event fires when navigate clicked ${
 			spec.includeAlt
 		}`, async (done) => {
-			const wrapper = shallow<TrimObjectSearchList>(
-				<TrimObjectSearchList
-					trimConnector={trimConnector}
-					trimType={BaseObjectTypes.Record}
-					purpose={5}
-					purposeExtra={789}
-					q="all"
-					onTrimObjectSelected={(trimObject) => {
-						testObject = trimObject!;
-					}}
-					includeAlternateWhenShowingFolderContents={spec.includeAlt}
-				/>
-			);
+			const wrapper = getWrapper(spec);
+
 			setTimeout(() => {
-				wrapper.find(List).simulate("click", {
-					preventDefault: function() {},
-					nativeEvent: {
-						target: {
-							classList: {
-								contains: () => {
-									return true;
-								},
-							},
-							parentElement: {
-								getAttribute: function() {
-									return "1";
-								},
-							},
-						},
-					},
-				});
+				clickNavigateOnListItem(wrapper);
 
 				expect.assertions(1);
 
 				expect(testQ).toBe(spec.expected);
+				done();
+			});
+		});
+
+		it(`sets the ancestor when a container expanded`, async (done) => {
+			const wrapper = getWrapper();
+
+			setTimeout(() => {
+				clickNavigateOnListItem(wrapper);
+
+				expect.assertions(3);
+
+				expect(wrapper.state("ancestors")).toEqual([
+					{ Uri: 1, NameString: "test", Name: { Value: "test" } },
+				]);
+
+				const breadcrumb = wrapper.find(Breadcrumb);
+
+				expect(breadcrumb.length).toBe(1);
+				expect(breadcrumb.props().items.length).toBe(1);
+				done();
+			});
+		});
+
+		it(`does a new search when breadcrumb clicked`, async (done) => {
+			const wrapper = getWrapper();
+			wrapper.setState({
+				ancestors: [{ Uri: 2, NameString: "test" }],
+				items: [
+					{ Uri: 1, NameString: "test" },
+					{ Uri: 2, NameString: "test 2" },
+				],
+			});
+
+			setTimeout(() => {
+				testQ = "";
+
+				expect.assertions(1);
+
+				const breadcrumb = wrapper.find(Breadcrumb);
+				breadcrumb
+					.props()
+					.items[0].onClick({ preventDefault: function() {} }, { key: "2" });
+
+				expect(testQ).toEqual("recContainer:2");
+				done();
+			});
+		});
+
+		it(`remove child from breadcrumb when parent clicked`, async (done) => {
+			const wrapper = getWrapper();
+			wrapper.setState({
+				ancestors: [
+					{ Uri: 1, NameString: "test" },
+					{ Uri: 2, NameString: "test 2" },
+				],
+				items: [
+					{ Uri: 1, NameString: "test" },
+					{ Uri: 2, NameString: "test 2" },
+				],
+			});
+
+			setTimeout(() => {
+				expect.assertions(1);
+
+				const breadcrumb = wrapper.find(Breadcrumb);
+				breadcrumb
+					.props()
+					.items[0].onClick({ preventDefault: function() {} }, { key: "1" });
+
+				expect(wrapper.state("ancestors")).toEqual([
+					{ Uri: 1, NameString: "test" },
+				]);
 				done();
 			});
 		});

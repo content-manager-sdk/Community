@@ -6,14 +6,20 @@ import { List, IListProps } from "office-ui-fabric-react/lib/List";
 import {
 	ITrimMainObject,
 	ISearchResults,
+	IClassification,
 } from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 import { Icon } from "office-ui-fabric-react/lib/Icon";
+import {
+	Breadcrumb,
+	IBreadcrumbItem,
+} from "office-ui-fabric-react/lib/Breadcrumb";
 
 export interface ITrimObjectSearchListState {
 	q?: string;
 	items: ITrimMainObject[];
+	ancestors: ITrimMainObject[];
 	lastScrollPos: number;
 	scrollDirection: string;
 	searchShortCuts: any;
@@ -107,73 +113,126 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	private _onTrimObjectContainerSearch(uri: number): void {
-		const { includeAlternateWhenShowingFolderContents } = this.props;
+		const { includeAlternateWhenShowingFolderContents, trimType } = this.props;
 
-		const clause = includeAlternateWhenShowingFolderContents
+		let clause = includeAlternateWhenShowingFolderContents
 			? "recContainerEx"
 			: "recContainer";
 
-		this._onShortcutClick(`${clause}:${uri}`);
+		if (trimType === BaseObjectTypes.Classification) {
+			clause = "plnParent";
+		}
+		if (trimType === BaseObjectTypes.Location) {
+			clause = "locMembers";
+		}
+
+		const ancestors = this.state.ancestors.slice(0);
+		const currentAncestor = ancestors.find((a) => {
+			return a.Uri === uri;
+		});
+
+		if (currentAncestor) {
+			while (ancestors[ancestors.length - 1].Uri !== uri) {
+				ancestors.pop();
+			}
+		} else {
+			this.state.items.forEach((item) => {
+				if (item.Uri === uri) {
+					ancestors.push(item);
+				}
+			});
+		}
+		this.setState({ ancestors: ancestors });
+
+		this._onShortcutClick(`${clause}:${uri}`, true);
 	}
 
-	private _onShortcutClick = (query: string) => {
+	private _onShortcutClick = (query: string, containerSearch = false) => {
+		if (!containerSearch) {
+			this.setState({ ancestors: [] });
+		}
 		this._newQuery = query;
 		this.doSearch();
 	};
 
+	private _onBreadcrumbItemClicked = (
+		ev: React.MouseEvent<HTMLElement>,
+		item: IBreadcrumbItem
+	): void => {
+		ev.preventDefault();
+		this._onTrimObjectContainerSearch(Number(item.key));
+	};
+
 	public render(): JSX.Element {
+		const { trimType } = this.props;
+		const { searchShortCuts, items, ancestors } = this.state;
+
 		return (
-			<div className="trim-search-list-outer">
-				<div className="trim-search-shortcuts">
-					<ul>
-						{Object.keys(this.state.searchShortCuts[this.props.trimType!]).map(
-							(key: any, index: number) => {
-								const sc = this.state.searchShortCuts[this.props.trimType!][
-									key
-								];
-								return (
-									<TooltipHost
-										key={key}
-										tooltipProps={{
-											onRenderContent: () => {
-												return (
-													<div>
-														<div className="ms-fontWeight-semibold">
-															{sc.Caption}
-														</div>
-														<div>{sc.ToolTip}</div>
-													</div>
-												);
-											},
-										}}
-										id="myID"
-										calloutProps={{ gapSpace: 0 }}
-									>
-										<li
-											key={key}
-											onClick={() => {
-												this._onShortcutClick(sc.q);
-											}}
-										>
-											<img src={`/assets/${sc.src}_x32.png`} />
-										</li>
-									</TooltipHost>
-								);
-							}
-						)}
-					</ul>
-				</div>
-				<div
-					className="trim-list-container is-scrollable"
-					data-is-scrollable="true"
-					onScroll={this._onScroll}
-				>
-					<List
-						items={this.state.items}
-						onRenderCell={this._onRenderCell}
-						onShouldVirtualize={this._onVirtualize}
-						onClick={this._onListClick}
+			<div className="trim-search-list">
+				{ancestors.length > 0 && (
+					<Breadcrumb
+						items={ancestors.map((a) => {
+							return {
+								text:
+									trimType === BaseObjectTypes.Classification
+										? (a as IClassification).Name.Value
+										: a.NameString!,
+								key: String(a.Uri),
+								onClick: this._onBreadcrumbItemClicked,
+							};
+						})}
 					/>
+				)}
+				<div className="trim-search-list-outer">
+					<div className="trim-search-shortcuts">
+						<ul>
+							{Object.keys(searchShortCuts[trimType!]).map(
+								(key: any, index: number) => {
+									const sc = searchShortCuts[trimType!][key];
+									return (
+										<TooltipHost
+											key={key}
+											tooltipProps={{
+												onRenderContent: () => {
+													return (
+														<div>
+															<div className="ms-fontWeight-semibold">
+																{sc.Caption}
+															</div>
+															<div>{sc.ToolTip}</div>
+														</div>
+													);
+												},
+											}}
+											id="myID"
+											calloutProps={{ gapSpace: 0 }}
+										>
+											<li
+												key={key}
+												onClick={() => {
+													this._onShortcutClick(sc.q);
+												}}
+											>
+												<img src={`/assets/${sc.src}_x32.png`} />
+											</li>
+										</TooltipHost>
+									);
+								}
+							)}
+						</ul>
+					</div>
+					<div
+						className="trim-list-container is-scrollable"
+						data-is-scrollable="true"
+						onScroll={this._onScroll}
+					>
+						<List
+							items={items}
+							onRenderCell={this._onRenderCell}
+							onShouldVirtualize={this._onVirtualize}
+							onClick={this._onListClick}
+						/>
+					</div>
 				</div>
 			</div>
 		);
@@ -248,6 +307,7 @@ export class TrimObjectSearchList extends React.Component<
 		return {
 			q: "",
 			items: [],
+			ancestors: [],
 			lastScrollPos: 0,
 			scrollDirection: "",
 			searchShortCuts: {
@@ -268,9 +328,15 @@ export class TrimObjectSearchList extends React.Component<
 					RecordDueOrInTray: { src: "recinduetray", q: "recDueOrInTray" },
 				},
 				[BaseObjectTypes.Location]: {
-					Favorite: { src: "recfavoritestray", q: "unkFavorite" },
+					Favorite: { src: "locfavorites", q: "unkFavorite" },
 					Me: { src: "User", q: "me" },
 					All: { src: "loc_list", q: "unkAll" },
+				},
+				[BaseObjectTypes.Classification]: {
+					Favorite: { src: "fpfavorites", q: "unkFavorite" },
+					Top: { src: "navContents", q: "unkTop" },
+					All: { src: "fpplans", q: "unkAll" },
+					Owner: { src: "fpplans", q: "plnOwner:me" },
 				},
 			},
 		};

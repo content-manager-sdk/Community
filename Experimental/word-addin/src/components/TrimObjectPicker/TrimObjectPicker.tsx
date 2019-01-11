@@ -113,6 +113,11 @@ export class TrimObjectPicker
 						directionalHint={DirectionalHint.bottomLeftEdge}
 						onDismiss={this._objectPickerDismissed}
 						className="ms-DatePicker-callout"
+						calloutWidth={
+							this._objectPickerDiv.current
+								? this._objectPickerDiv.current.clientWidth
+								: 0
+						}
 					>
 						{
 							<FocusTrapZone isClickableOutsideFocusTrap={true}>
@@ -137,11 +142,16 @@ export class TrimObjectPicker
 	}
 
 	private _trimObjectSelected = (trimObject: ITrimMainObject): void => {
+		const { onTrimObjectSelected } = this.props;
 		this.setState({
 			selectedItems: [trimObject],
 		});
 
 		this._dismissObjectPickerPopup();
+
+		if (onTrimObjectSelected) {
+			onTrimObjectSelected(trimObject);
+		}
 	};
 
 	/**

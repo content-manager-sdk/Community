@@ -103,10 +103,10 @@ namespace OneDriveAuthPlugin
 			return null;
 		}
 
-		private MyCommandDef makeCommand(CommandIds commandId, Record fromRecord)
+		private static MyCommandDef makeCommand(CommandIds commandId, Record fromRecord)
 		{
 
-			CommandDef commandDef = new CommandDef(commandId, this.Database);
+			CommandDef commandDef = new CommandDef(commandId, fromRecord.Database);
 			var myCommandDef = new MyCommandDef();
 			myCommandDef.CommandId = (HP.HPTRIM.ServiceModel.CommandIds)commandId;
 			myCommandDef.MenuEntryString = commandDef.GetMenuEntryString(fromRecord.TrimType);
@@ -117,15 +117,22 @@ namespace OneDriveAuthPlugin
 			return myCommandDef;
 		}
 
+		public static IList<MyCommandDef> getCommandDefs(Record fromRecord)
+		{
+			var commandDefs = new List<MyCommandDef>();
+			foreach (var commandId in new CommandIds[] { CommandIds.Properties, CommandIds.RecCheckIn, CommandIds.RecDocFinal, CommandIds.AddToFavorites, CommandIds.RemoveFromFavorites })
+			{
+				commandDefs.Add(makeCommand(commandId, fromRecord));
+			}
+
+			return commandDefs;
+		}
+
 		private void updateFromRecord(RegisterdFileResponse fileToUpdate, Record fromRecord)
 		{
 			fileToUpdate.Uri = fromRecord.Uri;
-			fileToUpdate.CommandDefs = new List<MyCommandDef>();
+			fileToUpdate.CommandDefs = getCommandDefs(fromRecord);
 
-			foreach (var commandId in new CommandIds[] { CommandIds.RecDocFinal, CommandIds.RecCheckIn, CommandIds.AddToFavorites, CommandIds.RemoveFromFavorites })
-			{
-				fileToUpdate.CommandDefs.Add(makeCommand(commandId, fromRecord));
-			}
 		}
 
 		public async Task<object> Post(DriveFileOperation request)

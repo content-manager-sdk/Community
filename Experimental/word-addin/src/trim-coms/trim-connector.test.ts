@@ -4,6 +4,7 @@ import {
 	IRecordType,
 	SERVICEAPI_BASE_URI,
 	TrimConnector,
+	IClassification,
 } from "./trim-connector";
 import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
@@ -89,6 +90,46 @@ describe("Test fetch from TRIM", () => {
 			})
 			.then((data) => {
 				expect(data.results.length).toBe(0);
+			});
+	});
+
+	it("the prefix is removed from the property name", () => {
+		mock.reset();
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/Classification`)
+			.replyOnce(200, {
+				Results: [
+					{
+						ClassificationName: { Value: "Test Name" },
+						PossiblyHasSubordinates: true,
+						TrimType: "Classification",
+						NameString: "Accounting - Accounting Automatic",
+						Uri: 9000000005,
+					},
+				],
+				PropertiesAndFields: {},
+				TotalResults: 1,
+				CountStringEx: "1 Classification",
+				MinimumCount: 1,
+				Count: 0,
+				HasMoreItems: false,
+				SearchTitle:
+					"Classifications - parent:9000000004 (Accounting) - 1 Classification",
+				HitHighlightString: "",
+				TrimType: "Classification",
+				ResponseStatus: {},
+			});
+
+		expect.assertions(1);
+		return trimConnector
+			.search<IClassification>({
+				trimType: BaseObjectTypes.Classification,
+				q: "all",
+				purpose: 3,
+				purposeExtra: 123,
+			})
+			.then((data) => {
+				expect(data.results[0].Name.Value).toBe("Test Name");
 			});
 	});
 

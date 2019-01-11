@@ -1,5 +1,8 @@
 import { IBaseProps } from "office-ui-fabric-react/lib/Utilities";
-import { ITrimConnector } from "../../trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	ITrimMainObject,
+} from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 
 export interface ITrimObjectPicker {
@@ -27,4 +30,7 @@ export interface ITrimObjectPickerProps
 	propertyName?: string;
 	purpose?: number;
 	purposeExtra?: number;
+
+	/** Callback for when a given trim object has been selected */
+	onTrimObjectSelected?: (item?: ITrimMainObject) => void;
 }

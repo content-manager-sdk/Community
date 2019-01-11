@@ -226,8 +226,12 @@ describe("Property Sheet", function() {
 	});
 
 	describe("Trim Object Properties", () => {
+		let onChangeForm;
 		const wrapper = shallow<PropertySheet>(
 			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
 				formDefinition={{
 					Pages: [
 						{
@@ -261,6 +265,17 @@ describe("Property Sheet", function() {
 			expect(objectPicker.props().propertyName).toEqual("RecordContainer");
 			expect(objectPicker.props().purpose).toEqual(1);
 			expect(objectPicker.props().purposeExtra).toEqual(9000000500);
+		});
+
+		it("fires the onChange event when an object picker changes", () => {
+			const testObject = { Uri: 2, NameString: "test" };
+
+			wrapper
+				.find(TrimObjectPicker)
+				.props()
+				.onTrimObjectSelected(testObject);
+
+			expect(onChangeForm).toEqual({ RecordContainer: testObject.Uri });
 		});
 	});
 });

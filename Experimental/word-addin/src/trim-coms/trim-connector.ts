@@ -78,6 +78,10 @@ export interface ILocation extends ITrimMainObject {
 	FullFormattedName: ITrimString;
 }
 
+export interface IClassification extends ITrimMainObject {
+	Name: ITrimString;
+}
+
 export interface IRecordType extends ITrimMainObject {}
 export interface ICommandDef {
 	CommandId: string;
@@ -321,6 +325,11 @@ export class TrimConnector implements ITrimConnector {
 		if (purposeExtra) {
 			params["purposeExtra"] = purposeExtra;
 		}
+
+		if (trimType === BaseObjectTypes.Classification) {
+			params.properties += ",Name";
+		}
+
 		params.start = params.start || 1;
 
 		return this.makeRequest(
@@ -329,7 +338,18 @@ export class TrimConnector implements ITrimConnector {
 				return {
 					hasMoreItems: data.HasMoreItems,
 					results: data.Results.map((trimObject: T) => {
-						return trimObject;
+						let newObject = {};
+
+						for (var key in trimObject) {
+							let newKey = key;
+							if (newKey.startsWith(trimType)) {
+								newObject[newKey.substring(trimType.length)] = trimObject[key];
+							} else {
+								newObject[newKey as string] = trimObject[key];
+							}
+						}
+
+						return newObject;
 					}),
 				};
 			}
