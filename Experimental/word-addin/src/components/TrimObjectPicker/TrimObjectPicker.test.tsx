@@ -90,6 +90,28 @@ describe("TrimObjectPicker", function() {
 		expect(wrapper.state("isObjectPickerShown")).toBe(true);
 	});
 
+	[
+		{ text: "test", expected: true },
+		{ text: "12", expected: false },
+		{ text: "1", expected: false },
+		{ text: "123", expected: true },
+	].forEach((spec) => {
+		it(`should open Object Picker when text entered ${spec.text} - ${
+			spec.expected
+		}`, () => {
+			const wrapper = mountObjectPicker({ label: "label" });
+			wrapper
+				.find(TextField)
+				.find("input")
+				.simulate("change", { target: { value: spec.text } });
+
+			expect.assertions(2);
+
+			expect(wrapper.state("isObjectPickerShown")).toBe(spec.expected);
+			expect(wrapper.state("searchStartPoint")).toEqual(spec.text);
+		});
+	});
+
 	it("should close Object Picker ", async (done) => {
 		expect.assertions(1);
 		const wrapper = mountObjectPicker({ label: "label" });

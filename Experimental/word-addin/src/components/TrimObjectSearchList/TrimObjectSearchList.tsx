@@ -37,6 +37,12 @@ export class TrimObjectSearchList extends React.Component<
 		this.state = this._getDefaultState();
 	}
 
+	componentDidUpdate(prevProps: ITrimObjectSearchListProps) {
+		if (prevProps.q !== this.props.q) {
+			this.doSearch();
+		}
+	}
+
 	componentDidMount() {
 		const { trimConnector, trimType } = this.props;
 		if (trimConnector) {

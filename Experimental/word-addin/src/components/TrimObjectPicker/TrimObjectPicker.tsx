@@ -24,6 +24,7 @@ export interface IObjectPickerState {
 	selectedItems: ITrimMainObject[];
 	searchStartPoint: string;
 	includeAlternateWhenShowingFolderContents: boolean;
+	textFieldText: string;
 }
 
 export class TrimObjectPicker
@@ -83,7 +84,7 @@ export class TrimObjectPicker
 
 	public render(): JSX.Element {
 		const { label, disabled, trimType, purpose, purposeExtra } = this.props;
-		const { isObjectPickerShown, searchStartPoint } = this.state;
+		const { isObjectPickerShown, searchStartPoint, textFieldText } = this.state;
 
 		return (
 			<div>
@@ -99,6 +100,8 @@ export class TrimObjectPicker
 						componentRef={this._textField}
 						className="trim-object-picker"
 						onRenderPrefix={this._renderPrefix}
+						onChange={this._textChanged}
+						value={textFieldText}
 					/>
 				</div>
 
@@ -145,6 +148,7 @@ export class TrimObjectPicker
 		const { onTrimObjectSelected } = this.props;
 		this.setState({
 			selectedItems: [trimObject],
+			textFieldText: "",
 		});
 
 		this._dismissObjectPickerPopup();
@@ -182,9 +186,22 @@ export class TrimObjectPicker
 		// don't need to focus the text box, if necessary the focusTrapZone will do it
 	};
 
+	private _textChanged = (
+		ev: React.FormEvent<HTMLInputElement>,
+		newText: string
+	): void => {
+		ev.stopPropagation();
+		this.setState({ textFieldText: newText });
+
+		this.setState({ searchStartPoint: newText });
+		if (!this.state.isObjectPickerShown && newText.length > 2) {
+			this._onTextFieldClick();
+		}
+	};
+
 	private _onIconClick = (ev: React.MouseEvent<HTMLElement>): void => {
 		ev.stopPropagation();
-		this._onTextFieldClick(ev);
+		this._onTextFieldClick();
 	};
 
 	private _renderPrefix = (
@@ -215,7 +232,7 @@ export class TrimObjectPicker
 		});
 	};
 
-	private _onTextFieldClick = (ev: React.MouseEvent<HTMLElement>): void => {
+	private _onTextFieldClick = (): void => {
 		if (!this.state.isObjectPickerShown && !this.props.disabled) {
 			this._showObjectPickerPopup();
 		} else {
@@ -245,6 +262,7 @@ export class TrimObjectPicker
 			selectedItems: [],
 			searchStartPoint: "",
 			includeAlternateWhenShowingFolderContents: false,
+			textFieldText: "",
 		};
 	}
 }

@@ -341,11 +341,11 @@ export class TrimConnector implements ITrimConnector {
 						let newObject = {};
 
 						for (var key in trimObject) {
-							let newKey = key;
-							if (newKey.startsWith(trimType)) {
-								newObject[newKey.substring(trimType.length)] = trimObject[key];
+							
+							if (key.startsWith(trimType)) {
+								newObject[key.substring(trimType.length)] = trimObject[key];
 							} else {
-								newObject[newKey as string] = trimObject[key];
+								newObject[key as string] = trimObject[key];
 							}
 						}
 
