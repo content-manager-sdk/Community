@@ -96,3 +96,10 @@
 .trim-search-list .ms-Breadcrumb button {
 	text-decoration: underline;
 }
+.trim-list-row-label div {
+	display: inline-block;
+}
+
+.trim-list-row-label div:first-child {
+	margin-right: 4px;
+}

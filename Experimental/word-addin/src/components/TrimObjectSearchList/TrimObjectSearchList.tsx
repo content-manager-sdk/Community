@@ -291,6 +291,7 @@ export class TrimObjectSearchList extends React.Component<
 		index: number | undefined,
 		isScrolling: boolean
 	): JSX.Element => {
+
 		if (
 			this.state.scrollDirection === "down" &&
 			index! + 1 === this.state.items.length
@@ -299,7 +300,15 @@ export class TrimObjectSearchList extends React.Component<
 		}
 		return (
 			<div className="trim-list-row" data-trim-uri={item.Uri}>
-				<div className="trim-list-row-label">{item.NameString}</div>
+				<div className="trim-list-row-label">
+					/* <div>
+						<img
+							src={`/assets/webIcons/${item.Icon.FileType ||
+								item.Icon.Id}_x16.png`}
+						/>
+					</div>
+					<div>{item.NameString}</div> */
+				</div>
 				{item.PossiblyHasSubordinates && (
 					<Icon iconName="NavigateForward" className="trim-find-children" />
 				)}

@@ -57,7 +57,13 @@ export interface IDriveInformation {
 	CommandDefs: ICommandDef[];
 }
 
+export interface IIcon {
+	FileType: string;
+	Id: string;
+}
+
 export interface ITrimMainObject {
+	Icon?: IIcon;
 	Uri: number;
 	NameString?: string;
 	CommandDefs?: [];
@@ -316,7 +322,7 @@ export class TrimConnector implements ITrimConnector {
 
 		const params = {
 			pageSize: 20,
-			properties: "NameString,PossiblyHasSubordinates",
+			properties: "NameString,PossiblyHasSubordinates,Icon",
 			purpose,
 			q,
 			start,
@@ -330,6 +336,10 @@ export class TrimConnector implements ITrimConnector {
 			params.properties += ",Name";
 		}
 
+		if (trimType === BaseObjectTypes.Record) {
+			params.properties += ",Tooltip";
+		}
+
 		params.start = params.start || 1;
 
 		return this.makeRequest(
@@ -341,7 +351,6 @@ export class TrimConnector implements ITrimConnector {
 						let newObject = {};
 
 						for (var key in trimObject) {
-							
 							if (key.startsWith(trimType)) {
 								newObject[key.substring(trimType.length)] = trimObject[key];
 							} else {

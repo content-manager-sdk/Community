@@ -34,7 +34,7 @@ describe("TrimObjectPicker", function() {
 	): Promise<ISearchResults<T>> {
 		return new Promise(function(resolve) {
 			resolve({
-				results: [{ Uri: 1, NameString: "test" } as T],
+				results: [{ Uri: 1, NameString: "test", Icon: {} } as T],
 				hasMoreItems: false,
 			});
 		});

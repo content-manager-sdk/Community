@@ -29,7 +29,7 @@ describe("Test fetch from TRIM", () => {
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
 				params: {
 					q: "all",
-					properties: "NameString,PossiblyHasSubordinates",
+					properties: "NameString,PossiblyHasSubordinates,Icon",
 					purpose: 3,
 					pageSize: 20,
 					start: 1,
@@ -54,7 +54,7 @@ describe("Test fetch from TRIM", () => {
 				purpose: 3,
 			})
 			.then((data) => {
-				expect(props).toEqual("NameString,PossiblyHasSubordinates");
+				expect(props).toEqual("NameString,PossiblyHasSubordinates,Icon");
 				expect(data.results[0].NameString).toBe("Document");
 			});
 	});
@@ -64,7 +64,7 @@ describe("Test fetch from TRIM", () => {
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
 				params: {
 					q: "all",
-					properties: "NameString,PossiblyHasSubordinates",
+					properties: "NameString,PossiblyHasSubordinates,Icon",
 					purpose: 3,
 					pageSize: 20,
 					start: 1,
@@ -95,30 +95,28 @@ describe("Test fetch from TRIM", () => {
 
 	it("the prefix is removed from the property name", () => {
 		mock.reset();
-		mock
-			.onGet(`${SERVICEAPI_BASE_URI}/Classification`)
-			.replyOnce(200, {
-				Results: [
-					{
-						ClassificationName: { Value: "Test Name" },
-						PossiblyHasSubordinates: true,
-						TrimType: "Classification",
-						NameString: "Accounting - Accounting Automatic",
-						Uri: 9000000005,
-					},
-				],
-				PropertiesAndFields: {},
-				TotalResults: 1,
-				CountStringEx: "1 Classification",
-				MinimumCount: 1,
-				Count: 0,
-				HasMoreItems: false,
-				SearchTitle:
-					"Classifications - parent:9000000004 (Accounting) - 1 Classification",
-				HitHighlightString: "",
-				TrimType: "Classification",
-				ResponseStatus: {},
-			});
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Classification`).replyOnce(200, {
+			Results: [
+				{
+					ClassificationName: { Value: "Test Name" },
+					PossiblyHasSubordinates: true,
+					TrimType: "Classification",
+					NameString: "Accounting - Accounting Automatic",
+					Uri: 9000000005,
+				},
+			],
+			PropertiesAndFields: {},
+			TotalResults: 1,
+			CountStringEx: "1 Classification",
+			MinimumCount: 1,
+			Count: 0,
+			HasMoreItems: false,
+			SearchTitle:
+				"Classifications - parent:9000000004 (Accounting) - 1 Classification",
+			HitHighlightString: "",
+			TrimType: "Classification",
+			ResponseStatus: {},
+		});
 
 		expect.assertions(1);
 		return trimConnector

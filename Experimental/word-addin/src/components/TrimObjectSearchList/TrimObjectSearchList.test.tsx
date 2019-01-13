@@ -70,7 +70,14 @@ describe("Trim object search list", function() {
 
 		return new Promise(function(resolve) {
 			resolve({
-				results: [{ Uri: 1, NameString: "test", Name: { Value: "test" } } as T],
+				results: [
+					{
+						Uri: 1,
+						NameString: "test",
+						Name: { Value: "test" },
+						Icon: { Id: "test", FileType: "" },
+					} as T,
+				],
 				hasMoreItems: hasMore,
 			});
 		});
@@ -159,7 +166,7 @@ describe("Trim object search list", function() {
 			.at(0)
 			.simulate("scroll", { currentTarget: { scrollTop: 10 } });
 
-		wrapper.instance()._onRenderCell({}, 0);
+		wrapper.instance()._onRenderCell({ Icon: {} }, 0);
 
 		expect.assertions(2);
 		expect(testStart).toBe(2);
@@ -178,8 +185,8 @@ describe("Trim object search list", function() {
 			.at(0)
 			.simulate("scroll", { currentTarget: { scrollTop: 10 } });
 
-		wrapper.instance()._onRenderCell({}, 0);
-		wrapper.instance()._onRenderCell({}, 1);
+		wrapper.instance()._onRenderCell({ Icon: {} }, 0);
+		wrapper.instance()._onRenderCell({ Icon: {} }, 1);
 
 		expect.assertions(2);
 
@@ -293,9 +300,7 @@ describe("Trim object search list", function() {
 
 				expect.assertions(3);
 
-				expect(wrapper.state("ancestors")).toEqual([
-					{ Uri: 1, NameString: "test", Name: { Value: "test" } },
-				]);
+				expect(wrapper.state("ancestors")[0].Uri).toEqual(1);
 
 				const breadcrumb = wrapper.find(Breadcrumb);
 
