@@ -287,27 +287,36 @@ export class TrimObjectSearchList extends React.Component<
 	};
 
 	private _onRenderCell = (
-		item: any,
+		item: ITrimMainObject,
 		index: number | undefined,
 		isScrolling: boolean
 	): JSX.Element => {
-
 		if (
 			this.state.scrollDirection === "down" &&
 			index! + 1 === this.state.items.length
 		) {
 			this.doSearch(this.state.items.length + 1);
 		}
+
+		let icon = "unknownExt";
+		if (item.Icon) {
+			if (item.Icon.Id && item.Icon.Id !== "Unknown") {
+				icon = item.Icon.Id;
+			} else if (item.Icon.FileType) {
+				icon = item.Icon.FileType;
+			}
+		}
 		return (
 			<div className="trim-list-row" data-trim-uri={item.Uri}>
 				<div className="trim-list-row-label">
-					/* <div>
-						<img
-							src={`/assets/webIcons/${item.Icon.FileType ||
-								item.Icon.Id}_x16.png`}
-						/>
+					<div>
+						<img src={`/assets/webIcons/${icon}_x16.png`} />
 					</div>
-					<div>{item.NameString}</div> */
+					<div>
+						{item.ToolTip
+							? `${item.ToolTip} (${item.NameString})`
+							: item.NameString}
+					</div>
 				</div>
 				{item.PossiblyHasSubordinates && (
 					<Icon iconName="NavigateForward" className="trim-find-children" />

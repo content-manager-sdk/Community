@@ -68,6 +68,7 @@ export interface ITrimMainObject {
 	NameString?: string;
 	CommandDefs?: [];
 	PossiblyHasSubordinates?: boolean;
+	ToolTip?: string;
 }
 
 export interface ITrimField {
