@@ -26,6 +26,7 @@ describe("Trim object search list", function() {
 	let testObject: ITrimMainObject;
 	let hasMore = true;
 	let includeAlternateWhenShowingFolderContents = false;
+	let testSortBy = "";
 
 	beforeEach(() => {
 		testPurpose = 0;
@@ -52,6 +53,7 @@ describe("Trim object search list", function() {
 				includeAlternateWhenShowingFolderContents={
 					includeAlternateWhenShowingFolderContents
 				}
+				contentsInReverseDateOrder={true}
 			/>
 		);
 	};
@@ -67,6 +69,7 @@ describe("Trim object search list", function() {
 		testTrimType = options.trimType;
 		testQ = options.q;
 		testStart = options.start!;
+		testSortBy = options.sortBy!;
 
 		return new Promise(function(resolve) {
 			resolve({
@@ -125,6 +128,7 @@ describe("Trim object search list", function() {
 		expect(testPurpose).toBe(5);
 		expect(testPurposeExtra).toBe(789);
 		expect(testQ).toBe("all");
+		expect(testSortBy).toBeFalsy();
 	});
 
 	it("sends the correct search query from short cuts", () => {
@@ -135,6 +139,7 @@ describe("Trim object search list", function() {
 		shortCut.at(0).simulate("click");
 
 		expect(testQ).toBe("recMyContainers");
+		expect(testSortBy).toBeFalsy();
 	});
 
 	it("clears the list when a new search run", () => {
@@ -218,7 +223,11 @@ describe("Trim object search list", function() {
 	});
 
 	const getWrapper = function(
-		spec = { trimType: BaseObjectTypes.Record, includeAlt: false }
+		spec = {
+			trimType: BaseObjectTypes.Record,
+			includeAlt: false,
+			contentsInReverseDateOrder: false,
+		}
 	) {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
@@ -231,6 +240,7 @@ describe("Trim object search list", function() {
 					testObject = trimObject!;
 				}}
 				includeAlternateWhenShowingFolderContents={spec.includeAlt}
+				contentsInReverseDateOrder={spec.contentsInReverseDateOrder}
 			/>
 		);
 	};
@@ -276,10 +286,16 @@ describe("Trim object search list", function() {
 			expected: "locMembers:1",
 			trimType: BaseObjectTypes.Location,
 		},
-	].forEach((spec) => {
+		{
+			includeAlt: false,
+			expected: "recContainer:1",
+			trimType: BaseObjectTypes.Record,
+		},
+	].forEach((s) => {
 		it(`search event fires when navigate clicked ${
-			spec.includeAlt
+			s.includeAlt
 		}`, async (done) => {
+			const spec = { ...s, contentsInReverseDateOrder: false };
 			const wrapper = getWrapper(spec);
 
 			setTimeout(() => {
@@ -291,76 +307,87 @@ describe("Trim object search list", function() {
 				done();
 			});
 		});
+	});
 
-		it(`sets the ancestor when a container expanded`, async (done) => {
-			const wrapper = getWrapper();
-
-			setTimeout(() => {
-				clickNavigateOnListItem(wrapper);
-
-				expect.assertions(3);
-
-				expect(wrapper.state("ancestors")[0].Uri).toEqual(1);
-
-				const breadcrumb = wrapper.find(Breadcrumb);
-
-				expect(breadcrumb.length).toBe(1);
-				expect(breadcrumb.props().items.length).toBe(1);
-				done();
-			});
+	it(`searches by registered date in reverse order`, async (done) => {
+		const wrapper = getWrapper({
+			includeAlt: false,
+			trimType: BaseObjectTypes.Record,
+			contentsInReverseDateOrder: true,
 		});
 
-		it(`does a new search when breadcrumb clicked`, async (done) => {
-			const wrapper = getWrapper();
-			wrapper.setState({
-				ancestors: [{ Uri: 2, NameString: "test" }],
-				items: [
-					{ Uri: 1, NameString: "test" },
-					{ Uri: 2, NameString: "test 2" },
-				],
-			});
+		setTimeout(() => {
+			clickNavigateOnListItem(wrapper);
 
-			setTimeout(() => {
-				testQ = "";
+			expect.assertions(1);
 
-				expect.assertions(1);
+			expect(testSortBy).toBe("recRegisteredOn-");
+			done();
+		});
+	});
 
-				const breadcrumb = wrapper.find(Breadcrumb);
-				breadcrumb
-					.props()
-					.items[0].onClick({ preventDefault: function() {} }, { key: "2" });
+	it(`sets the ancestor when a container expanded`, async (done) => {
+		const wrapper = getWrapper();
 
-				expect(testQ).toEqual("recContainer:2");
-				done();
-			});
+		setTimeout(() => {
+			clickNavigateOnListItem(wrapper);
+
+			expect.assertions(3);
+
+			expect(wrapper.state("ancestors")[0].Uri).toEqual(1);
+
+			const breadcrumb = wrapper.find(Breadcrumb);
+
+			expect(breadcrumb.length).toBe(1);
+			expect(breadcrumb.props().items.length).toBe(1);
+			done();
+		});
+	});
+
+	it(`does a new search when breadcrumb clicked`, async (done) => {
+		const wrapper = getWrapper();
+		wrapper.setState({
+			ancestors: [{ Uri: 2, NameString: "test" }],
+			items: [{ Uri: 1, NameString: "test" }, { Uri: 2, NameString: "test 2" }],
 		});
 
-		it(`remove child from breadcrumb when parent clicked`, async (done) => {
-			const wrapper = getWrapper();
-			wrapper.setState({
-				ancestors: [
-					{ Uri: 1, NameString: "test" },
-					{ Uri: 2, NameString: "test 2" },
-				],
-				items: [
-					{ Uri: 1, NameString: "test" },
-					{ Uri: 2, NameString: "test 2" },
-				],
-			});
+		setTimeout(() => {
+			testQ = "";
 
-			setTimeout(() => {
-				expect.assertions(1);
+			expect.assertions(1);
 
-				const breadcrumb = wrapper.find(Breadcrumb);
-				breadcrumb
-					.props()
-					.items[0].onClick({ preventDefault: function() {} }, { key: "1" });
+			const breadcrumb = wrapper.find(Breadcrumb);
+			breadcrumb
+				.props()
+				.items[0].onClick({ preventDefault: function() {} }, { key: "2" });
 
-				expect(wrapper.state("ancestors")).toEqual([
-					{ Uri: 1, NameString: "test" },
-				]);
-				done();
-			});
+			expect(testQ).toEqual("recContainer:2");
+			done();
+		});
+	});
+
+	it(`remove child from breadcrumb when parent clicked`, async (done) => {
+		const wrapper = getWrapper();
+		wrapper.setState({
+			ancestors: [
+				{ Uri: 1, NameString: "test" },
+				{ Uri: 2, NameString: "test 2" },
+			],
+			items: [{ Uri: 1, NameString: "test" }, { Uri: 2, NameString: "test 2" }],
+		});
+
+		setTimeout(() => {
+			expect.assertions(1);
+
+			const breadcrumb = wrapper.find(Breadcrumb);
+			breadcrumb
+				.props()
+				.items[0].onClick({ preventDefault: function() {} }, { key: "1" });
+
+			expect(wrapper.state("ancestors")).toEqual([
+				{ Uri: 1, NameString: "test" },
+			]);
+			done();
 		});
 	});
 

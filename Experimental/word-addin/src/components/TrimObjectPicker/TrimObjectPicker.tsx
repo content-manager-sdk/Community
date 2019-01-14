@@ -25,6 +25,7 @@ export interface IObjectPickerState {
 	searchStartPoint: string;
 	includeAlternateWhenShowingFolderContents: boolean;
 	textFieldText: string;
+	contentsInReverseDateOrder: boolean;
 }
 
 export class TrimObjectPicker
@@ -77,6 +78,7 @@ export class TrimObjectPicker
 				searchStartPoint: startSearch,
 				includeAlternateWhenShowingFolderContents:
 					data.IncludeAlternateWhenShowingFolderContents,
+				contentsInReverseDateOrder: data.ContentsInReverseDateOrder,
 			});
 		});
 		//	}
@@ -134,6 +136,9 @@ export class TrimObjectPicker
 									purposeExtra={purposeExtra}
 									includeAlternateWhenShowingFolderContents={
 										this.state.includeAlternateWhenShowingFolderContents
+									}
+									contentsInReverseDateOrder={
+										this.state.contentsInReverseDateOrder
 									}
 								/>
 							</FocusTrapZone>
@@ -263,6 +268,7 @@ export class TrimObjectPicker
 			searchStartPoint: "",
 			includeAlternateWhenShowingFolderContents: false,
 			textFieldText: "",
+			contentsInReverseDateOrder: false,
 		};
 	}
 }

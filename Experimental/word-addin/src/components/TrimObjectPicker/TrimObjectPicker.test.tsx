@@ -25,6 +25,7 @@ describe("TrimObjectPicker", function() {
 	let _searchStartPointRecord = "";
 	let _searchStartPointLocation = "";
 	let _searchStartPointDefault = "";
+	let _contentsInReverseDateOrder = false;
 	let trimConnector = new TrimConnector();
 
 	trimConnector.credentialsResolver = (callback) => {};
@@ -48,6 +49,7 @@ describe("TrimObjectPicker", function() {
 				StartPointRecordDefault: _searchStartPointRecord,
 				StartPointDefault: _searchStartPointDefault,
 				IncludeAlternateWhenShowingFolderContents: true,
+				ContentsInReverseDateOrder: _contentsInReverseDateOrder,
 			});
 		});
 	};
@@ -155,12 +157,14 @@ describe("TrimObjectPicker", function() {
 			searchStartPointRecord: string = "FavRecords",
 			searchStartPointDefault = "Search",
 			propertyName = "RecordContainer",
-			trimType = BaseObjectTypes.Record
+			trimType = BaseObjectTypes.Record,
+			contentsInReverseDateOrder = false
 		) => {
 			startPoint = searchStartPointContainer || startPoint;
 			_searchStartPointLocation = searchStartPointLocation;
 			_searchStartPointRecord = searchStartPointRecord;
 			_searchStartPointDefault = searchStartPointDefault;
+			_contentsInReverseDateOrder = contentsInReverseDateOrder;
 			const wrapper = shallow<TrimObjectPicker>(
 				<TrimObjectPicker
 					label="test"
@@ -459,6 +463,26 @@ describe("TrimObjectPicker", function() {
 					expect(list.props().q).toEqual(Expected);
 					done();
 				});
+			});
+		});
+
+		it(`passes the content sort to the list`, async (done) => {
+			expect.assertions(1);
+			const wrapper2 = makeWrapper(
+				"",
+				"",
+				"Templates",
+				"",
+				"RecordRelatedRecord",
+				BaseObjectTypes.Record,
+				true
+			);
+
+			setTimeout(() => {
+				const list = wrapper2.find(TrimObjectSearchList);
+
+				expect(list.props().contentsInReverseDateOrder).toBeTruthy();
+				done();
 			});
 		});
 	});

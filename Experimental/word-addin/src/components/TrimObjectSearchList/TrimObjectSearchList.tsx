@@ -72,7 +72,7 @@ export class TrimObjectSearchList extends React.Component<
 	private _newQuery = "";
 	private _searchRunning = false;
 	private _hasMore = true;
-	private doSearch(start: number = 1): void {
+	private doSearch(start: number = 1, sortBy: string = ""): void {
 		if (start < 2) {
 			this._hasMore = true;
 		}
@@ -90,6 +90,7 @@ export class TrimObjectSearchList extends React.Component<
 					purpose: purpose || 0,
 					purposeExtra: purposeExtra || 0,
 					start,
+					sortBy,
 				})
 				.then((response: ISearchResults<ITrimMainObject>) => {
 					this._hasMore = response.hasMoreItems;
@@ -158,7 +159,16 @@ export class TrimObjectSearchList extends React.Component<
 			this.setState({ ancestors: [] });
 		}
 		this._newQuery = query;
-		this.doSearch();
+
+		if (
+			containerSearch &&
+			this.props.contentsInReverseDateOrder &&
+			this.props.trimType == BaseObjectTypes.Record
+		) {
+			this.doSearch(1, "recRegisteredOn-");
+		} else {
+			this.doSearch();
+		}
 	};
 
 	private _onBreadcrumbItemClicked = (

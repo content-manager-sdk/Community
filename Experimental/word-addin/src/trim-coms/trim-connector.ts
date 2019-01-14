@@ -27,6 +27,7 @@ export interface ISearchParamaters {
 	purpose: number;
 	purposeExtra?: number;
 	start?: number;
+	sortBy?: string;
 }
 
 interface IOptionsInterface {
@@ -111,6 +112,7 @@ export interface ISearchOptions {
 	StartPointRecordDefault: string;
 	StartPointDefault: string;
 	IncludeAlternateWhenShowingFolderContents: boolean;
+	ContentsInReverseDateOrder: boolean;
 }
 
 export interface ITrimConnector {
@@ -149,20 +151,18 @@ export class TrimConnector implements ITrimConnector {
 			return this.makeRequest(
 				{ path: "UserOptions/Search", method: "get" },
 				(data: any) => {
-					this._searchClauseCache = {
-						StartPointForContainers:
-							data.UserOptions.SearchUserOptionsStartPointForContainers.Value,
-						StartPointForLocations:
-							data.UserOptions.SearchUserOptionsStartPointForLocations.Value,
-						StartPointRecordDefault:
-							data.UserOptions.SearchUserOptionsStartPointRecordDefault.Value,
-						StartPointDefault:
-							data.UserOptions.SearchUserOptionsStartPointDefault.Value,
-						IncludeAlternateWhenShowingFolderContents:
-							data.UserOptions
-								.SearchUserOptionsIncludeAlternateWhenShowingFolderContents
-								.Value,
-					};
+					const prefix = "SearchUserOptions";
+					this._searchClauseCache = {};
+					for (var key in data.UserOptions) {
+						if (key.startsWith(prefix)) {
+							this._searchClauseCache[key.substring(prefix.length)] =
+								data.UserOptions[key].Value;
+						} else {
+							this._searchClauseCache[key as string] =
+								data.UserOptions[key].Value;
+						}
+					}
+
 					return this._searchClauseCache;
 				}
 			);
@@ -319,7 +319,7 @@ export class TrimConnector implements ITrimConnector {
 	public search<T extends ITrimMainObject>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<T>> {
-		const { q, purpose, trimType, start, purposeExtra } = options;
+		const { q, purpose, trimType, start, purposeExtra, sortBy } = options;
 
 		const params = {
 			pageSize: 20,
@@ -328,6 +328,10 @@ export class TrimConnector implements ITrimConnector {
 			q,
 			start,
 		};
+
+		if (sortBy) {
+			params["sortBy"] = sortBy;
+		}
 
 		if (purposeExtra) {
 			params["purposeExtra"] = purposeExtra;

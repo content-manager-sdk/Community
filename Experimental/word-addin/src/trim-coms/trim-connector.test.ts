@@ -5,6 +5,7 @@ import {
 	SERVICEAPI_BASE_URI,
 	TrimConnector,
 	IClassification,
+	ITrimMainObject,
 } from "./trim-connector";
 import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
@@ -56,6 +57,32 @@ describe("Test fetch from TRIM", () => {
 			.then((data) => {
 				expect(props).toEqual("NameString,PossiblyHasSubordinates,Icon");
 				expect(data.results[0].NameString).toBe("Document");
+			});
+	});
+
+	it("passes sort to search", () => {
+		let sortBy: string = "";
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			sortBy = config.params.sortBy;
+
+			return [
+				200,
+				{
+					Results: [{ NameString: "Rec_1", Uri: 1 }],
+				},
+			];
+		});
+
+		expect.assertions(1);
+		return trimConnector
+			.search<ITrimMainObject>({
+				trimType: BaseObjectTypes.Record,
+				q: "all",
+				purpose: 3,
+				sortBy: "registeredOn",
+			})
+			.then(() => {
+				expect(sortBy).toEqual("registeredOn");
 			});
 	});
 
@@ -543,15 +570,20 @@ describe("Test fetch from TRIM", () => {
 									Value: false,
 									StringValue: "No",
 								},
+								SearchUserOptionsContentsInReverseDateOrder: {
+									Value: true,
+									StringValue: "Yes",
+								},
 							},
 						},
 					];
 				});
-			expect.assertions(2);
+			expect.assertions(3);
 
 			const data = await trimConnector.getSearchOptions();
 			expect(data.StartPointForContainers).toEqual("Containers");
 			expect(data.StartPointForLocations).toEqual("Favorites");
+			expect(data.ContentsInReverseDateOrder).toBe(true);
 		});
 	});
 });
