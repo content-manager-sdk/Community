@@ -322,7 +322,7 @@ export class TrimObjectSearchList extends React.Component<
 					<div>
 						<img src={`/assets/webIcons/${icon}_x16.png`} />
 					</div>
-					<div>
+					<div className="row-text">
 						{item.ToolTip
 							? `${item.ToolTip} (${item.NameString})`
 							: item.NameString}
