@@ -115,7 +115,10 @@ namespace HP.HPTRIM.SDK.Samples
 
                         for (int counter = _pool.Count; counter >= newPoolSize; counter--)
                         {
-                            _pool[counter - 1].Dirty = true;
+                            if (!_pool[counter - 1].IsLocked)
+                            {
+                                _pool[counter - 1].Dirty = true;
+                            }
                         }
                     }
                 }
