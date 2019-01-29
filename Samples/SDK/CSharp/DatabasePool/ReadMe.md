@@ -1,4 +1,7 @@
-﻿# Database Pool
+﻿# Note
+This database pool is not required for CM 9.2 and later as database pooling is built into the SDK Database connection.
+
+# Database Pool
 Instantiating a Database object can take several hundred milliseconds.  In many applications this is inconsequential as the Database is connected once and then kept open for the life of the application.  The stateless nature of a web service makes this impractical meaning that to an overhead of up to half a second can be added to each request simply to open a database connection.
 The database pool keeps a list of connected database objects in memory for a user so that if they have connected previously we can re-use an existing connection.
 
