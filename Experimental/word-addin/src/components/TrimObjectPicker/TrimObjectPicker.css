@@ -8,3 +8,6 @@
 	top: 7px;
 	cursor: pointer;
 }
+.trim-advanced-search .ms-Button-icon {
+	height: 24px;
+}

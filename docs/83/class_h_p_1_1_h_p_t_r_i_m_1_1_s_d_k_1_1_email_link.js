@@ -1,0 +1,28 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link =
+[
+    [ "EmailLink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a56a9388e942a754248d679d5c278e7cf", null ],
+    [ "EmailLink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#acadfb366e4c6cc172f9d2ee19ef1d1e0", null ],
+    [ "EmailLink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ac79b85491df6827b4d00eade8457b713", null ],
+    [ "EmailLink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a87299fe59fd83defafe425d88e7cbcd2", null ],
+    [ "EmailLink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a36aae79fb1c88603803cb7103176482c", null ],
+    [ "EmailLink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a9828cffc3b2c51502575801c52f77989", null ],
+    [ "SetNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a29c2f7cc344376b99a298a465b6c227d", null ],
+    [ "SetSyncState", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#af9f61a14fdcfe23a6a82a7c2aa65a557", null ],
+    [ "CanAddToNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ae65e0eeaa37418a996b845b3588d6add", null ],
+    [ "CanModifyExistingNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a117bddd26a2b65da2617af3063a3c72a", null ],
+    [ "Description", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a82b4c83c777dd968ef1f7f30311581a8", null ],
+    [ "DisplayName", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a352b7ad6b0ba0e6a30aace1823b479a5", null ],
+    [ "LinkedClassification", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a6fee9392911d10b47af65645058fa130", null ],
+    [ "LinkedObjectType", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ad7d00ec1a589d3e5929a019ff72eeb2f", null ],
+    [ "LinkedRecord", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ad886535e65a7555f21f119677f97a360", null ],
+    [ "MailFolderId", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#aca972571e4d6e7ef08a9c88052de1807", null ],
+    [ "Matter", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a741287e202074dd04ef3cb56cdc11749", null ],
+    [ "Notes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a5b9aee0bbbdb5362c75a9c78d30e04a4", null ],
+    [ "PermanentDelete", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ad66134d04b690c769f4d1f9dcdf7aaa4", null ],
+    [ "RecordType", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#abf79c0c4bbbeee5121a6f9c84497981d", null ],
+    [ "RetainInMailClient", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ad7c48db8c0ed62d9763d12c3b4594c4b", null ],
+    [ "RetentionPeriod", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#aa1af72f90c3e5658fa526b8b1c7688a4", null ],
+    [ "SubFolderRecordType", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#aacfd56646971faa5f0600cbf3abc5e1e", null ],
+    [ "SyncState", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#ac4795b9663f7fb02401febaf8afa94e4", null ],
+    [ "User", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_email_link.html#a7edca884dc4cee02755cca7aec9f5883", null ]
+];

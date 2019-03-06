@@ -39,7 +39,7 @@ export class TrimObjectSearchList extends React.Component<
 
 	componentDidUpdate(prevProps: ITrimObjectSearchListProps) {
 		if (prevProps.q !== this.props.q) {
-			this.doSearch();
+			this.doSearch(1, ``, true);
 		}
 	}
 
@@ -72,21 +72,40 @@ export class TrimObjectSearchList extends React.Component<
 	private _newQuery = "";
 	private _searchRunning = false;
 	private _hasMore = true;
-	private doSearch(start: number = 1, sortBy: string = ""): void {
+	private doSearch(
+		start: number = 1,
+		sortBy: string = "",
+		userSearch = false
+	): void {
 		if (start < 2) {
 			this._hasMore = true;
 		}
+
 		if (this._searchRunning === true || this._hasMore === false) {
 			return;
 		}
+
 		this._searchRunning = true;
 		const { trimConnector, trimType, q, purpose, purposeExtra } = this.props;
 
-		if (trimConnector && trimType) {
+		let query = this._newQuery;
+		if (q && !query && userSearch && !this.props.advancedSearch) {
+			query = trimConnector!.makeFriendlySearchQuery(trimType!, q!);
+			console.log("a");
+			console.log(query);
+		} else if (!this._newQuery) {
+			query = q!;
+			console.log("b");
+			console.log(query);
+		}
+
+		this._newQuery = ``;
+
+		if (query && trimConnector && trimType) {
 			trimConnector!
 				.search<ISearchResults<ITrimMainObject>>({
 					trimType: trimType,
-					q: this._newQuery || q || "unkAll",
+					q: query,
 					purpose: purpose || 0,
 					purposeExtra: purposeExtra || 0,
 					start,
@@ -106,6 +125,8 @@ export class TrimObjectSearchList extends React.Component<
 				.catch(() => {
 					this._searchRunning = false;
 				});
+		} else {
+			this._searchRunning = false;
 		}
 	}
 

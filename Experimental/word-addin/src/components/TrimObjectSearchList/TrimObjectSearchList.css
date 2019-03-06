@@ -10,7 +10,7 @@
 } */
 
 .trim-search-list-outer {
-	height: 260px;
+	height: 160px;
 	overflow: hidden;
 	display: flex;
 }
@@ -39,7 +39,8 @@
 .trim-search-shortcuts {
 	position: relative;
 	display: block;
-	width: 40px;
+	width: 44px;
+	padding-right: 4px;
 }
 
 .trim-search-shortcuts ul {

@@ -118,6 +118,10 @@ export class WordConnector implements IWordConnector {
 			// 	reject({ message: "Identity not supported." });
 			// } else {
 
+			if (!Office.context || !Office.context["auth"]) {
+				resolve("me");
+			}
+
 			(Office.context["auth"] as any).getAccessTokenAsync(
 				{ forceConsent: false },
 				(result: any) => {

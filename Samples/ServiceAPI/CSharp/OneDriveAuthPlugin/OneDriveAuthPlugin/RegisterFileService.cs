@@ -60,6 +60,12 @@ namespace OneDriveAuthPlugin
 				return session.RequestTokenSecret;
 			}
 
+			if (this.Cache.Get<string>("tk") != null)
+			{
+				return this.Cache.Get<string>("tk");
+			}
+
+		
 
 			var bootstrapContext = ClaimsPrincipal.Current.Identities.First().BootstrapContext as BootstrapContext;
 
@@ -81,7 +87,12 @@ namespace OneDriveAuthPlugin
 				// matching access token. Only if there isn't one, does it initiate the "on behalf of" flow
 				// with the Azure AD V2 endpoint.
 				result = await cca.AcquireTokenOnBehalfOfAsync(graphScopes, userAssertion, "https://login.microsoftonline.com/common/oauth2/v2.0");
+				if (session != null)
+				{
+					base.Cache.Add<string>("tk", result.AccessToken);
+				}
 				return result.AccessToken;
+
 
 			}
 			catch (MsalServiceException e)

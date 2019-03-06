@@ -39,14 +39,14 @@ describe("Trim object search list", function() {
 
 		wrapper = makeWrapper();
 	});
-	const makeWrapper = (): any => {
+	const makeWrapper = (query = `all`, advancedSearch = false): any => {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				purpose={5}
 				purposeExtra={789}
-				q="all"
+				q={query}
 				onTrimObjectSelected={(trimObject) => {
 					testObject = trimObject!;
 				}}
@@ -54,6 +54,7 @@ describe("Trim object search list", function() {
 					includeAlternateWhenShowingFolderContents
 				}
 				contentsInReverseDateOrder={true}
+				advancedSearch={advancedSearch}
 			/>
 		);
 	};
@@ -132,7 +133,7 @@ describe("Trim object search list", function() {
 	});
 
 	it("sends the correct search query from short cuts", () => {
-		const shortCut = wrapper.find("li");
+		const shortCut = wrapper.find("div.trim-search-shortcuts li");
 
 		expect(shortCut.at(0)).toBeTruthy();
 
@@ -407,5 +408,17 @@ describe("Trim object search list", function() {
 				<div>My Containers tooltip</div>
 			</div>
 		);
+	});
+
+	it(`uses the advanced search`, () => {
+		const list = makeWrapper(`test`, true);
+
+		const newProps = { ...list.props(), q: `test2` };
+
+		setTimeout(() => {
+			list.instance().componentDidUpdate(newProps);
+
+			expect(testQ).toEqual(`recAnyWord: test`);
+		});
 	});
 });

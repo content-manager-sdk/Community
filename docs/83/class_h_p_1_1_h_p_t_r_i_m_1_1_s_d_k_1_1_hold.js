@@ -1,0 +1,27 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold =
+[
+    [ "Hold", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a432452dfa55c84b44515e582c2e99b80", null ],
+    [ "Hold", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a4c6cadafc7077e14b663a9dea81e7a4b", null ],
+    [ "Hold", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a4bf424828649ae4d7b58f2cf21b624ef", null ],
+    [ "AddRecords", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#ab1952a9cab22fc2f3faf48d0d7b15e9b", null ],
+    [ "GetFieldValue", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#ac4dda4926dae9a0d52b60a72e3015e54", null ],
+    [ "GetFieldValueAsString", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a70185bc8e18a6d0eefe7c1703261d036", null ],
+    [ "RemoveAllRecords", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a33365e32bd561ef78ef87c43af2916a1", null ],
+    [ "RemoveRecords", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a5af2a326bcf51f953b024319d2e5715e", null ],
+    [ "SetActiveDateRange", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a4cfc26c6d22cf0a04140aed8496ebc0c", null ],
+    [ "SetFieldValue", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a9c3d24e56e395fad70689a378b6883dc", null ],
+    [ "SetNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a819249de1be2f454aa6ff3eb44ea54ab", null ],
+    [ "ActiveDateRangeDescription", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a234958b7ad54464fa5d9bc996d3d6b84", null ],
+    [ "AffectsDispositionOnly", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a15ea6b962eb51f68dc56718e05e44790", null ],
+    [ "CanAddToNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a859fce537c8d6e259e8d605e9e44e0d4", null ],
+    [ "CanModifyExistingNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a99345bd3035b3aa3f4d284eb0d15d6b2", null ],
+    [ "Contact", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#ab240bf8850b17298517d0a164c126768", null ],
+    [ "DateActiveFrom", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a44d8537d38ee87716b517e2826569ca0", null ],
+    [ "DateActiveTo", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a94500fab4f5381ff1c69ab150fff4954", null ],
+    [ "ExternalId", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a1037d023d0cc8624208b802bcdf06c7f", null ],
+    [ "IsActive", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#ae2dd4a109517f08ebf4f71c8a3dd2e93", null ],
+    [ "Name", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a89dff27e157389723162962799b7a959", null ],
+    [ "Notes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a2f1fef83b2bb24868d147351191332d8", null ],
+    [ "SearchCriteria", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a8de1ac1f8eb367cfeab3259091d211f8", null ],
+    [ "SearchLastRunOn", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hold.html#a3508a19aa2247a67b7eb9273ebe747db", null ]
+];

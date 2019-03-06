@@ -1,0 +1,4 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_s_w_i_g_t_y_p_e__p___api_trim_enterprise_dataset_ptr =
+[
+    [ "SWIGTYPE_p_ApiTrimEnterpriseDatasetPtr", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_s_w_i_g_t_y_p_e__p___api_trim_enterprise_dataset_ptr.html#a5bec8ece9b9e13a9174bae8f5600bcd7", null ]
+];

@@ -1,0 +1,28 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def =
+[
+    [ "PropertyOrFieldDef", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a9d8c954b51d563d0c5b4cdded79336e4", null ],
+    [ "PropertyOrFieldDef", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a670cb1c9a8d3c1c2a9114bdca567e1b6", null ],
+    [ "PropertyOrFieldDef", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a65b1d069e2c4ad479545625301445b3d", null ],
+    [ "PropertyOrFieldDef", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a7da8fdf003d29f66012dcb77e2119f43", null ],
+    [ "PropertyOrFieldDef", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a45ba0da05a96c8564713eea70256e386", null ],
+    [ "GetIcon", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#ab2c2930b66a545e18d6504a314b1bf35", null ],
+    [ "IsMandatory", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#ac651e53da889d592c09b7d14830e78df", null ],
+    [ "BestFitColumn", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a3be6d69f3ee7b6a5cfdf7e64b4fa3c6f", null ],
+    [ "Caption", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a84c5ef4c357de5300e41c492c68668d4", null ],
+    [ "ColumnWidth", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a996c6350beec412b91a3ba20e1e98e23", null ],
+    [ "DefaultColumnCharacters", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a23e1afe89646e02f8cd21482e39a207a", null ],
+    [ "Field", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#aabd798eef03e3a4854a13eba5fd7f075", null ],
+    [ "FieldUri", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#ae8fd4a750d314d6cccc4b20ae5c70d96", null ],
+    [ "IconAndOrTextMode", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#aa7987c38bb60fdc86a1a57c590ad19ec", null ],
+    [ "IsAField", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a07c313e2a33cd662bc0524523e130a8f", null ],
+    [ "IsAProperty", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a813f49b0446b8c362ca7ea07bb8052c8", null ],
+    [ "IsDefaultDataGridColumn", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a6fcc479e04196a865de2b1b9fbe4781f", null ],
+    [ "IsEMailAddress", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a737dfc80f0e8839dd8b1cf358a91cd86", null ],
+    [ "IsHyperlink", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a4818f0267e06fdd634f81ee9e0af77ed", null ],
+    [ "ObjectType", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#ac4147e54317c8f88ea9c91a375be83ef", null ],
+    [ "PFFormat", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a868fe5eeb7fc3ed000574296dc9ca627", null ],
+    [ "Property", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a9d6a7b2df489559edfdfa2a3140754ac", null ],
+    [ "PropertyId", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a833c6a60f14c2e9a8dd28ccfa87f8f65", null ],
+    [ "SortMode", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#a01e1f93b318735b5e26a854a553c911f", null ],
+    [ "StringAlignment", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_or_field_def.html#af84ddcc63dd38155ca54d4294e2565cf", null ]
+];

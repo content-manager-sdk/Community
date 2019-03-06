@@ -18,6 +18,59 @@ const axios = require("axios");
 
 const mock = new MockAdapter(axios);
 
+describe("Test makeFriendlySearchQuery", () => {
+	const trimConnector = new TrimConnector();
+	trimConnector.credentialsResolver = (callback) => {
+		callback("token123");
+	};
+
+	it("shortcut for Records", () => {
+		expect.assertions(1);
+
+		let query = trimConnector.makeFriendlySearchQuery(
+			BaseObjectTypes.Record,
+			"test"
+		);
+
+		expect(query).toEqual("recAnyWord:test* OR recNumber:test*");
+	});
+
+	it("shortcut for Locations", () => {
+		expect.assertions(1);
+
+		let query = trimConnector.makeFriendlySearchQuery(
+			BaseObjectTypes.Location,
+			"test"
+		);
+
+		expect(query).toEqual(
+			"locGivenNames:test* OR locSortName:test* OR locLogin:test*"
+		);
+	});
+
+	it("shortcut for Other", () => {
+		expect.assertions(1);
+
+		let query = trimConnector.makeFriendlySearchQuery(
+			BaseObjectTypes.RecordType,
+			"test"
+		);
+
+		expect(query).toEqual("test*");
+	});
+
+	it("shortcut for Classification", () => {
+		expect.assertions(1);
+
+		let query = trimConnector.makeFriendlySearchQuery(
+			BaseObjectTypes.Classification,
+			"test"
+		);
+
+		expect(query).toEqual("plnWord:test* OR plnTitle:test*");
+	});
+});
+
 describe("Test fetch from TRIM", () => {
 	const trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {

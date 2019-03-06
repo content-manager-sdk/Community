@@ -1,0 +1,9 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator =
+[
+    [ "OriginEmailCaptureSpamRuleListEnumerator", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator.html#abe1104002c50d7159fbb6ce8a7987942", null ],
+    [ "Dispose", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator.html#a65d8a66f7b7a6c2cc6ffb8d2181549c2", null ],
+    [ "MoveNext", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator.html#a580ab6b56e6c3dac2889f1ae18ac1bcc", null ],
+    [ "Reset", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator.html#a7f9f7569fbb0323dded3a7cf62edcd70", null ],
+    [ "Current", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator.html#adb6a940dfd527f3f68198eb8fa376068", null ],
+    [ "Current", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_origin_email_capture_spam_rule_list_1_1_origin_email_capture_spam_rule_list_enumerator.html#afb00ff632a12ba50ea9a47986a406f9d", null ]
+];

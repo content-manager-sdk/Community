@@ -52,12 +52,17 @@ body {
 
 .trim-object-picker .ms-TextField-prefix {
 	background-color: white;
-	padding-left: 5px;
+	padding: 0;
 }
 
 .trim-object-pills {
 	line-height: 25px;
 }
+
+.trim-object-pills:first-child {
+	padding-left: 5px;
+}
+
 .trim-pill-container {
 	position: relative;
 	display: inline-flex;

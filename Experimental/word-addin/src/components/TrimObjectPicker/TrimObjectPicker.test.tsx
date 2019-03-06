@@ -73,7 +73,10 @@ describe("TrimObjectPicker", function() {
 	it("should not open ObjectPicker when disabled, no label", () => {
 		const wrapper = mountObjectPicker({ disabled: true });
 
-		wrapper.find("i").simulate("click");
+		wrapper
+			.find("i")
+			.last()
+			.simulate("click");
 
 		expect(wrapper.state("isObjectPickerShown")).toBe(false);
 	});
@@ -81,14 +84,20 @@ describe("TrimObjectPicker", function() {
 	it("should not open Object Picker when disabled, with label", () => {
 		const wrapper = mountObjectPicker({ disabled: true, label: "label" });
 
-		wrapper.find("i").simulate("click");
+		wrapper
+			.find("i")
+			.last()
+			.simulate("click");
 		expect(wrapper.state("isObjectPickerShown")).toBe(false);
 	});
 
 	it("should open Object Picker ", () => {
 		const wrapper = mountObjectPicker({ label: "label" });
 
-		wrapper.find("i").simulate("click");
+		wrapper
+			.find("i")
+			.last()
+			.simulate("click");
 		expect(wrapper.state("isObjectPickerShown")).toBe(true);
 	});
 
@@ -114,12 +123,18 @@ describe("TrimObjectPicker", function() {
 		});
 	});
 
-	it("should close Object Picker ", async (done) => {
+	it("should close Object Picker", async (done) => {
 		expect.assertions(1);
 		const wrapper = mountObjectPicker({ label: "label" });
 
-		wrapper.find("i").simulate("click");
-		wrapper.find("i").simulate("click");
+		wrapper
+			.find("i")
+			.last()
+			.simulate("click");
+		wrapper
+			.find("i")
+			.last()
+			.simulate("click");
 
 		setImmediate(() => {
 			expect(wrapper.find(TrimObjectPicker).state("isObjectPickerShown")).toBe(
@@ -128,6 +143,33 @@ describe("TrimObjectPicker", function() {
 
 			done();
 		});
+	});
+
+	it("should set advanced search when icon clicked", () => {
+		const wrapper = mountObjectPicker({ disabled: true, label: "label" });
+
+		wrapper
+			.find("button")
+			.first()
+			.simulate("click");
+
+		expect(wrapper.state("advancedSearch")).toBe(true);
+	});
+
+	it("should de-select advanced search when icon clicked twice", () => {
+		const wrapper = mountObjectPicker({ disabled: true, label: "label" });
+
+		wrapper
+			.find("button")
+			.first()
+			.simulate("click");
+
+		wrapper
+			.find("button")
+			.first()
+			.simulate("click");
+
+		expect(wrapper.state("advancedSearch")).toBe(false);
 	});
 
 	describe("props passed through", () => {
@@ -466,7 +508,7 @@ describe("TrimObjectPicker", function() {
 			});
 		});
 
-		it(`passes the content sort to the list`, async (done) => {
+		it(`passes the 'content sort' to the list`, async (done) => {
 			expect.assertions(1);
 			const wrapper2 = makeWrapper(
 				"",

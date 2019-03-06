@@ -16,6 +16,7 @@ import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
 import { ITrimMainObject } from "src/trim-coms/trim-connector";
 import { IconButton } from "office-ui-fabric-react/lib/Button";
+import { IconType } from "office-ui-fabric-react/lib/Icon";
 import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 
@@ -26,6 +27,7 @@ export interface IObjectPickerState {
 	includeAlternateWhenShowingFolderContents: boolean;
 	textFieldText: string;
 	contentsInReverseDateOrder: boolean;
+	advancedSearch: boolean;
 }
 
 export class TrimObjectPicker
@@ -86,7 +88,14 @@ export class TrimObjectPicker
 
 	public render(): JSX.Element {
 		const { label, disabled, trimType, purpose, purposeExtra } = this.props;
-		const { isObjectPickerShown, searchStartPoint, textFieldText } = this.state;
+		const {
+			isObjectPickerShown,
+			searchStartPoint,
+			textFieldText,
+			advancedSearch,
+			contentsInReverseDateOrder,
+			includeAlternateWhenShowingFolderContents,
+		} = this.state;
 
 		return (
 			<div>
@@ -131,15 +140,14 @@ export class TrimObjectPicker
 									onDismiss={this._listDismissed}
 									trimType={trimType}
 									onTrimObjectSelected={this._trimObjectSelected}
-									q={this.state.searchStartPoint}
+									q={searchStartPoint}
 									purpose={purpose}
 									purposeExtra={purposeExtra}
 									includeAlternateWhenShowingFolderContents={
-										this.state.includeAlternateWhenShowingFolderContents
+										includeAlternateWhenShowingFolderContents
 									}
-									contentsInReverseDateOrder={
-										this.state.contentsInReverseDateOrder
-									}
+									contentsInReverseDateOrder={contentsInReverseDateOrder}
+									advancedSearch={advancedSearch}
 								/>
 							</FocusTrapZone>
 						}
@@ -196,9 +204,9 @@ export class TrimObjectPicker
 		newText: string
 	): void => {
 		ev.stopPropagation();
-		this.setState({ textFieldText: newText });
+		this.setState({ textFieldText: newText, searchStartPoint: newText });
 
-		this.setState({ searchStartPoint: newText });
+		//	this.setState({ searchStartPoint: newText });
 		if (!this.state.isObjectPickerShown && newText.length > 2) {
 			this._onTextFieldClick();
 		}
@@ -213,24 +221,45 @@ export class TrimObjectPicker
 		props?: ITextFieldProps,
 		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
 	): JSX.Element => {
+		const { advancedSearch } = this.state;
 		return (
-			<div className="trim-object-pills">
-				{this.state.selectedItems.map((selectedItem) => {
-					return (
-						<div className="trim-pill-container" key={selectedItem.Uri}>
-							<div className="trim-pill-content">{selectedItem.NameString}</div>
-							<IconButton
-								className="ms-fontSize-sPlus"
-								iconProps={{ iconName: "Cancel" }}
-								onClick={this._removeSelectedItem}
-							/>
-						</div>
-					);
-				})}
-			</div>
+			<React.Fragment>
+				<IconButton
+					onClick={this._doAdvancedSearch}
+					className="trim-advanced-search"
+					iconProps={{
+						iconType: IconType.image,
+						imageProps: {
+							src: `/assets/${
+								advancedSearch ? "dbp_searchmethod" : "spanner"
+							}_x24.png`,
+						},
+					}}
+				/>
+				<div className="trim-object-pills">
+					{this.state.selectedItems.map((selectedItem) => {
+						return (
+							<div className="trim-pill-container" key={selectedItem.Uri}>
+								<div className="trim-pill-content">
+									{selectedItem.NameString}
+								</div>
+								<IconButton
+									className="ms-fontSize-sPlus remove-item"
+									iconProps={{ iconName: "Cancel" }}
+									onClick={this._removeSelectedItem}
+								/>
+							</div>
+						);
+					})}
+				</div>
+			</React.Fragment>
 		);
 	};
 
+	private _doAdvancedSearch = () => {
+		const { advancedSearch } = this.state;
+		this.setState({ advancedSearch: !advancedSearch });
+	};
 	private _removeSelectedItem = () => {
 		this.setState({
 			selectedItems: [],
@@ -269,6 +298,7 @@ export class TrimObjectPicker
 			includeAlternateWhenShowingFolderContents: false,
 			textFieldText: "",
 			contentsInReverseDateOrder: false,
+			advancedSearch: false,
 		};
 	}
 }

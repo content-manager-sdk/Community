@@ -1,0 +1,27 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction =
+[
+    [ "Jurisdiction", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a57d89d0af39abca510a64a5ccd8b7896", null ],
+    [ "Jurisdiction", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#abbeb948c4f65d6916d2b07fc4e65a3b8", null ],
+    [ "Jurisdiction", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#aa479a51a2847c2d0f91f752674efe062", null ],
+    [ "AddToFavorites", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a3dd1497d7a20198f911c1bb6a8826b0f", null ],
+    [ "ApplyUserLabel", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#ae2464c1942f0b31835cecdeba1044065", null ],
+    [ "ChangePositionWithinFavorites", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a9c78b92396b5ca69a6b10bd76ef4f3e2", null ],
+    [ "ChangePositionWithinUserLabel", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a9856a6ffed1454d4473c13c3be0af75d", null ],
+    [ "DetachUserLabel", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a159201bdd2c8adacd50a36749245c516", null ],
+    [ "RemoveFromFavorites", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a3dd81e6b9c79cecb0221cf9bbfd4fb2b", null ],
+    [ "SetActiveDateRange", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#ab80bb52fe63054834f7cea43751c6dfc", null ],
+    [ "SetNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#adaf6acfba2befbad1ff7b9e3ea709e70", null ],
+    [ "ActiveDateRangeDescription", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#aaeab175e94e7eb9fa3b4c840a0077d4a", null ],
+    [ "CanAddToNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a6fc151c307f8236bbbe1f778c0febeac", null ],
+    [ "CanModifyExistingNotes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#ad8bbbec0fedfa1c2dd85b117fc9f1875", null ],
+    [ "ChildMembers", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#afd5c8d5142cbbba620ad90d636bbbf90", null ],
+    [ "Comments", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a318165f7e5d4d9eae18ad52d5a13e08c", null ],
+    [ "DateActiveFrom", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#af0ad82e6c2446842f7352fdffe653b79", null ],
+    [ "DateActiveTo", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a50fc0dc9f157960d1eb03552ed5f1450", null ],
+    [ "Description", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a995e4082e354699791578dcdf0ac0b31", null ],
+    [ "IsActive", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#aac7296b4aef11feafe21583988949ce2", null ],
+    [ "JurisdictionType", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a67690e999e02a9fcb0fc3d5e6720d217", null ],
+    [ "Members", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#ab4f819c0ac28104afc8e8ac9b478f3ad", null ],
+    [ "Name", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#ac799f2e8c72f608f6ccb17d08d806c8e", null ],
+    [ "Notes", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_jurisdiction.html#a911bdc1a3d4e1e782b87f045d9c051b0", null ]
+];

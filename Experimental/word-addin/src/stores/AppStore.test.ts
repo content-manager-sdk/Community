@@ -32,6 +32,9 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string {
+		throw new Error("Method not implemented.");
+	}
 	getSearchOptions(): Promise<ISearchOptions> {
 		throw new Error("Method not implemented.");
 	}

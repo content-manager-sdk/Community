@@ -5,11 +5,18 @@ import { DefaultButton } from "office-ui-fabric-react/lib/Button";
 import { ITrimConnector, ICommandDef } from "src/trim-coms/trim-connector";
 import { IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
 import { CommandIds } from "../trim-coms/trim-command-ids";
+import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
 
 export class ExistingRecord extends React.Component<
 	{ appStore?: any; trimConnector?: ITrimConnector },
-	any
+	{ menuMessage: string }
 > {
+	constructor(props: { appStore?: any; trimConnector?: ITrimConnector }) {
+		super(props);
+
+		this.state = { menuMessage: "" };
+	}
+
 	private _onActionclickClick = (
 		evt: React.MouseEvent<HTMLElement>,
 		item: IContextualMenuItem
@@ -22,8 +29,19 @@ export class ExistingRecord extends React.Component<
 				.runAction(item.key as CommandIds, appStore!.RecordUri)
 				.then((data) => {
 					appStore.setDocumentInfo(data);
+					this.setState({
+						menuMessage: `Action completed successfuly '${item.text}'.`,
+					});
+					const me = this;
+					setTimeout(function() {
+						me._dismissMessage();
+					}, 3000);
 				});
 		}
+	};
+
+	private _dismissMessage = () => {
+		this.setState({ menuMessage: "" });
 	};
 
 	public render() {
@@ -38,6 +56,8 @@ export class ExistingRecord extends React.Component<
 				};
 			}
 		);
+
+		const { menuMessage } = this.state;
 		return (
 			<React.Fragment>
 				<DefaultButton
@@ -49,6 +69,11 @@ export class ExistingRecord extends React.Component<
 						items: menuItems,
 					}}
 				/>
+				{menuMessage && (
+					<MessageBar onDismiss={this._dismissMessage}>
+						{menuMessage}
+					</MessageBar>
+				)}
 				<DetailsView />
 			</React.Fragment>
 		);

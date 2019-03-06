@@ -138,9 +138,22 @@ export interface ITrimConnector {
 	): Promise<IObjectDetails>;
 
 	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation>;
+	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string;
 }
 
 export class TrimConnector implements ITrimConnector {
+	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string {
+		switch (trimType) {
+			case BaseObjectTypes.Record:
+				return `recAnyWord:${query}* OR recNumber:${query}*`;
+			case BaseObjectTypes.Location:
+				return `locGivenNames:${query}* OR locSortName:${query}* OR locLogin:${query}*`;
+			case BaseObjectTypes.Classification:
+				return `plnWord:${query}* OR plnTitle:${query}*`;
+			default:
+				return `${query}*`;
+		}
+	}
 	private _searchOptionsCache: ISearchOptions;
 	public getSearchOptions(): Promise<ISearchOptions> {
 		if (this._searchOptionsCache) {
@@ -327,6 +340,7 @@ export class TrimConnector implements ITrimConnector {
 			purpose,
 			q,
 			start,
+			ExcludeCount: true,
 		};
 
 		if (sortBy) {

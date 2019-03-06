@@ -26,6 +26,7 @@ export interface ITrimObjectSearchListProps
 	trimConnector?: ITrimConnector;
 	includeAlternateWhenShowingFolderContents: boolean;
 	contentsInReverseDateOrder: boolean;
+	advancedSearch?: boolean;
 
 	/**
 	 * Callback issued when search is closed
