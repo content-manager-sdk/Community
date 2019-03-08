@@ -1,4 +1,4 @@
-# Welcome to the HPECM-Community repo!
+# Welcome to the Content Manager Community repo!
 ## Welcome
 To start with this site is mostly about sample code for the .Net SDK.  It may become more than this depending on interest and time.
 
