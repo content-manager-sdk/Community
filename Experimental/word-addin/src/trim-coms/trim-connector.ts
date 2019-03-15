@@ -28,6 +28,7 @@ export interface ISearchParamaters {
 	purposeExtra?: number;
 	start?: number;
 	sortBy?: string;
+	filter?: string;
 }
 
 interface IOptionsInterface {
@@ -332,7 +333,15 @@ export class TrimConnector implements ITrimConnector {
 	public search<T extends ITrimMainObject>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<T>> {
-		const { q, purpose, trimType, start, purposeExtra, sortBy } = options;
+		const {
+			q,
+			purpose,
+			trimType,
+			start,
+			purposeExtra,
+			sortBy,
+			filter,
+		} = options;
 
 		const params = {
 			pageSize: 20,
@@ -345,6 +354,10 @@ export class TrimConnector implements ITrimConnector {
 
 		if (sortBy) {
 			params["sortBy"] = sortBy;
+		}
+
+		if (filter) {
+			params["filter"] = filter;
 		}
 
 		if (purposeExtra) {

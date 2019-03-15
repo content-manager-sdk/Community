@@ -19,6 +19,7 @@ import { IconButton } from "office-ui-fabric-react/lib/Button";
 import { IconType } from "office-ui-fabric-react/lib/Icon";
 import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { debounce } from "throttle-debounce";
 
 export interface IObjectPickerState {
 	isObjectPickerShown?: boolean;
@@ -33,6 +34,7 @@ export interface IObjectPickerState {
 export class TrimObjectPicker
 	extends React.Component<ITrimObjectPickerProps, IObjectPickerState>
 	implements ITrimObjectPicker {
+	autocompleteSearchDebounced: any;
 	public reset(): void {
 		throw new Error("Method not implemented.");
 	}
@@ -44,6 +46,8 @@ export class TrimObjectPicker
 	constructor(props: ITrimObjectPickerProps) {
 		super(props);
 		this.state = this._getDefaultState();
+
+		this.autocompleteSearchDebounced = debounce(500, this.__textChanged);
 	}
 
 	componentDidMount() {
@@ -63,12 +67,14 @@ export class TrimObjectPicker
 			RecentDocs: "recMyDocuments",
 			ClassBrowser: "unkFavorite",
 			Worktray: "recWorkTray",
+			Top: "unkTop",
 		};
 		trimConnector!.getSearchOptions().then((data) => {
 			let key =
 				{
 					[BaseObjectTypes.Record]: data.StartPointRecordDefault,
 					[BaseObjectTypes.Location]: data.StartPointForLocations,
+					[BaseObjectTypes.LookupItem]: "Top",
 				}[trimType] || data.StartPointDefault;
 
 			if (propertyName === "RecordContainer") {
@@ -76,6 +82,7 @@ export class TrimObjectPicker
 			}
 
 			const startSearch = startSearches[key] || "unkFavorite";
+
 			this.setState({
 				searchStartPoint: startSearch,
 				includeAlternateWhenShowingFolderContents:
@@ -87,7 +94,14 @@ export class TrimObjectPicker
 	}
 
 	public render(): JSX.Element {
-		const { label, disabled, trimType, purpose, purposeExtra } = this.props;
+		const {
+			label,
+			disabled,
+			trimType,
+			purpose,
+			purposeExtra,
+			filter,
+		} = this.props;
 		const {
 			isObjectPickerShown,
 			searchStartPoint,
@@ -111,7 +125,7 @@ export class TrimObjectPicker
 						componentRef={this._textField}
 						className="trim-object-picker"
 						onRenderPrefix={this._renderPrefix}
-						onChange={this._textChanged}
+						onChange={this.changeQuery}
 						value={textFieldText}
 					/>
 				</div>
@@ -143,6 +157,7 @@ export class TrimObjectPicker
 									q={searchStartPoint}
 									purpose={purpose}
 									purposeExtra={purposeExtra}
+									filter={filter}
 									includeAlternateWhenShowingFolderContents={
 										includeAlternateWhenShowingFolderContents
 									}
@@ -199,17 +214,19 @@ export class TrimObjectPicker
 		// don't need to focus the text box, if necessary the focusTrapZone will do it
 	};
 
-	private _textChanged = (
+	private changeQuery = (
 		ev: React.FormEvent<HTMLInputElement>,
 		newText: string
 	): void => {
-		ev.stopPropagation();
-		this.setState({ textFieldText: newText, searchStartPoint: newText });
+		this.autocompleteSearchDebounced(newText);
+	};
 
-		//	this.setState({ searchStartPoint: newText });
+	private __textChanged = (newText: string): void => {
+		this.setState({ textFieldText: newText, searchStartPoint: newText });
 		if (!this.state.isObjectPickerShown && newText.length > 2) {
 			this._onTextFieldClick();
 		}
+		//	this.setState({ searchStartPoint: newText });
 	};
 
 	private _onIconClick = (ev: React.MouseEvent<HTMLElement>): void => {
@@ -288,12 +305,12 @@ export class TrimObjectPicker
 		}
 	}
 
-	private _getDefaultState(
-		props: ITrimObjectPickerProps = this.props
-	): IObjectPickerState {
+	private _getDefaultState(): IObjectPickerState {
+		const { value } = this.props;
+
 		return {
 			isObjectPickerShown: false,
-			selectedItems: [],
+			selectedItems: value || [],
 			searchStartPoint: "",
 			includeAlternateWhenShowingFolderContents: false,
 			textFieldText: "",

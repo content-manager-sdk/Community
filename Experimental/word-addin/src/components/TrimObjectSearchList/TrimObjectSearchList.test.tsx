@@ -21,6 +21,7 @@ describe("Trim object search list", function() {
 	let testPurposeExtra = 0;
 	let testTrimType = BaseObjectTypes.Location;
 	let testQ = "";
+	let testFilter = "";
 	let wrapper: any;
 	let testStart = 0;
 	let testObject: ITrimMainObject;
@@ -33,6 +34,7 @@ describe("Trim object search list", function() {
 		testPurposeExtra = 0;
 		testTrimType = BaseObjectTypes.Location;
 		testQ = "";
+		testFilter = "";
 		testStart = 0;
 		testObject = { Uri: 0, NameString: "", PossiblyHasSubordinates: false };
 		hasMore = true;
@@ -47,6 +49,7 @@ describe("Trim object search list", function() {
 				purpose={5}
 				purposeExtra={789}
 				q={query}
+				filter="electronic"
 				onTrimObjectSelected={(trimObject) => {
 					testObject = trimObject!;
 				}}
@@ -69,6 +72,7 @@ describe("Trim object search list", function() {
 		testPurposeExtra = Number(options.purposeExtra);
 		testTrimType = options.trimType;
 		testQ = options.q;
+		testFilter = options.filter!;
 		testStart = options.start!;
 		testSortBy = options.sortBy!;
 
@@ -129,6 +133,7 @@ describe("Trim object search list", function() {
 		expect(testPurpose).toBe(5);
 		expect(testPurposeExtra).toBe(789);
 		expect(testQ).toBe("all");
+		expect(testFilter).toBe("electronic");
 		expect(testSortBy).toBeFalsy();
 	});
 
@@ -281,6 +286,11 @@ describe("Trim object search list", function() {
 			includeAlt: true,
 			expected: "plnParent:1",
 			trimType: BaseObjectTypes.Classification,
+		},
+		{
+			includeAlt: false,
+			expected: "lkiParent:1",
+			trimType: BaseObjectTypes.LookupItem,
 		},
 		{
 			includeAlt: true,

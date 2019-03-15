@@ -36,13 +36,13 @@
       <HintPath>..\packages\DotNetOpenAuth.Ultimate.4.3.4.13329\lib\net45-full\DotNetOpenAuth.dll</HintPath>
     </Reference>
     <Reference Include="HP.HPTRIM.SDK">
-      <HintPath>..\..\lib\HP.HPTRIM.SDK.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.SDK.dll</HintPath>
     </Reference>
     <Reference Include="HP.HPTRIM.ServiceAPI.Common">
-      <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Common.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.ServiceAPI.Common.dll</HintPath>
     </Reference>
     <Reference Include="HP.HPTRIM.ServiceAPI.Model">
-      <HintPath>..\..\lib\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Identity.Client, Version=2.5.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Identity.Client.2.5.0-preview\lib\net45\Microsoft.Identity.Client.dll</HintPath>

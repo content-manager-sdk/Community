@@ -3,8 +3,18 @@ import { observable, action } from "mobx";
 import { observer } from "mobx-react";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
+import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
+import { SpinButton } from "office-ui-fabric-react/lib/SpinButton";
 import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
-import { ITrimMainObject } from "src/trim-coms/trim-connector";
+import { ITrimMainObject } from "../trim-coms/trim-connector";
+import {
+	Pivot,
+	PivotItem,
+	PivotLinkFormat,
+	PivotLinkSize,
+} from "office-ui-fabric-react/lib/Pivot";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import { Position } from "office-ui-fabric-react/lib/utilities/positioning";
 
 export class PropertySheet extends React.Component<
 	{
@@ -27,6 +37,16 @@ export class PropertySheet extends React.Component<
 		const { onChange } = this.props;
 		if (onChange) {
 			this.formValues[propName] = trimObject.Uri;
+			onChange(this.formValues);
+		}
+	};
+
+	private _onSelectLookupItem = (propName: string) => (
+		trimObject: ITrimMainObject
+	) => {
+		const { onChange } = this.props;
+		if (onChange) {
+			this.formValues[propName] = trimObject.NameString;
 			onChange(this.formValues);
 		}
 	};
@@ -54,6 +74,96 @@ export class PropertySheet extends React.Component<
 		}
 	};
 
+	private makePageItems = (formItems: any) => {
+		return formItems.map((pageItem: any) => {
+			const commonProps = { key: pageItem.Name, label: pageItem.Caption };
+
+			if (pageItem.Format === "String") {
+				if (pageItem.LookupSetUri > 0) {
+					if (pageItem.Value) {
+						this._onSelectLookupItem(pageItem.Name)(pageItem.Value);
+					}
+					return (
+						<TrimObjectPicker
+							{...commonProps}
+							trimType={BaseObjectTypes.LookupItem}
+							propertyName={pageItem.Name}
+							filter={"lkiSet:" + pageItem.LookupSetUri}
+							onTrimObjectSelected={this._onSelectLookupItem(pageItem.Name)}
+							value={
+								pageItem.Value ? [{ Uri: 0, NameString: pageItem.Value }] : []
+							}
+						/>
+					);
+				} else {
+					if (pageItem.Value) {
+						this._onTextChange(pageItem.Name)(null, pageItem.Value);
+					}
+					return (
+						<TextField
+							{...commonProps}
+							multiline={this.isTextFieldMultiline[pageItem.Name]}
+							defaultValue={
+								pageItem.Name === "RecordTypedTitle"
+									? this.props.defaultRecordTitle
+									: pageItem.Value
+							}
+							onChange={this._onTextChange(pageItem.Name)}
+						/>
+					);
+				}
+			} else if (
+				pageItem.Format === "Number" ||
+				pageItem.Format === "BigNumber" ||
+				pageItem.Format === "Decimal"
+			) {
+				return (
+					<SpinButton
+						{...commonProps}
+						defaultValue={pageItem.Value}
+						labelPosition={Position.top}
+						step={pageItem.Format === "Decimal" ? 0.1 : 1}
+					/>
+				);
+			} else if (pageItem.Format === "Boolean") {
+				return <Checkbox {...commonProps} defaultChecked={pageItem.Value} />;
+			} else if (pageItem.Format === "Datetime") {
+				if (pageItem.Value && !pageItem.Value.IsClear) {
+					this._onSelectDate(pageItem.Name)(new Date(pageItem.Value.DateTime));
+				}
+				return (
+					<DatePicker
+						{...commonProps}
+						showMonthPickerAsOverlay={true}
+						value={
+							pageItem.Value.IsClear
+								? undefined
+								: new Date(pageItem.Value.DateTime)
+						}
+						onSelectDate={this._onSelectDate(pageItem.Name)}
+					/>
+				);
+			} else if (pageItem.Format === "Object") {
+				if (pageItem.Value) {
+					this._onSelectObject(pageItem.Name)(pageItem.Value);
+				}
+				return (
+					<TrimObjectPicker
+						{...commonProps}
+						trimType={pageItem.ObjectType}
+						propertyName={pageItem.Name}
+						purpose={pageItem.EditPurpose}
+						purposeExtra={pageItem.EditPurposeExtra}
+						value={pageItem.Value ? [pageItem.Value as ITrimMainObject] : []}
+						onTrimObjectSelected={this._onSelectObject(pageItem.Name)}
+					/>
+				);
+			} else {
+				return null;
+			}
+		});
+	};
+
 	public render() {
 		const { formDefinition } = this.props;
 
@@ -62,58 +172,25 @@ export class PropertySheet extends React.Component<
 			formDefinition.Pages &&
 			formDefinition.Pages.length > 0
 		) {
-			const form = formDefinition.Pages[0];
-			const formItems = form.PageItems || [];
-
-			const pageItems = formItems.map((pageItem: any) => {
-				const commonProps = { key: pageItem.Name, label: pageItem.Caption };
-
-				if (pageItem.Format === "String") {
-					return (
-						<TextField
-							{...commonProps}
-							multiline={this.isTextFieldMultiline[pageItem.Name]}
-							defaultValue={
-								pageItem.Name === "RecordTypedTitle"
-									? this.props.defaultRecordTitle
-									: ""
-							}
-							onChange={this._onTextChange(pageItem.Name)}
-						/>
-					);
-				}
-				if (pageItem.Format === "Datetime") {
-					return (
-						<DatePicker
-							{...commonProps}
-							showMonthPickerAsOverlay={true}
-							value={
-								pageItem.Value.IsClear
-									? undefined
-									: new Date(pageItem.Value.DateTime)
-							}
-							onSelectDate={this._onSelectDate(pageItem.Name)}
-						/>
-					);
-				} else if (pageItem.Format === "Object") {
-					return (
-						<TrimObjectPicker
-							{...commonProps}
-							trimType={pageItem.ObjectType}
-							propertyName={pageItem.Name}
-							purpose={pageItem.EditPurpose}
-							purposeExtra={pageItem.EditPurposeExtra}
-							onTrimObjectSelected={this._onSelectObject(pageItem.Name)}
-						/>
-					);
-				} else {
-					return null;
-				}
-			});
+			let pageID = 1;
 			return (
 				<div>
-					<h1 className="ms-font-l">{form.Caption}</h1>
-					{pageItems}
+					<Pivot
+						linkFormat={PivotLinkFormat.tabs}
+						linkSize={PivotLinkSize.normal}
+					>
+						{formDefinition.Pages.map((page: any) => {
+							if (page.Type === "Normal") {
+								return (
+									<PivotItem headerText={page.Caption} key={pageID++}>
+										{this.makePageItems(page.PageItems)}
+									</PivotItem>
+								);
+							} else {
+								return null;
+							}
+						})}
+					</Pivot>
 				</div>
 			);
 		} else {

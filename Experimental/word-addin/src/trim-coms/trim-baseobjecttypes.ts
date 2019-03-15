@@ -3,6 +3,7 @@ export enum BaseObjectTypes {
 	RecordType = "RecordType",
 	Location = "Location",
 	Classification = "Classification",
+	LookupItem = "LookupItem",
 }
 
 export default BaseObjectTypes;

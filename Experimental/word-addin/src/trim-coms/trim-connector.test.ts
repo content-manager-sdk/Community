@@ -87,6 +87,7 @@ describe("Test fetch from TRIM", () => {
 					purpose: 3,
 					pageSize: 20,
 					start: 1,
+					ExcludeCount: true,
 				},
 			})
 			.reply(function(config: any) {
@@ -139,6 +140,32 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("passes filter to search", () => {
+		let filter: string = "";
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			filter = config.params.filter;
+
+			return [
+				200,
+				{
+					Results: [{ NameString: "Rec_1", Uri: 1 }],
+				},
+			];
+		});
+
+		expect.assertions(1);
+		return trimConnector
+			.search<ITrimMainObject>({
+				trimType: BaseObjectTypes.Record,
+				q: "all",
+				purpose: 3,
+				filter: "electronic",
+			})
+			.then(() => {
+				expect(filter).toEqual("electronic");
+			});
+	});
+
 	it("returns success when no results found.", () => {
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {
@@ -149,6 +176,7 @@ describe("Test fetch from TRIM", () => {
 					pageSize: 20,
 					start: 1,
 					purposeExtra: 123,
+					ExcludeCount: true,
 				},
 			})
 			.reply(function(config: any) {

@@ -6,6 +6,7 @@ import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
 import { PropertySheet } from "./PropertySheet";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import { Provider } from "mobx-react";
+import { PivotItem } from "office-ui-fabric-react/lib/Pivot";
 
 describe("Property Sheet", function() {
 	it("displays nothing when form definition is null", () => {
@@ -32,14 +33,70 @@ describe("Property Sheet", function() {
 		expect(wrapper.children()).toHaveLength(0);
 	});
 
-	it("displays first page heading", () => {
-		const wrapper = shallow<PropertySheet>(
-			<PropertySheet formDefinition={{ Pages: [{ Caption: "General" }] }} />
+	it("creates pages", () => {
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				defaultRecordTitle="test title"
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+								},
+							],
+						},
+						{
+							Type: "Normal",
+							Caption: "Extra",
+
+							PageItems: [{}],
+						},
+					],
+				}}
+			/>
 		);
 
-		expect(wrapper.find("h1").exists()).toBeTruthy();
-		expect(wrapper.find("h1").text()).toEqual("General");
-		expect(wrapper.find("h1").props().className).toEqual("ms-font-l");
+		expect(wrapperWithForm.find(PivotItem).length).toEqual(2);
+	});
+
+	it("does not create special pages", () => {
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				defaultRecordTitle="test title"
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+								},
+							],
+						},
+						{
+							Type: "Notes",
+							Caption: "Notes",
+							CaptionsAbove: false,
+							HighlightMandatory: false,
+							Mandatory: false,
+							NotesStyle: 2,
+							PageItems: [],
+							ChildType: "Unknown",
+						},
+					],
+				}}
+			/>
+		);
+
+		expect(wrapperWithForm.find(PivotItem).length).toEqual(1);
 	});
 
 	it("displays a text field with label", () => {
@@ -50,6 +107,7 @@ describe("Property Sheet", function() {
 					Pages: [
 						{
 							Caption: "General",
+							Type: "Normal",
 							PageItems: [
 								{
 									Format: "String",
@@ -88,6 +146,35 @@ describe("Property Sheet", function() {
 		expect(wrapperWithForm.find(TextField).props().multiline).toBeFalsy();
 	});
 
+	it("fires the onChange event when a text field loads with a value", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+									Value: "abc",
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
+	});
+
 	it("fires the onChange event when a text field changes", () => {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
@@ -99,6 +186,7 @@ describe("Property Sheet", function() {
 					Pages: [
 						{
 							Caption: "General",
+							Type: "Normal",
 							PageItems: [
 								{
 									Format: "String",
@@ -131,14 +219,14 @@ describe("Property Sheet", function() {
 					Pages: [
 						{
 							Caption: "General",
+							Type: "Normal",
 							PageItems: [
 								{
 									Format: "Datetime",
 									Name: "RecordDateCreated",
 									Caption: "a date",
 									Value: {
-										DateTime: "0001-01-01T00:00:00.0000000+11:00",
-										IsClear: true,
+										DateTime: "2018-12-14T15:37:06.0000000+11:00",
 									},
 								},
 							],
@@ -148,8 +236,13 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		const testDate = new Date();
+		expect(onChangeForm).toEqual({
+			RecordDateCreated: new Date(
+				"2018-12-14T15:37:06.0000000+11:00"
+			).toISOString(),
+		});
 
+		const testDate = new Date();
 		wrapperWithForm
 			.find(DatePicker)
 			.props()
@@ -165,6 +258,7 @@ describe("Property Sheet", function() {
 					Pages: [
 						{
 							Caption: "General",
+							Type: "Normal",
 							PageItems: [
 								{
 									Format: "Datetime",
@@ -236,17 +330,21 @@ describe("Property Sheet", function() {
 					Pages: [
 						{
 							Caption: "General",
+							Type: "Normal",
 							PageItems: [
 								{
 									Format: "Object",
 									Name: "RecordContainer",
 									Caption: "Container",
-									Value: {
-										Uri: 1,
-									},
 									ObjectType: "Record",
 									EditPurpose: 1,
 									EditPurposeExtra: 9000000500,
+									Value: {
+										TrimType: "LookupItem",
+										NameString: "High",
+
+										Uri: 1,
+									},
 								},
 							],
 						},
@@ -267,6 +365,10 @@ describe("Property Sheet", function() {
 			expect(objectPicker.props().purposeExtra).toEqual(9000000500);
 		});
 
+		it("fires the onChange event when an object picker loads", () => {
+			expect(onChangeForm).toEqual({ RecordContainer: 1 });
+		});
+
 		it("fires the onChange event when an object picker changes", () => {
 			const testObject = { Uri: 2, NameString: "test" };
 
@@ -277,5 +379,87 @@ describe("Property Sheet", function() {
 
 			expect(onChangeForm).toEqual({ RecordContainer: testObject.Uri });
 		});
+	});
+
+	describe("LookupSet", () => {
+		let onChangeForm;
+		const wrapper = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "Something_Field",
+									Caption: "Something",
+									LookupSetUri: 9000000004,
+									ObjectType: "Unknpown",
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		it("adds a TrimObjectPicker to the property sheet", () => {
+			const objectPicker = wrapper.find(TrimObjectPicker).at(0);
+			expect.assertions(4);
+			expect(objectPicker.exists()).toBeTruthy();
+
+			expect(objectPicker.props().label).toEqual("Something");
+			expect(objectPicker.props().trimType).toEqual(BaseObjectTypes.LookupItem);
+			expect(objectPicker.props().filter).toEqual("lkiSet:9000000004");
+		});
+
+		it("fires the onChange event when an object picker changes", () => {
+			const testObject = { Uri: 2, NameString: "test" };
+
+			wrapper
+				.find(TrimObjectPicker)
+				.props()
+				.onTrimObjectSelected(testObject);
+
+			expect(onChangeForm).toEqual({ Something_Field: "test" });
+		});
+	});
+
+	it("fires the onChange event when a text field changes", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		wrapperWithForm
+			.find(TextField)
+			.props()
+			.onChange(null, "abc");
+
+		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
 	});
 });

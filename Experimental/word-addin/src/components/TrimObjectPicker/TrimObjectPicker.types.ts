@@ -30,6 +30,8 @@ export interface ITrimObjectPickerProps
 	propertyName?: string;
 	purpose?: number;
 	purposeExtra?: number;
+	filter?: string;
+	value?: ITrimMainObject[];
 
 	/** Callback for when a given trim object has been selected */
 	onTrimObjectSelected?: (item?: ITrimMainObject) => void;

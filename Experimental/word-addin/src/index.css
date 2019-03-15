@@ -96,3 +96,8 @@ body {
 .trim-pill-container button {
 	height: 25px;
 }
+
+.ms-Checkbox {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}

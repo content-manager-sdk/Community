@@ -91,6 +91,22 @@ describe("TrimObjectPicker", function() {
 		expect(wrapper.state("isObjectPickerShown")).toBe(false);
 	});
 
+	it("should set defaut value", () => {
+		const wrapper = shallow(
+			<TrimObjectPicker
+				disabled
+				label="test"
+				trimType={BaseObjectTypes.Record}
+				trimConnector={trimConnector}
+				value={[{ Uri: 1, NameString: "test" }]}
+			/>
+		);
+
+		expect(wrapper.state("selectedItems")).toEqual([
+			{ Uri: 1, NameString: "test" },
+		]);
+	});
+
 	it("should open Object Picker ", () => {
 		const wrapper = mountObjectPicker({ label: "label" });
 
@@ -109,17 +125,28 @@ describe("TrimObjectPicker", function() {
 	].forEach((spec) => {
 		it(`should open Object Picker when text entered ${spec.text} - ${
 			spec.expected
-		}`, () => {
+		}`, (done) => {
+			const spec = { text: "1", expected: false };
+
 			const wrapper = mountObjectPicker({ label: "label" });
+
 			wrapper
 				.find(TextField)
 				.find("input")
 				.simulate("change", { target: { value: spec.text } });
 
-			expect.assertions(2);
-
-			expect(wrapper.state("isObjectPickerShown")).toBe(spec.expected);
-			expect(wrapper.state("searchStartPoint")).toEqual(spec.text);
+			setTimeout(() => {
+				try {
+					expect.assertions(2);
+					//	console.log("2");
+					expect(wrapper.state("isObjectPickerShown")).toBe(spec.expected);
+					//	console.log("3");
+					expect(wrapper.state("searchStartPoint")).toEqual(spec.expected);
+					console.log("4");
+				} finally {
+					done();
+				}
+			}, 600);
 		});
 	});
 

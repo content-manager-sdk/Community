@@ -27,6 +27,7 @@ export interface ITrimObjectSearchListProps
 	includeAlternateWhenShowingFolderContents: boolean;
 	contentsInReverseDateOrder: boolean;
 	advancedSearch?: boolean;
+	filter?: string;
 
 	/**
 	 * Callback issued when search is closed
