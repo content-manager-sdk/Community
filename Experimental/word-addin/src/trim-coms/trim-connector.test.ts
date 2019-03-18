@@ -616,6 +616,42 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
+	describe("Database properties", () => {
+		it("returns Currency Symbol", async () => {
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/Database`, {
+					params: {
+						properties: "DatabaseCurrencySymbol",
+					},
+				})
+				.reply(function(config: any) {
+					return [
+						200,
+						{
+							Results: [
+								{
+									DatabaseCurrencySymbol: { Value: "$" },
+									TrimType: "Database",
+									Uri: 1,
+								},
+							],
+							PropertiesAndFields: {},
+							TotalResults: 0,
+							MinimumCount: 0,
+							Count: 0,
+							HasMoreItems: false,
+							TrimType: "Unknown",
+							ResponseStatus: {},
+						},
+					];
+				});
+			expect.assertions(1);
+
+			const data = await trimConnector.getDatabaseProperties();
+			expect(data.CurrencySymbol).toEqual("$");
+		});
+	});
+
 	describe("User Options", () => {
 		it("returns the search user options", async () => {
 			mock

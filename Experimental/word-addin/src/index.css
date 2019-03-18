@@ -101,3 +101,9 @@ body {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+.trim-number-field {
+	margin-top: 5px;
+}
+.trim-number-field > div:first-child {
+	margin-bottom: 5px;
+}

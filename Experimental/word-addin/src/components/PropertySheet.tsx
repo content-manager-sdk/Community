@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
-import { SpinButton } from "office-ui-fabric-react/lib/SpinButton";
 import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
 import { ITrimMainObject } from "../trim-coms/trim-connector";
 import {
@@ -14,8 +13,9 @@ import {
 	PivotLinkSize,
 } from "office-ui-fabric-react/lib/Pivot";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
-import { Position } from "office-ui-fabric-react/lib/utilities/positioning";
-
+import TrimNumberField, {
+	TrimNumberFieldHelpers,
+} from "./TrimNumberField/TrimNumberField";
 export class PropertySheet extends React.Component<
 	{
 		formDefinition: any;
@@ -78,7 +78,7 @@ export class PropertySheet extends React.Component<
 		return formItems.map((pageItem: any) => {
 			const commonProps = { key: pageItem.Name, label: pageItem.Caption };
 
-			if (pageItem.Format === "String") {
+			if (pageItem.Format === "String" || pageItem.Format === "Text") {
 				if (pageItem.LookupSetUri > 0) {
 					if (pageItem.Value) {
 						this._onSelectLookupItem(pageItem.Name)(pageItem.Value);
@@ -102,7 +102,9 @@ export class PropertySheet extends React.Component<
 					return (
 						<TextField
 							{...commonProps}
-							multiline={this.isTextFieldMultiline[pageItem.Name]}
+							multiline={
+								pageItem.MultiLine || this.isTextFieldMultiline[pageItem.Name]
+							}
 							defaultValue={
 								pageItem.Name === "RecordTypedTitle"
 									? this.props.defaultRecordTitle
@@ -112,17 +114,12 @@ export class PropertySheet extends React.Component<
 						/>
 					);
 				}
-			} else if (
-				pageItem.Format === "Number" ||
-				pageItem.Format === "BigNumber" ||
-				pageItem.Format === "Decimal"
-			) {
+			} else if (TrimNumberFieldHelpers.IsNumberField(pageItem.Format)) {
 				return (
-					<SpinButton
+					<TrimNumberField
+						format={pageItem.Format}
 						{...commonProps}
 						defaultValue={pageItem.Value}
-						labelPosition={Position.top}
-						step={pageItem.Format === "Decimal" ? 0.1 : 1}
 					/>
 				);
 			} else if (pageItem.Format === "Boolean") {
@@ -154,7 +151,11 @@ export class PropertySheet extends React.Component<
 						propertyName={pageItem.Name}
 						purpose={pageItem.EditPurpose}
 						purposeExtra={pageItem.EditPurposeExtra}
-						value={pageItem.Value ? [pageItem.Value as ITrimMainObject] : []}
+						value={
+							pageItem.Value && (pageItem.Value as ITrimMainObject).Uri > 0
+								? [pageItem.Value as ITrimMainObject]
+								: []
+						}
 						onTrimObjectSelected={this._onSelectObject(pageItem.Name)}
 					/>
 				);

@@ -350,7 +350,7 @@ describe("Trim object search list", function() {
 			const breadcrumb = wrapper.find(Breadcrumb);
 
 			expect(breadcrumb.length).toBe(1);
-			expect(breadcrumb.props().items.length).toBe(1);
+			expect(breadcrumb.props()["items"].length).toBe(1);
 			done();
 		});
 	});
@@ -368,10 +368,10 @@ describe("Trim object search list", function() {
 			expect.assertions(1);
 
 			const breadcrumb = wrapper.find(Breadcrumb);
-			breadcrumb
-				.props()
-				.items[0].onClick({ preventDefault: function() {} }, { key: "2" });
-
+			const items = breadcrumb.props()["items"];
+			if (items) {
+				items[0].onClick({ preventDefault: function() {} }, { key: "2" });
+			}
 			expect(testQ).toEqual("recContainer:2");
 			done();
 		});
@@ -393,7 +393,7 @@ describe("Trim object search list", function() {
 			const breadcrumb = wrapper.find(Breadcrumb);
 			breadcrumb
 				.props()
-				.items[0].onClick({ preventDefault: function() {} }, { key: "1" });
+				["items"][0].onClick({ preventDefault: function() {} }, { key: "1" });
 
 			expect(wrapper.state("ancestors")).toEqual([
 				{ Uri: 1, NameString: "test" },

@@ -116,6 +116,10 @@ export interface ISearchOptions {
 	ContentsInReverseDateOrder: boolean;
 }
 
+export interface IDatabase {
+	CurrencySymbol: string;
+}
+
 export interface ITrimConnector {
 	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
@@ -124,6 +128,7 @@ export interface ITrimConnector {
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]>;
 	getSearchOptions(): Promise<ISearchOptions>;
+	getDatabaseProperties(): Promise<IDatabase>;
 	search<T>(
 		options: ISearchParamaters
 	): Promise<ISearchResults<ITrimMainObject>>;
@@ -155,6 +160,38 @@ export class TrimConnector implements ITrimConnector {
 				return `${query}*`;
 		}
 	}
+
+	private _databaseProperties: IDatabase;
+	public getDatabaseProperties(): Promise<IDatabase> {
+		if (this._databaseProperties) {
+			return new Promise((resolve) => {
+				resolve(this._databaseProperties);
+			});
+		} else {
+			return this.makeRequest(
+				{
+					path: "Database",
+					method: "get",
+					data: { properties: "DatabaseCurrencySymbol" },
+				},
+				(data: any) => {
+					const prefix = "Database";
+					let databaseProperties = {};
+					for (var key in data.Results[0]) {
+						if (key.startsWith(prefix)) {
+							databaseProperties[key.substring(prefix.length)] =
+								data.Results[0][key].Value;
+						} else {
+							databaseProperties[key as string] = data.Results[0][key].Value;
+						}
+					}
+
+					return (this._databaseProperties = databaseProperties as IDatabase);
+				}
+			);
+		}
+	}
+
 	private _searchOptionsCache: ISearchOptions;
 	public getSearchOptions(): Promise<ISearchOptions> {
 		if (this._searchOptionsCache) {
@@ -166,22 +203,22 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "UserOptions/Search", method: "get" },
 				(data: any) => {
 					const prefix = "SearchUserOptions";
-					this._searchClauseCache = {};
+					let searchOptionsCache = {};
 					for (var key in data.UserOptions) {
 						if (key.startsWith(prefix)) {
-							this._searchClauseCache[key.substring(prefix.length)] =
+							searchOptionsCache[key.substring(prefix.length)] =
 								data.UserOptions[key].Value;
 						} else {
-							this._searchClauseCache[key as string] =
-								data.UserOptions[key].Value;
+							searchOptionsCache[key as string] = data.UserOptions[key].Value;
 						}
 					}
 
-					return this._searchClauseCache;
+					return (this._searchOptionsCache = searchOptionsCache as ISearchOptions);
 				}
 			);
 		}
 	}
+
 	private _searchClauseCache = {};
 
 	public getSearchClauseDefinitions(

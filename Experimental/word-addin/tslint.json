@@ -18,7 +18,8 @@
 			"node_modules/**/*.ts",
 			"coverage/lcov-report/*.js",
 			"src/**/*.test.ts",
-			"src/**/*.test.tsx"
+			"src/**/*.test.tsx",
+			"D:/Community/Experimental/word-addin/src/components/TrimObjectSearchList/TrimObjectSearchList.test.tsx"
 		]
 	}
 }
