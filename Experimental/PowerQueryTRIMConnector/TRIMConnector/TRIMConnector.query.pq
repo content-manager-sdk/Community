@@ -21,27 +21,31 @@ section TrimConnectorUnitTests;
 shared TrimConnector.UnitTest =
 [
     // Put any common variables here if you only want them to be evaluated once
-    RootTable = TRIMConnector.Browse("http://localhost/ServiceAPI"),
-    Records = RootTable{[Name="Record"]}[Data],
-    Locations = RootTable{[Name="Location"]}[Data],
+    RootTable = TRIMConnector.Browse("http://localhost/ServiceAPI/"),
+    Records =TRIMConnector.Search("http://localhost/ServiceAPI/", "Record", "unkAll"),// RootTable{[Name="Record"]}[Data],
+    Locations =TRIMConnector.Search("http://localhost/ServiceAPI/", "Location", "unkAll"),
+//    Locations = RootTable{[Name="Location"]}[Data],
 
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement
     facts =
     {
+    
         Fact("Check that we have two entries in our nav table", 2, Table.RowCount(RootTable)),
         Fact("We have Record data?", true, not Table.IsEmpty(Records)),
-        Fact("We have Location data?", true, not Table.IsEmpty(Locations)),
-        Fact("Records only has 4 columns", 4, List.Count(Table.ColumnNames(Records))),        
+     //   Fact("We have Location data?", true, not Table.IsEmpty(Locations)),
+        Fact("Records only has 5 columns", 5, List.Count(Table.ColumnNames(Records))),        
         Fact("Record table has the right fields",
-            {"Title","Number", "DateLastUpdated", "IsElectronic"},
+            {"RecordTitle","RecordNumber", "DateLastUpdated", "RecordCheckedOutOn", "RecordIsElectronic"},
             Record.FieldNames(Type.RecordFields(Type.TableRow(Value.Type(Records))))
         ),
+                 
         // Query folding tests
         Fact("Fold $top 1 on Records", 
-            #table( type table [Title = text, Number = text, DateCreated = datetime, IsElectronic = logical] , {{"Series 1", "REC_0", #datetime(2019, 2, 11, 9, 10, 19), null}} ), 
+            #table( type table [Title = text, Number = text, DateCreated = datetime, CheckedOutOn = datetime, IsElectronic = logical] , {{"Series 1", "REC_0", #datetime(2019, 2, 11, 10, 10, 19), null, null}} ), 
             Table.FirstN(Records, 1)
         ),
+        
         Fact("Fold $top 0 on Locations", 
             #table( type table [SortName = text, DateLastUpdated = datetime] , {} ), 
             Table.FirstN(Locations, 0)
@@ -55,7 +59,24 @@ shared TrimConnector.UnitTest =
             Table.FirstN(Table.Skip(Records, 1), 1)
         ),
 
-        Fact("Fold $count", 15, Table.RowCount(Records))
+        Fact("Fold $count", 15, Table.RowCount(Records)),
+       
+        // OnSelectColumns
+        Fact("Fold $select single column", 
+            #table( type table [Title = text] , {{"Series 1"}} ),
+            Table.FirstN(Table.SelectColumns(Records, {"RecordTitle"}), 1)
+        ),
+        
+        Fact("Fold $select multiple column", 
+            #table( type table [Title = text, Number = text, IsElectronic = logical],{{"Series 1", "REC_0", true}}), 
+            Table.FirstN(Table.SelectColumns(Records, {"RecordTitle", "RecordNumber", "RecordIsElectronic"}), 1)
+        )
+        /*
+        Fact("Fold $select with ignore column", 
+            #table( type table [Title = text] , {{"Series 1"}} ),
+            Table.FirstN(Table.SelectColumns(Records, {"Title", "DoesNotExist"}, MissingField.Ignore), 1)
+        )
+        */
     },
 
     report = Facts.Summarize(facts)

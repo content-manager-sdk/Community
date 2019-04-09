@@ -4,7 +4,7 @@ section TRIMConnector;
 
 
 RecordTypeName = "Record";
-Properties = {"DateLastUpdated", "RecordTitle","RecordNumber", "RecordCheckedOutOn"};
+Properties = {"RecordDateCreated", "RecordTitle","RecordNumber", "RecordCheckedOutOn"};
 PropertiesLoc = {"DateLastUpdated", "LocationSortName"};
 
 
@@ -29,17 +29,30 @@ RootEntities = {
     "Location"
 };
 
+DefaultSelectedRecordType = type table [
+    RecordTitle = text,
+    RecordNumber = text,
+    RecordDateCreated = datetime,
+    RecordCheckedOutOn = datetime
+];
+
+
+DefaultSelectedLocationType = type table [
+    LocationSortName = text,
+    DateLastUpdated = datetime
+];
+
 RecordType = type table [
-    Title = text,
-    Number = text,
-    DateLastUpdated = datetime,
-    CheckedOutOn = datetime,
-    IsElectronic = logical
+    RecordTitle = text,
+    RecordNumber = text,
+    RecordDateCreated = datetime,
+    RecordCheckedOutOn = datetime,
+    RecordIsElectronic = logical
 ];
 
 
 LocationType = type table [
-    SortName = text,
+    LocationSortName = text,
     DateLastUpdated = datetime
 ];
 
@@ -49,7 +62,13 @@ SchemaTable = #table({"Entity", "Type"}, {
 });   
     
    
+StartingSchemaTable = #table({"Entity", "Type"}, {
+    {"Record", DefaultSelectedRecordType },
+    {"Location", DefaultSelectedLocationType }
+});   
+
 GetSchemaForEntity = (entity as text) as type => try SchemaTable{[Entity=entity]}[Type] otherwise error "Couldn't find entity: '" & entity &"'";
+GetStartingSchemaForEntity = (entity as text) as type => try StartingSchemaTable{[Entity=entity]}[Type] otherwise error "Couldn't find entity: '" & entity &"'";
 
 TRIMConnector.GoType = type function (
     baseUrl as (Uri.Type meta [
@@ -123,18 +142,14 @@ TrimNavTable = (url as text) as table =>
     in
         navTable;
 
-// GetEntity = (url as text, entity as text) as table => 
-//     let
-//         fullUrl = Uri.Combine(url, entity),
-//         schema = GetSchemaForEntity(entity),
-//         result = TRIMConnector.Feed(fullUrl, schema),
-//         appliedSchema = Table.ChangeType(result, schema)
-//     in
-//         appliedSchema;
 
 GetPage = (url as text, query as record, schema as type) =>
-	let	        
-        props = if Text.Contains(url,"/Record") then Properties else PropertiesLoc,
+	let	 
+
+        // get the columns from the current schema (which is an M Type value)
+        rowRecordType = Type.RecordFields(Type.TableRow(schema)),
+        existingColumns = Record.FieldNames(rowRecordType),
+     //   props = if Text.Contains(url,"/Record") then Properties else PropertiesLoc,
 
 		options = [
             Headers=[#"Accept"="application/json"], 
@@ -146,8 +161,8 @@ GetPage = (url as text, query as record, schema as type) =>
        
         #"Converted to Table" = Table.FromList(results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         CheckEmpty = if Table.IsEmpty(#"Converted to Table") then #table(type table[Column1 = [Uri = number]],{}) else #"Converted to Table",
-		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", props),
-		dd = List.Transform(props, each {_, FriendlyRowValues}),
+		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", existingColumns),
+		dd = List.Transform(existingColumns, each {_, FriendlyRowValues}),
 		pp = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, dd))),
         hasMoreItems = GetHasMoreItems(source),
 		r = Table.TransformColumnNames(pp, FriendlyColumnName)
@@ -254,7 +269,8 @@ FriendlyColumnName = (colName) =>
         path = List.Select(RootEntities, each Text.StartsWith(colName, _)),
 		cn = 
         if List.Count(path) = 1 then
-            Text.RemoveRange(colName, 0, Text.Length(List.First(path)))		
+          //  Text.RemoveRange(colName, 0, Text.Length(List.First(path)))		
+          colName
 		else 
 			colName
 	in
@@ -265,9 +281,9 @@ FriendlyRowValues = (row) =>
 	let
 		v = 
 			if Record.HasFields(row, "Value") then
-				row[Value]
-			else if Record.HasFields(row, "DateTime") then
-				row[DateTime]
+				row[Value]?
+			else if Record.HasFields(row, "IsTimeClear") then
+				row[DateTime]?
 			else
 				row
 	in
@@ -281,7 +297,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
         // We wrap the record with Diagnostics.WrapHandlers() to get some automatic
         // tracing if a handler returns an error.
         //
-        props = if entity = "Record" then Properties else PropertiesLoc,
+       // props = if entity = "Record" then Properties else PropertiesLoc,
         View = (state as record) => Table.View(null, Diagnostics.WrapHandlers([
             // Returns the table type returned by GetRows()
             GetType = () => CalculateSchema(state),
@@ -322,11 +338,24 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                 in
                     @View(newState),
 
-            OnSelectRows = (selector as any) =>
+            OnSelectColumns = (columns as list) =>
                 let
-                    newState = state & [ sel = selector ]
+                    // get the current schema
+                    currentSchema = CalculateSchema(state),
+                    // get the columns from the current schema (which is an M Type value)
+                    rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
+                    existingColumns = CalculateExistingColumns(),
+                    // calculate the new schema
+                    columnsToRemove = List.Difference(existingColumns, columns),
+                    updatedColumns = Record.RemoveFields(rowRecordType, columnsToRemove),
+                    newSchema = type table (Type.ForRecord(updatedColumns, false))
                 in
-                    @View(newState),
+                    @View(state & 
+                        [ 
+                            SelectColumns = columns,
+                            Schema = newSchema
+                        ]
+                    ),
 
             //
             // Helper functions
@@ -340,7 +369,14 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                 else
                     state[Schema],
 
-
+            CalculateExistingColumns = () as list =>
+                let
+                     currentSchema = CalculateSchema(state),
+                    // get the columns from the current schema (which is an M Type value)
+                    rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
+                    existingColumns = Record.FieldNames(rowRecordType)
+                in
+                    existingColumns,
             CalculateCountUrl = (state) as text => 
                  let
                     urlWithEntity = Uri.Combine(state[Url], state[Entity]),
@@ -357,7 +393,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
 
                     // Uri.BuildQueryString requires that all field values
                     // are text literals.
-                    defaultQueryString = [ resultsOnly = "true", q = searchString, properties = Text.Combine(props, ",")],
+                    defaultQueryString = [ resultsOnly = "true", q = searchString],
 
 
 
@@ -374,8 +410,12 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                             qsWithTop & [ #"start" = Number.ToText(state[Skip] + 1) ]
                         else
                             qsWithTop,
-
-                    encodedQueryString = Uri.BuildQueryString(qsWithTop),
+                    qsWithSelect =
+                        if (state[SelectColumns]? <> null) then
+                            qsWithSkip & [ #"properties" = Text.Combine(state[SelectColumns], ",") ]
+                        else
+                            qsWithSkip& [ #"properties" = Text.Combine(CalculateExistingColumns(), ",") ],
+                    encodedQueryString = Uri.BuildQueryString(qsWithSelect),
                     finalUrl = urlWithEntity & "?" & encodedQueryString
                 in
                     finalUrl
