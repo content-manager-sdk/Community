@@ -68,7 +68,8 @@
             if (List.IsEmpty(Record.FieldNames(columnsForType))) then table else withType meta previousMeta,
 
     // If given a generic record type (no predefined fields), the original record is returned
-    Record.ChangeType = (record as record, recordType as type) =>
+    Record.ChangeType = (record, recordType as type) =>
+		if record is null then null else
         let
             // record field format is [ fieldName = [ Type = type, Optional = logical], ... ]
             fields = try Type.RecordFields(recordType) otherwise error "Record.ChangeType: failed to get record fields. Is this a record type?",
@@ -136,3 +137,4 @@
         else (t) => t
 in
     Table.ChangeType
+

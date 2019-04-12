@@ -4,7 +4,7 @@ section TRIMConnector;
 
 
 RecordTypeName = "Record";
-Properties = {"RecordDateCreated", "RecordTitle","RecordNumber", "RecordCheckedOutOn"};
+Properties = {"RecordDateCreated", "RecordTitle","RecordNumber", "RecordCheckedOutOn", "RecordContainer"};
 PropertiesLoc = {"DateLastUpdated", "LocationSortName"};
 
 
@@ -29,25 +29,20 @@ RootEntities = {
     "Location"
 };
 
-DefaultSelectedRecordType = type table [
+RefRecordType = type nullable [
     RecordTitle = text,
-    RecordNumber = text,
-    RecordDateCreated = datetime,
-    RecordCheckedOutOn = datetime
+    RecordNumber = text
 ];
 
 
-DefaultSelectedLocationType = type table [
-    LocationSortName = text,
-    DateLastUpdated = datetime
-];
 
 RecordType = type table [
     RecordTitle = text,
     RecordNumber = text,
     RecordDateCreated = datetime,
     RecordCheckedOutOn = datetime,
-    RecordIsElectronic = logical
+    RecordIsElectronic = logical,
+    RecordContainer = nullable RefRecordType
 ];
 
 
@@ -62,13 +57,10 @@ SchemaTable = #table({"Entity", "Type"}, {
 });   
     
    
-StartingSchemaTable = #table({"Entity", "Type"}, {
-    {"Record", DefaultSelectedRecordType },
-    {"Location", DefaultSelectedLocationType }
-});   
+ 
 
 GetSchemaForEntity = (entity as text) as type => try SchemaTable{[Entity=entity]}[Type] otherwise error "Couldn't find entity: '" & entity &"'";
-GetStartingSchemaForEntity = (entity as text) as type => try StartingSchemaTable{[Entity=entity]}[Type] otherwise error "Couldn't find entity: '" & entity &"'";
+//GetStartingSchemaForEntity = (entity as text) as type => try StartingSchemaTable{[Entity=entity]}[Type] otherwise error "Couldn't find entity: '" & entity &"'";
 
 TRIMConnector.GoType = type function (
     baseUrl as (Uri.Type meta [
@@ -149,7 +141,7 @@ GetPage = (url as text, query as record, schema as type) =>
         // get the columns from the current schema (which is an M Type value)
         rowRecordType = Type.RecordFields(Type.TableRow(schema)),
         existingColumns = Record.FieldNames(rowRecordType),
-     //   props = if Text.Contains(url,"/Record") then Properties else PropertiesLoc,
+       // props = if Text.Contains(url,"/Record") then Properties else PropertiesLoc,
 
 		options = [
             Headers=[#"Accept"="application/json"], 
@@ -161,13 +153,14 @@ GetPage = (url as text, query as record, schema as type) =>
        
         #"Converted to Table" = Table.FromList(results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         CheckEmpty = if Table.IsEmpty(#"Converted to Table") then #table(type table[Column1 = [Uri = number]],{}) else #"Converted to Table",
-		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", existingColumns),
+		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", existingColumns),        
 		dd = List.Transform(existingColumns, each {_, FriendlyRowValues}),
 		pp = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, dd))),
         hasMoreItems = GetHasMoreItems(source),
-		r = Table.TransformColumnNames(pp, FriendlyColumnName)
+		r = Table.TransformColumnNames(pp, FriendlyColumnName),
+        _ex = Diagnostics.LogValue("ex: ",r)
 in
-	r meta [HasMoreItems = hasMoreItems, LastStart = query[start]?];
+	 _ex meta [HasMoreItems = hasMoreItems, LastStart = query[start]?];
 
 
 
@@ -279,8 +272,14 @@ FriendlyColumnName = (colName) =>
 
 FriendlyRowValues = (row) =>
 	let
+       	refRecordFieldTransformations = List.Transform({"RecordTitle","RecordNumber"}, each {_, FriendlyRowValues}),
+
 		v = 
-			if Record.HasFields(row, "Value") then
+            if row is null then
+                null
+            else if Record.HasFields(row, "Uri") then
+                Record.TransformFields(row, refRecordFieldTransformations)
+			else if Record.HasFields(row, "Value") then
 				row[Value]?
 			else if Record.HasFields(row, "IsTimeClear") then
 				row[DateTime]?
@@ -307,11 +306,14 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                 let
                     finalSchema = CalculateSchema(state),
                     finalUrl = CalculateUrl(state),
-
+                                       
                     result = TRIMConnector.Feed(finalUrl, finalSchema, state[Top]? <> null, if state[Skip]? <> null then state[Skip]+1 else 1, searchString),
-                    appliedType = Table.ChangeType(result, finalSchema)
+
+                    _result = Diagnostics.LogValue("result: ", result ),
+                    appliedType = Table.ChangeType(_result, finalSchema),
+                    _appliedType = Diagnostics.LogValue("ap: ", appliedType )
                 in
-                    appliedType,
+                    _appliedType,
 
            GetRowCount = () as number =>
                     let
@@ -370,7 +372,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                     state[Schema],
 
             CalculateExistingColumns = () as list =>
-                let
+                let                    
                      currentSchema = CalculateSchema(state),
                     // get the columns from the current schema (which is an M Type value)
                     rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
@@ -437,6 +439,10 @@ TRIMConnector.Atomic = (url as text) as number =>
         fieldVal = source[Count]
     in
         fieldVal;
+
+
+
+
 
 // 
 // Load common library functions
