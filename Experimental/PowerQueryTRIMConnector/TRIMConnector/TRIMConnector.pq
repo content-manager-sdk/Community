@@ -4,7 +4,7 @@ section TRIMConnector;
 
 
 RecordTypeName = "Record";
-Properties = {"RecordDateCreated", "RecordTitle","RecordNumber", "RecordCheckedOutOn", "RecordContainer"};
+Properties = {"RecordDateCreated", "RecordTitle","RecordNumber", "RecordCheckedOutOn"};
 PropertiesLoc = {"DateLastUpdated", "LocationSortName"};
 
 
@@ -296,7 +296,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
         // We wrap the record with Diagnostics.WrapHandlers() to get some automatic
         // tracing if a handler returns an error.
         //
-       // props = if entity = "Record" then Properties else PropertiesLoc,
+        props = if entity = "Record" then Properties else PropertiesLoc,
         View = (state as record) => Table.View(null, Diagnostics.WrapHandlers([
             // Returns the table type returned by GetRows()
             GetType = () => CalculateSchema(state),
@@ -381,17 +381,23 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                     existingColumns,
             CalculateCountUrl = (state) as text => 
                  let
-                    urlWithEntity = Uri.Combine(state[Url], state[Entity]),
+                    ulrWithTrailingSlash = UlrWithTrailingSlash(state),
+                    urlWithEntity = Uri.Combine(ulrWithTrailingSlash, state[Entity]),
                     defaultQueryString = [ resultsOnly = "true", q = searchString, CountResults="true"],
                     encodedQueryString = Uri.BuildQueryString(defaultQueryString),
                     finalUrl = urlWithEntity & "?" & encodedQueryString
                 in
                     finalUrl,
-
+            UlrWithTrailingSlash = (state) as text => 
+                 let
+                    ulrWithTrailingSlash = if Text.EndsWith(state[Url], "/") then state[Url] else state[Url] & "/"
+                in
+                    ulrWithTrailingSlash,
             // Calculates the final URL based on the current state.
             CalculateUrl = (state) as text => 
                 let
-                    urlWithEntity = Uri.Combine(state[Url], state[Entity]),
+                    ulrWithTrailingSlash = UlrWithTrailingSlash(state),
+                    urlWithEntity = Uri.Combine(ulrWithTrailingSlash, state[Entity]),
 
                     // Uri.BuildQueryString requires that all field values
                     // are text literals.
@@ -416,7 +422,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                         if (state[SelectColumns]? <> null) then
                             qsWithSkip & [ #"properties" = Text.Combine(state[SelectColumns], ",") ]
                         else
-                            qsWithSkip& [ #"properties" = Text.Combine(CalculateExistingColumns(), ",") ],
+                            qsWithSkip& [ #"properties" = Text.Combine(props, ",") ],
                     encodedQueryString = Uri.BuildQueryString(qsWithSelect),
                     finalUrl = urlWithEntity & "?" & encodedQueryString
                 in
