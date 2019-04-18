@@ -34,7 +34,7 @@ RefLocationType = type nullable [
 
 GetSearchClauseDefs =  (baseUrl as text, entity as text) as table =>  
     let
-        Source = Json.Document(Web.Contents(baseUrl & "SearchClauseDef?TrimType=Record&format=json")),
+        Source = Json.Document(Web.Contents(baseUrl & "SearchClauseDef?TrimType=" & entity & "&format=json")),
         SearchClauseDefs = Source[SearchClauseDefs],
         #"Converted to Table" = Table.FromList(SearchClauseDefs, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"BasedOnProperty", "OnlyForType", "InternalName", "Name", "Id", "CanSort", "ObjectTypeParameter", "IsBlocked"}, {"Column1.BasedOnProperty", "Column1.OnlyForType", "Column1.InternalName", "Column1.Name", "Column1.Id", "Column1.CanSort", "Column1.ObjectTypeParameter", "Column1.IsBlocked"}),
@@ -46,8 +46,8 @@ GetSearchClauseDefs =  (baseUrl as text, entity as text) as table =>
 GetPropertyDefinitions = (baseUrl as text, entity as text) as table =>  
     let
         Source = Json.Document(Web.Contents(baseUrl & "PropertyDefs?TrimType=" & entity & "&Get=All&ExcludeFields=false&format=json")),
-        PropertiesAndFields = Source[PropertiesAndFields],
-        Record = PropertiesAndFields[Record],
+        PropertiesAndFields =  Source[PropertiesAndFields],
+        Record = Record.Field(PropertiesAndFields, entity),
         #"Converted to Table" = Table.FromList(Record, Splitter.SplitByNothing(), null, null, ExtraValues.Error)
        
     in
@@ -114,7 +114,7 @@ GetSearchClause = (baseUrl as text, entity as text, propertyId as text) as text 
 
 
 SchemaTable = #table({"Entity"}, {
-    {"Record"}  
+    {"Record"}, {"Location"}, {"Activity"}, {"Classification"}, {"History"}, {"RecordType"}, {"Schedule"}, {"Space"}
 });
 
 GetSchemaForEntity = (baseUrl as text, entity as text) as table => GetTypeRecord(baseUrl, entity);
@@ -129,7 +129,7 @@ TRIMConnector.GoType = type function (
     optional entity as (type text meta [
         Documentation.FieldCaption = "Object Type",
         Documentation.FieldDescription = "Select if you wish to search by object type, otherwise leave blank to browse.",
-        Documentation.AllowedValues = { "Record", "Location" }
+        Documentation.AllowedValues = Table.Column(SchemaTable, "Entity")
     ]),
     optional searchString as (type text meta [
         Documentation.FieldCaption = "Search string",
@@ -157,16 +157,18 @@ TRIMConnector.Go = (baseUrl, optional entity as text, optional searchString as t
 
 genSavedSearchNav = (baseUrl as text, entity as text) as table => 
     let 
-        Source = Json.Document(Web.Contents( Uri.Combine(baseUrl, "SavedSearch") & "?q=(srhOwner:[default:me] or srhPublic) and not srhGroup&format=json&properties=SavedSearchFullName,Urn&pageSize=1000")),
+        Source = Json.Document(Web.Contents( Uri.Combine(baseUrl, "SavedSearch") & "?q=srhType=" & entity & " and (srhOwner:[default:me] or srhPublic) and not srhGroup&format=json&properties=SavedSearchFullName,Urn&pageSize=1000")),
         Results = Source[Results],
         #"Converted to Table" = Table.FromList(Results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+        
         #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"SavedSearchFullName", "Uri", "Urn"}, {"Name", "Uri", "Key"}),
         #"Column Transformations" = List.Transform({"Name", "Uri", "Key"}, each {_, FriendlyRowValues}),
 		#"Transformed Values" = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, #"Column Transformations"))),
         withData = Table.AddColumn(#"Transformed Values", "Data", each TRIMConnector.View(baseUrl, entity, Text.Format("unkSaved:#{0}",{[Uri]})), type table),
         withItemKind = Table.AddColumn(withData, "ItemKind", each "Folder", type text),
         withIsLeaf = Table.AddColumn(withItemKind, "IsLeaf", each false, type logical),
-        navTable = Table.ToNavigationTable(withIsLeaf, {"Name"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
+        #"Check for Null" = if List.IsEmpty(Results) then #table({"Key", "Name", "Data", "ItemKind", "ItemName", "IsLeaf"}, {}) else withIsLeaf,
+        navTable = Table.ToNavigationTable(#"Check for Null", {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
     in navTable;
 
 
@@ -174,13 +176,11 @@ genNavColumn = (url as text, entity as text) as table =>
     let 
         objects = #table(
             {"Key", "Name", "Data", "ItemKind", "ItemName", "IsLeaf"},
-            {{entity & "Favourites", "Favourites", TRIMConnector.View(url, entity, "unkFavorite"), "Table",    "Table",    true}, 
-            {entity & "SavedSearches", "Saved Searches", genSavedSearchNav(url, entity), "Folder",    "Folder",    false}}),
+            {{entity & "SavedSearches", "Saved Searches", genSavedSearchNav(url, entity), "Folder",    "Folder",    false}}),
         supplemented = 
-            if entity = "Record" then
+            if List.Contains({"Record", "Location", "Classification"}, entity) then
                 Table.InsertRows(objects, 0, {
-                [Key = "CheckedOut", Name = "Checked Out", Data = TRIMConnector.View(url, entity, "checkedOutBy:[all]"), ItemKind = "Table", ItemName = "Table", IsLeaf = true ],
-                [Key = "CheckedOutToMe", Name = "Checked Out To Me", Data = TRIMConnector.View(url, entity, "checkedOutBy:[me]"), ItemKind = "Table", ItemName = "Table", IsLeaf = true ]
+               [Key = entity & "Favorites", Name = "Favorites", Data = TRIMConnector.View(url, entity, "unkFavorite"), ItemKind = "Table", ItemName = "Table", IsLeaf = true ]
                 })
             else
                 objects,
