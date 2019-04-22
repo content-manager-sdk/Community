@@ -23,7 +23,7 @@ RefTrimMainObjectType = type nullable [
     Uri = number
 ];
 
-RefLocationType = type nullable [
+RefLocationType = type  [
     LocationInternetMailAddress = text,
     LocationLogsInAs = text, 
     LocationAdditionalLogin = text, 
@@ -69,14 +69,6 @@ GetTypeRecord = (baseUrl as text, entity as text) as table =>
     let
         #"Converted to Table" = GetPropertyDefinitions(baseUrl, entity),
         #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType"}),
-        #"Filtered Rows" = Table.SelectRows(#"Expanded Column1", each ([Column1.PFFormat] <> "Object")),
-        #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows","String","text",Replacer.ReplaceText,{"Column1.PFFormat"}),
-        #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Datetime","datetime",Replacer.ReplaceText,{"Column1.PFFormat"}),
-        #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","BigNumber","number",Replacer.ReplaceText,{"Column1.PFFormat"}),
-        #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Enum","text",Replacer.ReplaceText,{"Column1.PFFormat"}),
-        #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Boolean","logical",Replacer.ReplaceText,{"Column1.PFFormat"}),
-        #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","Geography","text",Replacer.ReplaceText,{"Column1.PFFormat"}),
-        #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","Number","number",Replacer.ReplaceText,{"Column1.PFFormat"}),
         #"Added Custom" = Table.AddColumn(#"Expanded Column1", "Type", each 
         if [Column1.PFFormat] = "Object" and [Column1.ObjectType] = "Location" then
             RefLocationType else 
@@ -92,7 +84,7 @@ GetTypeRecord = (baseUrl as text, entity as text) as table =>
             type logical else                 
         type text
 ),
-        #"Added Custom1" = Table.AddColumn(#"Added Custom", "Value", each type [pType]),
+        #"Added Custom1" = Table.AddColumn(#"Added Custom", "Value", each type nullable [pType]),
         #"Renamed Columns" = Table.RenameColumns(#"Added Custom1",{{"Column1.Id", "Name"}}),
         #"Type Table" = #table({"Name", "Type"}, {}),
          #"Type Table with Name" = Table.SelectColumns(#"Renamed Columns", {"Name", "Type"}),
@@ -157,14 +149,14 @@ TRIMConnector.Go = (baseUrl, optional entity as text, optional searchString as t
 
 genSavedSearchNav = (baseUrl as text, entity as text) as table => 
     let 
-        Source = Json.Document(Web.Contents( Uri.Combine(baseUrl, "SavedSearch") & "?q=srhType=" & entity & " and (srhOwner:[default:me] or srhPublic) and not srhGroup&format=json&properties=SavedSearchFullName,Urn&pageSize=1000")),
+        Source = Json.Document(Web.Contents( Uri.Combine(baseUrl, "SavedSearch") & "?q=srhType=" & entity & " and (srhOwner:[default:me] or srhPublic) and not srhGroup&format=json&properties=SavedSearchFullName&pageSize=1000")),
         Results = Source[Results],
         #"Converted to Table" = Table.FromList(Results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         
-        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"SavedSearchFullName", "Uri", "Urn"}, {"Name", "Uri", "Key"}),
-        #"Column Transformations" = List.Transform({"Name", "Uri", "Key"}, each {_, FriendlyRowValues}),
+        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"SavedSearchFullName", "Uri"}, {"Name", "Key"}),
+        #"Column Transformations" = List.Transform({"Name", "Key"}, each {_, FriendlyRowValues}),
 		#"Transformed Values" = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, #"Column Transformations"))),
-        withData = Table.AddColumn(#"Transformed Values", "Data", each TRIMConnector.View(baseUrl, entity, Text.Format("unkSaved:#{0}",{[Uri]})), type table),
+        withData = Table.AddColumn(#"Transformed Values", "Data", each TRIMConnector.View(baseUrl, entity, Text.Format("unkSaved:#{0}",{[Key]})), type table),
         withItemKind = Table.AddColumn(withData, "ItemKind", each "Folder", type text),
         withIsLeaf = Table.AddColumn(withItemKind, "IsLeaf", each false, type logical),
         #"Check for Null" = if List.IsEmpty(Results) then #table({"Key", "Name", "Data", "ItemKind", "ItemName", "IsLeaf"}, {}) else withIsLeaf,
@@ -531,7 +523,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                         if (state[SelectColumns]? <> null) then
                             qsWithSkip & [ #"properties" = Text.Combine(state[SelectColumns], ",") ]
                         else
-                            qsWithSkip& [ #"properties" = "" ],
+                            qsWithSkip& [ #"properties" = "Uri" ],
                     qsWithOrderBy = 
                         if (state[OrderBy]? <> null) then
                             qsWithSelect & [ #"sortBy" = state[OrderBy] ]
