@@ -13,17 +13,24 @@ shared TRIMConnector.Search = Value.ReplaceType(TRIMConnector.Go, TRIMConnector.
 //[DataSource.Kind="TRIMConnector", Publish="TRIMConnector.Publish"]
 shared TRIMConnector.Browse = (url) => TrimNavTable(url) as table;
 
-TRIMConnector.Feed = (url as text, schema as table, onePageOnly as logical, options as record, searchString as text) as table => GetAllPagesByNextLink(url, options, schema, onePageOnly, searchString);
+TRIMConnector.Feed = (url as text, schema as type, onePageOnly as logical, options as record, searchString as text) as table => GetAllPagesByNextLink(url, options, schema, onePageOnly, searchString);
 
 
-RefTrimMainObjectType = type nullable [
-    NameString = text,
-    ToolTip = text,
-    TrimType = text,
-    Uri = number
+
+Record = type table [
+    Uri = number,
+    RecordTitle = text,
+    RecordNumber = nullable text
 ];
 
-RefLocationType = type  [
+RefTrimMainObjectType = type [
+    NameString = nullable text,
+    ToolTip = nullable text,
+    TrimType = nullable text,
+    Uri = nullable number
+];
+
+RefLocationType = type nullable [
     LocationInternetMailAddress = text,
     LocationLogsInAs = text, 
     LocationAdditionalLogin = text, 
@@ -48,17 +55,19 @@ GetPropertyDefinitions = (baseUrl as text, entity as text) as table =>
         Source = Json.Document(Web.Contents(baseUrl & "PropertyDefs?TrimType=" & entity & "&Get=All&ExcludeFields=false&format=json")),
         PropertiesAndFields =  Source[PropertiesAndFields],
         Record = Record.Field(PropertiesAndFields, entity),
-        #"Converted to Table" = Table.FromList(Record, Splitter.SplitByNothing(), null, null, ExtraValues.Error)
-       
+        #"Converted to Table" = Table.FromList(Record, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType", "Property", "IsAField"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType", "Column1.Property", "Column1.IsAField"}),
+        #"Filtered Rows" = Table.SelectRows(#"Expanded Column1", each [Column1.IsAField] = true or Record.Field([Column1.Property], "IsExposedInSDK") = true)
     in
-        #"Converted to Table";
+        #"Filtered Rows";
 
 GetPropertyDefinitionsTable = (baseUrl as text, entity as text) as table =>  
     let
         #"Converted to Table" = GetPropertyDefinitions(baseUrl, entity),
-        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "SortMode", "ObjectType", "PFFormat", "Property", "PropertyId", "IsAField", "IsAProperty", "IsMandatory", "Field"}, {"Column1.Id", "Column1.SortMode", "Column1.ObjectType", "Column1.PFFormat", "Column1.Property", "Column1.PropertyId", "Column1.IsAField", "Column1.IsAProperty", "Column1.IsMandatory", "Column1.Field"}),
-        #"Renamed Columns" = Table.TransformColumnNames(#"Expanded Column1", each Text.Replace(_, "Column1.", "")),
+       // #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "SortMode", "ObjectType", "PFFormat", "Property", "PropertyId", "IsAField", "IsAProperty", "IsMandatory", "Field"}, {"Column1.Id", "Column1.SortMode", "Column1.ObjectType", "Column1.PFFormat", "Column1.Property", "Column1.PropertyId", "Column1.IsAField", "Column1.IsAProperty", "Column1.IsMandatory", "Column1.Field"}),
+        #"Renamed Columns" = Table.TransformColumnNames(#"Converted to Table", each Text.Replace(_, "Column1.", "")),
         #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"IsAField", Order.Ascending}, {"Id", Order.Ascending}}),
+        
         #"Expanded Property" = Table.ExpandRecordColumn(#"Sorted Rows", "Property", {"SearchClauseId"}, {"SearchClauseId"}),
         #"Removed Columns" = Table.RemoveColumns(#"Expanded Property",{"Field"})
     in
@@ -68,23 +77,25 @@ GetPropertyDefinitionsTable = (baseUrl as text, entity as text) as table =>
 GetTypeRecord = (baseUrl as text, entity as text) as table => 
     let
         #"Converted to Table" = GetPropertyDefinitions(baseUrl, entity),
-        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType"}),
-        #"Added Custom" = Table.AddColumn(#"Expanded Column1", "Type", each 
+       // #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType", "Property"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType"}),
+       // #"Filtered Rows" = Table.SelectRows(#"Converted to Table", each ( List.Contains({"RecordOwnerLocation","RecordExtension","RecordTitle", "RecordNumber","Uri"}, [Column1.Id]) )),
+        #"LocationFiltered Rows" = Table.SelectRows(#"Converted to Table", each ( Text.StartsWith([Column1.Id], "LocationOld") = false )),
+        #"Added Custom" = Table.AddColumn(#"LocationFiltered Rows", "Type", each 
         if [Column1.PFFormat] = "Object" and [Column1.ObjectType] = "Location" then
             RefLocationType else 
         if [Column1.PFFormat] = "Object" then
             RefTrimMainObjectType else   
         if List.Contains({"Number", "BigNumber", "Decimal", "Currency"}, [Column1.PFFormat]) then
-            type number else  
+            type nullable number else  
         if [Column1.PFFormat] = "Datetime" then
-            type datetime else  
+            type nullable datetime else  
         if [Column1.PFFormat] = "Date" then
-            type date else 
+            type nullable date else 
         if [Column1.PFFormat] = "Boolean" then
-            type logical else                 
-        type text
+            type nullable logical else                 
+        type nullable text
 ),
-        #"Added Custom1" = Table.AddColumn(#"Added Custom", "Value", each type nullable [pType]),
+        #"Added Custom1" = Table.AddColumn(#"Added Custom", "Value", each type [pType]),
         #"Renamed Columns" = Table.RenameColumns(#"Added Custom1",{{"Column1.Id", "Name"}}),
         #"Type Table" = #table({"Name", "Type"}, {}),
          #"Type Table with Name" = Table.SelectColumns(#"Renamed Columns", {"Name", "Type"}),
@@ -109,7 +120,14 @@ SchemaTable = #table({"Entity"}, {
     {"Record"}, {"Location"}, {"Activity"}, {"Classification"}, {"History"}, {"RecordType"}, {"Schedule"}, {"Space"}
 });
 
-GetSchemaForEntity = (baseUrl as text, entity as text) as table => GetTypeRecord(baseUrl, entity);
+
+GetSchemaForEntity = (baseUrl as text, entity as text) as type => 
+    let 
+        schema = Schema.ToTableType(GetTypeRecord(baseUrl, entity)),
+      // schema = Record,
+        _schema = Diagnostics.LogValue("xx schema ", schema)
+    in
+        _schema;
 
 TRIMConnector.GoType = type function (
     baseUrl as (Uri.Type meta [
@@ -201,10 +219,13 @@ TrimNavTable = (url as text) as table =>
         navTable;
 
 
-GetPage = (url as text, query as record, schema as table) =>
+GetPage = (url as text, query as record, schema as type) =>
 	let	 
-        propsColumn = Table.SelectColumns(schema, "Name"),
-        existingColumns = Table.ToList(propsColumn),
+       // propsColumn = Table.SelectColumns(schema, "Name"),
+       // existingColumns = Table.ToList(propsColumn),
+       existingColumns = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))),
+ 
+ _existingColumns = Diagnostics.LogValue("existingColumns", existingColumns),
 
         #"Options with Page Size" = if Record.HasFields(query, "pageSize") then query else query & [pageSize = Text.From(PAGE_SIZE)],
 
@@ -215,16 +236,17 @@ GetPage = (url as text, query as record, schema as table) =>
         
 		source = Json.Document(Web.Contents( url, options)),		
         results = source[Results],
-       
-        #"Converted to Table" = Table.FromList(results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+       _results = Diagnostics.LogValue("results ", results),
+        #"Converted to Table" = Table.FromList(_results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         CheckEmpty = if Table.IsEmpty(#"Converted to Table") then #table(type table[Column1 = [Uri = number]],{}) else #"Converted to Table",
-		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", existingColumns),        
-		dd = List.Transform(existingColumns, each {_, FriendlyRowValues}),
+		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", _existingColumns),        
+		dd = List.Transform(_existingColumns, each {_, FriendlyRowValues}),
 		pp = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, dd))),
-        hasMoreItems = GetHasMoreItems(source)
+        hasMoreItems = GetHasMoreItems(source),
+         _pp = Diagnostics.LogValue("pp ", pp)
 
 in
-	 pp meta [HasMoreItems = hasMoreItems, LastStart = query[start]?];
+	 _pp meta [HasMoreItems = hasMoreItems, LastStart = query[start]?];
 
 
 
@@ -289,7 +311,7 @@ shared Table.GenerateByPage = (getNextPage as function) as table =>
             );
 
 
-GetAllPagesByNextLink = (url as text, options as record, schema as table, onePageOnly as logical, searchString as text) as table =>
+GetAllPagesByNextLink = (url as text, options as record, schema as type, onePageOnly as logical, searchString as text) as table =>
     Table.GenerateByPage((previous) => 
         let
             // if previous is null, then this is our first page of data
@@ -357,33 +379,28 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
         // We wrap the record with Diagnostics.WrapHandlers() to get some automatic
         // tracing if a handler returns an error.
         //
-        View = (state as record) => Table.View(null, Diagnostics.WrapHandlers([
+        View = (state as record) => Table.View(#table(null, {}), Diagnostics.WrapHandlers([
             // Returns the table type returned by GetRows()
-            GetType = () => 
-                let
-                    finalSchema = CalculateSchema(state),
-
-
-
-                    #"Empty Table" = #table({},{}),
-                    #"With Schema" =  SchemaTransformTable(#"Empty Table", finalSchema),
-                    #"Type" = Value.Type(#"With Schema")
-                in
-                       #"Type",
+            GetType = () => CalculateSchema(state),
             // Called last - retrieves the data from the calculated URL
             GetRows = () => 
-                let
+                let                   
                     finalSchema = CalculateSchema(state),
                     finalUrl = CalculateUrl(state),
+
+                    _finalUrl = Diagnostics.LogValue("finalUrl", finalUrl),
+                    _finalSchema = Diagnostics.LogValue("finalSchema", finalSchema),
+
                     finalOptions = CalculateOptions(state), 
 
                     optionsWithTop = finalOptions & [start = if state[Skip]? <> null then state[Skip]+1 else 1],
-                    result = TRIMConnector.Feed(finalUrl, finalSchema, state[Top]? <> null, optionsWithTop, searchString),
-
-
-                     withSchema = if (finalSchema <> null) then SchemaTransformTable(result, finalSchema) else result
+                    result = TRIMConnector.Feed(_finalUrl, _finalSchema, state[Top]? <> null, optionsWithTop, searchString),
+                    _result = Diagnostics.LogValue("result", result),
+                    appliedType = Table.ChangeType(_result, finalSchema),
+                    _appliedType = Diagnostics.LogValue("appliedType", appliedType)
+                   //  withSchema = if (finalSchema <> null) then SchemaTransformTable(result, finalSchema) else result
                 in
-                    withSchema,
+                    _appliedType,
 
            GetRowCount = () as number =>
                     let
@@ -413,8 +430,14 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
             OnSelectColumns = (columns as list) =>
                 let
                     // get the current schema
-                    currentSchema = GetSchemaForEntity(UlrWithTrailingSlash(state), entity),
-                    newSchema = Table.SelectRows(currentSchema, each List.Contains(columns, [Name]))
+                    currentSchema = GetSchemaForEntity(UlrWithTrailingSlash(state),entity),
+                    // get the columns from the current schema (which is an M Type value)
+                    rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
+                    existingColumns = CalculateExistingColumns(),
+                    // calculate the new schema
+                    columnsToRemove = List.Difference(existingColumns, columns),
+                    updatedColumns = Record.RemoveFields(rowRecordType, columnsToRemove),
+                    newSchema = RefineSchema(state, columns)
                 in
                     @View(state & 
                         [ 
@@ -451,19 +474,33 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
             // Retrieves the cached schema. If this is the first call
             // to CalculateSchema, the table type is calculated based on
             // the entity name that was passed into the function.
-            CalculateSchema = (state) as table =>
+            CalculateSchema = (state) as type =>
                 if (state[Schema]? = null) then
-                    GetSchemaForEntity(UlrWithTrailingSlash(state), entity)
+                    GetSchemaForEntity(UlrWithTrailingSlash(state),entity)
+                    //GetSchemaForEntity(UlrWithTrailingSlash(state), entity)
                 else
                     state[Schema],
-
+            RefineSchema = (state, columns) as type =>
+                let
+                    // get the current schema
+                    currentSchema = CalculateSchema(state),
+                    // get the columns from the current schema (which is an M Type value)
+                    rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
+                    existingColumns = CalculateExistingColumns(),
+                    // calculate the new schema
+                    columnsToRemove = List.Difference(existingColumns, columns),
+                    updatedColumns = Record.RemoveFields(rowRecordType, columnsToRemove),
+                    newSchema = type table (Type.ForRecord(updatedColumns, false))
+                in                  
+                    newSchema,
             CalculateExistingColumns = () as list =>
                 let                    
-                     currentSchema = CalculateSchema(state),
+                    currentSchema = CalculateSchema(state),
                     // get the columns from the current schema (which is an M Type value)
-                    rowRecordType = Table.Column(currentSchema, "Name")
+                    rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
+                    existingColumns = Record.FieldNames(rowRecordType)
                 in
-                    rowRecordType,
+                    existingColumns,
 
             CalculateCountUrl = (state) as text => 
                  let
@@ -489,11 +526,11 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                     urlWithEntity,
             CalculateOptions = (state) as record => 
                 let
-                   propsColumn = Table.SelectColumns(CalculateSchema(state), "Name"),
-                   existingColumns = Table.ToList(propsColumn),
+                  // propsColumn = Table.SelectColumns(CalculateSchema(state), "Name"),
+                 //  existingColumns = Table.ToList(propsColumn),
                     // Uri.BuildQueryString requires that all field values
                     // are text literals.
-
+                  //  rowRecordType = Record.FieldNames(Type.RecordFields(Type.TableRow(currentSchema)))
                      rowRecordTypeTmo = Type.RecordFields(RefTrimMainObjectType),
                      tmoColumns = Record.FieldNames(rowRecordTypeTmo),
                     
@@ -523,7 +560,8 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                         if (state[SelectColumns]? <> null) then
                             qsWithSkip & [ #"properties" = Text.Combine(state[SelectColumns], ",") ]
                         else
-                            qsWithSkip& [ #"properties" = "Uri" ],
+                            qsWithSkip& [ #"properties" = if Text.Lower(entity) = "record" then "Uri,RecordTitle,RecordNumber" else Text.Combine(CalculateExistingColumns(), ",") ],
+                            //qsWithSkip& [ #"properties" = if Text.Lower(entity) = "record" then "Uri,RecordTitle,RecordNumber" else Text],
                     qsWithOrderBy = 
                         if (state[OrderBy]? <> null) then
                             qsWithSelect & [ #"sortBy" = state[OrderBy] ]
@@ -551,63 +589,15 @@ TRIMConnector.Atomic = (url as text) as number =>
         fieldVal;
 
 
-EnforceSchema.Strict = 1;               // Add any missing columns, remove extra columns, set table type
-EnforceSchema.IgnoreExtraColumns = 2;   // Add missing columns, do not remove extra columns
-EnforceSchema.IgnoreMissingColumns = 3; // Do not add or remove columns
-
-SchemaTransformTable = (table as table, schema as table, optional enforceSchema as number) as table =>
-    let
-        // Default to EnforceSchema.Strict
-        _enforceSchema = if (enforceSchema <> null) then enforceSchema else EnforceSchema.Strict,
-
-        // Applies type transforms to a given table
-        EnforceTypes = (table as table, schema as table) as table =>
-            let
-                map = (t) => if Type.Is(t, type list) or Type.Is(t, type record) or t = type any then null else t,
-                mapped = Table.TransformColumns(schema, {"Type", map}),
-                omitted = Table.SelectRows(mapped, each [Type] <> null),
-                existingColumns = Table.ColumnNames(table),
-                removeMissing = Table.SelectRows(omitted, each List.Contains(existingColumns, [Name])),
-                primativeTransforms = Table.ToRows(removeMissing),
-                changedPrimatives = Table.TransformColumnTypes(table, primativeTransforms)
-            in
-                changedPrimatives,
-
-        // Returns the table type for a given schema
-        SchemaToTableType = (schema as table) as type =>
-            let
-                toList = List.Transform(schema[Type], (t) => [Type=t, Optional=false]),
-                toRecord = Record.FromList(toList, schema[Name]),
-                toType = Type.ForRecord(toRecord, false)
-            in
-                type table (toType),
-
-        // Determine if we have extra/missing columns.
-        // The enforceSchema parameter determines what we do about them.
-        schemaNames = schema[Name],
-        foundNames = Table.ColumnNames(table),
-        addNames = List.RemoveItems(schemaNames, foundNames),
-        extraNames = List.RemoveItems(foundNames, schemaNames),
-        tmp = Text.NewGuid(),
-        added = Table.AddColumn(table, tmp, each []),
-        expanded = Table.ExpandRecordColumn(added, tmp, addNames),
-        result = if List.IsEmpty(addNames) then table else expanded,
-        fullList =
-            if (_enforceSchema = EnforceSchema.Strict) then
-                schemaNames
-            else if (_enforceSchema = EnforceSchema.IgnoreMissingColumns) then
-                foundNames
-            else
-                schemaNames & extraNames,
-
-        // Select the final list of columns.
-        // These will be ordered according to the schema table.
-        reordered = Table.SelectColumns(result, fullList, MissingField.Ignore),
-        enforcedTypes = EnforceTypes(reordered, schema),
-        withType = if (_enforceSchema = EnforceSchema.Strict) then Value.ReplaceType(enforcedTypes, SchemaToTableType(schema)) else enforcedTypes
-    in
-        withType;
-
+    // Returns a table type for the provided schema table
+    Schema.ToTableType = (schema as table) as type =>
+        let
+            toList = List.Transform(schema[Type], (t) => [Type=t, Optional=false]),
+            toRecord = Record.FromList(toList, schema[Name]),
+            toType = Type.ForRecord(toRecord, false),
+            previousMeta = Value.Metadata(schema)
+        in
+            type table (toType) meta previousMeta;
 
 // 
 // Load common library functions
@@ -621,6 +611,7 @@ Extension.LoadFunction = (name as text) =>
         Expression.Evaluate(asText, #shared);
 
 Table.ChangeType = Extension.LoadFunction("Table.ChangeType.pqm");
+//Schema.ToTableType = Extension.LoadFunction("Table.ChangeType.pqm");
 Diagnostics = Extension.LoadFunction("Diagnostics.pqm");
 Diagnostics.LogValue = Diagnostics[LogValue];
 Diagnostics.LogFailure = Diagnostics[LogFailure];
