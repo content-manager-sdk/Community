@@ -10,7 +10,7 @@
 } */
 
 .trim-search-list-outer {
-	height: 160px;
+	/*height: 160px;*/
 	overflow: hidden;
 	display: flex;
 }

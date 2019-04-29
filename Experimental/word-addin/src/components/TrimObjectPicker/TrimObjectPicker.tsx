@@ -111,6 +111,8 @@ export class TrimObjectPicker
 			includeAlternateWhenShowingFolderContents,
 		} = this.state;
 
+		const startSearchAt = textFieldText || searchStartPoint;
+
 		return (
 			<div>
 				<div ref={this._objectPickerDiv} role="combobox">
@@ -130,7 +132,7 @@ export class TrimObjectPicker
 					/>
 				</div>
 
-				{isObjectPickerShown && searchStartPoint && (
+				{isObjectPickerShown && startSearchAt && (
 					<Callout
 						id="Trim-ObjectPicker-Callout"
 						role="dialog"
@@ -154,7 +156,7 @@ export class TrimObjectPicker
 									onDismiss={this._listDismissed}
 									trimType={trimType}
 									onTrimObjectSelected={this._trimObjectSelected}
-									q={searchStartPoint}
+									q={startSearchAt}
 									purpose={purpose}
 									purposeExtra={purposeExtra}
 									filter={filter}
@@ -222,11 +224,10 @@ export class TrimObjectPicker
 	};
 
 	private __textChanged = (newText: string): void => {
-		this.setState({ textFieldText: newText, searchStartPoint: newText });
+		this.setState({ textFieldText: newText });
 		if (!this.state.isObjectPickerShown && newText.length > 2) {
 			this._onTextFieldClick();
 		}
-		//	this.setState({ searchStartPoint: newText });
 	};
 
 	private _onIconClick = (ev: React.MouseEvent<HTMLElement>): void => {
@@ -297,7 +298,6 @@ export class TrimObjectPicker
 
 	private _showObjectPickerPopup(): void {
 		if (!this.state.isObjectPickerShown) {
-			//  this._preventFocusOpeningPicker = true;
 			this.setState({
 				isObjectPickerShown: true,
 				//	errorMessage: ''
