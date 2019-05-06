@@ -39,7 +39,7 @@ body {
 .trim-main {
 	position: absolute;
 	top: 0px;
-	bottom: 90px;
+	/* bottom: 90px; */
 	right: 0px;
 	left: 0px;
 	padding: 0 6px 0 6px;
@@ -106,4 +106,10 @@ body {
 }
 .trim-number-field > div:first-child {
 	margin-bottom: 5px;
+}
+.new-record-body {
+	margin-top: 8px;
+}
+.new-record-body .ms-Pivot {
+	border-bottom: 1px groove;
 }

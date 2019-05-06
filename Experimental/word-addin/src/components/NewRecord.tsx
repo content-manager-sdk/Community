@@ -92,14 +92,16 @@ export class NewRecord extends React.Component<
 					placeholder={appStore.messages.web_SelectRecordType}
 					onChange={this._onChange}
 				/>
-				<PropertySheet
-					formDefinition={this.formDefinition}
-					defaultRecordTitle={this.recordProps["RecordTypedTitle"]}
-					onChange={this._onPropertySheetChange}
-				/>
-				<PrimaryButton onClick={this._onClick}>
-					{appStore.messages.web_Register}
-				</PrimaryButton>
+				<div className="new-record-body">
+					<PropertySheet
+						formDefinition={this.formDefinition}
+						defaultRecordTitle={this.recordProps["RecordTypedTitle"]}
+						onChange={this._onPropertySheetChange}
+					/>
+					<PrimaryButton onClick={this._onClick}>
+						{appStore.messages.web_Register}
+					</PrimaryButton>
+				</div>
 			</div>
 		);
 	}

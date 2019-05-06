@@ -68,6 +68,10 @@
 	cursor: pointer;
 }
 
+.is-selected {
+	background-color: #f4f4f4;
+}
+
 /* .trim-list-row > div {
 	display: inline-block;
 } */

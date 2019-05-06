@@ -97,6 +97,7 @@ export class TrimObjectSearchList extends React.Component<
 
 		let query = this._newQuery;
 		if (q && !query && userSearch && !this.props.advancedSearch) {
+
 			query = trimConnector!.makeFriendlySearchQuery(trimType!, q!);
 		} else if (!this._newQuery) {
 			query = q!;
@@ -293,13 +294,21 @@ export class TrimObjectSearchList extends React.Component<
 		return elReturn;
 	}
 
+	private _previousSelected: HTMLElement;
+
 	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
 		event.preventDefault();
 
 		const target = event.nativeEvent.target as HTMLElement;
 		const el = this.findAncestor(target!);
 		if (el) {
+			if (this._previousSelected) {
+				this._previousSelected.classList.remove("is-selected");
+			}
+			this._previousSelected = el;
+			el.classList.toggle("is-selected");
 			const uri = Number(el.getAttribute("data-trim-uri"));
+
 			if (target.classList && target.classList.contains("trim-find-children")) {
 				this._onTrimObjectContainerSearch(uri);
 			} else {
@@ -346,8 +355,13 @@ export class TrimObjectSearchList extends React.Component<
 				icon = item.Icon.FileType;
 			}
 		}
+
 		return (
-			<div className="trim-list-row" data-trim-uri={item.Uri}>
+			<div
+				data-is-focusable={true}
+				className="trim-list-row"
+				data-trim-uri={item.Uri}
+			>
 				<div className="trim-list-row-label">
 					<div>
 						<img src={`/assets/webIcons/${icon}_x16.png`} />

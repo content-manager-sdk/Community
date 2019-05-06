@@ -180,6 +180,7 @@ export class PropertySheet extends React.Component<
 						linkFormat={PivotLinkFormat.tabs}
 						linkSize={PivotLinkSize.normal}
 					>
+						<hr />
 						{formDefinition.Pages.map((page: any) => {
 							if (page.Type === "Normal") {
 								return (

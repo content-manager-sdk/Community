@@ -56,10 +56,15 @@ export class AppStore implements IAppStore {
 				// this.messages.bob_sbMe = "Me";
 			}
 
-			this.documentInfo = yield this.trimConnector.getDriveId(
-				this.wordConnector.getWebUrl()
-			);
-
+			// not happy with this
+			// it fails when we open as a dialog
+			// I do not need the dpcumentInfo when opened as a dialog
+			// so it would be better not to call at all when opened as a dialog...
+			try {
+				this.documentInfo = yield this.trimConnector.getDriveId(
+					this.wordConnector.getWebUrl()
+				);
+			} catch {}
 			this.status = "WAITING";
 			// this.status =
 			// 	this.documentInfo.found || !this.documentInfo.message

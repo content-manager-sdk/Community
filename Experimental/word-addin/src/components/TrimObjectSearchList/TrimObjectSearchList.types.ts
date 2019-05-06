@@ -29,6 +29,7 @@ export interface ITrimObjectSearchListProps
 	advancedSearch?: boolean;
 	filter?: string;
 
+
 	/**
 	 * Callback issued when search is closed
 	 */

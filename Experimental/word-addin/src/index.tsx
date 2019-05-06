@@ -14,7 +14,16 @@ initializeIcons();
 const wordConnector = new WordConnector();
 const trimConnector = new TrimConnector();
 trimConnector.credentialsResolver = (callback) => {
-	wordConnector.getAccessToken().then((token) => callback(token));
+	const url: URL = new URL(window.location.href);
+	const params: URLSearchParams = url.searchParams;
+	// get target key/value from URLSearchParams object
+	const accessToken = params.get("accessToken");
+
+	if (accessToken) {
+		callback(accessToken);
+	} else {
+		wordConnector.getAccessToken().then((token) => callback(token));
+	}
 };
 const appStore = new AppStore(wordConnector, trimConnector);
 
