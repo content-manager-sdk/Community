@@ -11,3 +11,14 @@
 .trim-advanced-search .ms-Button-icon {
 	height: 24px;
 }
+
+.object-picker {
+	height: 260px;
+	overflow: hidden;
+}
+
+.object-picker .trim-list-container {
+	width: 100%;
+	height: 260px;
+	overflow: auto;
+}

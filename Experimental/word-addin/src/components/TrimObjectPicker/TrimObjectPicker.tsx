@@ -135,6 +135,7 @@ export class TrimObjectPicker
 				{isObjectPickerShown && startSearchAt && (
 					<Callout
 						id="Trim-ObjectPicker-Callout"
+						className="object-picker"
 						role="dialog"
 						isBeakVisible={false}
 						gapSpace={0}
@@ -142,7 +143,6 @@ export class TrimObjectPicker
 						target={this._objectPickerDiv.current}
 						directionalHint={DirectionalHint.bottomLeftEdge}
 						onDismiss={this._objectPickerDismissed}
-						className="ms-DatePicker-callout"
 						calloutWidth={
 							this._objectPickerDiv.current
 								? this._objectPickerDiv.current.clientWidth

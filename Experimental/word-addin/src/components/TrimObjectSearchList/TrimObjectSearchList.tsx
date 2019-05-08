@@ -97,7 +97,6 @@ export class TrimObjectSearchList extends React.Component<
 
 		let query = this._newQuery;
 		if (q && !query && userSearch && !this.props.advancedSearch) {
-
 			query = trimConnector!.makeFriendlySearchQuery(trimType!, q!);
 		} else if (!this._newQuery) {
 			query = q!;
