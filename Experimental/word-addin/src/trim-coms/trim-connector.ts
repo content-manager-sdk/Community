@@ -137,13 +137,21 @@ export interface ITrimConnector {
 		recordTypeUri: number,
 		properties: any
 	): Promise<ITrimMainObject>;
+	getDriveUrl(recordUri: number): Promise<string>;
 	getDriveId(webUrl: string): Promise<IDriveInformation>;
 	getObjectDetails(
 		trimType: BaseObjectTypes,
 		uri: number
 	): Promise<IObjectDetails>;
 
-	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation>;
+	runAction(
+		commandId: CommandIds,
+		Uri: number,
+		fileName: string,
+		webUrl: string
+	): Promise<IDriveInformation>;
+
+	writeFileSlice(data: number[], fileName: string): Promise<string>;
 	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string;
 }
 
@@ -246,14 +254,26 @@ export class TrimConnector implements ITrimConnector {
 	}
 	public credentialsResolver: (callback: ITokenCallback) => void;
 
+	writeFileSlice(data: number[], fileName: string): Promise<string> {
+		return this.makeRequest(
+			{ path: "WriteFile", method: "post", data: { data, fileName } },
+			(data: any) => {
+				console.log(data);
+				return data.FileName;
+			}
+		);
+	}
+
 	public runAction(
 		commandId: CommandIds,
-		Uri: number
+		Uri: number,
+		fileName: string,
+		webUrl: string
 	): Promise<IDriveInformation> {
 		const path = "DriveFile";
 
 		const postBodies = {
-			[CommandIds.RecCheckIn]: { Uri, Action: "checkin" },
+			[CommandIds.RecCheckIn]: { Uri, Action: "checkin", fileName, webUrl },
 			[CommandIds.RecDocFinal]: {
 				Action: "finalize",
 				Uri,
@@ -303,6 +323,15 @@ export class TrimConnector implements ITrimConnector {
 			{ path: "RegisterFile", method: "get", data: { webUrl } },
 			(data: any) => {
 				return data.Results[0];
+			}
+		);
+	}
+
+	public getDriveUrl(recordUri: number): Promise<string> {
+		return this.makeRequest(
+			{ path: `OpenFile/${recordUri}`, method: "get" },
+			(data: any) => {
+				return data.WebUrl;
 			}
 		);
 	}
@@ -486,7 +515,9 @@ export class TrimConnector implements ITrimConnector {
 							response.data.Messages ||
 							response.data.SearchClauseDefs ||
 							response.data.UserOptions ||
-							response.data.Results
+							response.data.WebUrl ||
+							response.data.Results ||
+							response.data.FileName
 						) {
 							resolve(parseCallback(response.data));
 						} else {

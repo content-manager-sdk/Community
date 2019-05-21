@@ -16,9 +16,20 @@ export interface IWordConnector extends IWordUrl {
 	insertText(textToInsert: string): void;
 	setAutoOpen(autoOpen: boolean): void;
 	getAutoOpen(): boolean;
+	saveDocument(): Promise<void>;
+	getDocumentData(writeSlice: any): Promise<string>;
 }
 
 export class WordConnector implements IWordConnector {
+	getDocumentData(writeSlice: any): Promise<string> {
+		return new Promise((resolve, reject) => {
+			const onData = (fileName: string) => {
+				resolve(fileName);
+			};
+
+			this.getDocumentAsCompressed({ onData: onData, writeSlice });
+		});
+	}
 	setAutoOpen(autoOpen: boolean): void {
 		Office.context.document.settings.set(
 			"Office.AutoShowTaskpaneWithDocument",
@@ -33,6 +44,119 @@ export class WordConnector implements IWordConnector {
 
 		return autoOpen;
 	}
+
+	private getDocumentAsCompressed(args: any) {
+		const me = this;
+
+		Office.context.document.getFileAsync(
+			Office.FileType.Compressed,
+			{
+				sliceSize: 65536 * 8 /*64 KB*/,
+			},
+			function(result: any) {
+				if (result.status === "succeeded") {
+					// If the getFileAsync call succeeded, then
+					// result.value will return a valid File Object.
+					var myFile = result.value;
+					var sliceCount = myFile.sliceCount;
+					var slicesReceived = 0,
+						gotAllSlices = true,
+						docdataSlices: [] = [];
+					//showNotification("", "File size:" + myFile.size + " #Slices: " + sliceCount);
+
+					// Get the file slices.
+					me.getSliceAsync(
+						myFile,
+						0,
+						sliceCount,
+						gotAllSlices,
+						docdataSlices,
+						slicesReceived,
+						args
+					);
+				} else {
+					// showNotification("Error:", result.error.message);
+				}
+			}
+		);
+	}
+
+	private getSliceAsync(
+		file: any,
+		nextSlice: any,
+		sliceCount: number,
+		gotAllSlices: any,
+		docdataSlices: any,
+		slicesReceived: any,
+		args: any
+	) {
+		const me = this;
+		file.getSliceAsync(nextSlice, function(sliceResult: any) {
+			if (sliceResult.status == "succeeded") {
+				if (!gotAllSlices) {
+					// Failed to get all slices, no need to continue.
+					return;
+				}
+
+				// Got one slice, store it in a temporary array.
+				// (Or you can do something else, such as
+				// send it to a third-party server.)
+				//	docdataSlices[sliceResult.value.index] = sliceResult.value.data;
+
+				const { writeSlice } = args;
+				writeSlice(sliceResult.value.data, args.fileName).then(
+					(result: any) => {
+						args.fileName = result;
+						if (++slicesReceived == sliceCount) {
+							// All slices have been received.
+							file.closeAsync();
+
+							const { onData } = args;
+							onData(args.fileName);
+
+							//me.onGotAllSlices(docdataSlices, args);
+						} else {
+							me.getSliceAsync(
+								file,
+								++nextSlice,
+								sliceCount,
+								gotAllSlices,
+								docdataSlices,
+								slicesReceived,
+								args
+							);
+						}
+					}
+				);
+			} else {
+				gotAllSlices = false;
+				file.closeAsync();
+				//   showNotification("getSliceAsync Error:", sliceResult.error.message);
+			}
+		});
+	}
+
+	// private onGotAllSlices(docdataSlices: [], args: any) {
+	// 	var docdata: number[] = [];
+	// 	for (var i = 0; i < docdataSlices.length; i++) {
+	// 		docdata = docdata.concat(docdataSlices[i]);
+	// 	}
+
+	// 	const { onData } = args;
+	// 	onData(docdata);
+
+	// 	// var decoder = new TextDecoder('utf8');
+	// 	// var b64encoded = btoa(decoder.decode(docdata));
+
+	// 	//var fileContent = new String();
+	// 	//for (var j = 0; j < docdata.length; j++) {
+	// 	//    fileContent += String.fromCharCode(docdata[j]);
+	// 	//}
+
+	// 	// Now all the file content is stored in 'fileContent' variable,
+	// 	// you can do something with it, such as print, fax...
+	// }
+
 	public getWebUrl() {
 		return Office.context.document.url;
 	}
@@ -52,6 +176,44 @@ export class WordConnector implements IWordConnector {
 				}
 			}
 		);
+	}
+
+	public saveDocument(): Promise<void> {
+		return new Promise((resolve, reject) => {
+			Word.run((context) => {
+				const thisDocument = context.document;
+
+				context.load(thisDocument, "saved");
+				return context
+					.sync()
+					.then(() => {
+						if (thisDocument.saved === false) {
+							// Queue a command to save this document.
+							thisDocument.save();
+
+							// Synchronize the document state by executing the queued commands,
+							// and return a promise to indicate task completion.
+							context
+								.sync()
+								.then(function() {
+									//console.log('Saved the document');
+									resolve();
+								})
+								.catch((reason) => reject(reason));
+						} else {
+							//console.log('The document has not changed since the last save.');
+							resolve();
+						}
+
+						//	resolve();
+					})
+					.catch((error) => {
+						reject(error);
+					});
+			}).catch((error) => {
+				reject(error);
+			});
+		});
 	}
 
 	public setUri(uri: number): Promise<IGetRecordUriResponse> {

@@ -1,0 +1,29 @@
+.dialog-top {
+	height: 96vh;
+	position: relative;
+}
+
+.dialog-footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 34px;
+	margin-bottom: 8px;
+}
+
+.dialog-footer > div {
+	float: right;
+	margin-right: 8px;
+}
+
+.dialog-list .trim-list-container {
+	position: fixed;
+	top: 40px;
+	bottom: 52px;
+	left: 50px;
+	right: 10px;
+	/* left: 0;
+	right: 0; */
+	overflow: auto;
+}

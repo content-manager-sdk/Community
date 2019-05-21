@@ -6,12 +6,21 @@ import { ITrimConnector, ICommandDef } from "src/trim-coms/trim-connector";
 import { IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
 import { CommandIds } from "../trim-coms/trim-command-ids";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
+import { IWordConnector } from "src/office-coms/word-connector";
 
 export class ExistingRecord extends React.Component<
-	{ appStore?: any; trimConnector?: ITrimConnector },
+	{
+		appStore?: any;
+		trimConnector?: ITrimConnector;
+		wordConnector?: IWordConnector;
+	},
 	{ menuMessage: string }
 > {
-	constructor(props: { appStore?: any; trimConnector?: ITrimConnector }) {
+	constructor(props: {
+		appStore?: any;
+		trimConnector?: ITrimConnector;
+		wordConnector?: IWordConnector;
+	}) {
 		super(props);
 
 		this.state = { menuMessage: "" };
@@ -21,22 +30,43 @@ export class ExistingRecord extends React.Component<
 		evt: React.MouseEvent<HTMLElement>,
 		item: IContextualMenuItem
 	) => {
-		const { trimConnector, appStore } = this.props;
+		const { trimConnector, wordConnector, appStore } = this.props;
 		if (item.key === "Properties") {
 			open(`https://localhost/cm?uri=${appStore.documentInfo.Uri}`, "_blank");
 		} else {
-			trimConnector!
-				.runAction(item.key as CommandIds, appStore!.RecordUri)
-				.then((data) => {
-					appStore.setDocumentInfo(data);
-					this.setState({
-						menuMessage: `Action completed successfuly '${item.text}'.`,
-					});
-					const me = this;
-					setTimeout(function() {
-						me._dismissMessage();
-					}, 3000);
-				});
+			const me = this;
+			wordConnector!.saveDocument().then(() => {
+				const runAction = (fileName: string) => {
+					trimConnector!
+						.runAction(
+							item.key as CommandIds,
+							appStore!.RecordUri,
+							fileName,
+							wordConnector!.getWebUrl()
+						)
+						.then((data) => {
+							appStore.setDocumentInfo(data);
+							me.setState({
+								menuMessage: `Action completed successfuly '${item.text}'.`,
+							});
+							setTimeout(function() {
+								me._dismissMessage();
+							}, 3000);
+						});
+				};
+				console.log("11111111111111111");
+				if (item.key === "RecCheckIn") {
+					wordConnector!
+						.getDocumentData((data: number[], fileName: string) => {
+							return trimConnector!.writeFileSlice(data, fileName);
+						})
+						.then((fileName) => {
+							runAction(fileName);
+						});
+				} else {
+					runAction("");
+				}
+			});
 		}
 	};
 
@@ -80,4 +110,6 @@ export class ExistingRecord extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector")(observer(ExistingRecord));
+export default inject("appStore", "trimConnector", "wordConnector")(
+	observer(ExistingRecord)
+);
