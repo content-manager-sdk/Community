@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
+    <Compile Include="BaseOneDriveService.cs" />
     <Compile Include="CommandDefCustomProp.cs" />
     <Compile Include="CustomRecord.cs" />
     <Compile Include="GraphApiHelper.cs" />
@@ -116,6 +117,9 @@
     <Compile Include="MyCommandDef.cs" />
     <Compile Include="ODataHelper.cs" />
     <Compile Include="OneDriveAuthPlugin.cs" />
+    <Compile Include="WriteFileService.cs" />
+    <Compile Include="OpenFileService.cs" />
+    <Compile Include="OperationType.cs" />
     <Compile Include="RegisterFileService.cs" />
     <Compile Include="SsoTokenValidationResult.cs" />
     <Compile Include="TokenAuthProvider.cs" />

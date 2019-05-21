@@ -34,7 +34,7 @@ namespace OneDriveAuthPlugin
 
 			// Since add-in SSO tokens are issued by Azure, we can use the
 			// well-known OpenID config to get signing keys
-			string openIdConfig = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
+			string openIdConfig = $"https://login.microsoftonline.com/dd30c61c-1361-4509-82d6-fab96f7102a2/v2.0/.well-known/openid-configuration";
 
 			ConfigurationManager<OpenIdConnectConfiguration> configManager =
 				new ConfigurationManager<OpenIdConnectConfiguration>(openIdConfig, new OpenIdConnectConfigurationRetriever());
@@ -58,6 +58,11 @@ namespace OneDriveAuthPlugin
 			}
 
 			var preferredName = Claims.FirstOrDefault(claim => claim.Type == "preferred_username");
+
+			if (preferredName == null)
+			{
+				preferredName = Claims.FirstOrDefault(claim => claim.Type == "upn");
+			}
 
 			if (preferredName == null)
 			{

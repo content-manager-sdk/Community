@@ -9,11 +9,73 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace OneDriveAuthPlugin
 {
 	internal static class ODataHelper
 	{
+
+//		internal static async Task<T> UploadFile<T>(string itemPath, string accessToken)
+//		{
+
+//			System.Net.Http.StringContent content = new StringContent(@"{
+//  ""name"": ""Content Manager Documents"",
+//  ""folder"": { },
+//  ""@microsoft.graph.conflictBehavior"": ""replace""
+//}", Encoding.UTF8, "application/json");
+//			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+
+//			if (typeof(T) == typeof(string))
+//			{
+//				return jsonData;
+//			}
+//			// Convert to .NET class and populate the properties of the model objects,
+//			// and then populate the IEnumerable object and return it.
+//			JObject jsonArray = jsonData;
+//			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+//		}
+
+		internal static async Task<T> PostFile<T>(string itemPath, string accessToken, string filePath)
+		{
+			using (var fileStream = File.OpenRead(filePath))
+			{
+				System.Net.Http.StreamContent content = new StreamContent(fileStream);
+				content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filePath));
+
+				dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+
+				if (typeof(T) == typeof(string))
+				{
+					return jsonData;
+				}
+				// Convert to .NET class and populate the properties of the model objects,
+				// and then populate the IEnumerable object and return it.
+				JObject jsonArray = jsonData;
+				return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+			}
+		}
+
+		internal static async Task<T> PostFolder<T>(string itemPath, string accessToken)
+		{
+
+			System.Net.Http.StringContent content = new StringContent(@"{
+  ""name"": ""Content Manager Documents"",
+  ""folder"": { },
+  ""@microsoft.graph.conflictBehavior"": ""replace""
+}", Encoding.UTF8, "application/json");
+			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+
+			if (typeof(T) == typeof(string))
+			{
+				return jsonData;
+			}
+			// Convert to .NET class and populate the properties of the model objects,
+			// and then populate the IEnumerable object and return it.
+			JObject jsonArray = jsonData;
+			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+		}
+
 		/// <summary>
 		/// Gets any JSON array from any OData endpoint that requires an access token.
 		/// </summary>
@@ -21,9 +83,9 @@ namespace OneDriveAuthPlugin
 		/// <param name="itemsUrl">The URL of the OData endpoint.</param>
 		/// <param name="accessToken">An OAuth access token.</param>
 		/// <returns>Collection of T items that the caller can cast to any IEnumerable type.</returns>
-		internal static async Task<T> GetItem<T>(string itemPath, string accessToken)
+		internal static async Task<T> GetItem<T>(string itemPath, string accessToken, string tempPath)
 		{
-			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken);
+			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, tempPath: tempPath);
 
 			if (typeof(T) == typeof(string))
 			{
@@ -59,16 +121,35 @@ namespace OneDriveAuthPlugin
 		/// <param name="itemsUrl">The OData endpoint URL.</param>
 		/// <param name="accessToken">The access token for the endpoint resource.</param>
 		/// <returns></returns>
-		internal static async Task<dynamic> SendRequestWithAccessToken(string itemsUrl, string accessToken)
+		internal static async Task<dynamic> SendRequestWithAccessToken(string itemsUrl, string accessToken, HttpContent requestContent = null, string tempPath = null)
 		{
 			dynamic jsonData = null;
 
 			using (var client = new HttpClient())
 			{
+				HttpMethod method = HttpMethod.Get;
+				
+				if (requestContent is StringContent)
+				{
+					method = HttpMethod.Post;
+				}
+
+				if (requestContent is StreamContent)
+				{
+					method = HttpMethod.Put;
+				}
+
 				// Create and send the HTTP Request
-				using (var request = new HttpRequestMessage(HttpMethod.Get, itemsUrl))
+				using (var request = new HttpRequestMessage(method, itemsUrl))
 				{
 					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					
+					if (requestContent != null)
+					{
+						//request.Headers.Add("Content-type", "application/json");
+						request.Content = requestContent;
+						
+					}
 
 					using (HttpResponseMessage response = await client.SendAsync(request))
 					{
@@ -76,15 +157,15 @@ namespace OneDriveAuthPlugin
 						{
 							HttpContent content = response.Content;
 
-							if (itemsUrl.EndsWith("content"))
+							if (itemsUrl.EndsWith("content") && method == HttpMethod.Get)
 							{
-								string filePath = Path.ChangeExtension(Path.GetTempFileName(), "docx");
+								//string filePath = Path.ChangeExtension(Path.GetTempFileName(), "docx");
 									var contentStream = await content.ReadAsStreamAsync(); // get the actual content stream
-								using (var file = System.IO.File.Create(filePath))
+								using (var file = System.IO.File.Create(tempPath))
 								{
 									contentStream.CopyTo(file);
 								}
-								return filePath;// File(contentStream, content_type, filename);
+								return tempPath;// File(contentStream, content_type, filename);
 							} else { 
 								string responseContent = await content.ReadAsStringAsync();
 

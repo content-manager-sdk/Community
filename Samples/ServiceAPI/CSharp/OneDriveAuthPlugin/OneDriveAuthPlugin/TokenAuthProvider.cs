@@ -33,6 +33,7 @@ namespace OneDriveAuthPlugin
 #endif
 
 			AddInSsoToken ssotoken = new AddInSsoToken(accessToken);
+			
 
 			string expectedAudience = ConfigurationManager.AppSettings["ida:Audience"];
 

@@ -18,6 +18,16 @@ namespace OneDriveAuthPlugin
 			return GetFilesUrl + selectedProperties;
 		}
 
+		internal static string GetOneDriveFileUploadUrl(string folderId, string fileName)
+		{
+			return $"{GetMyOneDriveUrl()}/items/{folderId}:/{fileName}:/content";
+		}
+
+		internal static string GetOneDriveChildrenUrl()
+		{
+			return $"{GetMyOneDriveUrl()}/root/children";
+		}
+
 		internal static string GetOneDriveItemPathsUrl(string selectedPath)
 		{
 			// Construct URL for the names of the folders and files.
@@ -39,7 +49,7 @@ namespace OneDriveAuthPlugin
 		internal static string GetMyOneDriveUrl()
 		{
 			// Construct URL for the names of the folders and files.
-			return BaseGraphUrl + "/drive";
+			return BaseGraphUrl + "drive";
 		}
 	}
 
