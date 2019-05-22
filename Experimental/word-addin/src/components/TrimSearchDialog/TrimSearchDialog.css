@@ -21,9 +21,16 @@
 	position: fixed;
 	top: 40px;
 	bottom: 52px;
-	left: 50px;
 	right: 10px;
 	/* left: 0;
 	right: 0; */
 	overflow: auto;
+}
+
+.dialog-sizing {
+	left: 90px;
+}
+
+.slim-sizing {
+	left: 50px;
 }

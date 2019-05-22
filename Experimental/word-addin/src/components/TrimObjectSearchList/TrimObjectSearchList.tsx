@@ -11,6 +11,7 @@ import {
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 import { Icon } from "office-ui-fabric-react/lib/Icon";
+import { Text } from "office-ui-fabric-react/lib/Text";
 import {
 	Breadcrumb,
 	IBreadcrumbItem,
@@ -210,7 +211,7 @@ export class TrimObjectSearchList extends React.Component<
 	};
 
 	public render(): JSX.Element {
-		const { trimType } = this.props;
+		const { trimType, dialogDisplay } = this.props;
 		const { searchShortCuts, items, ancestors } = this.state;
 
 		return (
@@ -230,7 +231,11 @@ export class TrimObjectSearchList extends React.Component<
 					/>
 				)}
 				<div className="trim-search-list-outer">
-					<div className="trim-search-shortcuts">
+					<div
+						className={`trim-search-shortcuts shortcut-${
+							dialogDisplay ? "dialog" : "combo"
+						}`}
+					>
 						<ul>
 							{Object.keys(searchShortCuts[trimType!]).map(
 								(key: any, index: number) => {
@@ -260,6 +265,11 @@ export class TrimObjectSearchList extends React.Component<
 												}}
 											>
 												<img src={`/assets/${sc.src}_x32.png`} />
+												{dialogDisplay === true && (
+													<Text variant={"smallPlus"} block={true}>
+														{sc.Caption}
+													</Text>
+												)}
 											</li>
 										</TooltipHost>
 									);
@@ -268,7 +278,9 @@ export class TrimObjectSearchList extends React.Component<
 						</ul>
 					</div>
 					<div
-						className="trim-list-container is-scrollable"
+						className={`trim-list-container is-scrollable ${
+							dialogDisplay ? "dialog-sizing" : "slim-sizing"
+						}`}
 						data-is-scrollable="true"
 						onScroll={this._onScroll}
 					>

@@ -28,7 +28,7 @@ export interface ITrimObjectSearchListProps
 	contentsInReverseDateOrder: boolean;
 	advancedSearch?: boolean;
 	filter?: string;
-
+	dialogDisplay?: boolean;
 
 	/**
 	 * Callback issued when search is closed

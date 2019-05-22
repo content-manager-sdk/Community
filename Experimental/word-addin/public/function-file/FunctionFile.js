@@ -54,7 +54,7 @@ function openFromTrim(event) {
 					accessToken +
 					"&rnd=" +
 					Math.random(),
-				{ height: 45, width: 50, displayInIframe: true },
+				{ height: 55, width: 50, displayInIframe: true },
 				function(asyncResult) {
 					dialog = asyncResult.value;
 					dialog.addEventHandler(

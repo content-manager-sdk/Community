@@ -148,6 +148,7 @@ export class TrimSearchDialog
 							}
 							contentsInReverseDateOrder={contentsInReverseDateOrder}
 							advancedSearch={advancedSearch}
+							dialogDisplay={true}
 						/>
 					</FocusTrapZone>
 				)}

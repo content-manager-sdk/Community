@@ -24,6 +24,7 @@ describe("Trim object search list", function() {
 	let testQ = "";
 	let testFilter = "";
 	let wrapper: any;
+	let wrapperDialog: any;
 	let testStart = 0;
 	let testObject: ITrimMainObject;
 	let hasMore = true;
@@ -41,8 +42,13 @@ describe("Trim object search list", function() {
 		hasMore = true;
 
 		wrapper = makeWrapper();
+		wrapperDialog = makeWrapper("all", false, true);
 	});
-	const makeWrapper = (query = `all`, advancedSearch = false): any => {
+	const makeWrapper = (
+		query = `all`,
+		advancedSearch = false,
+		dialogDisplay = false
+	): any => {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
 				trimConnector={trimConnector}
@@ -59,6 +65,7 @@ describe("Trim object search list", function() {
 				}
 				contentsInReverseDateOrder={true}
 				advancedSearch={advancedSearch}
+				dialogDisplay={dialogDisplay}
 			/>
 		);
 	};
@@ -150,10 +157,26 @@ describe("Trim object search list", function() {
 	});
 
 	it("no text below shortcut", () => {
-		const text = wrapper.find(Text);
+		const text = wrapper.find("div.trim-search-shortcuts").find(Text);
 
 		expect(text.length).toEqual(0);
 	});
+
+	it(" text below shortcut", () => {
+		const text = wrapperDialog.find("div.trim-search-shortcuts").find(Text);
+
+		expect.assertions(2);
+
+		expect(text.length).toEqual(6);
+		expect(
+			text
+				.at(0)
+				.childAt(0)
+				.text()
+		).toEqual("My Containers");
+	});
+
+	//My Containers
 
 	it("clears the list when a new search run", () => {
 		const shortCut = wrapper.find("li");
@@ -260,7 +283,6 @@ describe("Trim object search list", function() {
 	};
 
 	const clickNavigateOnListItem = function(wrapper: ShallowWrapper) {
-		console.log("0000000000000000000000");
 		wrapper.find(List).simulate("click", {
 			preventDefault: function() {},
 			nativeEvent: {

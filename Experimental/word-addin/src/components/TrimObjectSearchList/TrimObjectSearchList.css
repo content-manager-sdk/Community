@@ -30,8 +30,15 @@
 .trim-search-shortcuts {
 	position: relative;
 	display: block;
-	width: 44px;
 	padding-right: 4px;
+}
+
+.shortcut-dialog {
+	width: 74px;
+}
+
+.shortcut-combob {
+	width: 44px;
 }
 
 .trim-search-shortcuts ul {
@@ -42,6 +49,7 @@
 
 .trim-search-shortcuts li {
 	margin-top: 4px;
+	text-align: center;
 }
 
 /* .trim-list {
