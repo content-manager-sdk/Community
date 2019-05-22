@@ -54,8 +54,8 @@ export class ExistingRecord extends React.Component<
 							}, 3000);
 						});
 				};
-				console.log("11111111111111111");
-				if (item.key === "RecCheckIn") {
+
+				if (item.key === CommandIds.RecCheckIn) {
 					wordConnector!
 						.getDocumentData((data: number[], fileName: string) => {
 							return trimConnector!.writeFileSlice(data, fileName);

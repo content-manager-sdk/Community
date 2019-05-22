@@ -5,7 +5,7 @@ import { ErrorDisplay } from "./ErrorDisplay";
 import MainApp from "./MainApp";
 //import { BrowserRouter as Router, Route } from "react-router-dom";
 import { TrimSearchDialog } from "./TrimSearchDialog/TrimSearchDialog";
-import BaseObjectTypes from "src/trim-coms/trim-baseobjecttypes";
+import { BaseObjectTypes } from "../../src/trim-coms/trim-baseobjecttypes";
 import { ITrimConnector } from "src/trim-coms/trim-connector";
 
 interface IProps {

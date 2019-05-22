@@ -49,6 +49,7 @@ describe("Existing Record", () => {
 					},
 				}}
 				trimConnector={mockTrimConnector}
+				wordConnector={mockWordConnector}
 			/>
 		);
 	};
@@ -69,6 +70,22 @@ describe("Existing Record", () => {
 			return new Promise(function(resolve) {
 				resolve(returnedDocumentInfo);
 			});
+		},
+	};
+
+	const mockWordConnector = {
+		saveDocument(): Promise<void> {
+			return new Promise(function(resolve) {
+				resolve();
+			});
+		},
+		getDocumentData(writeSlice: any): Promise<string> {
+			return new Promise(function(resolve) {
+				resolve("test");
+			});
+		},
+		getWebUrl() {
+			return "test-url";
 		},
 	};
 
@@ -103,18 +120,22 @@ describe("Existing Record", () => {
 		expect(wrapper.find(DefaultButton).props().text).toEqual("Actions");
 	});
 
-	it("calls checkin when checkin button clicked", () => {
+	it("calls checkin when checkin button clicked", async (done) => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
 		const menuItem = wrapper.find(DefaultButton).props().menuProps.items[0];
 
 		menuItem.onClick(null, menuItem);
-		expect(checkinUri).toEqual(7);
-		expect(finalizeUri).toEqual(0);
+
+		setImmediate(() => {
+			expect(checkinUri).toEqual(7);
+			expect(finalizeUri).toEqual(0);
+			done();
+		});
 	});
 
-	it("calls finalize when checkin button clicked", () => {
+	it("calls finalize when checkin button clicked", async (done) => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
@@ -122,8 +143,11 @@ describe("Existing Record", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		expect(checkinUri).toEqual(0);
-		expect(finalizeUri).toEqual(7);
+		setImmediate(() => {
+			expect(checkinUri).toEqual(0);
+			expect(finalizeUri).toEqual(7);
+			done();
+		});
 	});
 
 	it("disables Make Final when Record is already finalised", () => {
