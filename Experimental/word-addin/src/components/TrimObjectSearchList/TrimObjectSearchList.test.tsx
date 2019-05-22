@@ -15,6 +15,7 @@ import {
 import { List } from "office-ui-fabric-react/lib/List";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 import { Breadcrumb } from "office-ui-fabric-react/lib/Breadcrumb";
+import { Text } from "office-ui-fabric-react/lib/Text";
 
 describe("Trim object search list", function() {
 	let testPurpose = 0;
@@ -148,6 +149,12 @@ describe("Trim object search list", function() {
 		expect(testSortBy).toBeFalsy();
 	});
 
+	it("no text below shortcut", () => {
+		const text = wrapper.find(Text);
+
+		expect(text.length).toEqual(0);
+	});
+
 	it("clears the list when a new search run", () => {
 		const shortCut = wrapper.find("li");
 
@@ -218,6 +225,7 @@ describe("Trim object search list", function() {
 						getAttribute: function() {
 							return "1";
 						},
+						classList: { toggle: function() {} },
 					},
 				},
 			},
@@ -252,6 +260,7 @@ describe("Trim object search list", function() {
 	};
 
 	const clickNavigateOnListItem = function(wrapper: ShallowWrapper) {
+		console.log("0000000000000000000000");
 		wrapper.find(List).simulate("click", {
 			preventDefault: function() {},
 			nativeEvent: {
@@ -265,6 +274,7 @@ describe("Trim object search list", function() {
 						getAttribute: function() {
 							return "1";
 						},
+						classList: { toggle: function() {} },
 					},
 				},
 			},
