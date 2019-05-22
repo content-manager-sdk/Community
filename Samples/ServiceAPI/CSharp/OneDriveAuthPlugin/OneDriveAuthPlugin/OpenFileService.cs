@@ -76,5 +76,13 @@ namespace OneDriveAuthPlugin
 			}
 			return response;
 		}
+
+		// I am not 100% sure but the OnEndRequest method of Disposing seems to get called before the async services, that is why I am disposing here.
+		// If I continue to get Disposal errors I will need to re-think this.
+		public override void Dispose()
+		{
+			this.Database.Dispose();
+			base.Dispose();
+		}
 	}
 }

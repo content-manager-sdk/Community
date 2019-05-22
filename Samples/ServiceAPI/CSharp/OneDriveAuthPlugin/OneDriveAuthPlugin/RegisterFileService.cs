@@ -2,6 +2,7 @@
 using HP.HPTRIM.Service;
 using Microsoft.Identity.Client;
 using ServiceStack;
+using ServiceStack.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -179,28 +180,49 @@ namespace OneDriveAuthPlugin
 			}
 		}
 
+		private static Dictionary<long, string> _oneDriveDocuemntUrls = new Dictionary<long, string>();
+
+		private async Task<string> getOneDriveDocumentUrl(string token)
+		{
+			long myUri = this.Database.CurrentUser.Uri;
+			if (!_oneDriveDocuemntUrls.ContainsKey(myUri))
+			{
+				var driveDetails = await ODataHelper.GetItem<OneDriveDrive>(GraphApiHelper.GetMyOneDriveUrl(), token, null);
+				_oneDriveDocuemntUrls.Add(myUri, driveDetails.WebUrl);
+			}
+
+			return _oneDriveDocuemntUrls[myUri];
+		}
+
 		public async Task<object> Get(RegisterFile request)
 		{
+			var log = LogManager.GetLogger(typeof(RegisterFileService));
+
+			log.Debug("GET start");
 			RegisterFileResponse response = new RegisterFileResponse();
 
 			//string[] addinScopes = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/scope").Value.Split(' ');
 
-			string token = await getToken();
 
+			log.Debug("getToken");
+			string token = await getToken();
+			log.Debug("gotToken");
 
 			string driveId = getDriveIdFromTrim(request);
-
+			log.Debug("got Drive ID");
 			OneDriveItem fileResult = null;
 			try
 			{
 				if (!string.IsNullOrWhiteSpace(request.WebUrl))
 				{
-					var driveDetails = await ODataHelper.GetItem<OneDriveDrive>(GraphApiHelper.GetMyOneDriveUrl(), token, null);
+					string oneDriveUrl = await getOneDriveDocumentUrl(token);
 
-					string filePath = request.WebUrl.Substring(driveDetails.WebUrl.Length);
+					string filePath = request.WebUrl.Substring(oneDriveUrl.Length);
 
+					log.Debug("GetItem");
 					var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveItemPathsUrl(filePath);
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, token, null);
+					log.Debug("GotItem");
 				}
 				else if (!string.IsNullOrWhiteSpace(driveId))
 				{
@@ -216,7 +238,7 @@ namespace OneDriveAuthPlugin
 			}
 
 
-			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.Id, DriveItem = fileResult };
+			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.Id, /*DriveItem = fileResult */};
 
 
 			TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);
@@ -241,7 +263,16 @@ namespace OneDriveAuthPlugin
 
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };
+			log.Debug("Finished");
 			return response;
+		}
+
+		// I am not 100% sure but the OnEndRequest method of Disposing seems to get called before the async services, that is why I am disposing here.
+		// If I continue to get Disposal errors I will need to re-think this.
+		public override void Dispose()
+		{
+			this.Database.Dispose();
+			base.Dispose();
 		}
 	}
 }
