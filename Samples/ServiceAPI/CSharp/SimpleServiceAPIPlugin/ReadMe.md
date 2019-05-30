@@ -1,6 +1,9 @@
 # Simple ServiceAPI Plugin
 This sample adds a new service to the ServiceAPI to fetch a Record Title along with the current user name, it serves to demonstrate the creation of a ServiceAPI plugin.
 
+## Support
+ServiceAPI plugins are supported from version 8.2 onwards.
+
 ## Setup
 To use this sample:
  - Copy these files from your ServiceAPI bin folder to the Samples\ServiceAPI\CSharp\lib folder
