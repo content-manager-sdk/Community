@@ -19,5 +19,5 @@ Use the 'Edit Query' button in the Saved Search properties to select which colum
 ![Saved Search Properties](savedsearchresults.PNG)
 
 ## Authentication
-The only authentication that has been tested is Windows and Basic
+The only authentication that has been tested is Windows and Basic.
 
