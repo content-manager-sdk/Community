@@ -1,0 +1,105 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/x-ms-odc; charset=utf-8">
+<meta name=ProgId content=ODC.Database>
+<meta name=SourceType content=OLEDB>
+<title>Query - CMSavedSearch</title>
+<xml id=docprops><o:DocumentProperties
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns="http://www.w3.org/TR/REC-html40">
+  <o:Description>Connection to the 'CMSavedSearch' query in the workbook.</o:Description>
+  <o:Name>Query - CMSavedSearch</o:Name>
+ </o:DocumentProperties>
+</xml><xml id=msodc><odc:OfficeDataConnection
+  xmlns:odc="urn:schemas-microsoft-com:office:odc"
+  xmlns="http://www.w3.org/TR/REC-html40">
+  <odc:PowerQueryConnection odc:Type="OLEDB">
+   <odc:ConnectionString>Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=CMSavedSearch;Extended Properties=&quot;&quot;</odc:ConnectionString>
+   <odc:CommandType>SQL</odc:CommandType>
+   <odc:CommandText>SELECT * FROM [CMSavedSearch]</odc:CommandText>
+  </odc:PowerQueryConnection>
+  <odc:PowerQueryMashupData>&lt;Mashup xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://schemas.microsoft.com/DataMashup&quot;&gt;&lt;Client&gt;EXCEL&lt;/Client&gt;&lt;Version&gt;2.69.5467.451&lt;/Version&gt;&lt;MinVersion&gt;2.21.0.0&lt;/MinVersion&gt;&lt;Culture&gt;en-AU&lt;/Culture&gt;&lt;SafeCombine&gt;true&lt;/SafeCombine&gt;&lt;Items&gt;&lt;Query Name=&quot;ServiceURL&quot;&gt;&lt;Description&gt;The ServiceAPI URL&lt;/Description&gt;&lt;Formula&gt;&lt;![CDATA[let&#13;&#10;    Source = &quot;http://localhost/ServiceAPI/&quot; meta [IsParameterQuery=true, Type=&quot;Text&quot;, IsParameterQueryRequired=true]&#13;&#10;in&#13;&#10;    Source]]&gt;&lt;/Formula&gt;&lt;IsParameterQuery xsi:nil=&quot;true&quot; /&gt;&lt;IsDirectQuery xsi:nil=&quot;true&quot; /&gt;&lt;/Query&gt;&lt;Query Name=&quot;PageSize&quot;&gt;&lt;Description&gt;Number of objects (e.g. Records) to return in each page request.&lt;/Description&gt;&lt;Formula&gt;&lt;![CDATA[let&#13;&#10;    Source = 397 meta [IsParameterQuery=true, Type=&quot;Number&quot;, IsParameterQueryRequired=true]&#13;&#10;in&#13;&#10;    Source]]&gt;&lt;/Formula&gt;&lt;IsParameterQuery xsi:nil=&quot;true&quot; /&gt;&lt;IsDirectQuery xsi:nil=&quot;true&quot; /&gt;&lt;/Query&gt;&lt;Query Name=&quot;CMSavedSearch&quot;&gt;&lt;Formula&gt;&lt;![CDATA[let&#13;&#10;    Source = (savedSearchId as text) as table =&gt;&#13;&#10;let&#13;&#10;        friendlyRowValues = (row) =&gt;&#13;&#10;            let&#13;&#10;                tmoColumns = {&quot;Uri&quot;}, &#13;&#10;                locationColumns = {&quot;Uri&quot;}, &#13;&#10;&#13;&#10;       &#9;        refMainObjectFieldTransformations = List.Transform(tmoColumns, each {_, @friendlyRowValues}),&#13;&#10;                refLocationFieldTransformations = List.Transform(locationColumns, each {_, @friendlyRowValues}),&#13;&#10;&#9;        v = &#13;&#10;                    if Value.Type(row) = type text then row else&#13;&#10;                    if Value.Type(row) = type number then row else&#13;&#10;                    if row is null then&#13;&#10;                        null&#13;&#10;                    else if Record.HasFields(row, &quot;TrimType&quot;) and row[TrimType] = &quot;Location&quot; then&#13;&#10;                        Record.TransformFields(row, refLocationFieldTransformations)&#13;&#10;                    else if Record.HasFields(row, &quot;TrimType&quot;)  then&#13;&#10;                        Record.TransformFields(row, refMainObjectFieldTransformations)&#13;&#10;        &#9;    else if Record.HasFields(row, &quot;Value&quot;) then&#13;&#10;&#9;        &#9;row[Value]?&#13;&#10;        &#9;    else if Record.HasFields(row, &quot;IsTimeClear&quot;) then&#13;&#10;&#9;        &#9;row[DateTime]?&#13;&#10;        &#9;    else&#13;&#10;&#9;        &#9;row&#13;&#10;        &#9;in&#13;&#10;&#9;            v,&#13;&#10;&#13;&#10;        getPropertyList = (savedSearchDetails as record, savedSearchId as text) as record =&gt;&#13;&#10;            let&#13;&#10;&#9;&#9;&#9;searchQuery = [q=&quot;unkSaved:&quot; &amp; savedSearchId, pageSize=&quot;1&quot;, excludeCount=&quot;true&quot;,propertySets=&quot;FromSearch&quot;, IncludePropertyDefs=&quot;true&quot;],&#13;&#10;&#9;&#9;&#9;options = [&#13;&#10;&#9;&#9;&#9;&#9;Headers=[#&quot;Accept&quot;=&quot;application/json&quot;, #&quot;Cache-Control&quot;=&quot;no-cache, no-store, must-revalidate&quot;],&#13;&#10;&#9;&#9;&#9;&#9;Query=searchQuery],&#13;&#10;&#13;&#10;&#9;&#9;&#9;Source = Json.Document(Web.Contents(ServiceURL &amp; savedSearchDetails[trimType] , options))&#13;&#10;            in&#13;&#10;                Source[PropertiesAndFields], &#13;&#10;&#13;&#10;        getSavedSearchDetails = ( savedSearchId as text) as record =&gt;&#13;&#10;            let&#13;&#10;&#9;&#9;&#9;searchQuery = [properties=&quot;SavedSearchQueryString,SavedSearchObjectType&quot;],&#13;&#10;&#9;&#9;&#9;options = [&#13;&#10;&#9;&#9;&#9;&#9;Headers=[#&quot;Accept&quot;=&quot;application/json&quot;],&#13;&#10;&#9;&#9;&#9;&#9;Query=searchQuery],&#13;&#10;&#13;&#10;&#9;&#9;&#9;Source = Json.Document(Web.Contents(ServiceURL &amp; &quot;savedsearch/&quot; &amp; savedSearchId , options))&#13;&#10;            in&#13;&#10;                [trimType=Source[Results]{0}[SavedSearchObjectType][Value], query= Source[Results]{0}[SavedSearchQueryString][Value]],      &#13;&#10;&#13;&#10;&#9;runSearch = (startAt as number, savedSearchDetails as record, properties as text) as record =&gt;&#13;&#10;&#9;&#9;let&#13;&#10;&#13;&#10;&#13;&#10;&#9;&#9;&#9;searchQuery = [rnd=Number.ToText(Number.Random()), q=savedSearchDetails[query], descendantProperties=&quot;NameString,ToolTip&quot;, pageSize=Number.ToText(PageSize), excludeCount=&quot;true&quot;,properties=properties, start=Number.ToText(startAt)],&#13;&#10;&#9;&#9;&#9;options = [&#13;&#10;&#9;&#9;&#9;&#9;Headers=[#&quot;Accept&quot;=&quot;application/json&quot;, #&quot;Content-Type&quot;=&quot;application/json&quot;, #&quot;Cache-Control&quot;=&quot;no-cache, no-store, must-revalidate&quot;],&#13;&#10;&#9;&#9;&#9;&#9;Query=searchQuery, RelativePath = savedSearchDetails[trimType]],&#13;&#10;&#13;&#10;&#9;&#9;&#9;Source = Json.Document(Web.Contents(ServiceURL, options))&#13;&#10;&#9;&#9;&#9;&#9;&#9;in&#13;&#10;&#9;&#9;&#9; Source , &#13;&#10;&#13;&#10;&#13;&#10;    savedSearchDetails = getSavedSearchDetails(savedSearchId),&#13;&#10;    searchResults = List.Skip(List.Generate(() =&gt; [IsMore = null, Start = 1, WebCall = {}, Results = null],&#13;&#10;        each [Results] = null or List.Count([Results]) &gt; 0,&#13;&#10;        each [WebCall = runSearch(_[Start], savedSearchDetails, Text.Combine(propertyList, &quot;,&quot;)), IsMore = WebCall[HasMoreItems], Start=_[Start]+PageSize, Results = WebCall[Results]],&#13;&#10;        each [Results]),1), &#13;&#10;        &#13;&#10;    PropertiesAndFields = getPropertyList(savedSearchDetails, savedSearchId ),&#13;&#10;&#9;&#9;&#9;recordPropertyTable = Record.ToTable(PropertiesAndFields),&#13;&#10;&#9;&#9;&#9;Value = recordPropertyTable {0}[Value],&#13;&#10;&#9;&#9;&#9;propertyTable = Table.FromList(Value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),&#13;&#10;&#13;&#10;&#9;&#9;&#9;propertyColumn = if Table.HasColumns(propertyTable,&quot;Column1&quot;) then Table.ExpandRecordColumn(propertyTable , &quot;Column1&quot;, {&quot;Id&quot;}, {&quot;Column1.Id&quot;}) else error Error.Record(&quot;error reason&quot;, &quot;error message&quot;, &quot;error detail&quot;),&#13;&#10;&#9;&#9;&#9;propertyList = propertyColumn[Column1.Id],&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;&#9;&#9;&#9;#&quot;Converted to Table&quot; = Table.FromList(List.Combine(searchResults), Splitter.SplitByNothing(), null, null, ExtraValues.Error),      &#13;&#10;&#9;&#9;&#9;#&quot;Expanded Column1&quot; = if Table.HasColumns(#&quot;Converted to Table&quot;,&quot;Column1&quot;) then Table.ExpandRecordColumn(#&quot;Converted to Table&quot;, &quot;Column1&quot;, propertyList) else error Error.Record(&quot;EmptyList&quot;, &quot;No results returned by search.&quot;, null),&#13;&#10;&#9;&#9;&#9;#&quot;Column Transformations&quot; = List.Transform(propertyList, each {_, friendlyRowValues}),&#13;&#10;&#9;&#9;&#9;pageAsTable = Table.FromRecords(Table.TransformRows(#&quot;Expanded Column1&quot;, (row) =&gt; Record.TransformFields(row, #&quot;Column Transformations&quot;)))&#13;&#10;&#13;&#10;&#13;&#10;   in&#13;&#10;   pageAsTable&#13;&#10;in&#13;&#10;    Source]]&gt;&lt;/Formula&gt;&lt;IsParameterQuery xsi:nil=&quot;true&quot; /&gt;&lt;IsDirectQuery xsi:nil=&quot;true&quot; /&gt;&lt;/Query&gt;&lt;/Items&gt;&lt;/Mashup&gt;</odc:PowerQueryMashupData>
+ </odc:OfficeDataConnection>
+</xml>
+<style>
+<!--
+    .ODCDataSource
+    {
+    behavior: url(dataconn.htc);
+    }
+-->
+</style>
+ 
+</head>
+
+<body onload='init()' scroll=no leftmargin=0 topmargin=0 rightmargin=0 style='border: 0px'>
+<table style='border: solid 1px threedface; height: 100%; width: 100%' cellpadding=0 cellspacing=0 width='100%'> 
+  <tr> 
+    <td id=tdName style='font-family:arial; font-size:medium; padding: 3px; background-color: threedface'> 
+      &nbsp; 
+    </td> 
+     <td id=tdTableDropdown style='padding: 3px; background-color: threedface; vertical-align: top; padding-bottom: 3px'>
+
+      &nbsp; 
+    </td> 
+  </tr> 
+  <tr> 
+    <td id=tdDesc colspan='2' style='border-bottom: 1px threedshadow solid; font-family: Arial; font-size: 1pt; padding: 2px; background-color: threedface'>
+
+      &nbsp; 
+    </td> 
+  </tr> 
+  <tr> 
+    <td colspan='2' style='height: 100%; padding-bottom: 4px; border-top: 1px threedhighlight solid;'> 
+      <div id='pt' style='height: 100%' class='ODCDataSource'></div> 
+    </td> 
+  </tr> 
+</table> 
+
+  
+<script language='javascript'> 
+
+function init() { 
+  var sName, sDescription; 
+  var i, j; 
+  
+  try { 
+    sName = unescape(location.href) 
+  
+    i = sName.lastIndexOf(".") 
+    if (i>=0) { sName = sName.substring(1, i); } 
+  
+    i = sName.lastIndexOf("/") 
+    if (i>=0) { sName = sName.substring(i+1, sName.length); } 
+
+    document.title = sName; 
+    document.getElementById("tdName").innerText = sName; 
+
+    sDescription = document.getElementById("docprops").innerHTML; 
+  
+    i = sDescription.indexOf("escription>") 
+    if (i>=0) { j = sDescription.indexOf("escription>", i + 11); } 
+
+    if (i>=0 && j >= 0) { 
+      j = sDescription.lastIndexOf("</", j); 
+
+      if (j>=0) { 
+          sDescription = sDescription.substring(i+11, j); 
+        if (sDescription != "") { 
+            document.getElementById("tdDesc").style.fontSize="x-small"; 
+          document.getElementById("tdDesc").innerHTML = sDescription; 
+          } 
+        } 
+      } 
+    } 
+  catch(e) { 
+
+    } 
+  } 
+</script> 
+
+</body> 
+ 
+</html>
