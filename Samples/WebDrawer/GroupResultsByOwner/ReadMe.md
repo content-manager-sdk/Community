@@ -26,7 +26,7 @@ While there is no built-in way to group search results by owner Location these t
  1. copy WDRecordGrouped.cshtml into your WebDrawer views folder
  2. copy the config below into routeDefaults in WebDrawer hptrim.config.
  
-`
+```.xml
 <add
   name="Grouped"
   model="Records"
@@ -35,7 +35,7 @@ While there is no built-in way to group search results by owner Location these t
   stringDisplayType="TreeColumn"
   properties="RecordOwnerLocation"
 />
-` 
+``` 
  
 ## Comparing the samples
 Both samples:
@@ -46,3 +46,6 @@ Both samples:
 The simple sample gets the list of owners by returning a large number of Records and displaying the list of owner Locations that are found in these Records. The problem with this approach is that all relevant owner Locations may not be shown if the total result set is larger than the page size. 
 
 The JavaScript sample requires the WebDrawer owner to pre-define which owners we are interested in and then does a seperate background search to determine if there are any matching Records.
+
+## Video
+This [post](http://www.hprm.info/blog/2019/6/17/webdrawer-group-results-by-owner) gives some more detail on using these samples.
