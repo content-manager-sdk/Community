@@ -1,7 +1,7 @@
 # Group Search Results by Owner
 
 ## Overview
-While there is no built-in way to group search results by Location these two samples demonstrate how to achieve this in WebDrawer.
+While there is no built-in way to group search results by owner Location these two samples demonstrate how to achieve this in WebDrawer.
 
 
 ## Installing the samples
@@ -10,7 +10,7 @@ While there is no built-in way to group search results by Location these two sam
  1. copy WDRecordsByOwner.cshtml to your WebDrawer views folder
  2. copy the config below into routeDefaults in WebDrawer hptrim.config.
 
-`
+```.xml
 <add
   name="ByOwner"
   model="Locations"
@@ -20,7 +20,7 @@ While there is no built-in way to group search results by Location these two sam
   stringDisplayType="TreeColumn"
   properties="LocationSortName"
 />
-`
+```
 
 ### Simple Sample
  1. copy WDRecordGrouped.cshtml into your WebDrawer views folder
