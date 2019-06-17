@@ -1,0 +1,81 @@
+﻿@using HP.HPTRIM.Service
+@using HP.HPTRIM.ServiceModel
+@using System.Linq
+@inherits TrimViewPage<HP.HPTRIM.ServiceModel.LocationsResponse>
+@{
+
+    if (@HttpContext.Current.Request.QueryString["q"] == null)
+    {
+        ViewBag.SearchHelp = "";
+    }
+    ViewBag.HideSearchJS = true;
+}
+
+@Html.Partial("searchBanner")
+
+
+
+<div class="details-pane">
+    <form class="form-horizontal location-search" action="~/ByOwner" method="GET">
+
+        <input type="text" name="recq" autocomplete="off" value="@HttpContext.Current.Request.QueryString["recq"]">
+        <button class="btn nowrap search-btn" type="submit">Search</button>
+    </form>
+
+    @if (Model != null && Model.Results != null && Model.Results.Count > 0)
+    {
+        string lastGroup = "";
+        <h3>Results by owner:</h3>
+        <ul class="search-results">
+            @foreach (Location location in Model.Results)
+            {
+                <li id="@(string.Format("location-{0}", location.Uri))">@location.SortName</li>
+            }
+            <li id="location-other">Other</li>
+        </ul>
+
+    }
+</div>
+
+@section scripts {
+    <script>
+    (function () {
+        var locationUris = [@string.Join(",", Model.Results.Select(l => l.Uri.ToString()))];
+        var baseSearchUrl = "@Url.Content("~/Record")";
+        var query = "@HttpContext.Current.Request.QueryString["recq"]";      
+
+
+        var responseFN = function (uri, recQuery) {
+            return function(response) {
+
+                    var liText = $('#location-' + uri).text();
+
+                    if (response.Results.length > 0) {
+
+                        $('#location-' + uri).html('<li><a href="' + baseSearchUrl + '?' + recQuery + '">' + liText + '</a></li>')
+                    } else {
+                        $('#location-' + uri).text(liText + " " + "(no records found)")
+                    }
+
+                }
+            }
+
+        $.each(locationUris, function (idx) {
+
+            var uri = locationUris[idx];
+            var recQuery = "q=" + query + " AND recOwner:" + uri;
+            var my_url = baseSearchUrl + "?excludeCount=true&format=json&pageSize=1&" + recQuery;
+
+
+
+            $.get(my_url, responseFN(uri, recQuery));
+
+        });
+
+        var recQuery = "q=" + query + " AND NOT recOwner:[unkUri:" + locationUris.join(",") + "]";
+        $.get(baseSearchUrl + "?excludeCount=true&format=json&pageSize=1&" + recQuery, responseFN("other", recQuery));
+
+
+    }())
+    </script>
+}

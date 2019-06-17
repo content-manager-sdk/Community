@@ -200,11 +200,11 @@ export class TrimConnector implements ITrimConnector {
 		}
 	}
 
-	private _searchOptionsCache: ISearchOptions;
 	public getSearchOptions(): Promise<ISearchOptions> {
-		if (this._searchOptionsCache) {
+		const cachedOptions = this.getFromCache("search-options");
+		if (cachedOptions) {
 			return new Promise((resolve) => {
-				resolve(this._searchOptionsCache);
+				resolve(cachedOptions);
 			});
 		} else {
 			return this.makeRequest(
@@ -220,14 +220,24 @@ export class TrimConnector implements ITrimConnector {
 							searchOptionsCache[key as string] = data.UserOptions[key].Value;
 						}
 					}
-
-					return (this._searchOptionsCache = searchOptionsCache as ISearchOptions);
+					this.setCache("search-options", searchOptionsCache);
+					return searchOptionsCache as ISearchOptions;
 				}
 			);
 		}
 	}
 
-	private _searchClauseCache = {};
+	private getFromCache(key: string): any {
+		const cacheItem = localStorage.getItem(key);
+		if (cacheItem) {
+			return JSON.parse(cacheItem);
+		}
+		return null;
+	}
+
+	private setCache(key: string, cacheData: any) {
+		localStorage.setItem(key, JSON.stringify(cacheData));
+	}
 
 	public getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
@@ -236,17 +246,19 @@ export class TrimConnector implements ITrimConnector {
 			TrimType: trimType,
 		};
 
-		const cachedResults = this._searchClauseCache[trimType];
+		const cachedResults = this.getFromCache("search-clauses") || {};
 
-		if (cachedResults) {
+		if (cachedResults[trimType]) {
 			return new Promise((resolve) => {
-				resolve(cachedResults);
+				resolve(cachedResults[trimType]);
 			});
 		} else {
 			return this.makeRequest(
 				{ path: "SearchClauseDef", method: "get", data: params },
 				(data: any) => {
-					this._searchClauseCache[trimType] = data.SearchClauseDefs;
+					cachedResults[trimType] = data.SearchClauseDefs;
+					this.setCache("search-clauses", cachedResults);
+					//this._searchClauseCache[trimType] = data.SearchClauseDefs;
 					return data.SearchClauseDefs;
 				}
 			);
@@ -366,15 +378,16 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	private _messageCache: any;
 	public getMessages(): Promise<any> {
 		const params = {
 			MatchMessages: Object.keys(new TrimMessages()).join("|"),
 		};
 
-		if (this._messageCache) {
+		const messageCache = this.getFromCache("messages");
+
+		if (messageCache) {
 			return new Promise((resolve) => {
-				resolve(this._messageCache);
+				resolve(messageCache);
 			});
 		} else {
 			return this.makeRequest(
@@ -388,7 +401,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Finalize = "Make Final";
 					data.Messages.bob_sbMe = "Me";
 
-					this._messageCache = data.Messages;
+					this.setCache("messages", data.Messages);
+					//this._messageCache = data.Messages;
 
 					return data.Messages;
 				}

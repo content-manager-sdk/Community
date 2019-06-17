@@ -3,7 +3,7 @@
 section TRIMConnector;
 
 
-PAGE_SIZE = 100;
+PAGE_SIZE = 300;
 
 [DataSource.Kind="TRIMConnector", Publish="TRIMConnector.Publish"]
 shared TRIMConnector.Search = Value.ReplaceType(TRIMConnector.Go, TRIMConnector.GoType);
@@ -81,6 +81,8 @@ GetTypeRecord = (baseUrl as text, entity as text) as table =>
        // #"Filtered Rows" = Table.SelectRows(#"Converted to Table", each ( List.Contains({"RecordOwnerLocation","RecordExtension","RecordTitle", "RecordNumber","Uri"}, [Column1.Id]) )),
         #"LocationFiltered Rows" = Table.SelectRows(#"Converted to Table", each ( Text.StartsWith([Column1.Id], "LocationOld") = false )),
         #"Added Custom" = Table.AddColumn(#"LocationFiltered Rows", "Type", each 
+        if List.Contains({"HistoryEventObject","HistoryRelatedObjectUri", "HistoryForObjectUri"}, [Column1.Id]) then
+            type nullable number else  
         if [Column1.PFFormat] = "Object" and [Column1.ObjectType] = "Location" then
             RefLocationType else 
         if [Column1.PFFormat] = "Object" then
@@ -291,7 +293,7 @@ Table.ToNavigationTable = (
 // The getNextPage function takes a single argument and is expected to return a nullable table
 shared Table.GenerateByPage = (getNextPage as function) as table =>
     let        
-        listOfPages = List.Generate(
+        listOfPages = List.Generate(GetAllPagesByNextLink
             () => getNextPage(null),            // get the first page of data
             (lastPage) => lastPage <> null,     // stop when the function returns null
             (lastPage) => getNextPage(lastPage) // pass the previous page to the next function call

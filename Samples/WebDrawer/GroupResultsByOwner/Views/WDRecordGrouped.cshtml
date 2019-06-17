@@ -1,0 +1,51 @@
+﻿@using HP.HPTRIM.Service
+@using HP.HPTRIM.ServiceModel
+@using System.Linq
+@inherits TrimViewPage<HP.HPTRIM.ServiceModel.RecordsResponse>
+@{
+
+    if (@HttpContext.Current.Request.QueryString["q"] == null)
+    {
+        ViewBag.SearchHelp = "";
+    }
+    ViewBag.HideSearchJS = true;
+}
+
+@Html.Partial("searchBanner")
+
+
+
+<div class="details-pane">
+    <form class="form-horizontal location-search" action="~/Grouped" method="GET">
+
+        <input type="text" name="q" autocomplete="off" value="@HttpContext.Current.Request.QueryString["q"]">
+        <button class="btn nowrap search-btn" type="submit">Search</button>
+    </form>
+
+    @if (Model != null && Model.Results != null && Model.Results.Count > 0)
+    {
+        string lastGroup = "";
+        <h3>Results by owner:</h3>
+        <ul class="search-results">
+            @foreach (Record record in Model.Results.OrderBy(rec => rec.OwnerLocation.FormattedName.ToString()))
+            {
+                if (record.OwnerLocation.FormattedName.ToString() != lastGroup)
+                {
+                    lastGroup = @record.OwnerLocation.FormattedName;
+                    <li><a href="~/@("Record?" + HttpContext.Current.Request.QueryString + " AND (recOwner:" + @record.OwnerLocation.Uri + ")")">@record.OwnerLocation.FormattedName</a></li>
+                }
+
+            }
+        </ul>
+
+        if (Model.HasMoreItems)
+        {
+            var queryString = new System.Collections.Specialized.NameValueCollection(HttpContext.Current.Request.QueryString);
+            queryString["start"] = Model.Results.Count.ToString();
+
+            <h4 style="margin-top:20px">Only showing first @Model.Results.Count of @Model.TotalResults matches, for better results please refine the search terms.</h4>
+
+        }
+
+    }
+</div>

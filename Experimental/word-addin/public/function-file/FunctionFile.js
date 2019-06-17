@@ -47,8 +47,6 @@ function loadProps() {
 function openFromTrim(event) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
-			console.log(accessToken);
-
 			Office.context.ui.displayDialogAsync(
 				"https://localhost:3000/searchdialog?&accessToken=" +
 					accessToken +
