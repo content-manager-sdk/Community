@@ -1,0 +1,16 @@
+﻿@using HP.HPTRIM.Service
+@inherits TrimViewPage<HP.HPTRIM.ServiceAPI.Samples.SimpleResponse>
+@{ 
+    ViewBag.Title = "Simple Plugin";
+}
+
+
+@if (Model != null)
+{
+
+    <h2>Title</h2>
+    <p>@Model.RecordTitle</p>
+
+    <h2>Name</h2>
+    <p>@Model.Name</p>
+}
