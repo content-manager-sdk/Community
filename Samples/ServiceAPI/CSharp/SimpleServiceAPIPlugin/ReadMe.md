@@ -64,9 +64,9 @@ Console.WriteLine(response.RecordTitle);
 
 ## Incorporating in a ServiceAPI Razor web site (such as WebDrawer)
 Your plug-ins operate in just the same way as other endpoints built into the ServiceAPI.  This means that it is possible to wire up routes via routeDefaults in hptrim.config or to rely on auto-wiring.  The rules to follow to use auto-wiring to apply a Razor template are:
- * include 'Razor' in the serviceFeatures in hptrim.config
- * the CSHTML file must be in the Views folder (or one of its chid folders)
- * the file must have the same name as the request object type (e.g. 'Simple') 
- * the Razor must inherit from the service response (e.g. HP.HPTRIM.ServiceAPI.Samples.SimpleResponse)
+ * include 'Razor' in the serviceFeatures in hptrim.config,
+ * the CSHTML file must be in the Views folder (or one of its chid folders),
+ * the file must have the same name as the request object type (e.g. 'Simple'), and
+ * the Razor must inherit from the service response (e.g. HP.HPTRIM.ServiceAPI.Samples.SimpleResponse).
  
  Therefore, to apply a razor template to all response from the SimpleService simply copy Views\Simple.cstml to the ServieAPI\Views folder.
