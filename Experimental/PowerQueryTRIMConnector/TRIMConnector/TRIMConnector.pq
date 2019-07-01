@@ -3,7 +3,7 @@
 section TRIMConnector;
 
 
-PAGE_SIZE = 20;
+PAGE_SIZE = 300;
 
 [DataSource.Kind="TRIMConnector", Publish="TRIMConnector.Publish"]
 shared TRIMConnector.Search = Value.ReplaceType(TRIMConnector.Go, TRIMConnector.GoType);
@@ -79,12 +79,12 @@ GetPropertyDefinitionsTable = (baseUrl as text, savedSearchDetails as record) as
 
 getPropertyList = (baseUrl as text, savedSearchDetails as record) as record =>
     let
-	searchQuery = [q="unkSaved:" & savedSearchDetails[savedSearchId], pageSize="1", excludeCount="true",propertySets="FromSearch", IncludePropertyDefs="true"],
-	options = [
-		Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"],
-		Query=searchQuery],
+	    searchQuery = [q="unkSaved:" & savedSearchDetails[savedSearchId], pageSize="1", excludeCount="true",propertySets="FromSearch", IncludePropertyDefs="true"],
+	    options = [
+		    Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"],
+		    Query=searchQuery],
 
-	Source = Json.Document(Web.Contents(baseUrl & savedSearchDetails[trimType] , options))
+	    Source = Json.Document(Web.Contents(baseUrl & savedSearchDetails[trimType] , options))
     in
         Source[PropertiesAndFields];
 
@@ -193,17 +193,16 @@ TRIMConnector.Go = (baseUrl, savedSearchId as text) as table =>
 
 GetPage = (url as text, query as record, schema as type) =>
 	let	 
-       // propsColumn = Table.SelectColumns(schema, "Name"),
-       // existingColumns = Table.ToList(propsColumn),
+
        existingColumns = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))),
  
         _existingColumns = Diagnostics.LogValue("existingColumns", existingColumns),
 
-        #"Options with Page Size" = if Record.HasFields(query, "pageSize") then query else query & [pageSize = Text.From(PAGE_SIZE)],
+        optionsWithPageSize = if Record.HasFields(query, "pageSize") then query else query & [pageSize = Text.From(PAGE_SIZE)],
 
 		options = [
             Headers=[#"Accept"="application/json", #"Content-Type"="application/json"], 
-            Content= Json.FromValue(#"Options with Page Size")
+            Content= Json.FromValue(optionsWithPageSize)
         ],
         
 		source = Json.Document(Web.Contents( url, options)),		
@@ -211,9 +210,12 @@ GetPage = (url as text, query as record, schema as type) =>
        _results = Diagnostics.LogValue("results ", results),
         #"Converted to Table" = Table.FromList(_results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         CheckEmpty = if Table.IsEmpty(#"Converted to Table") then #table(type table[Column1 = [Uri = number]],{}) else #"Converted to Table",
-		#"Expanded Column1" = Table.ExpandRecordColumn(CheckEmpty, "Column1", _existingColumns),        
+		expanded = Table.ExpandRecordColumn(CheckEmpty, "Column1", List.Union({List.Select(_existingColumns, each Text.StartsWith(_, query[TrimType])), {"Fields"}})),  
+        
+        expandedWithFields = Table.ExpandRecordColumn(expanded, "Fields", List.Select(_existingColumns, each not Text.StartsWith(_, query[TrimType]))),
+
 		dd = List.Transform(_existingColumns, each {_, FriendlyRowValues}),
-		pp = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, dd))),
+		pp = Table.FromRecords(Table.TransformRows(expandedWithFields, (row) => Record.TransformFields(row, dd))),
         hasMoreItems = GetHasMoreItems(source),
          _pp = Diagnostics.LogValue("pp ", pp)
 
