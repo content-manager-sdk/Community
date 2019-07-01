@@ -1,7 +1,7 @@
 ﻿
 let
     
-    result = TRIMConnector.Search("http://localhost/ServiceAPI/", "Record", "unkFavorite")
+    result = TRIMConnector.Search("http://localhost/ServiceAPI/", "dctest")
 in
     result
     

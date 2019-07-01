@@ -3,15 +3,11 @@
 section TRIMConnector;
 
 
-PAGE_SIZE = 300;
+PAGE_SIZE = 20;
 
 [DataSource.Kind="TRIMConnector", Publish="TRIMConnector.Publish"]
 shared TRIMConnector.Search = Value.ReplaceType(TRIMConnector.Go, TRIMConnector.GoType);
 //shared TRIMSearchConnector.Search = (serviceUrl as text, optional objectType as text, optional searchString as text) => TRIMConnector.Go(serviceUrl, objectType, searchString) as table;
-
-
-//[DataSource.Kind="TRIMConnector", Publish="TRIMConnector.Publish"]
-shared TRIMConnector.Browse = (url) => TrimNavTable(url) as table;
 
 TRIMConnector.Feed = (url as text, schema as type, onePageOnly as logical, options as record, searchString as text) as table => GetAllPagesByNextLink(url, options, schema, onePageOnly, searchString);
 
@@ -39,10 +35,13 @@ RefLocationType = type nullable [
     LocationFullFormattedName = text
 ];
 
-GetSearchClauseDefs =  (baseUrl as text, entity as text) as table =>  
+GetSearchClauseDefs =  (baseUrl as text, savedSearchDetails) as table =>  
     let
-        Source = Json.Document(Web.Contents(baseUrl & "SearchClauseDef?TrimType=" & entity & "&format=json")),
-        SearchClauseDefs = Source[SearchClauseDefs],
+        Source = Json.Document(Web.Contents(baseUrl & "SearchClauseDef?TrimType=" & savedSearchDetails[trimType] & "&format=json")),
+
+        _Source = Diagnostics.LogValue("Source:", Source),
+
+        SearchClauseDefs = _Source[SearchClauseDefs],
         #"Converted to Table" = Table.FromList(SearchClauseDefs, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"BasedOnProperty", "OnlyForType", "InternalName", "Name", "Id", "CanSort", "ObjectTypeParameter", "IsBlocked"}, {"Column1.BasedOnProperty", "Column1.OnlyForType", "Column1.InternalName", "Column1.Name", "Column1.Id", "Column1.CanSort", "Column1.ObjectTypeParameter", "Column1.IsBlocked"}),
         #"Renamed Columns" = Table.TransformColumnNames(#"Expanded Column1", each Text.Replace(_, "Column1.", ""))
@@ -50,22 +49,26 @@ GetSearchClauseDefs =  (baseUrl as text, entity as text) as table =>
         #"Renamed Columns";
 
 
-GetPropertyDefinitions = (baseUrl as text, entity as text) as table =>  
+GetPropertyDefinitions = (baseUrl as text, savedSearchDetails as record) as table =>  
     let
-        Source = Json.Document(Web.Contents(baseUrl & "PropertyDefs?TrimType=" & entity & "&Get=All&ExcludeFields=false&format=json")),
-        PropertiesAndFields =  Source[PropertiesAndFields],
-        Record = Record.Field(PropertiesAndFields, entity),
+        
+        PropertiesAndFields =  getPropertyList(baseUrl, savedSearchDetails),
+         _PropertiesAndFields = Diagnostics.LogValue("PropertiesAndFields: ", PropertiesAndFields),
+        Record = Record.Field(_PropertiesAndFields, savedSearchDetails[trimType]),
         #"Converted to Table" = Table.FromList(Record, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType", "Property", "IsAField"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType", "Column1.Property", "Column1.IsAField"}),
         #"Filtered Rows" = Table.SelectRows(#"Expanded Column1", each [Column1.IsAField] = true or Record.Field([Column1.Property], "IsExposedInSDK") = true)
     in
         #"Filtered Rows";
 
-GetPropertyDefinitionsTable = (baseUrl as text, entity as text) as table =>  
+GetPropertyDefinitionsTable = (baseUrl as text, savedSearchDetails as record) as table =>  
     let
-        #"Converted to Table" = GetPropertyDefinitions(baseUrl, entity),
-       // #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "SortMode", "ObjectType", "PFFormat", "Property", "PropertyId", "IsAField", "IsAProperty", "IsMandatory", "Field"}, {"Column1.Id", "Column1.SortMode", "Column1.ObjectType", "Column1.PFFormat", "Column1.Property", "Column1.PropertyId", "Column1.IsAField", "Column1.IsAProperty", "Column1.IsMandatory", "Column1.Field"}),
-        #"Renamed Columns" = Table.TransformColumnNames(#"Converted to Table", each Text.Replace(_, "Column1.", "")),
+        #"Converted to Table" = GetPropertyDefinitions(baseUrl, savedSearchDetails),
+
+        _ex = Diagnostics.LogValue("Converted to Table", #"Converted to Table"),
+
+       
+        #"Renamed Columns" = Table.TransformColumnNames(_ex, each Text.Replace(_, "Column1.", "")),
         #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"IsAField", Order.Ascending}, {"Id", Order.Ascending}}),
         
         #"Expanded Property" = Table.ExpandRecordColumn(#"Sorted Rows", "Property", {"SearchClauseId"}, {"SearchClauseId"}),
@@ -74,12 +77,37 @@ GetPropertyDefinitionsTable = (baseUrl as text, entity as text) as table =>
         #"Removed Columns";
 
 
-GetTypeRecord = (baseUrl as text, entity as text) as table => 
+getPropertyList = (baseUrl as text, savedSearchDetails as record) as record =>
     let
-        #"Converted to Table" = GetPropertyDefinitions(baseUrl, entity),
+	searchQuery = [q="unkSaved:" & savedSearchDetails[savedSearchId], pageSize="1", excludeCount="true",propertySets="FromSearch", IncludePropertyDefs="true"],
+	options = [
+		Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"],
+		Query=searchQuery],
+
+	Source = Json.Document(Web.Contents(baseUrl & savedSearchDetails[trimType] , options))
+    in
+        Source[PropertiesAndFields];
+
+getSavedSearchDetails = (baseUrl as text, savedSearchId as text) as record =>
+    let
+	searchQuery = [properties="SavedSearchQueryString,SavedSearchObjectType"],
+	options = [
+		Headers=[#"Accept"="application/json"],
+		Query=searchQuery],
+
+	Source = Json.Document(Web.Contents(baseUrl & "savedsearch/" & savedSearchId , options))
+    in
+        [trimType=Source[Results]{0}[SavedSearchObjectType][Value], query= Source[Results]{0}[SavedSearchQueryString][Value]];   
+
+
+GetTypeRecord = (baseUrl as text, savedSearchDetails as record) as table => 
+    let
+        propertyDefs = GetPropertyDefinitions(baseUrl, savedSearchDetails),
+        _propertyDefs = Diagnostics.LogValue("propertyDefs ", propertyDefs),
+
        // #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType", "Property"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType"}),
        // #"Filtered Rows" = Table.SelectRows(#"Converted to Table", each ( List.Contains({"RecordOwnerLocation","RecordExtension","RecordTitle", "RecordNumber","Uri"}, [Column1.Id]) )),
-        #"LocationFiltered Rows" = Table.SelectRows(#"Converted to Table", each ( Text.StartsWith([Column1.Id], "LocationOld") = false )),
+        #"LocationFiltered Rows" = Table.SelectRows(_propertyDefs, each ( Text.StartsWith([Column1.Id], "LocationOld") = false )),
         #"Added Custom" = Table.AddColumn(#"LocationFiltered Rows", "Type", each 
         if List.Contains({"HistoryEventObject","HistoryRelatedObjectUri", "HistoryForObjectUri"}, [Column1.Id]) then
             type nullable number else  
@@ -107,13 +135,16 @@ GetTypeRecord = (baseUrl as text, entity as text) as table =>
         _ex;
         //#"Table to Record";
 
-GetSearchClause = (baseUrl as text, entity as text, propertyId as text) as text =>
+GetSearchClause = (baseUrl as text, savedSearchDetails as record, propertyId as text) as text =>
     let
-        PropertyDefs = GetPropertyDefinitionsTable(baseUrl, entity),
-        SearchClauseDefs = GetSearchClauseDefs(baseUrl, entity),
+        PropertyDefs = GetPropertyDefinitionsTable(baseUrl, savedSearchDetails),
+
+        _PropertyDefs = Diagnostics.LogValue("PropertyDefs ", PropertyDefs),
+
+        SearchClauseDefs = GetSearchClauseDefs(baseUrl, savedSearchDetails),
         SearchClause = SearchClauseDefs{[BasedOnProperty=propertyId]},
         SortClause = if SearchClause <> null and SearchClause[CanSort] = true then SearchClause[InternalName] else "",
-        SearchClauseId = if PropertyDefs{[Id=propertyId]}[IsAField] = true then propertyId else SortClause
+        SearchClauseId = if _PropertyDefs{[Id=propertyId]}[IsAField] = true then propertyId else SortClause
     in
         SearchClauseId;
 
@@ -123,30 +154,24 @@ SchemaTable = #table({"Entity"}, {
 });
 
 
-GetSchemaForEntity = (baseUrl as text, entity as text) as type => 
+GetSchemaForEntity = (baseUrl as text, savedSearchDetails as record) as type => 
     let 
-        schema = Schema.ToTableType(GetTypeRecord(baseUrl, entity)),
+        schema = Schema.ToTableType(GetTypeRecord(baseUrl, savedSearchDetails)),
       // schema = Record,
         _schema = Diagnostics.LogValue("xx schema ", schema)
     in
         _schema;
 
 TRIMConnector.GoType = type function (
-    baseUrl as (Uri.Type meta [
+    baseUrl as (type text meta [
         Documentation.FieldCaption = "ServiceAPI URL",
         Documentation.FieldDescription = "URL to your ServiceAPI URL",
         
         Documentation.SampleValues = {"http://MyServer/ServiceAPI/"}
     ]),
-    optional entity as (type text meta [
-        Documentation.FieldCaption = "Object Type",
-        Documentation.FieldDescription = "Select if you wish to search by object type, otherwise leave blank to browse.",
-        Documentation.AllowedValues = Table.Column(SchemaTable, "Entity")
-    ]),
-    optional searchString as (type text meta [
-        Documentation.FieldCaption = "Search string",
-        Documentation.FieldDescription = "A search string if you wish to search, otherwise leave blank to browse.",
-        Documentation.SampleValues = {"favorite", "container:123"}
+    savedSearchId as (type text meta [
+        Documentation.FieldCaption = "Saved Search name or URI",
+        Documentation.FieldDescription = "Saved Search name or URI"
     ]))
     as table meta [    
         Documentation.Name = "Content Manager",
@@ -155,71 +180,16 @@ TRIMConnector.GoType = type function (
 
 
 
-TRIMConnector.Go = (baseUrl, optional entity as text, optional searchString as text) as table =>
+TRIMConnector.Go = (baseUrl, savedSearchId as text) as table =>
     let
        ulrWithTrailingSlash = if Text.EndsWith(baseUrl, "/") then baseUrl else baseUrl & "/",
-        go = 
-            if entity = null or searchString = null then
-                TrimNavTable(ulrWithTrailingSlash)
-            else 
-                TRIMConnector.View(ulrWithTrailingSlash, entity, searchString)
+       savedSearchDetails = getSavedSearchDetails(ulrWithTrailingSlash, savedSearchId) & [savedSearchId = savedSearchId],
+       
+       _savedSearchDetails = Diagnostics.LogValue("savedSearchDetails ", savedSearchDetails),
+       go = TRIMConnector.View(ulrWithTrailingSlash, _savedSearchDetails)
     in
         go;
-
-
-genSavedSearchNav = (baseUrl as text, entity as text) as table => 
-    let 
-        Source = Json.Document(Web.Contents( Uri.Combine(baseUrl, "SavedSearch") & "?q=srhType=" & entity & " and (srhOwner:[default:me] or srhPublic) and not srhGroup&format=json&properties=SavedSearchFullName&pageSize=1000")),
-        Results = Source[Results],
-        #"Converted to Table" = Table.FromList(Results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-        
-        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"SavedSearchFullName", "Uri"}, {"Name", "Key"}),
-        #"Column Transformations" = List.Transform({"Name", "Key"}, each {_, FriendlyRowValues}),
-		#"Transformed Values" = Table.FromRecords(Table.TransformRows(#"Expanded Column1", (row) => Record.TransformFields(row, #"Column Transformations"))),
-        withData = Table.AddColumn(#"Transformed Values", "Data", each TRIMConnector.View(baseUrl, entity, Text.Format("unkSaved:#{0}",{[Key]})), type table),
-        withItemKind = Table.AddColumn(withData, "ItemKind", each "Folder", type text),
-        withIsLeaf = Table.AddColumn(withItemKind, "IsLeaf", each false, type logical),
-        #"Check for Null" = if List.IsEmpty(Results) then #table({"Key", "Name", "Data", "ItemKind", "ItemName", "IsLeaf"}, {}) else withIsLeaf,
-        navTable = Table.ToNavigationTable(#"Check for Null", {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
-    in navTable;
-
-
-genNavColumn = (url as text, entity as text) as table => 
-    let 
-        objects = #table(
-            {"Key", "Name", "Data", "ItemKind", "ItemName", "IsLeaf"},
-            {{entity & "SavedSearches", "Saved Searches", genSavedSearchNav(url, entity), "Folder",    "Folder",    false}}),
-        supplemented = 
-            if List.Contains({"Record", "Location", "Classification"}, entity) then
-                Table.InsertRows(objects, 0, {
-               [Key = entity & "Favorites", Name = "Favorites", Data = TRIMConnector.View(url, entity, "unkFavorite"), ItemKind = "Table", ItemName = "Table", IsLeaf = true ]
-                })
-            else
-                objects,
-
-        NavTable = Table.ToNavigationTable(supplemented, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
-    in
-        NavTable;
-
-TrimNavTable = (url as text) as table =>
-    let
-        entities = Table.SelectColumns(SchemaTable, {"Entity"}),
-        rename = Table.RenameColumns(entities, {{"Entity", "Name"}}),
-        // Add Data as a calculated column
-        //withData = Table.AddColumn(rename, "Data", each TRIMConnector.View(url, [Name], "unkAll"), type table),
-        withData = Table.AddColumn(rename, "Data", each genNavColumn(url, [Name]), type table),
-        // Add ItemKind and ItemName as fixed text values
-        withItemKind = Table.AddColumn(withData, "ItemKind", each "Folder", type text),
-        withItemName = Table.AddColumn(withItemKind, "ItemName", each "Folder", type text),
-        // Indicate that the node should not be expandable
-        withIsLeaf = Table.AddColumn(withItemName, "IsLeaf", each false, type logical),
-      //  withFunction = Table.InsertRows(withIsLeaf, 0, {[Name = "Myfunction", Data = TRIMSearchConnector.Search, ItemKind = "Function", ItemName = "Function", IsLeaf = true ]}),
-        //withFunction = Table.InsertRows(withIsLeaf, 0, {[Name = "Myfunction", Data = TRIMConnector.Feed, ItemKind = "Function", ItemName = "Function", IsLeaf = true ]}),
-        // Generate the nav table
-        navTable = Table.ToNavigationTable(withIsLeaf, {"Name"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
-    in
-        navTable;
-
+               
 
 GetPage = (url as text, query as record, schema as type) =>
 	let	 
@@ -227,7 +197,7 @@ GetPage = (url as text, query as record, schema as type) =>
        // existingColumns = Table.ToList(propsColumn),
        existingColumns = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))),
  
- _existingColumns = Diagnostics.LogValue("existingColumns", existingColumns),
+        _existingColumns = Diagnostics.LogValue("existingColumns", existingColumns),
 
         #"Options with Page Size" = if Record.HasFields(query, "pageSize") then query else query & [pageSize = Text.From(PAGE_SIZE)],
 
@@ -255,7 +225,7 @@ in
 
 // Data Source Kind description
 TRIMConnector = [
-    TestConnection = (dataSourcePath) => {"TRIMConnector.Search", dataSourcePath},
+    TestConnection = (dataSourcePath, savedSearchId) => {"TRIMConnector.Search", dataSourcePath, savedSearchId},
     Authentication = [
         // Key = [],
          UsernamePassword = [],
@@ -293,7 +263,7 @@ Table.ToNavigationTable = (
 // The getNextPage function takes a single argument and is expected to return a nullable table
 shared Table.GenerateByPage = (getNextPage as function) as table =>
     let        
-        listOfPages = List.Generate(GetAllPagesByNextLink
+        listOfPages = List.Generate(
             () => getNextPage(null),            // get the first page of data
             (lastPage) => lastPage <> null,     // stop when the function returns null
             (lastPage) => getNextPage(lastPage) // pass the previous page to the next function call
@@ -374,7 +344,7 @@ FriendlyRowValues = (row) =>
 		v;
 
 
-TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as text) as table =>
+TRIMConnector.View = (baseUrl as text, savedSearchDetails as record) as table =>
     let
         // Implementation of Table.View handlers.
         //
@@ -396,7 +366,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                     finalOptions = CalculateOptions(state), 
 
                     optionsWithTop = finalOptions & [start = if state[Skip]? <> null then state[Skip]+1 else 1],
-                    result = TRIMConnector.Feed(_finalUrl, _finalSchema, state[Top]? <> null, optionsWithTop, searchString),
+                    result = TRIMConnector.Feed(_finalUrl, _finalSchema, state[Top]? <> null, optionsWithTop, savedSearchDetails[query]),
                     _result = Diagnostics.LogValue("result", result),
                     appliedType = Table.ChangeType(_result, finalSchema),
                     _appliedType = Diagnostics.LogValue("appliedType", appliedType)
@@ -432,7 +402,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
             OnSelectColumns = (columns as list) =>
                 let
                     // get the current schema
-                    currentSchema = GetSchemaForEntity(UlrWithTrailingSlash(state),entity),
+                    currentSchema = GetSchemaForEntity(UlrWithTrailingSlash(state),savedSearchDetails),
                     // get the columns from the current schema (which is an M Type value)
                     rowRecordType = Type.RecordFields(Type.TableRow(currentSchema)),
                     existingColumns = CalculateExistingColumns(),
@@ -447,21 +417,14 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                             Schema = newSchema
                         ]
                     ),
-                // OnSort - receives a list of records containing two fields: 
-                //    [Name]  - the name of the column to sort on
-                //    [Order] - equal to Order.Ascending or Order.Descending
-                // If there are multiple records, the sort order must be maintained.
-                //
-                // OData allows you to sort on columns that do not appear in the result
-                // set, so we do not have to validate that the sorted columns are in our 
-                // existing schema.
+
                 OnSort = (order as list) =>
                     let
                         // This will convert the list of records to a list of text,
                         // where each entry is "<columnName> <asc|desc>"
                         sorting = List.Transform(order, (o) => 
                             let
-                                column = GetSearchClause(UlrWithTrailingSlash(state), entity, o[Name]),
+                                column = GetSearchClause(UlrWithTrailingSlash(state), savedSearchDetails, o[Name]),
                                 order = o[Order],
                                 orderText = if (order = Order.Ascending) then "" else "-"
                             in
@@ -478,8 +441,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
             // the entity name that was passed into the function.
             CalculateSchema = (state) as type =>
                 if (state[Schema]? = null) then
-                    GetSchemaForEntity(UlrWithTrailingSlash(state),entity)
-                    //GetSchemaForEntity(UlrWithTrailingSlash(state), entity)
+                    GetSchemaForEntity(UlrWithTrailingSlash(state),savedSearchDetails)
                 else
                     state[Schema],
             RefineSchema = (state, columns) as type =>
@@ -508,7 +470,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                  let
                     ulrWithTrailingSlash = UlrWithTrailingSlash(state),
                     urlWithEntity = Uri.Combine(ulrWithTrailingSlash, state[Entity]),
-                    defaultQueryString = [ resultsOnly = "true", q = searchString, CountResults="true"],
+                    defaultQueryString = [ resultsOnly = "true", q = savedSearchDetails[query], CountResults="true"],
                     encodedQueryString = Uri.BuildQueryString(defaultQueryString),
                     finalUrl = urlWithEntity & "?" & encodedQueryString
                 in
@@ -528,11 +490,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                     urlWithEntity,
             CalculateOptions = (state) as record => 
                 let
-                  // propsColumn = Table.SelectColumns(CalculateSchema(state), "Name"),
-                 //  existingColumns = Table.ToList(propsColumn),
-                    // Uri.BuildQueryString requires that all field values
-                    // are text literals.
-                  //  rowRecordType = Record.FieldNames(Type.RecordFields(Type.TableRow(currentSchema)))
+
                      rowRecordTypeTmo = Type.RecordFields(RefTrimMainObjectType),
                      tmoColumns = Record.FieldNames(rowRecordTypeTmo),
                     
@@ -541,7 +499,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
 
                      allProps = List.Distinct(List.Combine({locationColumns, tmoColumns})),
 
-                    defaultQueryString = [TrimType=state[Entity], resultsOnly = "true", q = searchString, descendantProperties = Text.Combine(allProps, ",")],
+                    defaultQueryString = [TrimType=state[Entity], resultsOnly = "true", q = savedSearchDetails[query], descendantProperties = Text.Combine(allProps, ",")],
                     _defaultQueryString = Diagnostics.LogValue("defaultQueryString: ",defaultQueryString),
 
 
@@ -562,8 +520,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                         if (state[SelectColumns]? <> null) then
                             qsWithSkip & [ #"properties" = Text.Combine(state[SelectColumns], ",") ]
                         else
-                            qsWithSkip& [ #"properties" = if Text.Lower(entity) = "record" then "Uri,RecordTitle,RecordNumber" else Text.Combine(CalculateExistingColumns(), ",") ],
-                            //qsWithSkip& [ #"properties" = if Text.Lower(entity) = "record" then "Uri,RecordTitle,RecordNumber" else Text],
+                            qsWithSkip& [ #"properties" = Text.Combine(CalculateExistingColumns(), ",") ],
                     qsWithOrderBy = 
                         if (state[OrderBy]? <> null) then
                             qsWithSelect & [ #"sortBy" = state[OrderBy] ]
@@ -573,7 +530,7 @@ TRIMConnector.View = (baseUrl as text, entity as text, optional searchString as 
                     qsWithOrderBy
         ]))
     in
-        View([Url = baseUrl, Entity = entity]);
+        View([Url = baseUrl, Entity = savedSearchDetails[trimType]]);
 
 
 TRIMConnector.Atomic = (url as text) as number =>
