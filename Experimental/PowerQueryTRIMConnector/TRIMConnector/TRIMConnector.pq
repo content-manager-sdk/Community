@@ -27,12 +27,10 @@ RefTrimMainObjectType = type [
 ];
 
 RefLocationType = type nullable [
-    LocationInternetMailAddress = text,
     LocationLogsInAs = text, 
     LocationAdditionalLogin = text, 
-    LocationSortName = text,
-    Uri = number,
-    LocationFullFormattedName = text
+    NameString = text,
+    Uri = number
 ];
 
 GetSearchClauseDefs =  (baseUrl as text, savedSearchDetails) as table =>  
@@ -90,15 +88,23 @@ getPropertyList = (baseUrl as text, savedSearchDetails as record) as record =>
 
 getSavedSearchDetails = (baseUrl as text, savedSearchId as text) as record =>
     let
-	searchQuery = [properties="SavedSearchQueryString,SavedSearchObjectType"],
-	options = [
-		Headers=[#"Accept"="application/json"],
-		Query=searchQuery],
+	    searchQuery = [properties="SavedSearchQueryString,SavedSearchObjectType"],
+	    options = [
+		    Headers=[#"Accept"="application/json"],
+		    Query=searchQuery],
 
-	Source = Json.Document(Web.Contents(baseUrl & "savedsearch/" & savedSearchId , options))
+	    Source = Json.Document(Web.Contents(baseUrl & "savedsearch/" & savedSearchId , options))
     in
         [trimType=Source[Results]{0}[SavedSearchObjectType][Value], query= Source[Results]{0}[SavedSearchQueryString][Value]];   
 
+
+getVersion = (baseUrl as text) as number =>
+    let
+    	options = [
+		    Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"]],
+       	Source = Json.Document(Web.Contents(baseUrl & "Version", options))
+    in
+        Source[Version];
 
 GetTypeRecord = (baseUrl as text, savedSearchDetails as record) as table => 
     let
@@ -183,7 +189,7 @@ TRIMConnector.GoType = type function (
 TRIMConnector.Go = (baseUrl, savedSearchId as text) as table =>
     let
        ulrWithTrailingSlash = if Text.EndsWith(baseUrl, "/") then baseUrl else baseUrl & "/",
-       savedSearchDetails = getSavedSearchDetails(ulrWithTrailingSlash, savedSearchId) & [savedSearchId = savedSearchId],
+       savedSearchDetails = getSavedSearchDetails(ulrWithTrailingSlash, savedSearchId) & [savedSearchId = savedSearchId, version = getVersion(ulrWithTrailingSlash)],
        
        _savedSearchDetails = Diagnostics.LogValue("savedSearchDetails ", savedSearchDetails),
        go = TRIMConnector.View(ulrWithTrailingSlash, _savedSearchDetails)
@@ -486,7 +492,8 @@ TRIMConnector.View = (baseUrl as text, savedSearchDetails as record) as table =>
             CalculateUrl = (state) as text => 
                 let
                     ulrWithTrailingSlash = UlrWithTrailingSlash(state),
-                    urlWithEntity = Uri.Combine(ulrWithTrailingSlash, "Search")
+                       urlWithEntity = Uri.Combine(ulrWithTrailingSlash,  if savedSearchDetails[version] >= 80 then "StreamSearch" else "Search")
+                    //urlWithEntity = Uri.Combine(ulrWithTrailingSlash, if savedSearchDetails[version] >= 80 then "StreamSearch" else "Search")
 
                 in
                     urlWithEntity,
@@ -501,7 +508,7 @@ TRIMConnector.View = (baseUrl as text, savedSearchDetails as record) as table =>
 
                      allProps = List.Distinct(List.Combine({locationColumns, tmoColumns})),
 
-                    defaultQueryString = [TrimType=state[Entity], resultsOnly = "true", q = savedSearchDetails[query], descendantProperties = Text.Combine(allProps, ",")],
+                    defaultQueryString = [TrimType=state[Entity],RetrieveLoginIdForLocations="true", resultsOnly = "true", q = savedSearchDetails[query], descendantProperties = Text.Combine(allProps, ",")],
                     _defaultQueryString = Diagnostics.LogValue("defaultQueryString: ",defaultQueryString),
 
 

@@ -41,6 +41,7 @@ The .Net SDK [documentation](http://sdk.mfcm.xyz) is available.
 | [Gmail add-on](Samples/Web%20Client/Gmail) | File an email from Gmail with the ability to complete the Record data entry form. |
 | [DataPort Custom Formatter](Samples/SDK/CSharp/DataPortCustomFormatter) | Import an XML file containing Record information in Content Manager. |
 | [.Net SDK Location Resolver](Samples/SDK/CSharp/SDKLocationResolver) | Dynamically locate the .Net SDK DLL.|
-| [Excel Connector](Samples/ServiceAPI/Power%20Query/Saved%20Search%20Query) | Fetch results of a Saved Search into Excel from Content Manager|
+| [Excel Connector](Samples/ServiceAPI/Power%20Query/Saved%20Search%20Query) | Fetch results of a Saved Search into Excel from Content Manager.|
+ [WebDrawer Results grouped by owner](Samples/WebDrawer/GroupResultsByOwner) | Two alternatives for displaying record search results grouped by owner Location.|
 
 
