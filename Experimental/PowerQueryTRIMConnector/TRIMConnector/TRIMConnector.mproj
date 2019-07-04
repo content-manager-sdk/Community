@@ -62,9 +62,6 @@
     <Compile Include="TRIMConnector64.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TRIMConnector80.png">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
     </Compile>
