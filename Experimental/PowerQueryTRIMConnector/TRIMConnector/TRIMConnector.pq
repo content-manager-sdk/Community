@@ -85,14 +85,17 @@ getPropertyList = (baseUrl as text, savedSearchDetails as record) as record =>
 
 getSavedSearchDetails = (baseUrl as text, savedSearchId as text) as record =>
     let
-	    searchQuery = [properties="SavedSearchQueryString,SavedSearchObjectType"],
+	    searchQuery = [q=savedSearchId, properties="SavedSearchQueryString,SavedSearchObjectType"],
 	    options = [
 		    Headers=[#"Accept"="application/json"],
 		    Query=searchQuery],
 
-	    Source = Json.Document(Web.Contents(baseUrl & "savedsearch/" & savedSearchId , options))
+	    Source = Json.Document(Web.Contents(baseUrl & "savedsearch/" , options)),
+        results = if (Source[Results] = null or List.Count(Source[Results]) = 0) then
+            error Error.Record("Unable to find Saved Search '" & savedSearchId & "'.", "Unable to find Saved Search '" & savedSearchId & "'.") 
+            else [trimType=Source[Results]{0}[SavedSearchObjectType][Value], query= Source[Results]{0}[SavedSearchQueryString][Value]]
     in
-        [trimType=Source[Results]{0}[SavedSearchObjectType][Value], query= Source[Results]{0}[SavedSearchQueryString][Value]];   
+        results;   
 
 
 getVersion = (baseUrl as text) as number =>
