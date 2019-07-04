@@ -1,13 +1,10 @@
-﻿// This file contains your Data Connector logic
-
-section TRIMConnector;
+﻿section TRIMConnector;
 
 
-PAGE_SIZE = 300;
+PAGE_SIZE = 500;
 
 [DataSource.Kind="TRIMConnector", Publish="TRIMConnector.Publish"]
 shared TRIMConnector.Search = Value.ReplaceType(TRIMConnector.Go, TRIMConnector.GoType);
-//shared TRIMSearchConnector.Search = (serviceUrl as text, optional objectType as text, optional searchString as text) => TRIMConnector.Go(serviceUrl, objectType, searchString) as table;
 
 TRIMConnector.Feed = (url as text, schema as type, onePageOnly as logical, options as record, searchString as text) as table => GetAllPagesByNextLink(url, options, schema, onePageOnly, searchString);
 
@@ -23,7 +20,7 @@ RefTrimMainObjectType = type [
     NameString = nullable text,
     ToolTip = nullable text,
     TrimType = nullable text,
-    Uri = nullable number
+    Uri = number
 ];
 
 RefLocationType = type nullable [
@@ -216,12 +213,13 @@ GetPage = (url as text, query as record, schema as type) =>
        _results = Diagnostics.LogValue("results ", results),
         #"Converted to Table" = Table.FromList(_results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
         CheckEmpty = if Table.IsEmpty(#"Converted to Table") then #table(type table[Column1 = [Uri = number]],{}) else #"Converted to Table",
-		expanded = Table.ExpandRecordColumn(CheckEmpty, "Column1", List.Union({List.Select(_existingColumns, each Text.StartsWith(_, query[TrimType])), {"Fields"}})),  
+        coreFields = {"Uri"},
+		expanded = Table.ExpandRecordColumn(CheckEmpty, "Column1", List.Union({List.Select(_existingColumns, each (Text.StartsWith(_, query[TrimType]) or List.Contains(coreFields, _))), {"Fields"}})),  
         
-        expandedWithFields = Table.ExpandRecordColumn(expanded, "Fields", List.Select(_existingColumns, each not Text.StartsWith(_, query[TrimType]))),
-
+        expandedWithFields = Table.ExpandRecordColumn(expanded, "Fields", List.Select(_existingColumns, each not (Text.StartsWith(_, query[TrimType]) or List.Contains(coreFields, _)))),
+        _expandedWithFields = Diagnostics.LogValue("expandedWithFields ", expandedWithFields),
 		dd = List.Transform(_existingColumns, each {_, FriendlyRowValues}),
-		pp = Table.FromRecords(Table.TransformRows(expandedWithFields, (row) => Record.TransformFields(row, dd))),
+		pp = Table.FromRecords(Table.TransformRows(_expandedWithFields, (row) => Record.TransformFields(row, dd))),
         hasMoreItems = GetHasMoreItems(source),
          _pp = Diagnostics.LogValue("pp ", pp)
 
@@ -329,6 +327,9 @@ TRIMConnector.Icons = [
 
 FriendlyRowValues = (row) =>
 	let
+
+        _row = Diagnostics.LogValue("row: ", row),
+
         rowRecordTypeTmo = Type.RecordFields(RefTrimMainObjectType),
         tmoColumns = Record.FieldNames(rowRecordTypeTmo),
                     
@@ -338,20 +339,20 @@ FriendlyRowValues = (row) =>
        	refMainObjectFieldTransformations = List.Transform(tmoColumns, each {_, FriendlyRowValues}),
         refLocationFieldTransformations = List.Transform(locationColumns, each {_, FriendlyRowValues}),
 		v = 
-            if Value.Type(row) = type text then row else
-            if Value.Type(row) = type number then row else
+            if Value.Type(_row) = type text then _row else
+            if Value.Type(_row) = type number then _row else
             if row is null then
                 null
-            else if Record.HasFields(row, "TrimType") and row[TrimType] = "Location" then
-                Record.TransformFields(row, refLocationFieldTransformations)
-            else if Record.HasFields(row, "TrimType")  then
-                Record.TransformFields(row, refMainObjectFieldTransformations)
-			else if Record.HasFields(row, "Value") then
+            else if Record.HasFields(_row, "TrimType") and row[TrimType] = "Location" then
+                Record.TransformFields(_row, refLocationFieldTransformations)
+            else if Record.HasFields(_row, "TrimType")  then
+                Record.TransformFields(_row, refMainObjectFieldTransformations)
+			else if Record.HasFields(_row, "Value") then
 				row[Value]?
-			else if Record.HasFields(row, "IsTimeClear") then
+			else if Record.HasFields(_row, "IsTimeClear") then
 				row[DateTime]?
 			else
-				row
+				_row
 	in
 		v;
 
