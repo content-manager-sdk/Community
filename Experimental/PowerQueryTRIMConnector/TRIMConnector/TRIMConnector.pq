@@ -295,11 +295,11 @@ GetAllPagesByNextLink = (url as text, options as record, schema as type, onePage
     Table.GenerateByPage((previous) => 
         let
             // if previous is null, then this is our first page of data
-            newOptions = options & [start = if (previous = null) then options[start] else if Value.Metadata(previous)[HasMoreItems] = false then 0 else Number.FromText(Value.Metadata(previous)[LastStart])+PAGE_SIZE],
+            newOptions = options & [start = if (previous = null) then options[start] else if Value.Metadata(previous)[HasMoreItems] = false then 0 else Value.Metadata(previous)[LastStart]+PAGE_SIZE],
             // if NextLink was set to null by the previous call, we know we have no more data
             page = 
                 if previous <> null and onePageOnly = true then null
-                else if (newOptions[start] > 0) then GetPage(url, options, schema) 
+                else if (newOptions[start] > 0) then GetPage(url, newOptions, schema) 
                 else null
         in
             page
@@ -492,7 +492,7 @@ TRIMConnector.View = (baseUrl as text, savedSearchDetails as record) as table =>
             CalculateUrl = (state) as text => 
                 let
                     ulrWithTrailingSlash = UlrWithTrailingSlash(state),
-                       urlWithEntity = Uri.Combine(ulrWithTrailingSlash,  if savedSearchDetails[version] >= 80 then "StreamSearch" else "Search")
+                       urlWithEntity = Uri.Combine(ulrWithTrailingSlash,  if (savedSearchDetails[version] >= 80 and savedSearchDetails[trimType] = "Record") then "StreamSearch" else "Search")
                     //urlWithEntity = Uri.Combine(ulrWithTrailingSlash, if savedSearchDetails[version] >= 80 then "StreamSearch" else "Search")
 
                 in
