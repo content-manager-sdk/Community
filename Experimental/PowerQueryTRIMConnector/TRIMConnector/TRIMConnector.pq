@@ -226,7 +226,7 @@ GetPage = (url as text, query as record, schema as type) =>
          _pp = Diagnostics.LogValue("pp ", pp)
 
 in
-	 _pp meta [HasMoreItems = hasMoreItems, LastStart = query[start]?];
+	 _pp meta [HasMoreItems = hasMoreItems, LastStart = query[start]?, SearchId =query[id]];
 
 
 
@@ -295,7 +295,11 @@ GetAllPagesByNextLink = (url as text, options as record, schema as type, onePage
     Table.GenerateByPage((previous) => 
         let
             // if previous is null, then this is our first page of data
-            newOptions = options & [start = if (previous = null) then options[start] else if Value.Metadata(previous)[HasMoreItems] = false then 0 else Value.Metadata(previous)[LastStart]+PAGE_SIZE],
+
+            newOptions = options & [
+                start = if (previous = null) then options[start] else if Value.Metadata(previous)[HasMoreItems] = false then 0 else Value.Metadata(previous)[LastStart]+PAGE_SIZE,
+                id = if (previous = null) then Number.ToText(Number.Random()) else Value.Metadata(previous)[SearchId]
+                ],
             // if NextLink was set to null by the previous call, we know we have no more data
             page = 
                 if previous <> null and onePageOnly = true then null
