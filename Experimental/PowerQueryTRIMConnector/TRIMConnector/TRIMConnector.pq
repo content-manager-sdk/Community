@@ -18,7 +18,7 @@ Record = type table [
 
 RefTrimMainObjectType = type [
     NameString = nullable text,
-    ToolTip = nullable text,
+  //  ToolTip = nullable text,
     TrimType = nullable text,
     Uri = number
 ];
@@ -101,10 +101,11 @@ getSavedSearchDetails = (baseUrl as text, savedSearchId as text) as record =>
 getVersion = (baseUrl as text) as number =>
     let
     	options = [
-		    Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"]],
-       	Source = Json.Document(Web.Contents(baseUrl & "Version", options))
+		    Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"],
+            Query=[q="all", properties="DatabaseSchemaVersion"]],
+       	Source = Json.Document(Web.Contents(baseUrl & "Database", options))
     in
-        Source[Version];
+        Source[Results]{0}[DatabaseSchemaVersion][Value];
 
 GetTypeRecord = (baseUrl as text, savedSearchDetails as record) as table => 
     let
@@ -500,7 +501,7 @@ TRIMConnector.View = (baseUrl as text, savedSearchDetails as record) as table =>
             CalculateUrl = (state) as text => 
                 let
                     ulrWithTrailingSlash = UlrWithTrailingSlash(state),
-                       urlWithEntity = Uri.Combine(ulrWithTrailingSlash,  if (savedSearchDetails[version] >= 80 and savedSearchDetails[trimType] = "Record") then "StreamSearch" else "Search")
+                       urlWithEntity = Uri.Combine(ulrWithTrailingSlash,  if (savedSearchDetails[version] >= 389 and savedSearchDetails[trimType] = "Record") then "StreamSearch" else "Search")
                     //urlWithEntity = Uri.Combine(ulrWithTrailingSlash, if savedSearchDetails[version] >= 80 then "StreamSearch" else "Search")
 
                 in
