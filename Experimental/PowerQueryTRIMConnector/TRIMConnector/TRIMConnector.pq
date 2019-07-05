@@ -18,7 +18,6 @@ Record = type table [
 
 RefTrimMainObjectType = type [
     NameString = nullable text,
-  //  ToolTip = nullable text,
     TrimType = nullable text,
     Uri = number
 ];
@@ -76,7 +75,7 @@ getPropertyList = (baseUrl as text, savedSearchDetails as record) as record =>
     let
 	    searchQuery = [q="unkSaved:" & savedSearchDetails[savedSearchId], pageSize="1", excludeCount="true",propertySets="FromSearch", IncludePropertyDefs="true"],
 	    options = [
-		    Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"],
+		    Headers=[#"Accept"="application/json"],
 		    Query=searchQuery],
 
 	    Source = Json.Document(Web.Contents(baseUrl & savedSearchDetails[trimType] , options))
@@ -101,7 +100,7 @@ getSavedSearchDetails = (baseUrl as text, savedSearchId as text) as record =>
 getVersion = (baseUrl as text) as number =>
     let
     	options = [
-		    Headers=[#"Accept"="application/json", #"Cache-Control"="no-cache, no-store, must-revalidate"],
+		    Headers=[#"Accept"="application/json"],
             Query=[q="all", properties="DatabaseSchemaVersion"]],
        	Source = Json.Document(Web.Contents(baseUrl & "Database", options))
     in
@@ -112,27 +111,25 @@ GetTypeRecord = (baseUrl as text, savedSearchDetails as record) as table =>
         propertyDefs = GetPropertyDefinitions(baseUrl, savedSearchDetails),
         _propertyDefs = Diagnostics.LogValue("propertyDefs ", propertyDefs),
 
-       // #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Id", "PFFormat", "ObjectType", "Property"}, {"Column1.Id", "Column1.PFFormat", "Column1.ObjectType"}),
-       // #"Filtered Rows" = Table.SelectRows(#"Converted to Table", each ( List.Contains({"RecordOwnerLocation","RecordExtension","RecordTitle", "RecordNumber","Uri"}, [Column1.Id]) )),
-        #"LocationFiltered Rows" = Table.SelectRows(_propertyDefs, each ( Text.StartsWith([Column1.Id], "LocationOld") = false )),
-        #"Added Custom" = Table.AddColumn(#"LocationFiltered Rows", "Type", each 
-        if List.Contains({"HistoryEventObject","HistoryRelatedObjectUri", "HistoryForObjectUri"}, [Column1.Id]) then
-            type nullable number else  
-        if [Column1.PFFormat] = "Object" and [Column1.ObjectType] = "Location" then
-            RefLocationType else 
-        if [Column1.PFFormat] = "Object" then
-            RefTrimMainObjectType else   
-        if List.Contains({"Number", "BigNumber", "Decimal", "Currency"}, [Column1.PFFormat]) then
-            type nullable number else  
-        if [Column1.PFFormat] = "Datetime" then
-            type nullable datetime else  
-        if [Column1.PFFormat] = "Date" then
-            type nullable date else 
-        if [Column1.PFFormat] = "Boolean" then
-            type nullable logical else                 
-        type nullable text
-),
-        #"Added Custom1" = Table.AddColumn(#"Added Custom", "Value", each type [pType]),
+        locationFilteredRows = Table.SelectRows(_propertyDefs, each ( Text.StartsWith([Column1.Id], "LocationOld") = false )),
+        addedCustom = Table.AddColumn(locationFilteredRows, "Type", each 
+            if List.Contains({"HistoryEventObject","HistoryRelatedObjectUri", "HistoryForObjectUri"}, [Column1.Id]) then
+                type nullable number else  
+            if [Column1.PFFormat] = "Object" and [Column1.ObjectType] = "Location" then
+                RefLocationType else 
+            if [Column1.PFFormat] = "Object" then
+                RefTrimMainObjectType else   
+            if List.Contains({"Number", "BigNumber", "Decimal", "Currency"}, [Column1.PFFormat]) then
+                type nullable number else  
+            if [Column1.PFFormat] = "Datetime" then
+                type nullable datetime else  
+            if [Column1.PFFormat] = "Date" then
+                type nullable date else 
+            if [Column1.PFFormat] = "Boolean" then
+                type nullable logical else                 
+            type nullable text
+        ),
+        #"Added Custom1" = Table.AddColumn(addedCustom, "Value", each type [pType]),
         #"Renamed Columns" = Table.RenameColumns(#"Added Custom1",{{"Column1.Id", "Name"}}),
         #"Type Table" = #table({"Name", "Type"}, {}),
          #"Type Table with Name" = Table.SelectColumns(#"Renamed Columns", {"Name", "Type"}),
@@ -201,14 +198,14 @@ TRIMConnector.Go = (baseUrl, savedSearchId as text) as table =>
 GetPage = (url as text, query as record, schema as type) =>
 	let	 
 
-       existingColumns = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))),
- 
+        existingColumns = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))), 
         _existingColumns = Diagnostics.LogValue("existingColumns", existingColumns),
 
         optionsWithPageSize = if Record.HasFields(query, "pageSize") then query else query & [pageSize = Text.From(PAGE_SIZE)],
 
+
 		options = [
-            Headers=[#"Accept"="application/json", #"Content-Type"="application/json"], 
+            Headers=[#"Content-Type"="application/json"], 
             Content= Json.FromValue(optionsWithPageSize)
         ],
         
@@ -228,7 +225,7 @@ GetPage = (url as text, query as record, schema as type) =>
          _pp = Diagnostics.LogValue("pp ", pp)
 
 in
-	 _pp meta [HasMoreItems = hasMoreItems, LastStart = query[start]?, SearchId =query[id]];
+	 _pp meta [HasMoreItems = hasMoreItems, LastStart = query[start]?, SearchId = query[id]];
 
 
 
@@ -299,13 +296,18 @@ GetAllPagesByNextLink = (url as text, options as record, schema as type, onePage
             // if previous is null, then this is our first page of data
 
             newOptions = options & [
-                start = if (previous = null) then options[start] else if Value.Metadata(previous)[HasMoreItems] = false then 0 else Value.Metadata(previous)[LastStart]+PAGE_SIZE,
-                id = if (previous = null) then Number.ToText(Number.Random()) else Value.Metadata(previous)[SearchId]
+                start = if (previous = null) then options[start] else if Value.Metadata(previous)[HasMoreItems] = false then 0 else Value.Metadata(previous)[LastStart]+PAGE_SIZE
                 ],
+            optionsWithCache = 
+                if onePageOnly = true then 
+                    newOptions 
+                else 
+                    newOptions & [id = if (previous = null) then Number.ToText(Number.Random()) else Value.Metadata(previous)[SearchId]], 
+
             // if NextLink was set to null by the previous call, we know we have no more data
             page = 
                 if previous <> null and onePageOnly = true then null
-                else if (newOptions[start] > 0) then GetPage(url, newOptions, schema) 
+                else if (optionsWithCache[start] > 0) then GetPage(url, optionsWithCache, schema) 
                 else null
         in
             page
@@ -534,11 +536,7 @@ TRIMConnector.View = (baseUrl as text, savedSearchDetails as record) as table =>
                             qsWithTop & [ #"start" = Number.ToText(state[Skip] + 1) ]
                         else
                             qsWithTop,
-                    qsWithSelect =
-                        if (state[SelectColumns]? <> null) then
-                            qsWithSkip & [ #"properties" = Text.Combine(state[SelectColumns], ",") ]
-                        else
-                            qsWithSkip& [ #"properties" = Text.Combine(CalculateExistingColumns(), ",") ],
+                    qsWithSelect = qsWithSkip & [ #"properties" = Text.Combine( List.First(List.RemoveNulls({ state[SelectColumns]?, CalculateExistingColumns()})) , ",") ],
                     qsWithOrderBy = 
                         if (state[OrderBy]? <> null) then
                             qsWithSelect & [ #"sortBy" = state[OrderBy] ]
