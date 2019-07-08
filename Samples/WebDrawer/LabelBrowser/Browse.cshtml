@@ -1,0 +1,15 @@
+﻿@using HP.HPTRIM.Service
+@inherits TrimViewPage<HP.HPTRIM.ServiceModel.UserLabelsResponse>
+@{
+
+    if (@HttpContext.Current.Request.QueryString["q"] == null)
+    {
+        ViewBag.SearchHelp = Translations.lang.record_search_help;
+    }
+    ViewBag.HideSearchJS = true;
+}
+
+
+@section scripts {
+<script src="~/scripts/LabelBrowser.js" type="text/javascript"></script>
+}
