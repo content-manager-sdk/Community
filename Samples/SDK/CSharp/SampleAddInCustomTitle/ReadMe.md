@@ -1,12 +1,7 @@
-﻿# Sample Addin
-A .Net add-in can be used to customise the behaviour of various objects, such as Record, Location and others.  It allows you to intercept various events including:
- - PreDelete
- - Delete
- - PreSave
- - Save
- - and others...
+﻿# Sample Addin to replace tags with Record properties
+This add-in will read the title string and replace any properties surrounded with angle brackets with their equivalent property or field value.  For example the title "this is a record by <Author>" will be replaced by "this is a record by David".
 
-In addition to intercepting events it can be used to add items to the context menu, in the 'Send To' sub menu
+
 
 ## Setup
 To use this sample:
@@ -15,8 +10,8 @@ To use this sample:
  - add a 'New generic add-in (.Net) (see image 1),
  - select which object types this addin should be used by
 
-## Testing
-This addin will write a log file when it is used, to open the log file go to your AuditLogs folder (typicall ServerData\[DATABASE ID]\AuditLogs).  If the addin is operating then then from the context menu of an object select 'Send To > Sample Menu String
+## Download
+If you want to download the add-in 'as-is' then you can do that [here](DLL/SampleAddin.zip).
 
 ### Image 1
 ![image 1](addin_dialog.PNG)
