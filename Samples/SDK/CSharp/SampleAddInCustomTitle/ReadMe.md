@@ -11,7 +11,7 @@ To use this sample:
  - select which object types this addin should be used by
 
 ## Download
-If you want to download the add-in 'as-is' then you can do that [here](DLL/SampleAddin.zip).
+If you want to download the add-in 'as-is' then you can do that [here](DLL).
 
 ### Image 1
 ![image 1](addin_dialog.PNG)
