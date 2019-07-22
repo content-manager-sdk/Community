@@ -155,7 +155,7 @@ namespace SampleAddIn
 		{
 			PropertyIds propertyId = PropertyIds.Unknown;
 			
-			if (System.Enum.TryParse<PropertyIds>($"Record{m.Groups[1]}", out propertyId))
+			if (System.Enum.TryParse<PropertyIds>($"Record{m.Groups[1]}", true, out propertyId))
 			{
 				if (record.GetProperty(propertyId) != null)
 				{
@@ -183,13 +183,24 @@ namespace SampleAddIn
 			return m.Value;
 		}
 
+		private string titleTemplate = "Include properties using elements such as <Author> <Address> or <DateCreated>.";
+
 		public override bool PreSave(TrimMainObject modifiedObject)
 		{
 			Record record = modifiedObject as Record;
 
 			if (record != null)
 			{
-				record.Title = Regex.Replace(record.Title, "<(.*?)>", new MatchEvaluator(match => replacePlaceHolder(record, match)));
+				if (record.Title == titleTemplate)
+				{
+					MessageBox.Show("Please set Title before saving.");
+					return false;
+				}
+				else
+				{
+
+					record.Title = Regex.Replace(record.Title, "<(.*?)>", new MatchEvaluator(match => replacePlaceHolder(record, match)));
+				}
 			}
 			return true;
 		}
@@ -206,7 +217,7 @@ namespace SampleAddIn
 
 			if (record != null && string.IsNullOrWhiteSpace(record.Title))
 			{
-				record.Title = "<Activity> <Author> <Addressee> <Subject> <AdditionalInformation> <DateCreated>";
+				record.Title = titleTemplate;
 
 			}
 		}
