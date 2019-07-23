@@ -13,11 +13,11 @@ To use this connector:
 
 ## Using the connector
 To get data from CM using this connector:
- * create a saved search of the data (Records, Locations, and data supported by Saved Searches),
+ * create a saved search of the data (Records, Locations, any data supported by Saved Searches),
  * in the Saved Search properties use 'Edit Query\Results' to choose the columns to include in your Saved Search,
  * from Power BI use 'Get Data\Other' to access the connector,
  * use either Basic or Windows authentication to connect to the Web Service,
- * enter the URL to the web service (e.g. http://myserver/ServiceAPI)
+ * enter the URL to the web service (e.g. `http://myserver/ServiceAPI`)
  * enter the name or URI of the saved search.
 
 ## Authentication
