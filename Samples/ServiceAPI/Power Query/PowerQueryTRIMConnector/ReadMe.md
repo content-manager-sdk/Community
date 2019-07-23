@@ -1,23 +1,25 @@
-# Excel Saved Search Query
-This sample is an Office data connector to fetch all objects for a Saved Search from Content Manager.  It creates a table containing columns for each property included in the Saved Search.
+# Power BI Connector
+This connector simplifies the process of connecting to CM from Power BI, allowing you to use and Saved Search as a Power BI datasource. 
 
-## Setup
-To use this sample:
- - copy the ODC file to [My Documents]\My Data Sources
- - from the Excel Data ribbon choose 'Existing Connections'
- - select 'Query - CMSavedSearch'
- - select 'Only create Connection'
- - from the Excel Data ribbon choose 'Queries and Connections'
- - from the Queries and Connections pane:
-	  - set the location of your ServiceAPI instance in the ServiceURL parameter
-	  - Invoke CMSavedSearch
-	  - enter the name of a SavedSearch
+## Saved Searches
+The connector requires you construct a Saved Search in CM to which you will connect from Power BI.  The reason for this is that it is much simpler to compose your query in the CM application than to do so in Power BI.
  
+## Installation
+To use this connector:
+ * make sure Power BI Desktop is installed
+ * copy the file [TRIMConnector.pqx](Samples/ServiceAPI/Power%20Query/PowerQueryTRIMConnector/Published) to  Documents\Power BI Desktop\Custom Connectors
+ * [install](https://docs.microsoft.com/en-us/power-bi/desktop-trusted-third-party-connectors) the thumbrint for the connector certificate in your registry. 
+ * open Power BI and find the connector in 'Get Data\Other'
  
-## Choosing the data 
-Use the 'Edit Query' button in the Saved Search properties to select which columns should appear in the Saved Search. It is best not rely on the default columns as these can change over time and from user to user.
-![Saved Search Properties](savedsearchresults.PNG)
+## Using the connector
+To get data from CM using this connector:
+ * create a saved search of the data (Records, Locations, and data supported by Saved Searches),
+ * in the Saved Search properties use 'Edit Query\Results' to choose the columns to include in your Saved Search,
+ * from Power BI use 'Get Data\Other' to access the connector,
+ * use either Basic or Windows authentication to connect to the Web Service,
+ * enter the URL to the web service (e.g. http://myserver/ServiceAPI)
+ * enter the name or URI of the saved search.
 
 ## Authentication
-The only authentication that has been tested is Windows and Basic.
+The only authentication that has been implemented is Windows and Basic.
 
