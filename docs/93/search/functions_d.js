@@ -39,5 +39,6 @@ var searchData=
   ['newworkingdocument',['NewWorkingDocument',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity_documents.html#a98b5b4517a8a911ca09efbc2a75648e6',1,'HP::HPTRIM::SDK::ActivityDocuments']]],
   ['not',['Not',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a53506c5df2b4708fb86829fb78874fe1',1,'HP::HPTRIM::SDK::TrimMainObjectSearch']]],
   ['notification',['Notification',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_notification.html#a29715dec3e33c595484fc83c5b55a0d4',1,'HP.HPTRIM.SDK.Notification.Notification(Database database, TrimURI uri)'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_notification.html#a34a24c300af5e20bbe72922630f15c13',1,'HP.HPTRIM.SDK.Notification.Notification(Database database, string name)']]],
+  ['notifyexternallyshared',['NotifyExternallyShared',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a773543c5100b70be7f5fdb462d57f159',1,'HP::HPTRIM::SDK::Record']]],
   ['notifyviewed',['NotifyViewed',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a5f2845fa57f8ceaa2b9f10d92e7b6c41',1,'HP::HPTRIM::SDK::Record']]]
 ];

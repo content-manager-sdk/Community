@@ -75,6 +75,7 @@ var namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k =
     [ "EventProcessorCounters", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_processor_counters.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_processor_counters" ],
     [ "EventProcessorCountersList", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_processor_counters_list.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_processor_counters_list" ],
     [ "EventProcessTypeList", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_process_type_list.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_process_type_list" ],
+    [ "ExternalSharingUserOptions", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_external_sharing_user_options.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_external_sharing_user_options" ],
     [ "ExtractDocument", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_extract_document.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_extract_document" ],
     [ "FavoriteSearchMethodsUserOptions", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_favorite_search_methods_user_options.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_favorite_search_methods_user_options" ],
     [ "FieldDefinition", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_field_definition.html", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_field_definition" ],

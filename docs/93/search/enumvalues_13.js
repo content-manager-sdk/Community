@@ -1188,6 +1188,7 @@ var searchData=
   ['trm_5ffileblankorzero',['trm_fileBlankORZero',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7ccaa9d1ba5efb265b3afdd08f0f04db27e1',1,'HP::HPTRIM::SDK']]],
   ['trm_5ffileorfoldernotaccessible',['trm_fileOrFolderNotAccessible',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7ccaffd6075587473b312fccb59d11873a7b',1,'HP::HPTRIM::SDK']]],
   ['trm_5ffoldercap',['trm_folderCap',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7ccab679d36d2c3a0e6b17f1fa8d52029fb2',1,'HP::HPTRIM::SDK']]],
+  ['trm_5fgetdocumentfailed',['trm_getDocumentFailed',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca6ef60b320480f0853fb4d7653cbbc060',1,'HP::HPTRIM::SDK']]],
   ['trm_5fgetglobalconfirmmsg',['trm_getGlobalConfirmMsg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca639f43de644c0258738be86a8a0db6c0',1,'HP::HPTRIM::SDK']]],
   ['trm_5fgetglobalframewarningmsg',['trm_getGlobalFrameWarningMsg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca00f7712bb3f8fad0ed002e93c1eb7d98',1,'HP::HPTRIM::SDK']]],
   ['trm_5fgetglobalselectcaption',['trm_getGlobalSelectCaption',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7ccaba17e50742f54f7e0559683457bfdf11',1,'HP::HPTRIM::SDK']]],

@@ -421,6 +421,9 @@ Properties</h2></td></tr>
 <tr class="memitem:a4037c24de3ad1d3801f0f1d71c921c92"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a4037c24de3ad1d3801f0f1d71c921c92">SearchAsXML</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a4037c24de3ad1d3801f0f1d71c921c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets a string containing an XML representation of the search. This XML is language and locale independent and can be used for persisting a query for later execution, perhaps by a user using a different language.  <a href="#a4037c24de3ad1d3801f0f1d71c921c92">More...</a><br /></td></tr>
 <tr class="separator:a4037c24de3ad1d3801f0f1d71c921c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a758868eca4696ecd82c3230c69334b13"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a758868eca4696ecd82c3230c69334b13">OverrideBatchSize</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a758868eca4696ecd82c3230c69334b13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets a batch size value which is used when pre-fetching results. Items are fully constructed and added to the global object cache as part the optimization to provided fast access when processing results. In general, the system settings should be perfectly adequate, however in some paging situations it might be quicker to adjust this value. It can be in the range of 1 to 500, 0 means use the system default.  <a href="#a758868eca4696ecd82c3230c69334b13">More...</a><br /></td></tr>
+<tr class="separator:a758868eca4696ecd82c3230c69334b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc12b50bc6ded2bf1d84907f394b110f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#adc12b50bc6ded2bf1d84907f394b110f">HitHighlightString</a><code> [get]</code></td></tr>
 <tr class="memdesc:adc12b50bc6ded2bf1d84907f394b110f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a string containing a string that can be used for hit highlighting in a document viewer. It basically contains an array of content search related strings, separated by commas. It can be passed to the <a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_extract_document.html" title="A helper class that encapsulates the process of extracting a document attached to a Trim object...">ExtractDocument</a> class when producing a HTML rendering that highlights hits  <a href="#adc12b50bc6ded2bf1d84907f394b110f">More...</a><br /></td></tr>
 <tr class="separator:adc12b50bc6ded2bf1d84907f394b110f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2371,6 +2374,28 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets a number indicating the highest known number of rows that match the query. It is also guaranteed to return a result without doing a round trip to the server. So, it generally either reflects the veryFastCount if the count is known (eg in the case of small queries or when a count has already been obtained) or the number of rows that have currently been downloaded from the server as part of the initial query execution. It should be quick and can be used to notify the user if there are, say, more than 500 hits. </p>
+
+</div>
+</div>
+<a class="anchor" id="a758868eca4696ecd82c3230c69334b13"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long HP.HPTRIM.SDK.TrimMainObjectSearch.OverrideBatchSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets a batch size value which is used when pre-fetching results. Items are fully constructed and added to the global object cache as part the optimization to provided fast access when processing results. In general, the system settings should be perfectly adequate, however in some paging situations it might be quicker to adjust this value. It can be in the range of 1 to 500, 0 means use the system default. </p>
 
 </div>
 </div>

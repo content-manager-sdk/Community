@@ -219,6 +219,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4318fecce02bbd4214ec7d7712164610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ddc1fee9228ea545e308b13626ef90a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a7ddc1fee9228ea545e308b13626ef90a">SaveWorkingCopy</a> (<a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_input_document.html">InputDocument</a> documentToSave)</td></tr>
 <tr class="separator:a7ddc1fee9228ea545e308b13626ef90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a773543c5100b70be7f5fdb462d57f159"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a773543c5100b70be7f5fdb462d57f159">NotifyExternallyShared</a> (string shareDetails)</td></tr>
+<tr class="separator:a773543c5100b70be7f5fdb462d57f159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae48bf4f426d39439a1dca772bea5d648"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#ae48bf4f426d39439a1dca772bea5d648">GetExternalShareURL</a> ()</td></tr>
+<tr class="separator:ae48bf4f426d39439a1dca772bea5d648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52439cf4cb8afcc509b47f36c12f5a38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a52439cf4cb8afcc509b47f36c12f5a38">DeleteAndDeleteContents</a> ()</td></tr>
 <tr class="memdesc:a52439cf4cb8afcc509b47f36c12f5a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes this record and also deletes all records contained within this record  <a href="#a52439cf4cb8afcc509b47f36c12f5a38">More...</a><br /></td></tr>
 <tr class="separator:a52439cf4cb8afcc509b47f36c12f5a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -936,6 +940,9 @@ Properties</h2></td></tr>
 <tr class="memitem:aedd9d54a5152db302f4b456f56e1b1a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#aedd9d54a5152db302f4b456f56e1b1a8">IsRootOfPartSeries</a><code> [get]</code></td></tr>
 <tr class="memdesc:aedd9d54a5152db302f4b456f56e1b1a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a Boolean value indicating if it was the first or original part, if the record is in a part series.  <a href="#aedd9d54a5152db302f4b456f56e1b1a8">More...</a><br /></td></tr>
 <tr class="separator:aedd9d54a5152db302f4b456f56e1b1a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27bdd6b533b7e73321e3d094d26628af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a27bdd6b533b7e73321e3d094d26628af">IsShared</a><code> [get]</code></td></tr>
+<tr class="memdesc:a27bdd6b533b7e73321e3d094d26628af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a boolean value indicating if this folder has been shared with R_objectiveConnect  <a href="#a27bdd6b533b7e73321e3d094d26628af">More...</a><br /></td></tr>
+<tr class="separator:a27bdd6b533b7e73321e3d094d26628af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dd348ed4ccd36761a80b17b2dcc2299"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a6dd348ed4ccd36761a80b17b2dcc2299">IsSigned</a><code> [get]</code></td></tr>
 <tr class="memdesc:a6dd348ed4ccd36761a80b17b2dcc2299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a Boolean value indicating whether the electronic document attached to this record has been digitally signed.  <a href="#a6dd348ed4ccd36761a80b17b2dcc2299">More...</a><br /></td></tr>
 <tr class="separator:a6dd348ed4ccd36761a80b17b2dcc2299"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2585,6 +2592,21 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae48bf4f426d39439a1dca772bea5d648"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string HP.HPTRIM.SDK.Record.GetExternalShareURL </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="acdb4e248c476356763309da8cab18b8e"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3239,6 +3261,22 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sets the dateInactive for this record and any of its contents. When processing contents, you can specify whether the task should halt if any failures occur. </p>
+
+</div>
+</div>
+<a class="anchor" id="a773543c5100b70be7f5fdb462d57f159"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HP.HPTRIM.SDK.Record.NotifyExternallyShared </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>shareDetails</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -7029,6 +7067,28 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets a Boolean value indicating if it was the first or original part, if the record is in a part series. </p>
+
+</div>
+</div>
+<a class="anchor" id="a27bdd6b533b7e73321e3d094d26628af"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HP.HPTRIM.SDK.Record.IsShared</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets a boolean value indicating if this folder has been shared with R_objectiveConnect </p>
 
 </div>
 </div>

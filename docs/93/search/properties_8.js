@@ -139,6 +139,7 @@ var searchData=
   ['issearchclause',['IsSearchClause',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_search_stack_item.html#a3e3bd11a3a2e8a5b67f553bc3f4ddb2f',1,'HP::HPTRIM::SDK::TrimSearchStackItem']]],
   ['issection',['IsSection',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_agenda_item.html#a16c62a12c4f9e45aeacad8003fecc7e7',1,'HP::HPTRIM::SDK::AgendaItem']]],
   ['issecurityviolation',['IsSecurityViolation',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_history.html#a7bd1fe24e3a8cb77a1bd3e108e29669f',1,'HP::HPTRIM::SDK::History']]],
+  ['isshared',['IsShared',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a27bdd6b533b7e73321e3d094d26628af',1,'HP::HPTRIM::SDK::Record']]],
   ['issigned',['IsSigned',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a6dd348ed4ccd36761a80b17b2dcc2299',1,'HP::HPTRIM::SDK::Record']]],
   ['issinglehopclient',['IsSingleHopClient',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#af2320f468edb92ec94160acb38c41804',1,'HP::HPTRIM::SDK::Database']]],
   ['isstanding',['IsStanding',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_agenda_item.html#a23234c257c3e3625427104d377858fcb',1,'HP::HPTRIM::SDK::AgendaItem']]],

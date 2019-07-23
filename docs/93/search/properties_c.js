@@ -37,6 +37,7 @@ var searchData=
   ['matterrecord',['MatterRecord',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a2fadf159d2ebee880756cc2718722ecb',1,'HP::HPTRIM::SDK::Record']]],
   ['matterrecordaccessreferenced',['MatterRecordAccessReferenced',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a04db246dce8899cf19df8b672628cb9b',1,'HP::HPTRIM::SDK::Database']]],
   ['maxfoldersize',['MaxFolderSize',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a311487d932d4bedeaabe5fafd20ef12e',1,'HP::HPTRIM::SDK::ElectronicStore']]],
+  ['maximumsecuritylevel',['MaximumSecurityLevel',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_external_sharing_user_options.html#ae7b6711398cfc68d0003b02588a7964b',1,'HP::HPTRIM::SDK::ExternalSharingUserOptions']]],
   ['maxresults',['MaxResults',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_search_top_containers_filter.html#ad94b37c85755be87b5b0156049383f21',1,'HP::HPTRIM::SDK::TrimSearchTopContainersFilter']]],
   ['mediatype',['MediaType',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a44420aaa00231444ec90648b9586510f',1,'HP.HPTRIM.SDK.Record.MediaType()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_type.html#ad96455310f0113bfb3055f8770d6dab6',1,'HP.HPTRIM.SDK.RecordType.MediaType()']]],
   ['medium',['Medium',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_communication.html#a2019b577f9193528328887a2070865de',1,'HP::HPTRIM::SDK::Communication']]],

@@ -21,5 +21,6 @@ var searchData=
   ['eventprocessorcounterslistenumerator',['EventProcessorCountersListEnumerator',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_processor_counters_list_1_1_event_processor_counters_list_enumerator.html',1,'HP::HPTRIM::SDK::EventProcessorCountersList']]],
   ['eventprocesstypelist',['EventProcessTypeList',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_process_type_list.html',1,'HP::HPTRIM::SDK']]],
   ['eventprocesstypelistenumerator',['EventProcessTypeListEnumerator',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_event_process_type_list_1_1_event_process_type_list_enumerator.html',1,'HP::HPTRIM::SDK::EventProcessTypeList']]],
+  ['externalsharinguseroptions',['ExternalSharingUserOptions',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_external_sharing_user_options.html',1,'HP::HPTRIM::SDK']]],
   ['extractdocument',['ExtractDocument',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_extract_document.html',1,'HP::HPTRIM::SDK']]]
 ];

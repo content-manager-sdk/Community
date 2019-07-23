@@ -44,6 +44,7 @@ var searchData=
   ['policycentrenotes',['PolicyCentreNotes',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_schedule_trigger.html#affce6073375c86a356445d05f4216d8a',1,'HP::HPTRIM::SDK::ScheduleTrigger']]],
   ['policycentretitle',['PolicyCentreTitle',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_schedule_trigger.html#acbc2f36c3b12d8eb8d7d8f56cd283a5d',1,'HP::HPTRIM::SDK::ScheduleTrigger']]],
   ['popupid',['PopupId',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_menu_popup.html#ac7e03180aa10d126af1410eab27eec0e',1,'HP::HPTRIM::SDK::MenuPopup']]],
+  ['portnumber',['PortNumber',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_external_sharing_user_options.html#aeb5f71a04e1942b4bd6e2cc65f2a1e2c',1,'HP::HPTRIM::SDK::ExternalSharingUserOptions']]],
   ['position',['Position',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_location.html#a08d1f0d2458f674b0bdf5d711ee45aac',1,'HP::HPTRIM::SDK::Location']]],
   ['positions',['Positions',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity_result.html#ab7b2c4887120acbf345867e6ebddca87',1,'HP::HPTRIM::SDK::ActivityResult']]],
   ['possiblyhassubordinates',['PossiblyHasSubordinates',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_object.html#abec13116d54a3551eb8d34efc02f4fb9',1,'HP::HPTRIM::SDK::TrimObject']]],

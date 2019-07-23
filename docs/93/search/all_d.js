@@ -258,6 +258,7 @@ var searchData=
   ['notifyautomaticuserregistrations',['NotifyAutomaticUserRegistrations',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a760476cdc0b3894f5beb27ac41729e6c',1,'HP::HPTRIM::SDK::Database']]],
   ['notifybyemail',['NotifyByEmail',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#ae9058ede18402de2e0a2679ece086517',1,'HP::HPTRIM::SDK::TodoItem']]],
   ['notifydocumentreviewevents',['NotifyDocumentReviewEvents',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a7b263b746162abec7f5fc32d94e041b7',1,'HP::HPTRIM::SDK::Database']]],
+  ['notifyexternallyshared',['NotifyExternallyShared',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a773543c5100b70be7f5fdb462d57f159',1,'HP::HPTRIM::SDK::Record']]],
   ['notifynextaction',['NotifyNextAction',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#acf491762ed69a36ce6b1a25248c3327d',1,'HP::HPTRIM::SDK::Database']]],
   ['notifyoverdueaction',['NotifyOverdueAction',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a3269d660c47b45fc0fb1eb51482afdff',1,'HP::HPTRIM::SDK::Database']]],
   ['notifyoverduereturn',['NotifyOverdueReturn',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a999b53b7610c038de92b87259f3c4f6a',1,'HP::HPTRIM::SDK::Database']]],

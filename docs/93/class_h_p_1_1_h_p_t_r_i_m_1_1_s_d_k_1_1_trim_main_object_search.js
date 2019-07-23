@@ -89,6 +89,7 @@ var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search =
     [ "IncludeLocationsByProfileReference", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#ada11bfa47e708850efae2a1638b8c66d", null ],
     [ "LimitOnRowsReturned", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#ab119b3e714c93f456e69ea941b61a180", null ],
     [ "MinimumCount", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#ab0ed00aa20768741a206c79c11fb1583", null ],
+    [ "OverrideBatchSize", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a758868eca4696ecd82c3230c69334b13", null ],
     [ "PagingMode", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#af00405b69647d9747fcf0bfc0eacc60a", null ],
     [ "QueryInfoMessage", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#aeea76e2c6f8cd964fe1289511f40630b", null ],
     [ "SearchAsXML", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a4037c24de3ad1d3801f0f1d71c921c92", null ],
