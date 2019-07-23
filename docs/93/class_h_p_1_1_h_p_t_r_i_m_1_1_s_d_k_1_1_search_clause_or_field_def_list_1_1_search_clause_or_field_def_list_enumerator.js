@@ -1,0 +1,9 @@
+var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator =
+[
+    [ "SearchClauseOrFieldDefListEnumerator", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator.html#a5278b594159f443a0f9ec52f786e5d67", null ],
+    [ "Dispose", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator.html#ad777ba6c092754d89ed0b63d301d7517", null ],
+    [ "MoveNext", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator.html#acb7057155ae5158ce3c4d9fcab9e1ccf", null ],
+    [ "Reset", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator.html#af2643fd9d78f7f25fd9e383f78956a29", null ],
+    [ "Current", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator.html#a00020caa7bdec955285a2d39d7ce3c14", null ],
+    [ "Current", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_search_clause_or_field_def_list_1_1_search_clause_or_field_def_list_enumerator.html#a56096f8059860be32aff57d104344685", null ]
+];
