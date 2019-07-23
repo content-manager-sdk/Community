@@ -42,6 +42,8 @@ The .Net SDK [documentation](http://sdk.mfcm.xyz) is available.
 | [DataPort Custom Formatter](Samples/SDK/CSharp/DataPortCustomFormatter) | Import an XML file containing Record information in Content Manager. |
 | [.Net SDK Location Resolver](Samples/SDK/CSharp/SDKLocationResolver) | Dynamically locate the .Net SDK DLL.|
 | [Excel Connector](Samples/ServiceAPI/Power%20Query/Saved%20Search%20Query) | Fetch results of a Saved Search into Excel from Content Manager.|
- [WebDrawer Results grouped by owner](Samples/WebDrawer/GroupResultsByOwner) | Two alternatives for displaying record search results grouped by owner Location.|
+| [WebDrawer Results grouped by owner](Samples/WebDrawer/GroupResultsByOwner) | Two alternatives for displaying record search results grouped by owner Location.|
+| [Include properties in Record Title](Samples/SDK/CSharp/SampleAddInCustomTitle) | A record add-in to replace tags with property or field values.|
+| [Power BI connector](Samples/ServiceAPI/Power%20Query/PowerQueryTRIMConnector) | Source CM data from Power BI|
 
 
