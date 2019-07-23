@@ -12,6 +12,14 @@ To use this sample:
  - add a 'New generic add-in (.Net) (see image 1),
  - select which object types this addin should be used by
 
+## Configuration
+The add-in pre-populates the record title with the text 'Include properties using elements such as <Author> <Address> or <DateCreated>.'.  To change this text:
+ * create a string type Additional Field
+ * do not assign this additional field to an object type
+ * name the field 'CustomTitleConfig' (or [RecordTypeName]_CustomTitleConfig if you want different text for different Record Types)
+ * enter the default record title text in the Default Value of the Additional Field.
+
+
 ## Download
 If you want to download the add-in 'as-is' then you can do that [here](DLL).
 

@@ -106,6 +106,7 @@ namespace SampleAddIn
 		public override void Initialise(Database db)
 		{
 			SDKLoader.load();
+	
 		}
 
 		public override TrimMenuLink[] GetMenuLinks()
@@ -177,18 +178,21 @@ namespace SampleAddIn
 			}
 			else
 			{
-				FieldDefinition fieldDef = FieldDefinition.FindFieldBySearchClauseName(record.Database, BaseObjectTypes.Record, m.Groups[1].Value);
-
-				if (fieldDef == null)
+				using (Database db = record.Database)
 				{
-					fieldDef = record.Database.FindTrimObjectByName(BaseObjectTypes.FieldDefinition, m.Groups[1].Value) as FieldDefinition;
-				}
+					FieldDefinition fieldDef = FieldDefinition.FindFieldBySearchClauseName(db, BaseObjectTypes.Record, m.Groups[1].Value);
 
-				if (fieldDef != null)
-				{
-					if (record.GetFieldValue(fieldDef) != null)
+					if (fieldDef == null)
 					{
-						return record.GetFieldValueAsString(fieldDef, StringDisplayType.TreeColumn, false);
+						fieldDef = db.FindTrimObjectByName(BaseObjectTypes.FieldDefinition, m.Groups[1].Value) as FieldDefinition;
+					}
+
+					if (fieldDef != null)
+					{
+						if (record.GetFieldValue(fieldDef) != null)
+						{
+							return record.GetFieldValueAsString(fieldDef, StringDisplayType.TreeColumn, false);
+						}
 					}
 				}
 			}
@@ -223,6 +227,8 @@ namespace SampleAddIn
 			return false;
 		}
 
+		private Dictionary<string, string> titleTemplates = new Dictionary<string, string>();
+
 		public override void Setup(TrimMainObject newObject)
 		{
 
@@ -230,7 +236,27 @@ namespace SampleAddIn
 
 			if (record != null && string.IsNullOrEmpty(record.Title))
 			{
-				record.Title = titleTemplate;
+				if (!titleTemplates.ContainsKey(record.RecordType.Name))
+				{
+					using (Database db = record.Database)
+					{
+						FieldDefinition fieldDef = db.FindTrimObjectByName(BaseObjectTypes.FieldDefinition, $"{record.RecordType.Name}_CustomTitleConfig") as FieldDefinition;
+
+						if (fieldDef == null)
+						{
+							fieldDef = db.FindTrimObjectByName(BaseObjectTypes.FieldDefinition, "CustomTitleConfig") as FieldDefinition;
+						}
+						if (fieldDef != null)
+						{
+							titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"] = fieldDef.DefaultValue.AsString();
+						} else
+						{
+							titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"] = titleTemplate;
+						}
+					}
+				}
+
+				record.Title = titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"];
 
 			}
 		}
