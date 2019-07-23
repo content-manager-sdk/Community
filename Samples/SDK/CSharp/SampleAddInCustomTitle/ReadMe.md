@@ -18,6 +18,7 @@ The add-in pre-populates the record title with the text 'Include properties usin
  * do not assign this additional field to an object type
  * name the field 'CustomTitleConfig' (or [RecordTypeName]_CustomTitleConfig if you want different text for different Record Types)
  * enter the default record title text in the Default Value of the Additional Field.
+ ![Configuration](config.PNG)
 
 
 ## Download
