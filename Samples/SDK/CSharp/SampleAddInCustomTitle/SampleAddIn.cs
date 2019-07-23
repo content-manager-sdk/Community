@@ -10,83 +10,7 @@ using HP.HPTRIM.SDK;
 
 namespace SampleAddIn
 {
-	public class SampleMenuLink : TrimMenuLink
-	{
-		public SampleMenuLink()
-		{
-		}
-
-		// Summary:
-		//     Gets a string that should appear as a tool tip when hovering over a menu
-		//     item
-		public override string Description
-		{
-			get { return "Select this menu item to run the sample link and see the log."; }
-		}
-
-		//
-		// Summary:
-		//     Gets an ID number that identifies this menu item.
-		public override int MenuID
-		{
-			get { return 42; }
-		}
-
-		//
-		// Summary:
-		//     Gets a string that should appear on the context menu.
-		public override string Name
-		{
-			get { return "Sample Menu String (Show Log)"; }
-		}
-		//
-		// Summary:
-		//     Gets a boolean value indicating whether this menu item supports TRIM tagged
-		//     processing
-		public override bool SupportsTagged
-		{
-			get { return false; }
-		}
-	};
-
-	public class SampleMenuLinkTagged : TrimMenuLink
-	{
-		public SampleMenuLinkTagged()
-		{
-		}
-
-		// Summary:
-		//     Gets a string that should appear as a tool tip when hovering over a menu
-		//     item
-		public override string Description
-		{
-			get { return "Select this menu item to run the tagged sample link and see the log."; }
-		}
-
-		//
-		// Summary:
-		//     Gets an ID number that identifies this menu item.
-		public override int MenuID
-		{
-			get { return 43; }
-		}
-
-		//
-		// Summary:
-		//     Gets a string that should appear on the context menu.
-		public override string Name
-		{
-			get { return "Sample Tagged Menu String (Show Log Tagged)"; }
-		}
-		//
-		// Summary:
-		//     Gets a boolean value indicating whether this menu item supports TRIM tagged
-		//     processing
-		public override bool SupportsTagged
-		{
-			get { return true; }
-		}
-	};
+	   
 
 	public class SampleAddInCustomTitle : ITrimAddIn
 	{
@@ -105,6 +29,7 @@ namespace SampleAddIn
 
 		public override void Initialise(Database db)
 		{
+			m_errorMsg = new StringBuilder();
 			SDKLoader.load();
 	
 		}
@@ -208,9 +133,9 @@ namespace SampleAddIn
 
 			if (record != null)
 			{
-				if (record.Title == titleTemplate)
+				if (record.Title == titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"])
 				{
-					MessageBox.Show("Please set Title before saving.");
+					m_errorMsg.Append( "Please set Title before saving.");
 					return false;
 				}
 				else
@@ -236,11 +161,14 @@ namespace SampleAddIn
 
 			if (record != null && string.IsNullOrEmpty(record.Title))
 			{
-				if (!titleTemplates.ContainsKey(record.RecordType.Name))
+				string key = $"{record.RecordType.Name}_CustomTitleConfig";
+
+
+				if (!titleTemplates.ContainsKey(key))
 				{
 					using (Database db = record.Database)
 					{
-						FieldDefinition fieldDef = db.FindTrimObjectByName(BaseObjectTypes.FieldDefinition, $"{record.RecordType.Name}_CustomTitleConfig") as FieldDefinition;
+						FieldDefinition fieldDef = db.FindTrimObjectByName(BaseObjectTypes.FieldDefinition, key) as FieldDefinition;
 
 						if (fieldDef == null)
 						{
@@ -248,15 +176,15 @@ namespace SampleAddIn
 						}
 						if (fieldDef != null)
 						{
-							titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"] = fieldDef.DefaultValue.AsString();
+							titleTemplates[key] = fieldDef.DefaultValue.AsString();
 						} else
 						{
-							titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"] = titleTemplate;
+							titleTemplates[key] = titleTemplate;
 						}
 					}
 				}
 
-				record.Title = titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"];
+				record.Title = titleTemplates[key];
 
 			}
 		}
