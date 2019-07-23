@@ -149,13 +149,26 @@ namespace SampleAddIn
 		}
 
 
+		private static bool enumTryParse(string name, out PropertyIds propertyId)
+		{
+			propertyId = PropertyIds.Unknown;
 
+			try
+			{
+				propertyId = (PropertyIds)System.Enum.Parse(typeof(PropertyIds), name, true);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 
 		public static string replacePlaceHolder(Record record, Match m)
 		{
 			PropertyIds propertyId = PropertyIds.Unknown;
-			
-			if (System.Enum.TryParse<PropertyIds>($"Record{m.Groups[1]}", true, out propertyId))
+
+			if (enumTryParse($"Record{m.Groups[1]}", out propertyId))
 			{
 				if (record.GetProperty(propertyId) != null)
 				{
@@ -215,7 +228,7 @@ namespace SampleAddIn
 
 			Record record = newObject as Record;
 
-			if (record != null && string.IsNullOrWhiteSpace(record.Title))
+			if (record != null && string.IsNullOrEmpty(record.Title))
 			{
 				record.Title = titleTemplate;
 

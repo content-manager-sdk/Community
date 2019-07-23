@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SampleAddIn</RootNamespace>
     <AssemblyName>SampleAddIn</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -60,7 +60,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HP.HPTRIM.SDK">
-      <HintPath>..\lib\HP.HPTRIM.SDK.dll</HintPath>
+      <HintPath>C:\junk\HP.HPTRIM.SDK.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
