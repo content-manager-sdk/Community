@@ -7,7 +7,7 @@ The connector requires you construct a Saved Search in CM to which you will conn
 ## Installation
 To use this connector:
  * make sure Power BI Desktop is installed
- * copy the file [TRIMConnector.pqx](Samples/ServiceAPI/Power%20Query/PowerQueryTRIMConnector/Published) to  Documents\Power BI Desktop\Custom Connectors
+ * copy the file [TRIMConnector.pqx](Published) to  Documents\Power BI Desktop\Custom Connectors
  * [install](https://docs.microsoft.com/en-us/power-bi/desktop-trusted-third-party-connectors) the thumbrint for the connector certificate in your registry. 
  * open Power BI and find the connector in 'Get Data\Other'
  
