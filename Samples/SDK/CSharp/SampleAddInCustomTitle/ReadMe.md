@@ -13,7 +13,7 @@ To use this sample:
  - select which object types this addin should be used by
 
 ## Configuration
-The add-in pre-populates the record title with the text 'Include properties using elements such as <Author> <Address> or <DateCreated>.'.  To change this text:
+The add-in pre-populates the record title with the text 'Include properties using elements such as &lt;Author> &lt;Address> or &lt;DateCreated>.'.  To change this text:
  * create a string type Additional Field
  * do not assign this additional field to an object type
  * name the field 'CustomTitleConfig' (or [RecordTypeName]_CustomTitleConfig if you want different text for different Record Types)
