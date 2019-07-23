@@ -8,9 +8,9 @@ The connector requires you construct a Saved Search in CM to which you will conn
 To use this connector:
  * make sure Power BI Desktop is installed
  * copy the file [TRIMConnector.pqx](Published) to  Documents\Power BI Desktop\Custom Connectors
- * [install](https://docs.microsoft.com/en-us/power-bi/desktop-trusted-third-party-connectors) the thumbrint for the connector certificate in your registry. 
+ * [install](https://docs.microsoft.com/en-us/power-bi/desktop-trusted-third-party-connectors) the thumbprint for the connector certificate in your registry (`186130535E0FF7C0B05AD66EF2167E004FBB2C45`), 
  * open Power BI and find the connector in 'Get Data\Other'
- 
+
 ## Using the connector
 To get data from CM using this connector:
  * create a saved search of the data (Records, Locations, and data supported by Saved Searches),
