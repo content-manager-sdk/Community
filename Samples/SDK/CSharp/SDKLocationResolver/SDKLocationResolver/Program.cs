@@ -75,7 +75,12 @@ namespace SDKLocationResolver
         static void Main(string[] args)
         {
             string installDir = FindInstalledTRIMPath();
-            string pathToSdkDll = Path.Combine(installDir, "HP.HPTRIM.SDK.dll");
+			if (string.IsNullOrWhiteSpace(installDir))
+			{
+				throw new Exception("Unable to find path to HP.HPTRIM.SDK in registry.");
+			}
+
+			string pathToSdkDll = Path.Combine(installDir, "HP.HPTRIM.SDK.dll");
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) => AssemblyResolveEventHandler(sender, e, pathToSdkDll);
 
 
