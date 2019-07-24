@@ -10,7 +10,7 @@ using HP.HPTRIM.SDK;
 
 namespace SampleAddIn
 {
-	   
+
 
 	public class SampleAddInCustomTitle : ITrimAddIn
 	{
@@ -31,7 +31,7 @@ namespace SampleAddIn
 		{
 			m_errorMsg = new StringBuilder();
 			SDKLoader.load();
-	
+
 		}
 
 		public override TrimMenuLink[] GetMenuLinks()
@@ -90,15 +90,20 @@ namespace SampleAddIn
 			}
 		}
 
-		public static string replacePlaceHolder(Record record, Match m)
+		private int lastPos;
+
+		public string replacePlaceHolder(Record record, Match m)
 		{
+			string replaced = string.Empty;
+			
+
 			PropertyIds propertyId = PropertyIds.Unknown;
 
 			if (enumTryParse($"Record{m.Groups[1]}", out propertyId))
 			{
 				if (record.GetProperty(propertyId) != null)
 				{
-					return record.GetPropertyAsString(propertyId, StringDisplayType.TreeColumn, false);
+					replaced = record.GetPropertyAsString(propertyId, StringDisplayType.TreeColumn, false);
 				}
 			}
 			else
@@ -116,13 +121,44 @@ namespace SampleAddIn
 					{
 						if (record.GetFieldValue(fieldDef) != null)
 						{
-							return record.GetFieldValueAsString(fieldDef, StringDisplayType.TreeColumn, false);
+							replaced = record.GetFieldValueAsString(fieldDef, StringDisplayType.TreeColumn, false);
 						}
 					}
 				}
 			}
 
-			return m.Value;
+			string leadingSpace = string.Empty;
+
+			 if (m.Index > (lastPos + 1))
+			{
+				leadingSpace = " ";
+			}
+
+			if (replaced == string.Empty)
+			{
+				if (m.Value.StartsWith(" ") && m.Value.EndsWith(" ") && m.Index > (lastPos+1))
+				{
+					replaced = leadingSpace;
+				}				
+			}
+			else
+			{
+				if (m.Value.StartsWith(" ") && m.Value.EndsWith(" "))
+				{
+					replaced = $"{leadingSpace}{replaced} ";
+				}
+				else if (m.Value.StartsWith(" "))
+				{
+					replaced = $"{leadingSpace}{replaced}";
+				}
+				else if (m.Value.EndsWith(" "))
+				{
+					replaced = $"{replaced} ";
+				}
+			}
+
+			lastPos = m.Index + m.Length;
+			return replaced;
 		}
 
 		private string titleTemplate = "Include properties using elements such as <Author> <Address> or <DateCreated>.";
@@ -135,13 +171,14 @@ namespace SampleAddIn
 			{
 				if (record.Title == titleTemplates[$"{record.RecordType.Name}_CustomTitleConfig"])
 				{
-					m_errorMsg.Append( "Please set Title before saving.");
+					m_errorMsg.Clear();
+					m_errorMsg.Append("Please set Title before saving.");
 					return false;
 				}
 				else
 				{
-
-					record.Title = Regex.Replace(record.Title, "<(.*?)>", new MatchEvaluator(match => replacePlaceHolder(record, match)));
+					lastPos = 0;
+					record.Title = Regex.Replace(record.Title, "\\s?<(.*?)>\\s?", new MatchEvaluator(match => replacePlaceHolder(record, match)));
 				}
 			}
 			return true;
@@ -177,14 +214,15 @@ namespace SampleAddIn
 						if (fieldDef != null)
 						{
 							titleTemplates[key] = fieldDef.DefaultValue.AsString();
-						} else
+						}
+						else
 						{
 							titleTemplates[key] = titleTemplate;
 						}
 					}
 				}
 
-				record.Title = titleTemplates[key];
+				record.Title = titleTemplates[key].TrimEnd();
 
 			}
 		}
