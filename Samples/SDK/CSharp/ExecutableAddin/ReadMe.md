@@ -1,5 +1,5 @@
 # Executable Addin
-The executuable addin uses command line arguments to get the database ID and selected URIs.  If you include the database ID (see below) the paramters will be in this format: --dbid J1 --uris 9000000001,9000000002
+The executuable addin uses command line arguments to get the database ID and selected URIs.  If you include the database ID (see below) the paramters will be in this format: ```--dbid J1 --uris 9000000001,9000000002```
 
 ## Warning
 As the URIS are passed as a comma seperated string there is a limit on the number that will be passed.  I believe it is 200, make sure you test this.
