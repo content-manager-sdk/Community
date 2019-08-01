@@ -213,7 +213,13 @@ in
 
 // Data Source Kind description
 TRIMConnector = [
-    TestConnection = (dataSourcePath, savedSearchId) => {"TRIMConnector.Search", dataSourcePath, savedSearchId},
+    TestConnection = (dataSourcePath) => 
+         let
+            json = Json.Document(dataSourcePath),
+            baseUrl = json[baseUrl],
+            savedSearchId = json[savedSearchId]
+        in
+            { "TRIMConnector.Search", baseUrl, savedSearchId },
     Authentication = [
         // Key = [],
         UsernamePassword = [],
