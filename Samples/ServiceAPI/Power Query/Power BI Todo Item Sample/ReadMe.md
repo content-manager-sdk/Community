@@ -27,9 +27,10 @@ Things to take note of in this sample:
  * reports like this can be [published](https://docs.microsoft.com/en-us/power-bi/desktop-upload-desktop-files) to Power BI in the cloud and connected to CM on-premise using a [gateway](https://docs.microsoft.com/en-us/power-bi/service-gateway-onprem)
  
 ## Row level security
-For row level security (RLS) to work there needs to be a value in either LogsInAs or AdditionalLogin that matches the user name Power BI hs for you.  If published to the cloud this will likely by your UPN, for example (david@cme.com).  To make RLS work you may need to add the UPF for each of your users to the 'Alternative Login' in their Location.
+For row level security (RLS) to work there needs to be a value in either LogsInAs or AdditionalLogin that matches the user name Power BI hs for you.  If published to the cloud this will likely by your UPN, for example (```david@acme.com```).  To make RLS work you may need to add the UPF for each of your users to the 'Alternative Login' in their Location.
  
 ## Images
+
 ### Image 1
 ![Saved Search](ss_query.PNG)
 
