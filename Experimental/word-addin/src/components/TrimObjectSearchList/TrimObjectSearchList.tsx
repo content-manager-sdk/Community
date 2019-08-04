@@ -39,7 +39,10 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	componentDidUpdate(prevProps: ITrimObjectSearchListProps) {
-		if (prevProps.q !== this.props.q) {
+		if (
+			prevProps.q !== this.props.q ||
+			prevProps.advancedSearch !== this.props.advancedSearch
+		) {
 			this.doSearch(1, ``, true);
 		}
 	}
@@ -314,10 +317,10 @@ export class TrimObjectSearchList extends React.Component<
 		const el = this.findAncestor(target!);
 		if (el) {
 			if (this._previousSelected) {
-				this._previousSelected.classList.remove("is-selected");
+				this._previousSelected.classList.remove("trim-is-selected");
 			}
 			this._previousSelected = el;
-			el.classList.toggle("is-selected");
+			el.classList.toggle("trim-is-selected");
 			const uri = Number(el.getAttribute("data-trim-uri"));
 
 			if (target.classList && target.classList.contains("trim-find-children")) {

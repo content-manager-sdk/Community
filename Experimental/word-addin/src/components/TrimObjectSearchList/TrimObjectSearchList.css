@@ -67,7 +67,7 @@
 	cursor: pointer;
 }
 
-.is-selected {
+.trim-is-selected {
 	background-color: #f4f4f4;
 }
 
