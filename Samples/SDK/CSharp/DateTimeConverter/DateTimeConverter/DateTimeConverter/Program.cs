@@ -17,7 +17,6 @@ namespace DateTimeConverter
 			{
 				database.Connect();
 
-
 				database.SetTimezoneString("(UTC+02:00) Tripoli");
 
 				DateTime dt = DateTime.Parse("2019-08-05T22:35:06Z");

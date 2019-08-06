@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateTimeConverter", "DateTi
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Framework", "..\..\Framework\Framework\Framework.shproj", "{2BE5BB81-6EA1-4B3B-A4D8-0464FF896B80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{755E5338-B3C0-4E7E-8130-40A64111E838}"
+	ProjectSection(SolutionItems) = preProject
+		..\ReadMe.md = ..\ReadMe.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\..\Framework\Framework\Framework.projitems*{2be5bb81-6ea1-4b3b-a4d8-0464ff896b80}*SharedItemsImports = 13

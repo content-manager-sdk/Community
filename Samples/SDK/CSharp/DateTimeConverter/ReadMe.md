@@ -40,4 +40,4 @@ Given that the TrimDateTime object operates in the time zone local to the machin
 
 
 ## Getting UTC
-As of CM 9.4 the method TrimDatetime.ToUniversalTime() can return an incorrect result, to avoid this use DateTimeComvert.ToUtc().
+As of CM 9.4 the method TrimDatetime.ToDateTimeUTC() can return an incorrect result, to avoid this use DateTimeComvert.ToUtc().
