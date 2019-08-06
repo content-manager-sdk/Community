@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateTimeConverter", "DateTimeConverter\DateTimeConverter.csproj", "{4D98143D-CEA3-4AF5-A327-7D40495D766E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Framework", "..\..\Framework\Framework\Framework.shproj", "{2BE5BB81-6EA1-4B3B-A4D8-0464FF896B80}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\Framework\Framework\Framework.projitems*{2be5bb81-6ea1-4b3b-a4d8-0464ff896b80}*SharedItemsImports = 13
+		..\..\Framework\Framework\Framework.projitems*{4d98143d-cea3-4af5-a327-7d40495d766e}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D98143D-CEA3-4AF5-A327-7D40495D766E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D98143D-CEA3-4AF5-A327-7D40495D766E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D98143D-CEA3-4AF5-A327-7D40495D766E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D98143D-CEA3-4AF5-A327-7D40495D766E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED476F62-2311-4E0D-823F-78243AC0749E}
+	EndGlobalSection
+EndGlobal
