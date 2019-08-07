@@ -400,6 +400,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Checkin = "Check In";
 					data.Messages.web_Finalize = "Make Final";
 					data.Messages.bob_sbMe = "Me";
+					data.Messages.web_GoToTextSearch = "Go to text search";
+					data.Messages.web_GoToAdvancedSearch = "Go to advanced search";
 
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;

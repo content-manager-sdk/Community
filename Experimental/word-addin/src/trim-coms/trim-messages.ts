@@ -6,6 +6,8 @@ export class TrimMessages {
 	public web_Checkin = ""; // tslint:disable-line
 	public web_Finalize = ""; // tslint:disable-line
 	public bob_sbMe = ""; // tslint:disable-line
+	public web_GoToTextSearch = ""; // tslint:disable-line
+	public web_GoToAdvancedSearch = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

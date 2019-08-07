@@ -4,6 +4,7 @@ import {
 	ITrimMainObject,
 } from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { IAppStore } from "../../stores/AppStore";
 
 export interface ITrimSearchDialog {}
 
@@ -11,6 +12,7 @@ export interface ITrimSearchDialogProps
 	extends IBaseProps<ITrimSearchDialog>,
 		React.HTMLAttributes<HTMLElement> {
 	trimConnector?: ITrimConnector;
+	appStore?: IAppStore;
 
 	trimType: BaseObjectTypes;
 

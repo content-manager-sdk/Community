@@ -24,6 +24,7 @@ import { IconType } from "office-ui-fabric-react/lib/Icon";
 import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { debounce } from "throttle-debounce";
+import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 
 export interface ITrimSearchDialogState {
 	isObjectPickerShown?: boolean;
@@ -33,6 +34,8 @@ export interface ITrimSearchDialogState {
 	textFieldText: string;
 	contentsInReverseDateOrder: boolean;
 	advancedSearch: boolean;
+	textSearchHelp: string;
+	advancedSearchHelp: string;
 }
 
 export class TrimSearchDialog
@@ -70,6 +73,16 @@ export class TrimSearchDialog
 			Worktray: "recWorkTray",
 			Top: "unkTop",
 		};
+
+		trimConnector!.getMessages().then((messages) => {
+			console.log("dddddddddddddddddddd");
+			console.log(messages);
+			this.setState({
+				textSearchHelp: messages.web_GoToTextSearch,
+				advancedSearchHelp: messages.web_GoToAdvancedSearch,
+			});
+		});
+
 		trimConnector!.getSearchOptions().then((data) => {
 			let key =
 				{
@@ -224,37 +237,27 @@ export class TrimSearchDialog
 		props?: ITextFieldProps,
 		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
 	): JSX.Element => {
-		const { advancedSearch } = this.state;
+		const { advancedSearch, textSearchHelp, advancedSearchHelp } = this.state;
+
 		return (
 			<React.Fragment>
-				<IconButton
-					onClick={this._doAdvancedSearch}
-					className="trim-advanced-search"
-					iconProps={{
-						iconType: IconType.image,
-						imageProps: {
-							src: `/assets/${
-								advancedSearch ? "dbp_searchmethod" : "spanner"
-							}_x24.png`,
-						},
-					}}
-				/>
-				{/* <div className="trim-object-pills">
-					{this.state.selectedItems.map((selectedItem) => {
-						return (
-							<div className="trim-pill-container" key={selectedItem.Uri}>
-								<div className="trim-pill-content">
-									{selectedItem.NameString}
-								</div>
-								<IconButton
-									className="ms-fontSize-sPlus remove-item"
-									iconProps={{ iconName: "Cancel" }}
-									onClick={this._removeSelectedItem}
-								/>
-							</div>
-						);
-					})}
-				</div> */}
+				<TooltipHost
+					content={advancedSearch ? textSearchHelp : advancedSearchHelp}
+					calloutProps={{ gapSpace: 0 }}
+				>
+					<IconButton
+						onClick={this._doAdvancedSearch}
+						className="trim-advanced-search"
+						iconProps={{
+							iconType: IconType.image,
+							imageProps: {
+								src: `/assets/${
+									advancedSearch ? "dbp_searchmethod" : "spanner"
+								}_x24.png`,
+							},
+						}}
+					/>
+				</TooltipHost>
 			</React.Fragment>
 		);
 	};
@@ -263,11 +266,6 @@ export class TrimSearchDialog
 		const { advancedSearch } = this.state;
 		this.setState({ advancedSearch: !advancedSearch });
 	};
-	// private _removeSelectedItem = () => {
-	// 	this.setState({
-	// 		selectedItems: [],
-	// 	});
-	// };
 
 	private _onTextFieldClick = (): void => {
 		// if (!this.state.isObjectPickerShown && !this.props.disabled) {
@@ -292,6 +290,8 @@ export class TrimSearchDialog
 			textFieldText: "",
 			contentsInReverseDateOrder: false,
 			advancedSearch: false,
+			textSearchHelp: "",
+			advancedSearchHelp: "",
 		};
 	}
 }

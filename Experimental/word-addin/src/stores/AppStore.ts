@@ -16,6 +16,7 @@ export interface IAppStore {
 	status: string;
 	UserProfile?: IUserProfile;
 	errorMessage?: string;
+	messages: TrimMessages;
 }
 
 export class AppStore implements IAppStore {

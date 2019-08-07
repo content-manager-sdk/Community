@@ -48,7 +48,8 @@ function openFromTrim(event) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
 			Office.context.ui.displayDialogAsync(
-				"https://localhost:3000/searchdialog?&accessToken=" +
+				location.origin +
+					"/searchdialog?&accessToken=" +
 					accessToken +
 					"&rnd=" +
 					Math.random(),

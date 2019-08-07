@@ -8,6 +8,8 @@ import { CommandIds } from "../trim-coms/trim-command-ids";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
 import { IWordConnector } from "src/office-coms/word-connector";
 
+const config = (global as any).config;
+
 export class ExistingRecord extends React.Component<
 	{
 		appStore?: any;
@@ -32,7 +34,7 @@ export class ExistingRecord extends React.Component<
 	) => {
 		const { trimConnector, wordConnector, appStore } = this.props;
 		if (item.key === "Properties") {
-			open(`https://localhost/cm?uri=${appStore.documentInfo.Uri}`, "_blank");
+			open(`${config.BASE_URL}/cm?uri=${appStore.documentInfo.Uri}`, "_blank");
 		} else {
 			const me = this;
 			wordConnector!.saveDocument().then(() => {
