@@ -30,11 +30,14 @@ namespace OneDriveAuthPlugin
 					
 				}, "~/auth/aad"));
 
-				appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept", allowedOrigins: "https://localhost:3000", allowCredentials: true));
+				//https://localhost:3000, 
+
+			//	appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept,Referrer,User-Agent", allowedOrigins: "https://mfcm.xyz", allowCredentials: true));
+			//	appHost.Plugins.Add(new CorsFeature(allowedHeaders: "*", allowedOrigins: "https://mfcm.xyz", allowCredentials: true));
 			}
 			else
 			{
-				appHost.Config.DefaultRedirectPath = "~/cm";
+				appHost.Config.DefaultRedirectPath = "~/ContentManager";
 
 				
 

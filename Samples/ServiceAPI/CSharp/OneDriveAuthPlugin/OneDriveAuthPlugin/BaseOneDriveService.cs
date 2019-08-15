@@ -56,6 +56,8 @@ namespace OneDriveAuthPlugin
 				new ConfidentialClientApplication(ConfigurationManager.AppSettings["ida:ClientID"],
 												  ConfigurationManager.AppSettings["ida:RedirectUri"], clientCred, null, null);
 
+			string tenantId = ConfigurationManager.AppSettings["oauth.aad.TenantId"].ToString();
+
 			string[] graphScopes = { "Files.Read.All" };
 			AuthenticationResult result = null;
 			try
@@ -63,7 +65,7 @@ namespace OneDriveAuthPlugin
 				// The AcquireTokenOnBehalfOfAsync method will first look in the MSAL in memory cache for a
 				// matching access token. Only if there isn't one, does it initiate the "on behalf of" flow
 				// with the Azure AD V2 endpoint.
-				result = await cca.AcquireTokenOnBehalfOfAsync(graphScopes, userAssertion, "https://login.microsoftonline.com/dd30c61c-1361-4509-82d6-fab96f7102a2/oauth2/v2.0");
+				result = await cca.AcquireTokenOnBehalfOfAsync(graphScopes, userAssertion, $"https://login.microsoftonline.com/{tenantId}/v2.0");
 				if (session != null)
 				{
 					base.Cache.Add<string>("tk", result.AccessToken);

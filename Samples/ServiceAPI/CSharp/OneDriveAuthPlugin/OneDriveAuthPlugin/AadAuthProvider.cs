@@ -6,6 +6,7 @@ using ServiceStack.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -14,6 +15,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 
 // From Here: https://github.com/jfoshee/ServiceStack.Authentication.Aad
@@ -178,8 +180,12 @@ namespace OneDriveAuthPlugin
 			// TODO: WARN: Property 'code' does not exist on type 'ServiceStack.Authenticate'
 			// TODO: WARN: Property 'session_state' does not exist on type 'ServiceStack.Authenticate'
 			// TODO: The base Init() should strip the query string from the request URL
+
+
 			if (CallbackUrl.IsNullOrEmpty())
 				CallbackUrl = new Uri(authService.Request.AbsoluteUri).GetLeftPart(UriPartial.Path);
+
+
 			var tokens = Init(authService, ref session, request);
 			var httpRequest = authService.Request;
 			var query = httpRequest.QueryString;
@@ -229,7 +235,13 @@ namespace OneDriveAuthPlugin
 				tokens.AccessTokenSecret = code;
 			//	tokens.RefreshToken = authInfo["refresh_token"];
 			tokens.AccessToken = code;
-			session.ReferrerUrl = AppSettings.Get<string>($"oauth.{Provider}.RedirectUrl", session.ReferrerUrl);;
+			session.ReferrerUrl = AppSettings.Get<string>($"oauth.{Provider}.RedirectUrl", session.ReferrerUrl);
+
+			if (state.Contains("?"))
+			{
+				session.ReferrerUrl = session.ReferrerUrl + state.Substring(state.IndexOf("?"));
+			}
+
 			return OnAuthenticated(authService, session, tokens, httpRequest.FormData.ToDictionary())
 				   ?? authService.Redirect(SuccessRedirectUrlFilter(this, session.ReferrerUrl.SetParam("s", "1"))); //Haz Access!
 
@@ -238,6 +250,12 @@ namespace OneDriveAuthPlugin
 		private object RequestCode(IServiceBase authService, IAuthSession session, AuthUserSession userSession, IAuthTokens tokens)
 		{
 			var state = Guid.NewGuid().ToString("N");
+
+			if (session.ReferrerUrl.Contains("?"))
+			{
+				state = state + session.ReferrerUrl.Substring(session.ReferrerUrl.IndexOf("?"));
+			}
+
 			userSession.State = state;
 			var codeRequest = AuthorizeUrl + "?response_type=token&client_id={0}&redirect_uri={1}&scope={2}&state={3}&nonce=678910&response_mode=form_post"
 				.Fmt(ClientId, CallbackUrl.UrlEncode(), Scopes.Join(" "), state);
@@ -307,6 +325,7 @@ namespace OneDriveAuthPlugin
 				tokens.AccessTokenSecret = authInfo["access_token"];
 				tokens.RefreshToken = authInfo["refresh_token"];
 				tokens.AccessToken = authInfo["id_token"];
+				
 				return OnAuthenticated(authService, session, tokens, authInfo.ToDictionary())
 					   ?? authService.Redirect(SuccessRedirectUrlFilter(this, session.ReferrerUrl.SetParam("s", "1"))); //Haz Access!
 																														//}

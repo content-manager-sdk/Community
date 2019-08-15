@@ -27,7 +27,7 @@ namespace OneDriveAuthPlugin
 		/// </summary>
 		/// <param name="expectedAudience">The valid audience value to check</param>
 		/// <returns></returns>
-		public async Task<SsoTokenValidationResult> Validate(string expectedAudience)
+		public async Task<SsoTokenValidationResult> Validate(string expectedAudience, string issuer)
 		{
 
 			SsoTokenValidationResult result = new SsoTokenValidationResult();
@@ -70,7 +70,7 @@ namespace OneDriveAuthPlugin
 				return result;
 			}
 
-			string expectedIssuer = string.Format("https://login.microsoftonline.com/{0}/v2.0", tenantIdClaim.Value);
+			string expectedIssuer = issuer; // string.Format("https://login.microsoftonline.com/{0}/v2.0", tenantIdClaim.Value);
 
 			// Use System.IdentityModel.Tokens.Jwt library to validate the token
 			JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -128,6 +128,7 @@ namespace OneDriveAuthPlugin
 			{
 				result.Message = ex.Message;
 			}
+
 
 			return result;
 		}
