@@ -116,7 +116,7 @@
                   </Action>
                 </Control>
 
-				<Control xsi:type="Button" id="CM.OpeneButton">
+				<Control xsi:type="Button" id="CM.OpenButton">
                   <Label resid="CM.OpenButton.Label" />
                   <Supertip>
                     <!-- ToolTip title. resid must point to a ShortString resource. -->
@@ -136,6 +136,26 @@
                   </Action>
                 </Control>
 
+				<Control xsi:type="Button" id="CM.HelpButton">
+                  <Label resid="CM.HelpButton.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource. -->
+                    <Title resid="CM.HelpButton.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource. -->
+                    <Description resid="CM.HelpButton.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CM.helpicon_16x16" />
+                    <bt:Image size="32" resid="CM.helpicon_32x32" />
+                    <bt:Image size="80" resid="CM.helpicon_80x80" />
+                  </Icon>
+
+                  <!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>openHelp</FunctionName>
+                  </Action>
+                </Control>
+
               </Group>
             </OfficeTab>
           </ExtensionPoint>
@@ -152,6 +172,9 @@
 		<bt:Image id="CM.openicon_16x16" DefaultValue="https://localhost:3000/assets/open16.png" />
 		<bt:Image id="CM.openicon_32x32" DefaultValue="https://localhost:3000/assets/open32.png" />
 		<bt:Image id="CM.openicon_80x80" DefaultValue="https://localhost:3000/assets/open80.png" />
+		<bt:Image id="CM.helpicon_16x16" DefaultValue="https://localhost:3000/assets/help16.png" />
+		<bt:Image id="CM.helpicon_32x32" DefaultValue="https://localhost:3000/assets/help32.png" />
+		<bt:Image id="CM.helpicon_80x80" DefaultValue="https://localhost:3000/assets/help80.png" />
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Contoso.Taskpane.Url" DefaultValue="https://localhost:3000/index.html" />
@@ -162,6 +185,7 @@
       <bt:ShortStrings>
         <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="Record" />
 		<bt:String id="CM.OpenButton.Label" DefaultValue="Open" />
+		<bt:String id="CM.HelpButton.Label" DefaultValue="Help" />
         <bt:String id="Contoso.Group1Label" DefaultValue="Content Manager" />
         <bt:String id="Contoso.GetStarted.Title" DefaultValue="Manage this document in Content Manager" />
       </bt:ShortStrings>
@@ -169,6 +193,7 @@
       <bt:LongStrings>
         <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="Click to Show the Content Manager Taskpane" />
 		<bt:String id="CM.OpenButton.Tooltip" DefaultValue="Open a document from CM" />
+		<bt:String id="CM.HelpButton.Tooltip" DefaultValue="Open the help file" />
         <bt:String id="Contoso.GetStarted.Description" DefaultValue="Content " />
       </bt:LongStrings>
     </Resources>
@@ -184,7 +209,18 @@
       </Scopes>
     </WebApplicationInfo>
   </VersionOverrides>
-
+  <!-- For mfcm.xyz/CMWord -->
+	 <!--WebApplicationInfo>
+      <Id>53897c90-897f-42c6-a869-dc1bcf489015</Id>
+      <Resource>api://mfcm.xyz/CMWord/6894e422-aa5e-4097-afd6-965ce110271e</Resource>
+      <Scopes>
+        <Scope>user.read</Scope>
+        <Scope>files.read</Scope>
+		<Scope>files.read.all</Scope>
+        <Scope>profile</Scope>
+        <Scope>openid</Scope>
+      </Scopes>
+    </WebApplicationInfo-->
   <!-- End Add-in Commands Mode integration. -->
 
 </OfficeApp>

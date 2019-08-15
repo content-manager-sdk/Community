@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import BootStrap from "./components/BootStrap";
 import "./index.css";
 import WordConnector from "./office-coms/word-connector";
-import registerServiceWorker from "./registerServiceWorker";
+//import registerServiceWorker from "./registerServiceWorker";
 import { AppStore } from "./stores/AppStore";
 import TrimConnector from "./trim-coms/trim-connector";
 import { initializeIcons } from "@uifabric/icons";
@@ -39,7 +39,7 @@ const root = (
 
 ReactDOM.render(root, document.getElementById("root") as HTMLElement);
 
-registerServiceWorker();
+//registerServiceWorker();
 
 if (module.hot) {
 	module.hot.accept();

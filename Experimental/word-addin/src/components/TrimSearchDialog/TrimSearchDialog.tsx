@@ -251,7 +251,7 @@ export class TrimSearchDialog
 						iconProps={{
 							iconType: IconType.image,
 							imageProps: {
-								src: `/assets/${
+								src: `${process.env.PUBLIC_URL}/assets/${
 									advancedSearch ? "dbp_searchmethod" : "spanner"
 								}_x24.png`,
 							},

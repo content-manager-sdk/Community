@@ -34,7 +34,12 @@ export class ExistingRecord extends React.Component<
 	) => {
 		const { trimConnector, wordConnector, appStore } = this.props;
 		if (item.key === "Properties") {
-			open(`${config.BASE_URL}/cm?uri=${appStore.documentInfo.Uri}`, "_blank");
+			let webClientUrl =
+				(config.BASE_URL.endsWith("/")
+					? config.BASE_URL
+					: config.BASE_URL + "/") + config.WEB_CLIENT;
+
+			open(`${webClientUrl}?uri=${appStore.documentInfo.Uri}`, "_blank");
 		} else {
 			const me = this;
 			wordConnector!.saveDocument().then(() => {

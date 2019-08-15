@@ -43,13 +43,22 @@ function loadProps() {
 	}
 	return dfd.promise();
 }
+function openHelp(event) {
+	let appPath = config.SERVICEAPI_PATH ? "/" + config.SERVICEAPI_PATH : "";
 
+	open(location.origin + appPath + "/help.html");
+	event.completed();
+}
 function openFromTrim(event) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
+			let appPath = config.SERVICEAPI_PATH ? "/" + config.SERVICEAPI_PATH : "";
+			appPath = appPath.endsWith("/") ? appPath : appPath + "/";
+
 			Office.context.ui.displayDialogAsync(
 				location.origin +
-					"/searchdialog?&accessToken=" +
+					appPath +
+					"?searchdialog=true&accessToken=" +
 					accessToken +
 					"&rnd=" +
 					Math.random(),

@@ -267,7 +267,11 @@ export class TrimObjectSearchList extends React.Component<
 													this._onShortcutClick(sc.q);
 												}}
 											>
-												<img src={`/assets/${sc.src}_x32.png`} />
+												<img
+													src={`${process.env.PUBLIC_URL}/assets/${
+														sc.src
+													}_x32.png`}
+												/>
 												{dialogDisplay === true && (
 													<Text variant={"smallPlus"} block={true}>
 														{sc.Caption}
@@ -378,7 +382,9 @@ export class TrimObjectSearchList extends React.Component<
 			>
 				<div className="trim-list-row-label">
 					<div>
-						<img src={`/assets/webIcons/${icon}_x16.png`} />
+						<img
+							src={`${process.env.PUBLIC_URL}/assets/webIcons/${icon}_x16.png`}
+						/>
 					</div>
 					<div className="row-text">
 						{item.ToolTip

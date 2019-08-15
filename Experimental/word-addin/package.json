@@ -1,49 +1,50 @@
 {
-  "name": "word-addin",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@microsoft/office-js": "^1.1.10",
-    "@types/fetch-mock": "^6.0.5",
-    "@types/throttle-debounce": "^1.1.1",
-    "axios": "^0.18.0",
-    "fetch-mock": "^7.3.1",
-    "jest-fetch-mock": "^1.7.5",
-    "mobx": "^5.9.0",
-    "mobx-react": "^5.4.3",
-    "office-ui-fabric-react": "^6.157.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-scripts-ts": "3.1.0",
-    "throttle-debounce": "^2.1.0"
-  },
-  "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
-  },
-  "devDependencies": {
-    "@microsoft/microsoft-graph-types": "^1.7.0",
-    "@types/enzyme": "^3.9.0",
-    "@types/enzyme-adapter-react-16": "^1.0.5",
-    "@types/jest": "^23.3.14",
-    "@types/node": "^10.14.1",
-    "@types/office-js": "0.0.135",
-    "@types/react": "^16.8.8",
-    "@types/react-dom": "^16.8.2",
-    "@types/webpack-env": "^1.13.9",
-    "axios-mock-adapter": "^1.16.0",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.11.2",
-    "react-test-renderer": "^16.8.4",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.3.3333"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "office-ui-fabric-react/lib/(.*)$": "office-ui-fabric-react/lib-commonjs/$1"
-    }
-  }
+	"name": "word-addin",
+	"version": "0.1.0",
+	"private": true,
+	"homepage": "/CMWord/",
+	"dependencies": {
+		"@microsoft/office-js": "^1.1.10",
+		"@types/fetch-mock": "^6.0.5",
+		"@types/throttle-debounce": "^1.1.1",
+		"axios": "^0.18.0",
+		"fetch-mock": "^7.3.1",
+		"jest-fetch-mock": "^1.7.5",
+		"mobx": "^5.9.0",
+		"mobx-react": "^5.4.3",
+		"office-ui-fabric-react": "^6.157.0",
+		"react": "^16.8.4",
+		"react-dom": "^16.8.4",
+		"react-scripts-ts": "3.1.0",
+		"throttle-debounce": "^2.1.0"
+	},
+	"scripts": {
+		"start": "react-scripts-ts start",
+		"build": "react-scripts-ts build",
+		"test": "react-scripts-ts test --env=jsdom",
+		"eject": "react-scripts-ts eject"
+	},
+	"devDependencies": {
+		"@microsoft/microsoft-graph-types": "^1.7.0",
+		"@types/enzyme": "^3.9.0",
+		"@types/enzyme-adapter-react-16": "^1.0.5",
+		"@types/jest": "^23.3.14",
+		"@types/node": "^10.14.1",
+		"@types/office-js": "0.0.135",
+		"@types/react": "^16.8.8",
+		"@types/react-dom": "^16.8.2",
+		"@types/webpack-env": "^1.13.9",
+		"axios-mock-adapter": "^1.16.0",
+		"enzyme": "^3.9.0",
+		"enzyme-adapter-react-16": "^1.11.2",
+		"react-test-renderer": "^16.8.4",
+		"tslint-config-prettier": "^1.18.0",
+		"typescript": "^3.3.3333"
+	},
+	"jest": {
+		"moduleNameMapper": {
+			"^react-native$": "react-native-web",
+			"office-ui-fabric-react/lib/(.*)$": "office-ui-fabric-react/lib-commonjs/$1"
+		}
+	}
 }

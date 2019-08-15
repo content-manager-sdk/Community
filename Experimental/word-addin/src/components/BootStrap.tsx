@@ -16,10 +16,12 @@ interface IProps {
 export class BootStrap extends React.Component<IProps, { dialogName: string }> {
 	constructor(props: IProps) {
 		super(props);
-
-		const url: URL = new URL(window.location.href);
-
-		this.state = { dialogName: url.pathname };
+		//functionfile
+		if (window.location.search.indexOf("searchdialog") > -1) {
+			this.state = { dialogName: "/searchdialog" };
+		} else {
+			this.state = { dialogName: "" };
+		}
 	}
 
 	componentDidMount() {
