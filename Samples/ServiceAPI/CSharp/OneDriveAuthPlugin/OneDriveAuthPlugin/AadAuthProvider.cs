@@ -57,7 +57,7 @@ namespace OneDriveAuthPlugin
 			get
 			{
 				var tenantId = string.IsNullOrEmpty(TenantId) ? "common" : TenantId;
-				return Realm + tenantId + "/oauth2/";
+				return Realm + tenantId + "/oauth2/v2.0/";
 			}
 		}
 		public IAppSettings AppSettings { get; private set; }

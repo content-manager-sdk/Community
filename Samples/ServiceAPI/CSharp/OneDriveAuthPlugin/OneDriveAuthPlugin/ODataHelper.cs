@@ -171,7 +171,28 @@ namespace OneDriveAuthPlugin
 
 								jsonData = JsonConvert.DeserializeObject(responseContent);
 							} 
-						} 
+						} else
+						{
+							string message = "";
+							try
+							{
+								HttpContent content = response.Content;
+								string responseContent = await content.ReadAsStringAsync();
+
+								JObject errorData = JsonConvert.DeserializeObject(responseContent) as JObject;
+
+								JObject j1 = errorData.GetValue("error") as JObject;
+
+								message = j1.GetValue("message").ToString();
+
+								
+							}
+							catch
+							{
+								message = response.StatusCode.ToString();
+							}
+							throw new HttpError(response.StatusCode, response.StatusCode.ToString(), message);
+						}
 					}
 				}
 			}

@@ -27,6 +27,9 @@ namespace OneDriveAuthPlugin
 			return null;
 		}
 
+		private static TokenCache userTokenCache = new TokenCache();
+		private static TokenCache apiTokenCache = new TokenCache();
+
 		protected async Task<string> getToken()
 		{
 			UserAssertion userAssertion;
@@ -37,24 +40,26 @@ namespace OneDriveAuthPlugin
 				return session.RequestTokenSecret;
 			}
 
-			if (this.Cache.Get<string>("tk") != null)
-			{
-				return this.Cache.Get<string>("tk");
-			}
+			//if (this.Cache.Get<string>("tk") != null)
+			//{
+			//	return this.Cache.Get<string>("tk");
+			//}
 
 
 
+			TokenCache cache = new TokenCache();
+			
 			var bootstrapContext = ClaimsPrincipal.Current.Identities.First().BootstrapContext as BootstrapContext;
 
 			//	SecurityToken st = bootstrapContext.SecurityToken;
 
 			userAssertion = new UserAssertion(bootstrapContext.Token);
 
-			ClientCredential clientCred = new ClientCredential(ConfigurationManager.AppSettings["ida:Password"]);
+			ClientCredential clientCred = new ClientCredential(ConfigurationManager.AppSettings["oauth.aad.ClientSecret"]);
 
 			ConfidentialClientApplication cca =
-				new ConfidentialClientApplication(ConfigurationManager.AppSettings["ida:ClientID"],
-												  ConfigurationManager.AppSettings["ida:RedirectUri"], clientCred, null, null);
+				new ConfidentialClientApplication(ConfigurationManager.AppSettings["oauth.aad.ClientId"],
+												  ConfigurationManager.AppSettings["oauth.aad.RedirectUrl"], clientCred, userTokenCache, apiTokenCache);
 
 			string tenantId = ConfigurationManager.AppSettings["oauth.aad.TenantId"].ToString();
 
@@ -66,10 +71,10 @@ namespace OneDriveAuthPlugin
 				// matching access token. Only if there isn't one, does it initiate the "on behalf of" flow
 				// with the Azure AD V2 endpoint.
 				result = await cca.AcquireTokenOnBehalfOfAsync(graphScopes, userAssertion, $"https://login.microsoftonline.com/{tenantId}/v2.0");
-				if (session != null)
-				{
-					base.Cache.Add<string>("tk", result.AccessToken);
-				}
+				//if (session != null)
+				//{
+				//	base.Cache.Add<string>("tk", result.AccessToken);
+				//}
 				return result.AccessToken;
 
 

@@ -238,7 +238,7 @@ namespace OneDriveAuthPlugin
 			}
 
 
-			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.Id, /*DriveItem = fileResult */};
+			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.Id, DriveItem = fileResult };
 
 
 			TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);

@@ -4,6 +4,7 @@ using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,19 +16,21 @@ namespace OneDriveAuthPlugin
 		public long Uri { get; set; }
 	}
 
-	public class OpenFileResponse
+	public class OpenFileResponse : IHasResponseStatus
 	{
 		public string WebUrl { get; set; }
+		public ResponseStatus ResponseStatus { get; set; }
 	}
 
 	public class OpenFileService : BaseOneDriveService
 	{
 
+
 		public async Task<object> Get(OpenFile request)
 		{
 			if (request.Uri < 1)
 			{
-				throw new Exception("Invalid Uri");
+				throw new HttpError(HttpStatusCode.BadRequest, "400", "Invalid Uri");
 			}
 
 			var response = new OpenFileResponse();
@@ -36,7 +39,7 @@ namespace OneDriveAuthPlugin
 			string token = await getToken();
 
 			string driveId = record.ExternalReference;
-			
+
 
 			OneDriveItem fileResult = null;
 			if (!string.IsNullOrWhiteSpace(driveId))
@@ -48,29 +51,31 @@ namespace OneDriveAuthPlugin
 			{
 				string folderId = string.Empty;
 
-				try
+				//	try
+				//	{
+				var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
+				folderId = documentFolder.Id;
+
+				if (!record.IsDocumentInClientCache)
 				{
-					var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
-					folderId = documentFolder.Id;
-
-					if (!record.IsDocumentInClientCache)
-					{
-						record.LoadDocumentIntoClientCache();
-					}
-
-					var fileItem = await ODataHelper.PostFile<OneDriveItem>(GraphApiHelper.GetOneDriveFileUploadUrl(folderId, record.SuggestedFileName), token, record.DocumentPathInClientCache);
-
-					record.ExternalReference = fileItem.Id;
-					record.Save();
-					record.GetDocument(null, true, null, null);
-
-					response.WebUrl = fileItem.WebUrl;
+					record.LoadDocumentIntoClientCache();
 				}
-				catch
-				{
-					throw;
-				}
-			} else
+
+				var fileItem = await ODataHelper.PostFile<OneDriveItem>(GraphApiHelper.GetOneDriveFileUploadUrl(folderId, record.SuggestedFileName), token, record.DocumentPathInClientCache);
+
+				record.ExternalReference = fileItem.Id;
+				record.Save();
+				record.GetDocument(null, true, null, null);
+
+				response.WebUrl = fileItem.WebUrl;
+				//}
+				//catch
+				//{
+				//	return new Error
+				//	throw;
+				//}
+			}
+			else
 			{
 				throw new Exception("Record is not a valid document.");
 			}
