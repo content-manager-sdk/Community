@@ -9,17 +9,17 @@
   <!-- Begin Basic Settings: Add-in metadata, used for all versions of Office unless override provided. -->
 
   <!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
-  <Id>edc27695-a13f-4394-8447-7ba90e045985</Id>
+  <Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.6.0.3</Version>
+  <Version>1.6.101.0</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
-  <DisplayName DefaultValue="WordAddin2">
-  <Override Locale="en-US" Value="Content Manager" />
+  <DisplayName DefaultValue="Content Manager Connect">
+  <Override Locale="en-US" Value="Content Manager Connect" />
   </DisplayName>
-  <Description DefaultValue="[Document Add-in description]"/>
+  <Description DefaultValue="An addin to register documents in Content Manager."/>
 
   <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png" />
@@ -198,9 +198,10 @@
       </bt:LongStrings>
     </Resources>
 	 <WebApplicationInfo>
-      <Id>53897c90-897f-42c6-a869-dc1bcf489015</Id>
-      <Resource>api://localhost:3000/53897c90-897f-42c6-a869-dc1bcf489015</Resource>
+      <Id>7e63d8fa-a2f6-48b4-96a5-da76b1877d53</Id>
+      <Resource>api://localhost:3000/7e63d8fa-a2f6-48b4-96a5-da76b1877d53</Resource>
       <Scopes>
+	  	<Scope>Sites.ReadWrite.All</Scope>
         <Scope>user.read</Scope>
         <Scope>files.read</Scope>
 		<Scope>files.read.all</Scope>
@@ -209,18 +210,4 @@
       </Scopes>
     </WebApplicationInfo>
   </VersionOverrides>
-  <!-- For mfcm.xyz/CMWord -->
-	 <!--WebApplicationInfo>
-      <Id>53897c90-897f-42c6-a869-dc1bcf489015</Id>
-      <Resource>api://mfcm.xyz/CMWord/6894e422-aa5e-4097-afd6-965ce110271e</Resource>
-      <Scopes>
-        <Scope>user.read</Scope>
-        <Scope>files.read</Scope>
-		<Scope>files.read.all</Scope>
-        <Scope>profile</Scope>
-        <Scope>openid</Scope>
-      </Scopes>
-    </WebApplicationInfo-->
-  <!-- End Add-in Commands Mode integration. -->
-
 </OfficeApp>

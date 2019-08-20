@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width,initial-scale=1,shrink-to-fit=no"
+		/>
+		<meta name="theme-color" content="#000000" />
+		<link
+			rel="stylesheet"
+			href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"
+		/>
+
+		<link rel="shortcut icon" href="../favicon.ico" />
+
+		<title>Help</title>
+	</head>
+	<body class="ms-Fabric">
+		<h1 class="ms-fontSize-42 ms-fontWeight-semibold">Help</h1>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">Overview</h2>
+
+		<p>This word add-in is designed to allow you to:</p>
+		<ul>
+			<li>
+				register a document in CM by creating a Record linked to this document,
+			</li>
+			<li>check the document into the linked Record,</li>
+			<li>finalise the Record,</li>
+			<li>link to the Record in the CM Web Client,</li>
+			<li>favourite the record,</li>
+			<li>view the record properties from within Word, and</li>
+			<li>open a record from CM into Word.</li>
+		</ul>
+
+		<p>
+			In addition to the functions available from Word there are operations that
+			are available from within the Web Client (under the 'More' menu),
+			including:
+		</p>
+		<ul>
+			<li>checkin the electronic document,</li>
+			<li>checkin and finalize in a single operation,</li>
+			<li>checkin, finalize and delete from OneDrive (Word online),</li>
+			<li>edit in Word online</li>
+		</ul>
+
+		<h2>Using the Open dialog</h2>
+		<p>
+			The open dialog allows you to search all Records in CM, even non
+			electronic ones. To use it:
+		</p>
+		<ol>
+			<li>enter a search term (or select a shortcut from the left)</li>
+			<li>wait for the result list to populate</li>
+			<li>select a Record</li>
+			<li>click OK</li>
+			<li>
+				if the Document already exists in O365 it will be opened, if not it will
+				be copied to the folder 'Content Manager Documents' from CM and then
+				opened.
+			</li>
+		</ol>
+		<h3>Complex searches</h3>
+		<p>
+			Complex searches are supported via the string search syntax, to use this
+			click the magnifying glass to toggle to advanced search mode.
+		</p>
+		<h3>Containers</h3>
+		<p>
+			Containers can be navigated to find Records, simply search for the
+			container then use the arrow icon to list the contained records.
+		</p>
+
+		<h2>Creating a Record</h2>
+		<p>
+			I am experimenting with using the Task Pane, I have a feeling that it
+			might work better than a dialog in mobile devices, so the record creation
+			happens in the task pane. Simply click Record to choose a Record Type.
+			Most field types (inculding user defined fields) should be supported. I am
+			not supporting anything funky like special purpose pages (ACLs etc).
+		</p>
+		<h3>Object selection fields</h3>
+		<p>
+			Object selection fields (Container, Locations etc) operate similarly to
+			the Open dialog in that you can use a text search or toggle into advanced
+			search.
+		</p>
+
+		<h3>The process</h3>
+		<p>The process I have implemented goes like this:</p>
+		<ol>
+			<li>register a Record in CM (with no electronic document attached)</li>
+			<li>edit the document until ready to be stored in CM, then</li>
+			<li>check it in or check in and finalise.</li>
+		</ol>
+
+		<h2>Viewing a Record</h2>
+		<p>
+			Once the Record is registered in CM you can view the view pane properties
+			by clicking the Record icon. You can insert the value for any ofthese
+			properties into the document by clicking the copy icon to the right of the
+			property.
+		</p>
+		<p>A limited number of actions are available from the Actions menu.</p>
+		<h2>Challenges</h2>
+		<p>Some things I am not sure how to work around:</p>
+		<ul>
+			<li>
+				save the document in Word online then it takes some time for the updated
+				document to be available via the Drive API so I do not know when to save
+				it back to CM
+			</li>
+			<li>
+				it would be nice to be able to open from CM from the Office 365 landing
+				page. I am not sure if there is any way to do this though. Maybe we can
+				build our own landing page which includes the Office 365 landing page?
+			</li>
+			<li>
+				I have tried and failed to set a title on the 'Open' dialog windows
+			</li>
+		</ul>
+
+		<h2>To do</h2>
+		<p>Some of the many things left to do or investigate</p>
+		<ul>
+			<li>
+				determine how much UI we need in the search interface, for example
+				widgets for each search clause?
+			</li>
+			<li>
+				do I need to re-authenticate from the web client when calling 'Edit in
+				Word' if the session has expired, for example with an IIS reset
+			</li>
+			<li>
+				do I need to re-authenticate from Word if the session has expired in the
+				ServiceAPI?
+			</li>
+			<li>
+				the addin does not always start first time, it often sits there with the
+				'starting' text. I call it again and it works.
+			</li>
+			<li>
+				slowness in using the add-in which is, I believe, related to
+				authentication
+			</li>
+			<li>
+				need a notification that an action has completedin addin, for example
+				when calling 'Check in
+			</li>
+			<li>
+				I have written an auth plugin, which also has custom web services, the
+				config for this needs to be reviewed and we need to determine how best
+				to bring this into the core ServiceAPI/Web Client
+			</li>
+
+			<li>
+				from document open dialog an error returned by the web service does not
+				get displayed
+			</li>
+			<li>have a better 'loading' experience the word 'starting'</li>
+			<li>
+				document open dialog needs an option to filter 'only Word files (e.g.
+				DOCX)
+			</li>
+			<li>
+				document open dialog needs an progress indicator when searching and
+				opening a document
+			</li>
+			<li>
+				document open dialog should not close when OK clicked when no record is
+				selected
+			</li>
+			<li>progress inidicator required in task pane</li>
+		</ul>
+	</body>
+</html>

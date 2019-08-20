@@ -71,6 +71,7 @@ export interface ITrimMainObject {
 	CommandDefs?: [];
 	PossiblyHasSubordinates?: boolean;
 	ToolTip?: string;
+	Selected?: boolean;
 }
 
 export interface ITrimField {

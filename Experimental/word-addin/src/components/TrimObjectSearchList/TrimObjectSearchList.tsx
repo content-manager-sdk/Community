@@ -24,6 +24,7 @@ export interface ITrimObjectSearchListState {
 	lastScrollPos: number;
 	scrollDirection: string;
 	searchShortCuts: any;
+	selectedUri: number;
 }
 
 export class TrimObjectSearchList extends React.Component<
@@ -219,20 +220,6 @@ export class TrimObjectSearchList extends React.Component<
 
 		return (
 			<div className="trim-search-list">
-				{ancestors.length > 0 && (
-					<Breadcrumb
-						items={ancestors.map((a) => {
-							return {
-								text:
-									trimType === BaseObjectTypes.Classification
-										? (a as IClassification).Name.Value
-										: a.NameString!,
-								key: String(a.Uri),
-								onClick: this._onBreadcrumbItemClicked,
-							};
-						})}
-					/>
-				)}
 				<div className="trim-search-list-outer">
 					<div
 						className={`trim-search-shortcuts shortcut-${
@@ -291,6 +278,20 @@ export class TrimObjectSearchList extends React.Component<
 						data-is-scrollable="true"
 						onScroll={this._onScroll}
 					>
+						{ancestors.length > 0 && (
+							<Breadcrumb
+								items={ancestors.map((a) => {
+									return {
+										text:
+											trimType === BaseObjectTypes.Classification
+												? (a as IClassification).Name.Value
+												: a.NameString!,
+										key: String(a.Uri),
+										onClick: this._onBreadcrumbItemClicked,
+									};
+								})}
+							/>
+						)}
 						<List
 							items={items}
 							onRenderCell={this._onRenderCell}
@@ -312,7 +313,7 @@ export class TrimObjectSearchList extends React.Component<
 		return elReturn;
 	}
 
-	private _previousSelected: HTMLElement;
+	//private _previousSelected: HTMLElement;
 
 	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
 		event.preventDefault();
@@ -320,12 +321,20 @@ export class TrimObjectSearchList extends React.Component<
 		const target = event.nativeEvent.target as HTMLElement;
 		const el = this.findAncestor(target!);
 		if (el) {
-			if (this._previousSelected) {
-				this._previousSelected.classList.remove("trim-is-selected");
-			}
-			this._previousSelected = el;
-			el.classList.toggle("trim-is-selected");
+			//	if (this._previousSelected) {
+			//		this._previousSelected.classList.remove("trim-is-selected");
+			//	}
+			//	this._previousSelected = el;
+			//el.classList.toggle("trim-is-selected");
 			const uri = Number(el.getAttribute("data-trim-uri"));
+			const { items } = this.state;
+
+			for (let counter = 0; counter < items.length; counter++) {
+				items[counter].Selected = items[counter].Uri === uri;
+			}
+			this.setState({ items: [...items] });
+
+			console.log("bb: " + uri);
 
 			if (target.classList && target.classList.contains("trim-find-children")) {
 				this._onTrimObjectContainerSearch(uri);
@@ -373,11 +382,13 @@ export class TrimObjectSearchList extends React.Component<
 				icon = item.Icon.FileType;
 			}
 		}
-
+		console.log("aa: " + item.Uri);
 		return (
 			<div
 				data-is-focusable={true}
-				className="trim-list-row"
+				className={`trim-list-row${
+					item.Selected === true ? " trim-is-selected" : ""
+				}`}
 				data-trim-uri={item.Uri}
 			>
 				<div className="trim-list-row-label">
@@ -408,6 +419,7 @@ export class TrimObjectSearchList extends React.Component<
 			ancestors: [],
 			lastScrollPos: 0,
 			scrollDirection: "",
+			selectedUri: 0,
 			searchShortCuts: {
 				[BaseObjectTypes.Record]: {
 					RecordMyContainers: {

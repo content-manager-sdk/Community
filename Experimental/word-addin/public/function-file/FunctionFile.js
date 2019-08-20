@@ -44,15 +44,19 @@ function loadProps() {
 	return dfd.promise();
 }
 function openHelp(event) {
-	let appPath = config.SERVICEAPI_PATH ? "/" + config.SERVICEAPI_PATH : "";
+	let appPath = config.MY_PATH;
+	appPath = appPath.endsWith("/") ? appPath : appPath + "/";
 
-	open(location.origin + appPath + "/help.html");
+	let root = location.origin.endsWith("/")
+		? location.origin
+		: location.origin + "/";
+	open(root + appPath + "home/help.html");
 	event.completed();
 }
 function openFromTrim(event) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
-			let appPath = config.SERVICEAPI_PATH ? "/" + config.SERVICEAPI_PATH : "";
+			let appPath = config.MY_PATH ? "/" + config.MY_PATH : "";
 			appPath = appPath.endsWith("/") ? appPath : appPath + "/";
 
 			Office.context.ui.displayDialogAsync(
