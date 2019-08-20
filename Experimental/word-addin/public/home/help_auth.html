@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width,initial-scale=1,shrink-to-fit=no"
+		/>
+		<meta name="theme-color" content="#000000" />
+		<link
+			rel="stylesheet"
+			href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"
+		/>
+
+		<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+
+		<title>Help</title>
+	</head>
+	<body class="ms-Fabric">
+		<h1 class="ms-fontSize-42 ms-fontWeight-semibold">Help</h1>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">Overview</h2>
+
+		<ul>
+			<li>create Azure AD App</li>
+		</ul>
+
+<h2>In manifest</h2>
+<ul>
+		<li>WebApplicationInfo Id from Application/Client ID</li>
+	<li>WebApplicationInfo Resource from Application ID Uri</li>
+	<li>deploy addin in Office 365</li>
+</ul>
+
+<h2>In Web Client Config</h2>
+<ul>
+<li>application / client id in oauth.aad.ClientId</li>
+<li>secret created in Client secrets in oauth.aad.ClientSecret</li>
+<li>URLs from Overview / Endpoints</li>
+<li>tenant id from overview</li>
+</ul>
+
+<h3>Example</h3>
+<pre>
+		<add key="oauth.aad.ClientId" value="0000-00000-000-00-0000"/>
+		<add key="oauth.aad.ClientSecret" value="MY SECRETP:"/>
+		<add key="oauth.aad.AuthorizeUrl" value="https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize"/>
+		<add key="oauth.aad.AccessTokenUrl" value="https://login.microsoftonline.com/organizations/oauth2/v2.0/token"/>    
+		<add key="oauth.aad.RedirectUrl" value="https://localhost/ContentManager/"/>
+		<add key="oauth.aad.TenantId" value="0000-00-000-0-0000"/>
+
+</pre>
+	</body>
+</html>
