@@ -58,16 +58,13 @@ describe("New Record layout", function() {
 		): Promise<import("../office-coms/word-connector").IGetRecordUriResponse> {
 			throw new Error("Method not implemented.");
 		}
-		getWebUrl(): string {
+		getWebUrl(): Promise<string> {
 			throw new Error("Method not implemented.");
 		}
 		getUri(): Promise<
 			import("../office-coms/word-connector").IGetRecordUriResponse
 		> {
 			throw new Error("Method not implemented.");
-		}
-		getName(): string {
-			return "default title";
 		}
 	}
 

@@ -5,14 +5,13 @@ export interface IGetRecordUriResponse {
 }
 
 export interface IWordUrl {
-	getWebUrl(): string;
+	getWebUrl(): Promise<string>;
 }
 
 export interface IWordConnector extends IWordUrl {
 	getAccessToken(): Promise<string>;
 	getUri(): Promise<IGetRecordUriResponse>;
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
-	getName(): string;
 	insertText(textToInsert: string): void;
 	setAutoOpen(autoOpen: boolean): void;
 	getAutoOpen(): boolean;
@@ -157,14 +156,29 @@ export class WordConnector implements IWordConnector {
 	// 	// you can do something with it, such as print, fax...
 	// }
 
-	public getWebUrl() {
-		return Office.context.document.url;
+	public getWebUrl(): Promise<string> {
+		return new Promise((resolve, reject) => {
+			Office.context.document.getFilePropertiesAsync({}, (asyncResult) => {
+				var fileUrl = asyncResult.value.url;
+				if (fileUrl == "") {
+					reject("The file hasn't been saved yet. Save the file and try again");
+				} else {
+					resolve(fileUrl);
+				}
+			});
+		});
 	}
 
-	public getName(): string {
-		const tokens = this.getWebUrl().split("/");
-		return tokens[tokens.length - 1].split(".")[0];
-	}
+	// public getName(): Promise<string> {
+	// 	return new Promise((resolve, reject) => {
+	// 		this.getWebUrl().then((webUrl) => {
+	// 			const tokens = webUrl.split("/");
+	// 			resolve(tokens[tokens.length - 1].split(".")[0]);
+	// 		});
+	// 	});
+	// 	//	.split("/");
+	// 	//	return tokens[tokens.length - 1].split(".")[0];
+	// }
 
 	public insertText(textToInsert: string): void {
 		Office.context.document.setSelectedDataAsync(

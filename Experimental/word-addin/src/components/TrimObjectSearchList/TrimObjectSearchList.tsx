@@ -17,6 +17,8 @@ import {
 	IBreadcrumbItem,
 } from "office-ui-fabric-react/lib/Breadcrumb";
 
+import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+
 export interface ITrimObjectSearchListState {
 	q?: string;
 	items: ITrimMainObject[];
@@ -25,6 +27,7 @@ export interface ITrimObjectSearchListState {
 	scrollDirection: string;
 	searchShortCuts: any;
 	selectedUri: number;
+	isRunning: boolean;
 }
 
 export class TrimObjectSearchList extends React.Component<
@@ -45,6 +48,10 @@ export class TrimObjectSearchList extends React.Component<
 			prevProps.advancedSearch !== this.props.advancedSearch
 		) {
 			this.doSearch(1, ``, true);
+		}
+
+		if (prevProps.advancedSearch !== this.props.advancedSearch) {
+			this.setState({ ancestors: [] });
 		}
 	}
 
@@ -90,6 +97,10 @@ export class TrimObjectSearchList extends React.Component<
 			return;
 		}
 
+		this.setState((prevState) => ({
+			isRunning: true,
+		}));
+
 		//this._searchRunning = true;
 		const {
 			trimConnector,
@@ -125,17 +136,18 @@ export class TrimObjectSearchList extends React.Component<
 					if (start > 1) {
 						this.setState((prevState) => ({
 							items: [...prevState.items, ...response.results],
+							isRunning: false,
 						}));
 					} else {
-						this.setState({ items: response.results });
+						this.setState({ items: response.results, isRunning: false });
 					}
 					//	this._searchRunning = false;
 				})
 				.catch(() => {
-					//	this._searchRunning = false;
+					this.setState({ isRunning: false });
 				});
 		} else {
-			//	this._searchRunning = false;
+			this.setState({ isRunning: false });
 		}
 	}
 
@@ -216,7 +228,7 @@ export class TrimObjectSearchList extends React.Component<
 
 	public render(): JSX.Element {
 		const { trimType, dialogDisplay } = this.props;
-		const { searchShortCuts, items, ancestors } = this.state;
+		const { searchShortCuts, items, ancestors, isRunning } = this.state;
 
 		return (
 			<div className="trim-search-list">
@@ -292,12 +304,16 @@ export class TrimObjectSearchList extends React.Component<
 								})}
 							/>
 						)}
-						<List
-							items={items}
-							onRenderCell={this._onRenderCell}
-							onShouldVirtualize={this._onVirtualize}
-							onClick={this._onListClick}
-						/>
+						{isRunning === true ? (
+							<Spinner size={SpinnerSize.large} />
+						) : (
+							<List
+								items={items}
+								onRenderCell={this._onRenderCell}
+								onShouldVirtualize={this._onVirtualize}
+								onClick={this._onListClick}
+							/>
+						)}
 					</div>
 				</div>
 			</div>
@@ -313,7 +329,7 @@ export class TrimObjectSearchList extends React.Component<
 		return elReturn;
 	}
 
-	//private _previousSelected: HTMLElement;
+	private _previousSelected: HTMLElement;
 
 	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
 		event.preventDefault();
@@ -321,24 +337,25 @@ export class TrimObjectSearchList extends React.Component<
 		const target = event.nativeEvent.target as HTMLElement;
 		const el = this.findAncestor(target!);
 		if (el) {
-			//	if (this._previousSelected) {
-			//		this._previousSelected.classList.remove("trim-is-selected");
-			//	}
-			//	this._previousSelected = el;
-			//el.classList.toggle("trim-is-selected");
-			const uri = Number(el.getAttribute("data-trim-uri"));
-			const { items } = this.state;
-
-			for (let counter = 0; counter < items.length; counter++) {
-				items[counter].Selected = items[counter].Uri === uri;
+			if (this._previousSelected) {
+				this._previousSelected.classList.remove("trim-is-selected");
 			}
-			this.setState({ items: [...items] });
+			this._previousSelected = el;
+			el.classList.toggle("trim-is-selected");
+			const uri = Number(el.getAttribute("data-trim-uri"));
+			//	const { items } = this.state;
 
-			console.log("bb: " + uri);
+			//	for (let counter = 0; counter < items.length; counter++) {
+			//		items[counter].Selected = items[counter].Uri === uri;
+			//	}
+			//	this.setState({ items: [...items] });
+
+			//console.log("bb: " + uri);
 
 			if (target.classList && target.classList.contains("trim-find-children")) {
 				this._onTrimObjectContainerSearch(uri);
 			} else {
+				this.forceUpdate();
 				this._onTrimObjectSelected(uri);
 			}
 		}
@@ -382,7 +399,7 @@ export class TrimObjectSearchList extends React.Component<
 				icon = item.Icon.FileType;
 			}
 		}
-		console.log("aa: " + item.Uri);
+
 		return (
 			<div
 				data-is-focusable={true}
@@ -420,6 +437,7 @@ export class TrimObjectSearchList extends React.Component<
 			lastScrollPos: 0,
 			scrollDirection: "",
 			selectedUri: 0,
+			isRunning: false,
 			searchShortCuts: {
 				[BaseObjectTypes.Record]: {
 					RecordMyContainers: {

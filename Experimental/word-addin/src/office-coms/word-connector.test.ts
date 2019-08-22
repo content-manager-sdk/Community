@@ -134,9 +134,11 @@ describe("word apis", () => {
 		});
 	});
 
-	it("name from document URL", async () => {
-		expect(wordConnector.getName()).toEqual("Document8");
-	});
+
+	// move to appStore tests
+	// it("name from document URL", async () => {
+	// 	expect(wordConnector.getName()).toEqual("Document8");
+	// });
 
 	test("Set uri in custom prop", async () => {
 		Mock_Action = "Add_Uri";

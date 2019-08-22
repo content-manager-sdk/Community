@@ -43,25 +43,33 @@ function loadProps() {
 	}
 	return dfd.promise();
 }
-function openHelp(event) {
+
+function getRoot() {
 	let appPath = config.MY_PATH;
-	appPath = appPath.endsWith("/") ? appPath : appPath + "/";
 
 	let root = location.origin.endsWith("/")
 		? location.origin
 		: location.origin + "/";
-	open(root + appPath + "home/help.html");
+
+	root = root + (appPath === "/" ? "" : appPath);
+
+	root = root.endsWith("/") ? root : root + "/";
+
+	return root;
+}
+
+function openHelp(event) {
+	const root = getRoot();
+
+	open(root + "home/help.html", "_help");
 	event.completed();
 }
 function openFromTrim(event) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
-			let appPath = config.MY_PATH ? "/" + config.MY_PATH : "";
-			appPath = appPath.endsWith("/") ? appPath : appPath + "/";
-
+			const root = getRoot();
 			Office.context.ui.displayDialogAsync(
-				location.origin +
-					appPath +
+				root +
 					"?searchdialog=true&accessToken=" +
 					accessToken +
 					"&rnd=" +

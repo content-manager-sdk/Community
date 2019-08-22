@@ -113,3 +113,7 @@ body {
 .new-record-body .ms-Pivot {
 	border-bottom: 1px groove;
 }
+
+.ms-Spinner {
+	margin-top: 30px;
+}

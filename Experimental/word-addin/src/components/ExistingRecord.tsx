@@ -49,7 +49,7 @@ export class ExistingRecord extends React.Component<
 							item.key as CommandIds,
 							appStore!.RecordUri,
 							fileName,
-							wordConnector!.getWebUrl()
+							appStore!.WebUrl()
 						)
 						.then((data) => {
 							appStore.setDocumentInfo(data);

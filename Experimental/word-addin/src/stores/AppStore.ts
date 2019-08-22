@@ -29,6 +29,8 @@ export class AppStore implements IAppStore {
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
 	@observable public status: string = "STARTING";
+	@observable public WebUrl: string;
+	@observable public FileName: string;
 
 	constructor(
 		private wordConnector: IWordUrl,
@@ -38,7 +40,10 @@ export class AppStore implements IAppStore {
 	}
 
 	// tslint:disable-next-line
-	public fetchBaseSettingFromTrim = flow(function*(this: AppStore) {
+	public fetchBaseSettingFromTrim = flow(function*(
+		this: AppStore,
+		fromDialog: boolean
+	) {
 		try {
 			const response: ILocation = yield this.trimConnector.getMe();
 			const messagesResponse: any = yield this.trimConnector.getMessages();
@@ -61,11 +66,14 @@ export class AppStore implements IAppStore {
 			// it fails when we open as a dialog
 			// I do not need the dpcumentInfo when opened as a dialog
 			// so it would be better not to call at all when opened as a dialog...
-			try {
-				this.documentInfo = yield this.trimConnector.getDriveId(
-					this.wordConnector.getWebUrl()
-				);
-			} catch {}
+			if (!fromDialog) {
+				this.WebUrl = yield this.wordConnector.getWebUrl();
+
+				const tokens = this.WebUrl.split("/");
+
+				this.FileName = tokens[tokens.length - 1].split(".")[0];
+				this.documentInfo = yield this.trimConnector.getDriveId(this.WebUrl);
+			}
 			this.status = "WAITING";
 			// this.status =
 			// 	this.documentInfo.found || !this.documentInfo.message
@@ -123,7 +131,7 @@ export class AppStore implements IAppStore {
 			recordType,
 			{
 				...properties,
-				...{ RecordExternalReference: this.documentInfo.Id },
+				...{ RecordSpURL: this.documentInfo.Id },
 			}
 		);
 

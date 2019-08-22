@@ -46,8 +46,8 @@ export class NewRecord extends React.Component<
 	}
 
 	componentDidMount() {
-		const { trimConnector, wordConnector } = this.props;
-		this.recordProps["RecordTypedTitle"] = wordConnector!.getName();
+		const { trimConnector, appStore } = this.props;
+		this.recordProps["RecordTypedTitle"] = appStore.FileName;
 
 		let me = this;
 		return trimConnector!

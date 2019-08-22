@@ -7,6 +7,7 @@ import MainApp from "./MainApp";
 import { TrimSearchDialog } from "./TrimSearchDialog/TrimSearchDialog";
 import { BaseObjectTypes } from "../../src/trim-coms/trim-baseobjecttypes";
 import { ITrimConnector } from "src/trim-coms/trim-connector";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 
 interface IProps {
 	appStore?: IAppStore;
@@ -26,8 +27,9 @@ export class BootStrap extends React.Component<IProps, { dialogName: string }> {
 
 	componentDidMount() {
 		const { appStore } = this.props;
+		const { dialogName } = this.state;
 		Office.initialize = function(reason) {
-			appStore!.fetchBaseSettingFromTrim();
+			appStore!.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
 		};
 	}
 	// private _onChange = (ev: React.MouseEvent<HTMLElement>, checked: boolean) => {
@@ -40,18 +42,18 @@ export class BootStrap extends React.Component<IProps, { dialogName: string }> {
 
 		if (appStore!.status === "ERROR") {
 			return <ErrorDisplay Message={appStore!.errorMessage} />;
+		} else if (this.state.dialogName === "/searchdialog") {
+			return (
+				<TrimSearchDialog
+					trimType={BaseObjectTypes.Record}
+					trimConnector={trimConnector}
+					startPoint="RecentDocs"
+				/>
+			);
 		} else if (appStore!.status !== "STARTING") {
-			if (this.state.dialogName === "/searchdialog") {
-				return (
-					<TrimSearchDialog
-						trimType={BaseObjectTypes.Record}
-						trimConnector={trimConnector}
-						startPoint="RecentDocs"
-					/>
-				);
-			} else {
-				return <MainApp className="trim-main" />;
-			}
+			return <MainApp className="trim-main" />;
+		} else if (appStore!.status === "STARTING") {
+			return <Spinner size={SpinnerSize.large} />;
 		} else {
 			return <h1>{appStore!.status}</h1>; // <Samples />;
 		}
