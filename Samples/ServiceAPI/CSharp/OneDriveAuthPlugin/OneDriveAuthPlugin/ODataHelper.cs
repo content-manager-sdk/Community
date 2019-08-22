@@ -36,27 +36,27 @@ namespace OneDriveAuthPlugin
 //			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
 //		}
 
-		internal static async Task<T> PostFile<T>(string itemPath, string accessToken, string filePath)
+		internal static async Task<T> PostFile<T>(string itemPath, string accessToken, string filePath) where T : class
 		{
 			using (var fileStream = File.OpenRead(filePath))
 			{
 				System.Net.Http.StreamContent content = new StreamContent(fileStream);
 				content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filePath));
 
-				dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+				string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
 
 				if (typeof(T) == typeof(string))
 				{
-					return jsonData;
+					return jsonData as T;
 				}
 				// Convert to .NET class and populate the properties of the model objects,
 				// and then populate the IEnumerable object and return it.
-				JObject jsonArray = jsonData;
-				return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+				//JObject jsonArray = jsonData;
+				return JsonConvert.DeserializeObject<T>(jsonData);
 			}
 		}
 
-		internal static async Task<T> PostFolder<T>(string itemPath, string accessToken)
+		internal static async Task<T> PostFolder<T>(string itemPath, string accessToken) where T : class
 		{
 
 			System.Net.Http.StringContent content = new StringContent(@"{
@@ -64,16 +64,16 @@ namespace OneDriveAuthPlugin
   ""folder"": { },
   ""@microsoft.graph.conflictBehavior"": ""replace""
 }", Encoding.UTF8, "application/json");
-			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+			string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
 
 			if (typeof(T) == typeof(string))
 			{
-				return jsonData;
+				return jsonData as T;
 			}
 			// Convert to .NET class and populate the properties of the model objects,
 			// and then populate the IEnumerable object and return it.
-			JObject jsonArray = jsonData;
-			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+		//	JObject jsonArray = jsonData;
+			return JsonConvert.DeserializeObject<T>(jsonData);
 		}
 
 		/// <summary>
@@ -83,18 +83,18 @@ namespace OneDriveAuthPlugin
 		/// <param name="itemsUrl">The URL of the OData endpoint.</param>
 		/// <param name="accessToken">An OAuth access token.</param>
 		/// <returns>Collection of T items that the caller can cast to any IEnumerable type.</returns>
-		internal static async Task<T> GetItem<T>(string itemPath, string accessToken, string tempPath)
+		internal static async Task<T> GetItem<T>(string itemPath, string accessToken, string tempPath) where T : class
 		{
-			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, tempPath: tempPath);
+			string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, tempPath: tempPath);
 
 			if (typeof(T) == typeof(string))
 			{
-				return jsonData;
+				return jsonData as T;
 			}
 			// Convert to .NET class and populate the properties of the model objects,
 			// and then populate the IEnumerable object and return it.
-			JObject jsonArray = jsonData;
-			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+			//JObject jsonArray = jsonData;
+			return JsonConvert.DeserializeObject<T>(jsonData);
 		}
 
 
@@ -105,15 +105,15 @@ namespace OneDriveAuthPlugin
 		/// <param name="itemsUrl">The URL of the OData endpoint.</param>
 		/// <param name="accessToken">An OAuth access token.</param>
 		/// <returns>Collection of T items that the caller can cast to any IEnumerable type.</returns>
-		internal static async Task<IEnumerable<T>> GetItems<T>(string itemsUrl, string accessToken)
-		{
-			dynamic jsonData = await SendRequestWithAccessToken(itemsUrl, accessToken);
+		//internal static async Task<IEnumerable<T>> GetItems<T>(string itemsUrl, string accessToken)
+		//{
+		//	string jsonData = await SendRequestWithAccessToken(itemsUrl, accessToken);
 
-			// Convert to .NET class and populate the properties of the model objects,
-			// and then populate the IEnumerable object and return it.
-			JArray jsonArray = jsonData.value;
-			return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonArray.ToString());
-		}
+		//	// Convert to .NET class and populate the properties of the model objects,
+		//	// and then populate the IEnumerable object and return it.
+		//	JArray jsonArray = jsonData.value;
+		//	return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonArray.ToString());
+		//}
 
 		/// <summary>
 		/// Sends a request to the specified OData URL with the specified access token.
@@ -121,7 +121,7 @@ namespace OneDriveAuthPlugin
 		/// <param name="itemsUrl">The OData endpoint URL.</param>
 		/// <param name="accessToken">The access token for the endpoint resource.</param>
 		/// <returns></returns>
-		internal static async Task<dynamic> SendRequestWithAccessToken(string itemsUrl, string accessToken, HttpContent requestContent = null, string tempPath = null)
+		internal static async Task<string> SendRequestWithAccessToken(string itemsUrl, string accessToken, HttpContent requestContent = null, string tempPath = null)
 		{
 			dynamic jsonData = null;
 
@@ -167,9 +167,9 @@ namespace OneDriveAuthPlugin
 								}
 								return tempPath;// File(contentStream, content_type, filename);
 							} else { 
-								string responseContent = await content.ReadAsStringAsync();
+								return await content.ReadAsStringAsync();
 
-								jsonData = JsonConvert.DeserializeObject(responseContent);
+							//	jsonData = JsonConvert.DeserializeObject(responseContent);
 							} 
 						} else
 						{

@@ -21,7 +21,7 @@ namespace OneDriveAuthPlugin
 			if (request.Uri > 0)
 			{
 				var record = new Record(this.Database, request.Uri);
-				return record.ExternalReference;
+				return record.SpURL;
 			}
 
 			return null;

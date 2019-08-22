@@ -99,7 +99,7 @@ namespace OneDriveAuthPlugin
 				Record record = new Record(this.Database, request.Uri);
 				record.Refresh();
 
-				string driveId = record.ExternalReference;
+				string driveId = record.SpURL;
 
 				var registeredFile = new RegisterdFileResponse() { Id = driveId };
 
@@ -141,6 +141,8 @@ namespace OneDriveAuthPlugin
 						//	var driveDetails = await ODataHelper.GetItem<string>(GraphApiHelper.GetOneDriveItemContentIdUrl(driveId), token, filePath);
 
 						var inputDocument = new InputDocument(request.FileName);
+
+					
 						inputDocument.CheckinAs = request.WebUrl;
 							record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 					
@@ -153,7 +155,7 @@ namespace OneDriveAuthPlugin
 					string token = await getToken();
 
 					await ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token);
-					record.ExternalReference = "";
+					record.SpURL = "";
 				}
 
 				if (request.Action.IndexOf("finalize", StringComparison.InvariantCultureIgnoreCase) > -1)
@@ -180,19 +182,7 @@ namespace OneDriveAuthPlugin
 			}
 		}
 
-		private static Dictionary<long, string> _oneDriveDocuemntUrls = new Dictionary<long, string>();
 
-		private async Task<string> getOneDriveDocumentUrl(string token)
-		{
-			long myUri = this.Database.CurrentUser.Uri;
-			if (!_oneDriveDocuemntUrls.ContainsKey(myUri))
-			{
-				var driveDetails = await ODataHelper.GetItem<OneDriveDrive>(GraphApiHelper.GetMyOneDriveUrl(), token, null);
-				_oneDriveDocuemntUrls.Add(myUri, driveDetails.WebUrl);
-			}
-
-			return _oneDriveDocuemntUrls[myUri];
-		}
 
 		public async Task<object> Get(RegisterFile request)
 		{
@@ -215,12 +205,9 @@ namespace OneDriveAuthPlugin
 			{
 				if (!string.IsNullOrWhiteSpace(request.WebUrl))
 				{
-					string oneDriveUrl = await getOneDriveDocumentUrl(token);
-
-					string filePath = request.WebUrl.Substring(oneDriveUrl.Length);
 
 					log.Debug("GetItem");
-					var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveItemPathsUrl(filePath);
+					var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveShareUrl(request.WebUrl);
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, token, null);
 					log.Debug("GotItem");
 				}
@@ -236,14 +223,13 @@ namespace OneDriveAuthPlugin
 			{
 				throw;
 			}
+					   			
 
-
-			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.Id, DriveItem = fileResult };
-
+			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.getDriveAndId(), DriveItem = fileResult };
 
 			TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);
-			TrimSearchClause clause = new TrimSearchClause(this.Database, BaseObjectTypes.Record, SearchClauseIds.RecordExternal);
-			clause.SetCriteriaFromString(fileResult.Id);
+			TrimSearchClause clause = new TrimSearchClause(this.Database, BaseObjectTypes.Record, SearchClauseIds.RecordSpURL);
+			clause.SetCriteriaFromString(fileResult.getDriveAndId());
 
 			search.AddSearchClause(clause);
 

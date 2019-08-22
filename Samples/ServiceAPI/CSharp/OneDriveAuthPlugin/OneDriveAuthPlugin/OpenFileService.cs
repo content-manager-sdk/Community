@@ -38,8 +38,8 @@ namespace OneDriveAuthPlugin
 
 			string token = await getToken();
 
-			string driveId = record.ExternalReference;
-
+			string driveId = record.SpURL;
+		//	string webUrl = record.SpURL;
 
 			OneDriveItem fileResult = null;
 			if (!string.IsNullOrWhiteSpace(driveId))
@@ -63,7 +63,8 @@ namespace OneDriveAuthPlugin
 
 				var fileItem = await ODataHelper.PostFile<OneDriveItem>(GraphApiHelper.GetOneDriveFileUploadUrl(folderId, record.SuggestedFileName), token, record.DocumentPathInClientCache);
 
-				record.ExternalReference = fileItem.Id;
+				//record.ExternalReference = fileItem.Id;
+				record.SpURL = fileItem.getDriveAndId();
 				record.Save();
 				record.GetDocument(null, true, null, null);
 

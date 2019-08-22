@@ -34,6 +34,15 @@ namespace OneDriveAuthPlugin
 	public class OneDriveItem : MSGraphObject, IEtagable
 	{
 		public string Etag { get; set; }
+		public string DriveId { get; set; }
+
+		//[JsonProperty("@microsoft.graph.parentReference")]
+		public OneDriveItem ParentReference { get; set; }
+
+		public string getDriveAndId()
+		{
+			return this.ParentReference.DriveId + "/items/" + this.Id;
+		}
 
 	}
 
