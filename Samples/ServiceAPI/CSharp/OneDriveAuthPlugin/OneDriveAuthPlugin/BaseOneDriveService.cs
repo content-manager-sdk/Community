@@ -1,14 +1,15 @@
 ﻿using HP.HPTRIM.SDK;
 using HP.HPTRIM.Service;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json;
 using ServiceStack;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OneDriveAuthPlugin
@@ -30,7 +31,37 @@ namespace OneDriveAuthPlugin
 		private static TokenCache userTokenCache = new TokenCache();
 		private static TokenCache apiTokenCache = new TokenCache();
 
-		protected async Task<string> getToken()
+
+		protected string getApplicationToken()
+		{
+			string token = this.Cache.Get<string>("appToken");
+
+			if (string.IsNullOrWhiteSpace(token)) {
+
+				WebClient webClient = new WebClient();
+				string tokenUrl = ConfigurationManager.AppSettings["oauth.aad.AccessTokenUrl"];
+
+				NameValueCollection formData = new NameValueCollection();
+				formData["client_id"] = ConfigurationManager.AppSettings["oauth.aad.ClientId"];
+				formData["client_secret"] = ConfigurationManager.AppSettings["oauth.aad.ClientSecret"];
+				formData["grant_type"] = "client_credentials";
+				formData["scope"] = "https://graph.microsoft.com/.default";
+
+
+				var data = webClient.UploadValues(tokenUrl, formData);
+
+				var str = System.Text.Encoding.Default.GetString(data);
+
+				dynamic response = JsonConvert.DeserializeObject(str);
+				token = response.access_token;
+				this.Cache.Add<string>("appToken", token, TimeSpan.FromSeconds(Convert.ToDouble(response.expires_in)));
+
+				return response.access_token;
+			}
+			return token;
+
+		}
+			protected async Task<string> getToken()
 		{
 			UserAssertion userAssertion;
 			var session = (base.GetSession() as AuthUserSession);
@@ -39,15 +70,6 @@ namespace OneDriveAuthPlugin
 			{
 				return session.RequestTokenSecret;
 			}
-
-			//if (this.Cache.Get<string>("tk") != null)
-			//{
-			//	return this.Cache.Get<string>("tk");
-			//}
-
-
-
-			TokenCache cache = new TokenCache();
 			
 			var bootstrapContext = ClaimsPrincipal.Current.Identities.First().BootstrapContext as BootstrapContext;
 

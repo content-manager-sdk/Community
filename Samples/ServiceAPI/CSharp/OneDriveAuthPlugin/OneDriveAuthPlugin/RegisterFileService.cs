@@ -191,7 +191,6 @@ namespace OneDriveAuthPlugin
 			log.Debug("GET start");
 			RegisterFileResponse response = new RegisterFileResponse();
 
-			//string[] addinScopes = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/scope").Value.Split(' ');
 
 
 			log.Debug("getToken");

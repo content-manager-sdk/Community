@@ -36,7 +36,7 @@ namespace OneDriveAuthPlugin
 			var response = new OpenFileResponse();
 			var record = new Record(this.Database, request.Uri);
 
-			string token = await getToken();
+		//	string token = await getToken();
 
 			string driveId = record.SpURL;
 		//	string webUrl = record.SpURL;
@@ -44,11 +44,13 @@ namespace OneDriveAuthPlugin
 			OneDriveItem fileResult = null;
 			if (!string.IsNullOrWhiteSpace(driveId))
 			{
+				string token = getApplicationToken();
 				fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
 				response.WebUrl = fileResult.WebUrl;
 			}
 			else if (record.IsElectronic)
 			{
+				string token = await getToken();
 				string folderId = string.Empty;
 
 				//	try
