@@ -38,9 +38,16 @@ describe("New Record layout", function() {
 			mockStore.RecordUri = recordUri;
 			mockStore.RecordProps = recordProps;
 		},
+		FileName: "default title",
 	};
 
 	class MockWordConnector implements IWordConnector {
+		saveDocument(): Promise<void> {
+			throw new Error("Method not implemented.");
+		}
+		getDocumentData(writeSlice: any): Promise<string> {
+			throw new Error("Method not implemented.");
+		}
 		setAutoOpen(autoOpen: boolean): void {
 			throw new Error("Method not implemented.");
 		}

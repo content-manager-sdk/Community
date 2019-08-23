@@ -127,17 +127,22 @@ export class AppStore implements IAppStore {
 		recordType: number,
 		properties: any
 	) {
-		const newRecord: ITrimMainObject = yield this.trimConnector.registerInTrim(
-			recordType,
-			{
-				...properties,
-				...{ RecordSpURL: this.documentInfo.Id },
-			}
-		);
+		try {
+			const newRecord: ITrimMainObject = yield this.trimConnector.registerInTrim(
+				recordType,
+				{
+					...properties,
+					...{ RecordSpURL: this.documentInfo.Id },
+				}
+			);
 
-		if (newRecord.Uri > 0) {
-			this.documentInfo.Uri = newRecord.Uri;
-			this.documentInfo.CommandDefs = newRecord.CommandDefs!;
+			if (newRecord.Uri > 0) {
+				this.documentInfo.Uri = newRecord.Uri;
+				this.documentInfo.CommandDefs = newRecord.CommandDefs!;
+			}
+		} catch (error) {
+			this.status = "ERROR";
+			this.errorMessage = error.message;
 		}
 	});
 }

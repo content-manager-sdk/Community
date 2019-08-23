@@ -18,20 +18,28 @@ import {
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
-import { IWordUrl } from "src/office-coms/word-connector";
-import { CommandIds } from "src/trim-coms/trim-command-ids";
+import { IWordUrl } from "../office-coms/word-connector";
+import { CommandIds } from "../trim-coms/trim-command-ids";
 
 let Mock_Action = "";
 
 class MockWordConnector implements IWordUrl {
-	getWebUrl(): string {
-		return "My.Url";
+	getWebUrl(): Promise<string> {
+		return new Promise(function(resolve, reject) {
+			resolve("My.Url");
+		});
 	}
 }
 
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	getDriveUrl(recordUri: number): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
+	writeFileSlice(data: number[], fileName: string): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
 	getDatabaseProperties(): Promise<
 		import("../trim-coms/trim-connector").IDatabase
 	> {
@@ -87,7 +95,11 @@ class MockTrimConnector implements ITrimConnector {
 		postedProperties = properties;
 
 		return new Promise(function(resolve, reject) {
-			resolve({ Uri: 567 });
+			if (Mock_Trim_Action === "ERROR") {
+				reject({ message: "error" });
+			} else {
+				resolve({ Uri: 567 });
+			}
 		});
 	}
 	getPropertySheet(recordTypeUri: number): Promise<any> {
@@ -120,7 +132,7 @@ describe("Test basic setup from Trim", () => {
 	it("the display name is david", () => {
 		expect.assertions(3);
 		expect(appStore.status).toBe("STARTING");
-		return appStore.fetchBaseSettingFromTrim().then(() => {
+		return appStore.fetchBaseSettingFromTrim(false).then(() => {
 			expect(appStore.UserProfile.DisplayName).toBe("david");
 			expect(appStore.status).toBe("WAITING");
 		});
@@ -129,13 +141,13 @@ describe("Test basic setup from Trim", () => {
 	it("Content Manager name is returned", async () => {
 		expect.assertions(1);
 
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
 		expect(appStore.ApplicationDisplayName).toBe("Content Manager");
 	});
 
 	it("Message from getMessage", async () => {
 		expect.assertions(1);
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
 		expect(appStore.messages["web_HPRM"]).toBe("Content Manager");
 	});
 
@@ -144,7 +156,7 @@ describe("Test basic setup from Trim", () => {
 
 		expect.assertions(1);
 
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
 		expect(appStore.status).toBe("ERROR");
 	});
 
@@ -153,7 +165,7 @@ describe("Test basic setup from Trim", () => {
 
 		expect.assertions(3);
 		expect(appStore.RecordUri).toBe(0);
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
 		expect(appStore.RecordUri).toBe(567);
 
 		expect(appStore.status).toBe("WAITING");
@@ -164,7 +176,7 @@ describe("Test basic setup from Trim", () => {
 
 		expect.assertions(3);
 		expect(appStore.RecordUri).toBe(0);
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
 		expect(appStore.RecordUri).toBe(0);
 		expect(appStore.status).toBe("WAITING");
 	});
@@ -174,7 +186,18 @@ describe("Test basic setup from Trim", () => {
 
 		expect.assertions(3);
 		expect(appStore.status).toBe("STARTING");
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
+		expect(appStore.errorMessage).toBe("error");
+
+		expect(appStore.status).toBe("ERROR");
+	});
+
+	test("Error handled on createRecord", async () => {
+		Mock_Trim_Action = "ERROR";
+
+		expect.assertions(3);
+		expect(appStore.status).toBe("STARTING");
+		await appStore.createRecord(1, {});
 		expect(appStore.errorMessage).toBe("error");
 
 		expect(appStore.status).toBe("ERROR");
@@ -190,8 +213,8 @@ describe("Test basic setup from Trim", () => {
 		postedProperties = null;
 
 		expect.assertions(1);
-		await appStore.fetchBaseSettingFromTrim();
+		await appStore.fetchBaseSettingFromTrim(false);
 		await appStore.createRecord(2, {});
-		expect(postedProperties["RecordExternalReference"]).toBe("abc");
+		expect(postedProperties["RecordSpURL"]).toBe("abc");
 	});
 });

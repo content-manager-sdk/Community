@@ -78,6 +78,7 @@ export class TrimObjectSearchList extends React.Component<
 				});
 			}
 		}
+
 		this.doSearch();
 	}
 

@@ -39,24 +39,26 @@ export class BootStrap extends React.Component<IProps, { dialogName: string }> {
 	// };
 	public render() {
 		const { appStore, trimConnector } = this.props;
+		return (
+			<div>
+				{appStore!.status === "ERROR" && (
+					<ErrorDisplay Message={appStore!.errorMessage} />
+				)}
+				{appStore!.status === "STARTING" && (
+					<Spinner size={SpinnerSize.large} />
+				)}
 
-		if (appStore!.status === "ERROR") {
-			return <ErrorDisplay Message={appStore!.errorMessage} />;
-		} else if (this.state.dialogName === "/searchdialog") {
-			return (
-				<TrimSearchDialog
-					trimType={BaseObjectTypes.Record}
-					trimConnector={trimConnector}
-					startPoint="RecentDocs"
-				/>
-			);
-		} else if (appStore!.status !== "STARTING") {
-			return <MainApp className="trim-main" />;
-		} else if (appStore!.status === "STARTING") {
-			return <Spinner size={SpinnerSize.large} />;
-		} else {
-			return <h1>{appStore!.status}</h1>; // <Samples />;
-		}
+				{this.state.dialogName === "/searchdialog" ? (
+					<TrimSearchDialog
+						trimType={BaseObjectTypes.Record}
+						trimConnector={trimConnector}
+						startPoint="RecentDocs"
+					/>
+				) : (
+					<MainApp className="trim-main" />
+				)}
+			</div>
+		);
 	}
 }
 

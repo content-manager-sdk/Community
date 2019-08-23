@@ -44,6 +44,7 @@ describe("Trim object search list", function() {
 		wrapper = makeWrapper();
 		wrapperDialog = makeWrapper("all", false, true);
 	});
+
 	const makeWrapper = (
 		query = `all`,
 		advancedSearch = false,
@@ -178,17 +179,21 @@ describe("Trim object search list", function() {
 
 	//My Containers
 
-	it("clears the list when a new search run", () => {
+	it("clears the list when a new search run", async (done) => {
 		const shortCut = wrapper.find("li");
 
 		shortCut.at(0).simulate("click");
 
-		expect(
-			wrapper
-				.find(List)
-				.at(0)
-				.props().items!.length
-		).toBe(1);
+		setImmediate(() => {
+			expect(
+				wrapper
+					.find(List)
+					.at(0)
+					.props().items!.length
+			).toBe(1);
+
+			done();
+		});
 	});
 
 	it("clears the ancestors when a new search run", () => {
@@ -329,15 +334,10 @@ describe("Trim object search list", function() {
 			expected: "locMembers:1",
 			trimType: BaseObjectTypes.Location,
 		},
-		{
-			includeAlt: false,
-			expected: "recContainer:1",
-			trimType: BaseObjectTypes.Record,
-		},
 	].forEach((s) => {
-		it(`search event fires when navigate clicked ${
-			s.includeAlt
-		}`, async (done) => {
+		it(`search event fires when navigate clicked ${s.includeAlt} - ${
+			s.expected
+		} - ${s.trimType}`, async (done) => {
 			const spec = { ...s, contentsInReverseDateOrder: false };
 			const wrapper = getWrapper(spec);
 
