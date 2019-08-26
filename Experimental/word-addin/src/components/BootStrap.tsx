@@ -1,13 +1,14 @@
 import * as React from "react";
-import IAppStore from "../stores/AppStore";
+//import { IAppStore } from "../stores/AppStore";
 import { inject, observer } from "mobx-react";
-import { ErrorDisplay } from "./ErrorDisplay";
+import ErrorDisplay from "./ErrorDisplay";
 import MainApp from "./MainApp";
 //import { BrowserRouter as Router, Route } from "react-router-dom";
 import { TrimSearchDialog } from "./TrimSearchDialog/TrimSearchDialog";
 import { BaseObjectTypes } from "../../src/trim-coms/trim-baseobjecttypes";
 import { ITrimConnector } from "src/trim-coms/trim-connector";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+import { IAppStore } from "src/stores/AppStore";
 
 interface IProps {
 	appStore?: IAppStore;
@@ -39,23 +40,25 @@ export class BootStrap extends React.Component<IProps, { dialogName: string }> {
 	// };
 	public render() {
 		const { appStore, trimConnector } = this.props;
+
 		return (
 			<div>
-				{appStore!.status === "ERROR" && (
-					<ErrorDisplay Message={appStore!.errorMessage} />
-				)}
-				{appStore!.status === "STARTING" && (
-					<Spinner size={SpinnerSize.large} />
-				)}
+				{appStore!.status === "ERROR" && <ErrorDisplay />}
 
 				{this.state.dialogName === "/searchdialog" ? (
 					<TrimSearchDialog
 						trimType={BaseObjectTypes.Record}
 						trimConnector={trimConnector}
 						startPoint="RecentDocs"
+						appStore={appStore}
 					/>
 				) : (
-					<MainApp className="trim-main" />
+					<React.Fragment>
+						{appStore!.status === "STARTING" && (
+							<Spinner size={SpinnerSize.large} />
+						)}
+						<MainApp className="trim-main" />
+					</React.Fragment>
 				)}
 			</div>
 		);

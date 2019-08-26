@@ -75,8 +75,6 @@ export class TrimSearchDialog
 		};
 
 		trimConnector!.getMessages().then((messages) => {
-			console.log("dddddddddddddddddddd");
-			console.log(messages);
 			this.setState({
 				textSearchHelp: messages.web_GoToTextSearch,
 				advancedSearchHelp: messages.web_GoToAdvancedSearch,
@@ -110,6 +108,7 @@ export class TrimSearchDialog
 			purposeExtra,
 			filter,
 			trimConnector,
+			appStore,
 		} = this.props;
 		const {
 			searchStartPoint,
@@ -190,6 +189,9 @@ export class TrimSearchDialog
 										.getDriveUrl(selectedItems[0].Uri)
 										.then((response: string) => {
 											Office.context.ui.messageParent(response);
+										})
+										.catch((error) => {
+											appStore!.setError(error.message);
 										});
 								} else {
 									Office.context.ui.messageParent("0");
@@ -296,4 +298,4 @@ export class TrimSearchDialog
 	}
 }
 
-export default inject("trimConnector")(TrimSearchDialog);
+export default inject("appStore", "trimConnector")(TrimSearchDialog);

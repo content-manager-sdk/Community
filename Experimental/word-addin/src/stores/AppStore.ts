@@ -17,6 +17,9 @@ export interface IAppStore {
 	UserProfile?: IUserProfile;
 	errorMessage?: string;
 	messages: TrimMessages;
+	fetchBaseSettingFromTrim: any;
+	resetError(): void;
+	setError(message: string): void;
 }
 
 export class AppStore implements IAppStore {
@@ -80,8 +83,7 @@ export class AppStore implements IAppStore {
 			// 		? "WAITING"
 			// 		: "ERROR";
 		} catch (error) {
-			this.status = "ERROR";
-			this.errorMessage = error.message;
+			this.setError(error.message);
 		}
 	});
 
@@ -141,10 +143,21 @@ export class AppStore implements IAppStore {
 				this.documentInfo.CommandDefs = newRecord.CommandDefs!;
 			}
 		} catch (error) {
-			this.status = "ERROR";
-			this.errorMessage = error.message;
+			this.setError(error.message);
 		}
 	});
+
+	@action.bound
+	public setError = (message: string) => {
+		this.errorMessage = message;
+		this.status = "ERROR";
+	};
+
+	@action.bound
+	public resetError = () => {
+		this.errorMessage = "";
+		this.status = "WAITING";
+	};
 }
 
 export default AppStore;

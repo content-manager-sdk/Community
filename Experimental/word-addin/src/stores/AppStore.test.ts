@@ -217,4 +217,26 @@ describe("Test basic setup from Trim", () => {
 		await appStore.createRecord(2, {});
 		expect(postedProperties["RecordSpURL"]).toBe("abc");
 	});
+
+	describe("Test operation", () => {
+		it("clears the error when reset called", function() {
+			appStore.errorMessage = "test";
+			appStore.status = "ERROR";
+
+			appStore.resetError();
+
+			expect(appStore.errorMessage).toBeFalsy();
+			expect(appStore.status).toEqual("WAITING");
+		});
+
+		it("sets the error", function() {
+			appStore.errorMessage = "";
+			appStore.status = "WAITING";
+
+			appStore.setError("an error");
+
+			expect(appStore.errorMessage).toEqual("an error");
+			expect(appStore.status).toEqual("ERROR");
+		});
+	});
 });

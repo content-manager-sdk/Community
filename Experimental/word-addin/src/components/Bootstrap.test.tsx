@@ -2,7 +2,7 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import { BootStrap } from "./BootStrap";
 import MainApp from "./MainApp";
-import { ErrorDisplay } from "./ErrorDisplay";
+import ErrorDisplay from "./ErrorDisplay";
 
 (global as any).Office = {};
 
@@ -20,8 +20,8 @@ describe("BootStrap", function() {
 					status: "ERROR",
 					errorMessage: "test",
 					fetchBaseSettingFromTrim: () => {},
+					messages: { web_HPRM: "CM" },
 				}}
-				wordConnector={mockWordConnector}
 			/>
 		);
 		//   expect(wrapper).toMatchSnapshot();
@@ -37,8 +37,10 @@ describe("BootStrap", function() {
 	it("shows Main component", function() {
 		const wrapper = shallow(
 			<BootStrap
-				appStore={{ status: "WAITING", fetchBaseSettingFromTrim: () => {} }}
-				wordConnector={mockWordConnector}
+				appStore={{
+					status: "WAITING",
+					fetchBaseSettingFromTrim: () => {},
+				}}
 			/>
 		);
 
