@@ -19,6 +19,7 @@ namespace OneDriveAuthPlugin
 			{
 				appHost.Plugins.Remove(appHost.Plugins.First(p => p is AuthFeature));
 			}
+
 			var appSettings = new ServiceStack.Configuration.AppSettings();
 
 			if (!AppHostConfig.Instance.IsInWebClient)
@@ -30,10 +31,7 @@ namespace OneDriveAuthPlugin
 					
 				}, "~/auth/aad"));
 
-				//https://localhost:3000, 
-
-			//	appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept,Referrer,User-Agent", allowedOrigins: "https://mfcm.xyz", allowCredentials: true));
-			//	appHost.Plugins.Add(new CorsFeature(allowedHeaders: "*", allowedOrigins: "https://mfcm.xyz", allowCredentials: true));
+				appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept", allowedOrigins: "https://localhost:3000", allowCredentials: true));
 			}
 			else
 			{

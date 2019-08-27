@@ -112,6 +112,7 @@
     <Compile Include="BaseOneDriveService.cs" />
     <Compile Include="CommandDefCustomProp.cs" />
     <Compile Include="CustomRecord.cs" />
+    <Compile Include="GetFileService.cs" />
     <Compile Include="GraphApiHelper.cs" />
     <Compile Include="models.cs" />
     <Compile Include="MyCommandDef.cs" />
