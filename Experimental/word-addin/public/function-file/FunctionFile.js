@@ -94,7 +94,7 @@ function insertObjectFromTrim(event) {
 		dialog.close();
 	};
 
-	const extentsions = "docx,docm,dotx,xlsx,xlsm,xltx,pptx";
+	const extentsions = "docx";
 
 	doOpen(
 		event,
@@ -113,8 +113,16 @@ function insertTextFromTrim(event) {
 				var range = context.document.getSelection();
 
 				// Queue a commmand to delete the range object.
-				range.insertText(args.message, "Replace");
-
+				if (
+					args.message
+						.substr(0, 6)
+						.toLowerCase()
+						.startsWith("<html>")
+				) {
+					range.insertHtml(args.message, "Replace");
+				} else {
+					range.insertText(args.message, "Replace");
+				}
 				// Synchronize the document state by executing the queued commands,
 				// and return a promise to indicate task completion.
 				return context.sync().then(function() {

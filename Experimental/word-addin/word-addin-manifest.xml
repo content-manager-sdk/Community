@@ -2,7 +2,7 @@
 <OfficeApp
           xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.1"
           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
           xsi:type="TaskPaneApp">
 
@@ -12,7 +12,7 @@
   <Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.6.104.0</Version>
+  <Version>1.6.105.0</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
