@@ -109,6 +109,7 @@ export class TrimSearchDialog
 			filter,
 			trimConnector,
 			appStore,
+			filterSearch,
 		} = this.props;
 		const {
 			searchStartPoint,
@@ -155,6 +156,7 @@ export class TrimSearchDialog
 							purpose={purpose}
 							purposeExtra={purposeExtra}
 							filter={filter}
+							filterSearch={filterSearch}
 							includeAlternateWhenShowingFolderContents={
 								includeAlternateWhenShowingFolderContents
 							}
@@ -185,8 +187,10 @@ export class TrimSearchDialog
 								const { selectedItems } = this.state;
 
 								if (selectedItems.length > 0) {
+									const fn = filterSearch ? "getRecordAsText" : "getDriveUrl";
+
 									trimConnector!
-										.getDriveUrl(selectedItems[0].Uri)
+										[fn](selectedItems[0].Uri)
 										.then((response: string) => {
 											Office.context.ui.messageParent(response);
 										})

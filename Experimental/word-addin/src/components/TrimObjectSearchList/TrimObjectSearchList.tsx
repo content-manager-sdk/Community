@@ -110,6 +110,7 @@ export class TrimObjectSearchList extends React.Component<
 			purpose,
 			purposeExtra,
 			filter,
+			filterSearch,
 		} = this.props;
 
 		let query = this._newQuery;
@@ -117,6 +118,10 @@ export class TrimObjectSearchList extends React.Component<
 			query = trimConnector!.makeFriendlySearchQuery(trimType!, q!);
 		} else if (!this._newQuery) {
 			query = q!;
+		}
+
+		if (filterSearch) {
+			query = query + ` AND (${filterSearch})`;
 		}
 
 		this._newQuery = ``;

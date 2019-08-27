@@ -4,8 +4,6 @@ import { BootStrap } from "./BootStrap";
 import MainApp from "./MainApp";
 import ErrorDisplay from "./ErrorDisplay";
 
-(global as any).Office = {};
-
 describe("BootStrap", function() {
 	const mockWordConnector = {
 		getAutoOpen(): boolean {

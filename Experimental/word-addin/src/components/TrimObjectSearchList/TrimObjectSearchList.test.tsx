@@ -23,6 +23,7 @@ describe("Trim object search list", function() {
 	let testTrimType = BaseObjectTypes.Location;
 	let testQ = "";
 	let testFilter = "";
+	let filterSearch = "";
 	let wrapper: any;
 	let wrapperDialog: any;
 	let testStart = 0;
@@ -48,7 +49,8 @@ describe("Trim object search list", function() {
 	const makeWrapper = (
 		query = `all`,
 		advancedSearch = false,
-		dialogDisplay = false
+		dialogDisplay = false,
+		filterSearch = ""
 	): any => {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
@@ -58,6 +60,7 @@ describe("Trim object search list", function() {
 				purposeExtra={789}
 				q={query}
 				filter="electronic"
+				filterSearch={filterSearch}
 				onTrimObjectSelected={(trimObject) => {
 					testObject = trimObject!;
 				}}
@@ -452,15 +455,54 @@ describe("Trim object search list", function() {
 		);
 	});
 
-	it(`uses the advanced search`, () => {
+	it(`uses the advanced search`, (done) => {
+		const list = makeWrapper(`test`, false);
+
+		const newProps = { ...list.props(), q: `test` };
+
+		setTimeout(() => {
+			try {
+				list.instance().componentDidUpdate(newProps);
+
+				expect(testQ).toEqual(`recAnyWord:test* OR recNumber:test*`);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it(`does not use the advanced search`, (done) => {
 		const list = makeWrapper(`test`, true);
+
+		const newProps = { ...list.props(), q: `test` };
+
+		setTimeout(() => {
+			try {
+				list.instance().componentDidUpdate(newProps);
+
+				expect(testQ).toEqual(`test`);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it(`uses the filter search`, (done) => {
+		const list = makeWrapper(`test`, true, false, "contains:all");
 
 		const newProps = { ...list.props(), q: `test2` };
 
 		setTimeout(() => {
-			list.instance().componentDidUpdate(newProps);
+			try {
+				list.instance().componentDidUpdate(newProps);
 
-			expect(testQ).toEqual(`recAnyWord: test`);
+				expect(testQ).toEqual(`test AND (contains:all)`);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 });

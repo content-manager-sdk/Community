@@ -19,6 +19,7 @@ export interface ITrimSearchDialogProps
 	purpose?: number;
 	purposeExtra?: number;
 	filter?: string;
+	filterSearch?: string;
 	value?: ITrimMainObject[];
 	startPoint?: string;
 

@@ -64,7 +64,128 @@ function openHelp(event) {
 	open(root + "home/help.html", "_help");
 	event.completed();
 }
+
+let dialog;
+
+function insertObjectFromTrim(event) {
+	const fn = function(args) {
+		if (args.message !== "0") {
+			// Run a batch operation against the Word object model.
+			Word.run(function(context) {
+				// Queue a command to get the current selection and then
+				// create a proxy range object with the results.
+				var range = context.document.getSelection();
+
+				// Queue a commmand to delete the range object.
+				range.insertFileFromBase64(args.message, "Replace");
+
+				// Synchronize the document state by executing the queued commands,
+				// and return a promise to indicate task completion.
+				return context.sync().then(function() {
+					console.log("Inserting text");
+				});
+			}).catch(function(error) {
+				console.log("Error: " + JSON.stringify(error));
+				if (error instanceof OfficeExtension.Error) {
+					console.log("Debug info: " + JSON.stringify(error.debugInfo));
+				}
+			});
+		}
+		dialog.close();
+	};
+
+	const extentsions = "docx,docm,dotx,xlsx,xlsm,xltx,pptx";
+
+	doOpen(
+		event,
+		`recExtension:${extentsions} OR recContains:[recExtension:${extentsions}${extentsions}]`,
+		fn
+	);
+}
+
+function insertTextFromTrim(event) {
+	const fn = function(args) {
+		if (args.message !== "0") {
+			// Run a batch operation against the Word object model.
+			Word.run(function(context) {
+				// Queue a command to get the current selection and then
+				// create a proxy range object with the results.
+				var range = context.document.getSelection();
+
+				// Queue a commmand to delete the range object.
+				range.insertText(args.message, "Replace");
+
+				// Synchronize the document state by executing the queued commands,
+				// and return a promise to indicate task completion.
+				return context.sync().then(function() {
+					console.log("Inserting text");
+				});
+			}).catch(function(error) {
+				console.log("Error: " + JSON.stringify(error));
+				if (error instanceof OfficeExtension.Error) {
+					console.log("Debug info: " + JSON.stringify(error.debugInfo));
+				}
+			});
+		}
+		dialog.close();
+	};
+
+	const extentsions = "txt,log,csv,1st,html,lst,md,text,xml";
+
+	doOpen(
+		event,
+		`recExtension:${extentsions} OR recContains:[recExtension:${extentsions}${extentsions}]`,
+		fn
+	);
+}
+
+function insertPictureFromTrim(event) {
+	const fn = function(args) {
+		if (args.message !== "0") {
+			// Run a batch operation against the Word object model.
+			Word.run(function(context) {
+				// Queue a command to get the current selection and then
+				// create a proxy range object with the results.
+				var range = context.document.getSelection();
+
+				// Queue a commmand to delete the range object.
+				range.insertInlinePictureFromBase64(args.message, "Replace");
+
+				// Synchronize the document state by executing the queued commands,
+				// and return a promise to indicate task completion.
+				return context.sync().then(function() {
+					console.log("Inserting picture");
+				});
+			}).catch(function(error) {
+				console.log("Error: " + JSON.stringify(error));
+				if (error instanceof OfficeExtension.Error) {
+					console.log("Debug info: " + JSON.stringify(error.debugInfo));
+				}
+			});
+		}
+		dialog.close();
+	};
+	const extentsions = "ai,bmp,gif,ico,png,ps,psd,jpeg,tif,tiff,jpg";
+
+	doOpen(
+		event,
+		`recExtension:${extentsions} OR recContains:[recExtension:${extentsions}${extentsions}]`,
+		fn
+	);
+}
+
 function openFromTrim(event) {
+	const fn = function(args) {
+		if (args.message !== "0") {
+			open(args.message, "_blank");
+		}
+		dialog.close();
+	};
+
+	doOpen(event, "", fn);
+}
+
+function doOpen(event, filter, fn) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
 			const root = getRoot();
@@ -73,14 +194,13 @@ function openFromTrim(event) {
 					"?searchdialog=true&accessToken=" +
 					accessToken +
 					"&rnd=" +
-					Math.random(),
+					Math.random() +
+					"&filter=" +
+					filter,
 				{ height: 55, width: 50, displayInIframe: true },
 				function(asyncResult) {
 					dialog = asyncResult.value;
-					dialog.addEventHandler(
-						Office.EventType.DialogMessageReceived,
-						processCreateMessage
-					);
+					dialog.addEventHandler(Office.EventType.DialogMessageReceived, fn);
 				}
 			);
 			event.completed();
@@ -89,10 +209,10 @@ function openFromTrim(event) {
 		}
 	});
 
-	function processCreateMessage(args) {
-		if (args.message !== "0") {
-			open(args.message, "_blank");
-		}
-		dialog.close();
-	}
+	// function processCreateMessage(args) {
+	// 	if (args.message !== "0") {
+	// 		open(args.message, "_blank");
+	// 	}
+	// 	dialog.close();
+	// }
 }

@@ -139,6 +139,7 @@ export interface ITrimConnector {
 		properties: any
 	): Promise<ITrimMainObject>;
 	getDriveUrl(recordUri: number): Promise<string>;
+	getRecordAsText(recordUri: number): Promise<string>;
 	getDriveId(webUrl: string): Promise<IDriveInformation>;
 	getObjectDetails(
 		trimType: BaseObjectTypes,
@@ -349,6 +350,15 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
+	public getRecordAsText(recordUri: number): Promise<string> {
+		return this.makeRequest(
+			{ path: `GetFile`, method: "get", data: { uri: recordUri } },
+			(data: any) => {
+				return data.File;
+			}
+		);
+	}
+
 	public registerInTrim(
 		recordTypeUri: number,
 		properties: any
@@ -534,7 +544,8 @@ export class TrimConnector implements ITrimConnector {
 							response.data.UserOptions ||
 							response.data.WebUrl ||
 							response.data.Results ||
-							response.data.FileName
+							response.data.FileName ||
+							response.data.File
 						) {
 							resolve(parseCallback(response.data));
 						} else {

@@ -15,14 +15,25 @@ interface IProps {
 	trimConnector?: ITrimConnector;
 }
 
-export class BootStrap extends React.Component<IProps, { dialogName: string }> {
+export class BootStrap extends React.Component<
+	IProps,
+	{ dialogName: string; filter: string }
+> {
 	constructor(props: IProps) {
 		super(props);
-		//functionfile
+
+		let filter = "";
+		try {
+			const params = new URLSearchParams(window.location.search);
+			filter = params.get("filter") || "";
+		} catch {
+			// I only have this try/catch to make the tests work
+		}
+
 		if (window.location.search.indexOf("searchdialog") > -1) {
-			this.state = { dialogName: "/searchdialog" };
+			this.state = { dialogName: "/searchdialog", filter: filter };
 		} else {
-			this.state = { dialogName: "" };
+			this.state = { dialogName: "", filter: filter };
 		}
 	}
 
@@ -51,6 +62,7 @@ export class BootStrap extends React.Component<IProps, { dialogName: string }> {
 						trimConnector={trimConnector}
 						startPoint="RecentDocs"
 						appStore={appStore}
+						filterSearch={this.state.filter}
 					/>
 				) : (
 					<React.Fragment>
