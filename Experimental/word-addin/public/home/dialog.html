@@ -1,0 +1,11 @@
+<html>
+	<head>
+		<script>
+			const href = window.location.href;
+			const goTo = window.location.href.substring(href.indexOf("=") + 1);
+			console.log(goTo);
+			window.location.replace(goTo);
+		</script>
+	</head>
+	<body></body>
+</html>
