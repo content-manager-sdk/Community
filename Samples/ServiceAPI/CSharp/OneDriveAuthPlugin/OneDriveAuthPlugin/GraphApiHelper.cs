@@ -13,10 +13,19 @@ namespace OneDriveAuthPlugin
 		internal static string BaseGraphUrl = BaseUrl + "me/";
 
 
+		internal static string GetOneDriveSessionUrl(OneDriveItem item)
+		{
+			return $"{BaseUrl}/drives/{item.getDriveAndId()}/createUploadSession";
+		}
 
 		internal static string GetOneDriveFileUploadUrl(string folderId, string fileName)
 		{
 			return $"{GetMyOneDriveUrl()}/items/{folderId}:/{fileName}:/content";
+		}
+
+		internal static string GetOneDriveChildrenUrl(OneDriveItem item)
+		{
+			return $"{BaseUrl}/drives/{item.getDriveAndId()}/children";
 		}
 
 		internal static string GetOneDriveChildrenUrl()
@@ -46,7 +55,7 @@ namespace OneDriveAuthPlugin
 		internal static string GetOneDriveItemIdUrl(string id)
 		{
 			// Construct URL for the names of the folders and files.
-			return $"{BaseUrl}drives/{id}";
+			return $"{BaseUrl}drives/{id}?$select=webDavUrl,webUrl,id,name,etag,parentreference";
 		}
 
 		internal static string GetOneDriveItemContentIdUrl(string id)

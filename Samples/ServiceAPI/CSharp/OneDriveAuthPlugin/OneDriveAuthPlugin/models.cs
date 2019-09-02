@@ -12,9 +12,9 @@ namespace OneDriveAuthPlugin
 		public string Name { get; set; }
 		public string Id { get; set; }
 		public string WebUrl { get; set; }
+		public string WebDavUrl { get; set; }
 
-		[JsonProperty("@microsoft.graph.downloadUrl")]
-		string DownloadUrl { get; set; }
+
 	}
 
 	/// <summary>
@@ -44,6 +44,12 @@ namespace OneDriveAuthPlugin
 			return this.ParentReference.DriveId + "/items/" + this.Id;
 		}
 
+	}
+
+	public class FileUploadSession
+	{
+		public string uploadUrl { get; set; }
+		public DateTime expirationDateTime { get; set; }
 	}
 
 	/// <summary>

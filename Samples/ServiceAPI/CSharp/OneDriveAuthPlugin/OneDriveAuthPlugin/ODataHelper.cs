@@ -16,32 +16,68 @@ namespace OneDriveAuthPlugin
 	internal static class ODataHelper
 	{
 
-//		internal static async Task<T> UploadFile<T>(string itemPath, string accessToken)
-//		{
+		//		internal static async Task<T> UploadFile<T>(string itemPath, string accessToken)
+		//		{
 
-//			System.Net.Http.StringContent content = new StringContent(@"{
-//  ""name"": ""Content Manager Documents"",
-//  ""folder"": { },
-//  ""@microsoft.graph.conflictBehavior"": ""replace""
-//}", Encoding.UTF8, "application/json");
-//			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+		//			System.Net.Http.StringContent content = new StringContent(@"{
+		//  ""name"": ""Content Manager Documents"",
+		//  ""folder"": { },
+		//  ""@microsoft.graph.conflictBehavior"": ""replace""
+		//}", Encoding.UTF8, "application/json");
+		//			dynamic jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
 
-//			if (typeof(T) == typeof(string))
-//			{
-//				return jsonData;
-//			}
-//			// Convert to .NET class and populate the properties of the model objects,
-//			// and then populate the IEnumerable object and return it.
-//			JObject jsonArray = jsonData;
-//			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
-//		}
+		//			if (typeof(T) == typeof(string))
+		//			{
+		//				return jsonData;
+		//			}
+		//			// Convert to .NET class and populate the properties of the model objects,
+		//			// and then populate the IEnumerable object and return it.
+		//			JObject jsonArray = jsonData;
+		//			return JsonConvert.DeserializeObject<T>(jsonArray.ToString());
+		//		}
+
+		internal static async Task<OneDriveItem> PostEmptyFile(string itemPath, string accessToken, string fileName)
+		{
+			System.Net.Http.StringContent content = new StringContent($"{{\"name\":\"{fileName}\", " +
+				$"\"file\":{{}}," +
+				$"\"@microsoft.graph.conflictBehavior\": \"replace\"}}", Encoding.UTF8, "application/json");
+
+
+			string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+
+
+			// Convert to .NET class and populate the properties of the model objects,
+			// and then populate the IEnumerable object and return it.
+			//	JObject jsonArray = jsonData;
+			return JsonConvert.DeserializeObject<OneDriveItem>(jsonData);
+		}
+
+		internal static async Task<FileUploadSession> PostUploadSession(string itemPath, string accessToken, string fileName)
+		{
+			System.Net.Http.StringContent content = new StringContent(@"{
+  ""item"": {
+    ""@microsoft.graph.conflictBehavior"": ""replace""
+
+  }
+}", Encoding.UTF8, "application/json");
+
+			string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+
+
+			// Convert to .NET class and populate the properties of the model objects,
+			// and then populate the IEnumerable object and return it.
+			//	JObject jsonArray = jsonData;
+			return JsonConvert.DeserializeObject<FileUploadSession>(jsonData);
+		}
 
 		internal static async Task<T> PostFile<T>(string itemPath, string accessToken, string filePath) where T : class
 		{
 			using (var fileStream = File.OpenRead(filePath))
 			{
 				System.Net.Http.StreamContent content = new StreamContent(fileStream);
-				content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filePath));
+				//	content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filePath));
+				content.Headers.ContentRange = new ContentRangeHeaderValue(0, fileStream.Length-1, fileStream.Length) { Unit = "bytes" };
+				content.Headers.ContentLength = fileStream.Length;
 
 				string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
 
@@ -56,13 +92,15 @@ namespace OneDriveAuthPlugin
 			}
 		}
 
+
+
 		internal static async Task<T> PostFolder<T>(string itemPath, string accessToken) where T : class
 		{
 
 			System.Net.Http.StringContent content = new StringContent(@"{
   ""name"": ""Content Manager Documents"",
-  ""folder"": { },
-  ""@microsoft.graph.conflictBehavior"": ""replace""
+""folder"": { },
+""@microsoft.graph.conflictBehavior"": ""replace""
 }", Encoding.UTF8, "application/json");
 			string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
 

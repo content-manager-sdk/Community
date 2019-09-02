@@ -39,7 +39,9 @@ namespace OneDriveAuthPlugin
 			if (string.IsNullOrWhiteSpace(token)) {
 
 				WebClient webClient = new WebClient();
-				string tokenUrl = ConfigurationManager.AppSettings["oauth.aad.AccessTokenUrl"];
+				string tenantId = ConfigurationManager.AppSettings["oauth.aad.TenantId"];
+				string tokenUrl = ConfigurationManager.AppSettings["oauth.aad.AccessTokenUrl"].Replace("common", tenantId);
+
 
 				NameValueCollection formData = new NameValueCollection();
 				formData["client_id"] = ConfigurationManager.AppSettings["oauth.aad.ClientId"];

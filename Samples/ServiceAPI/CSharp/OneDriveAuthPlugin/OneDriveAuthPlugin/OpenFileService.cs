@@ -3,9 +3,11 @@ using HP.HPTRIM.Service;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OneDriveAuthPlugin
@@ -19,6 +21,10 @@ namespace OneDriveAuthPlugin
 	public class OpenFileResponse : IHasResponseStatus
 	{
 		public string WebUrl { get; set; }
+		public string WebDavUrl { get; set; }
+
+		public bool UserHasAccess { get; set; }
+
 		public ResponseStatus ResponseStatus { get; set; }
 	}
 
@@ -33,7 +39,7 @@ namespace OneDriveAuthPlugin
 				throw new HttpError(HttpStatusCode.BadRequest, "400", "Invalid Uri");
 			}
 
-			var response = new OpenFileResponse();
+			var response = new OpenFileResponse() { UserHasAccess = true };
 			var record = new Record(this.Database, request.Uri);
 
 		//	string token = await getToken();
@@ -44,12 +50,30 @@ namespace OneDriveAuthPlugin
 			OneDriveItem fileResult = null;
 			if (!string.IsNullOrWhiteSpace(driveId))
 			{
-				string token = getApplicationToken();
-				fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
+
+				string token = await getToken();
+
+				try
+				{
+					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
+				}
+				catch (Exception ex)
+				{
+					response.UserHasAccess = false;
+				}
+
+				if (response.UserHasAccess == false)
+				{
+					token = getApplicationToken();
+					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
+				}
 				response.WebUrl = fileResult.WebUrl;
+				response.WebDavUrl = fileResult.WebDavUrl;
 			}
 			else if (record.IsElectronic)
 			{
+				record.GetDocument(null, true, null, null);
+
 				string token = await getToken();
 				string folderId = string.Empty;
 
@@ -63,14 +87,26 @@ namespace OneDriveAuthPlugin
 					record.LoadDocumentIntoClientCache();
 				}
 
-				var fileItem = await ODataHelper.PostFile<OneDriveItem>(GraphApiHelper.GetOneDriveFileUploadUrl(folderId, record.SuggestedFileName), token, record.DocumentPathInClientCache);
+				Regex pattern = new Regex("[\\\\/<>|?]|[\n]{2}");
+				
+				string fileName = $"{Path.GetFileNameWithoutExtension(record.SuggestedFileName)} ({pattern.Replace(record.Number, "_")}){Path.GetExtension(record.SuggestedFileName)}" ;
+
+				var emptyfile = await ODataHelper.PostEmptyFile(GraphApiHelper.GetOneDriveChildrenUrl(documentFolder), token, fileName);
+
+				var sessionDetails = await ODataHelper.PostUploadSession(GraphApiHelper.GetOneDriveSessionUrl(emptyfile), token, fileName);
+
+				var fileItem = await ODataHelper.PostFile<OneDriveItem>(sessionDetails.uploadUrl, token, record.DocumentPathInClientCache);
 
 				//record.ExternalReference = fileItem.Id;
 				record.SpURL = fileItem.getDriveAndId();
-				record.Save();
-				record.GetDocument(null, true, null, null);
 
-				response.WebUrl = fileItem.WebUrl;
+				fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(record.SpURL), token, null);
+
+				record.Save();
+				
+
+				response.WebUrl = fileResult.WebUrl;
+				response.WebDavUrl = fileResult.WebDavUrl;
 				//}
 				//catch
 				//{
