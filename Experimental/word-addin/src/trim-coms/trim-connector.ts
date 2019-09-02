@@ -559,7 +559,11 @@ export class TrimConnector implements ITrimConnector {
 						}
 					})
 					.catch((error) => {
-						if (error.response!.data!.ResponseStatus) {
+						if (
+							error.response &&
+							error.response.data &&
+							error.response.data.ResponseStatus
+						) {
 							reject({
 								message:
 									error.response.data.ResponseStatus.Message ||

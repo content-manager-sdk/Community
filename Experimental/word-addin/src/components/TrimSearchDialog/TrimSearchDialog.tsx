@@ -25,6 +25,7 @@ import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { debounce } from "throttle-debounce";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 
 export interface ITrimSearchDialogState {
 	isObjectPickerShown?: boolean;
@@ -36,6 +37,7 @@ export interface ITrimSearchDialogState {
 	advancedSearch: boolean;
 	textSearchHelp: string;
 	advancedSearchHelp: string;
+	isRunning: boolean;
 }
 
 export class TrimSearchDialog
@@ -112,6 +114,7 @@ export class TrimSearchDialog
 			filterSearch,
 		} = this.props;
 		const {
+			isRunning,
 			searchStartPoint,
 			textFieldText,
 			advancedSearch,
@@ -123,50 +126,54 @@ export class TrimSearchDialog
 
 		return (
 			<div className="dialog-top">
-				<div
-					ref={this._objectPickerDiv}
-					role="combobox"
-					className="dialog-header"
-				>
-					<TextField
-						iconProps={{
-							iconName: "Search",
-							onClick: this._onIconClick,
-							className: "trim-ObjectPicker-event--without-label",
-						}}
-						componentRef={this._textField}
-						className="trim-object-picker"
-						onRenderPrefix={this._renderPrefix}
-						onChange={this.changeQuery}
-						value={textFieldText}
-					/>
-				</div>
-
-				{startSearchAt && (
-					<FocusTrapZone
-						isClickableOutsideFocusTrap={true}
-						className="dialog-list"
-						data-is-scrollable="true"
-					>
-						<TrimObjectSearchList
-							componentRef={this._searchList}
-							trimType={trimType}
-							onTrimObjectSelected={this._trimObjectSelected}
-							q={startSearchAt}
-							purpose={purpose}
-							purposeExtra={purposeExtra}
-							filter={filter}
-							filterSearch={filterSearch}
-							includeAlternateWhenShowingFolderContents={
-								includeAlternateWhenShowingFolderContents
-							}
-							contentsInReverseDateOrder={contentsInReverseDateOrder}
-							advancedSearch={advancedSearch}
-							dialogDisplay={true}
-						/>
-					</FocusTrapZone>
+				{isRunning === true ? (
+					<Spinner size={SpinnerSize.large} />
+				) : (
+					<React.Fragment>
+						<div
+							ref={this._objectPickerDiv}
+							role="combobox"
+							className="dialog-header"
+						>
+							<TextField
+								iconProps={{
+									iconName: "Search",
+									onClick: this._onIconClick,
+									className: "trim-ObjectPicker-event--without-label",
+								}}
+								componentRef={this._textField}
+								className="trim-object-picker"
+								onRenderPrefix={this._renderPrefix}
+								onChange={this.changeQuery}
+								value={textFieldText}
+							/>
+						</div>
+						{startSearchAt && (
+							<FocusTrapZone
+								isClickableOutsideFocusTrap={true}
+								className="dialog-list"
+								data-is-scrollable="true"
+							>
+								<TrimObjectSearchList
+									componentRef={this._searchList}
+									trimType={trimType}
+									onTrimObjectSelected={this._trimObjectSelected}
+									q={startSearchAt}
+									purpose={purpose}
+									purposeExtra={purposeExtra}
+									filter={filter}
+									filterSearch={filterSearch}
+									includeAlternateWhenShowingFolderContents={
+										includeAlternateWhenShowingFolderContents
+									}
+									contentsInReverseDateOrder={contentsInReverseDateOrder}
+									advancedSearch={advancedSearch}
+									dialogDisplay={true}
+								/>
+							</FocusTrapZone>
+						)}
+					</React.Fragment>
 				)}
-
 				<div className="dialog-footer">
 					<div>
 						<DefaultButton
@@ -185,7 +192,7 @@ export class TrimSearchDialog
 							text="OK"
 							onClick={() => {
 								const { selectedItems } = this.state;
-
+								this.setState({ isRunning: true });
 								if (selectedItems.length > 0) {
 									const fn = filterSearch ? "getRecordAsText" : "getDriveUrl";
 
@@ -196,6 +203,9 @@ export class TrimSearchDialog
 										})
 										.catch((error) => {
 											appStore!.setError(error.message);
+										})
+										.finally(() => {
+											this.setState({ isRunning: false });
 										});
 								} else {
 									Office.context.ui.messageParent("0");
@@ -289,6 +299,7 @@ export class TrimSearchDialog
 		const { value } = this.props;
 
 		return {
+			isRunning: false,
 			isObjectPickerShown: false,
 			selectedItems: value || [],
 			searchStartPoint: "",
