@@ -258,7 +258,7 @@ function doOpen(event, filter, fn, fnEv) {
 function noAccessMsg(url) {
 	const root = getRoot();
 
-	const fullUrl = root + "home/dialog.html";
+	const fullUrl = root + "home/dialog.html?goTo=" + url;
 
 	// I wait for half a second otherwise I get an error that another dialog is already open
 
