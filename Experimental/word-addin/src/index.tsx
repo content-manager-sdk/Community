@@ -9,20 +9,24 @@ import { AppStore } from "./stores/AppStore";
 import TrimConnector from "./trim-coms/trim-connector";
 import { initializeIcons } from "@uifabric/icons";
 
+import { getQueryStringValue } from "../src/utils/getQueryStringValue";
+
 initializeIcons();
 
 const wordConnector = new WordConnector();
 const trimConnector = new TrimConnector();
 trimConnector.credentialsResolver = (callback) => {
-	const url: URL = new URL(window.location.href);
-	const params: URLSearchParams = url.searchParams;
-	// get target key/value from URLSearchParams object
-	const accessToken = params.get("accessToken");
+	const accessToken = getQueryStringValue("accessToken");
 
 	if (accessToken) {
-		callback(accessToken);
+		callback(accessToken, "");
 	} else {
-		wordConnector.getAccessToken().then((token) => callback(token));
+		wordConnector
+			.getAccessToken()
+			.then((token) => callback(token, ""))
+			.catch(function(error) {
+				callback("", error.message);
+			});
 	}
 };
 const appStore = new AppStore(wordConnector, trimConnector);

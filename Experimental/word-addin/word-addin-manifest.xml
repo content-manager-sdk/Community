@@ -2,7 +2,7 @@
 <OfficeApp
           xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.1"
+          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
           xsi:type="TaskPaneApp">
 
@@ -12,7 +12,7 @@
   <Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.6.105.0</Version>
+  <Version>1.6.106.0</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -308,8 +308,8 @@
       </bt:LongStrings>
     </Resources>
 	 <WebApplicationInfo>
-      <Id>7e63d8fa-a2f6-48b4-96a5-da76b1877d53</Id>
-      <Resource>api://localhost:3000/7e63d8fa-a2f6-48b4-96a5-da76b1877d53</Resource>
+      <Id>09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Id>
+      <Resource>api://localhost:3000/09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Resource>
       <Scopes>
 	  	<Scope>Sites.ReadWrite.All</Scope>
         <Scope>user.read</Scope>

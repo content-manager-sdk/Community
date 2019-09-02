@@ -10,10 +10,25 @@ import {
 	DialogFooter,
 	DialogType,
 } from "office-ui-fabric-react";
+import { TeachingBubble } from "office-ui-fabric-react/lib/TeachingBubble";
 
 initializeIcons();
 
-export class ErrorDisplay extends React.Component<{ appStore?: any }, any> {
+export class ErrorDisplay extends React.Component<
+	{ appStore?: any },
+	{ isDetailVisble: boolean }
+> {
+	constructor(props: {}) {
+		super(props);
+
+		this._onDismiss = this._onDismiss.bind(this);
+		this._onShow = this._onShow.bind(this);
+
+		this.state = { isDetailVisble: false };
+	}
+
+	private _menuButtonElement: HTMLElement;
+
 	private _closeDialog = (): void => {
 		const { appStore } = this.props;
 
@@ -21,8 +36,21 @@ export class ErrorDisplay extends React.Component<{ appStore?: any }, any> {
 		// 	this.setState({ hideDialog: true });
 	};
 
+	private _onShow(ev: any): void {
+		this.setState({
+			isDetailVisble: true,
+		});
+	}
+
+	private _onDismiss(ev: any): void {
+		this.setState({
+			isDetailVisble: false,
+		});
+	}
+
 	public render() {
 		const { appStore } = this.props;
+		const { isDetailVisble } = this.state;
 
 		return (
 			<Dialog
@@ -47,10 +75,31 @@ export class ErrorDisplay extends React.Component<{ appStore?: any }, any> {
 								{appStore!.errorMessage}
 							</div>
 						</div>
+						<div className="ms-Grid-row">
+							{isDetailVisble && (
+								<TeachingBubble
+									targetElement={this._menuButtonElement}
+									headline="Error Details"
+								>
+									{JSON.stringify(appStore!.errorBody, null, "\t")}
+								</TeachingBubble>
+							)}
+						</div>
 					</div>
 				</div>
 
 				<DialogFooter>
+					{appStore!.errorBody && (
+						<span
+							className="ms-TeachingBubbleBasicExample-buttonArea"
+							ref={(menuButton) => (this._menuButtonElement = menuButton!)}
+						>
+							<DefaultButton
+								onClick={isDetailVisble ? this._onDismiss : this._onShow}
+								text="Details"
+							/>
+						</span>
+					)}
 					<DefaultButton onClick={this._closeDialog} text="OK" />
 				</DialogFooter>
 			</Dialog>

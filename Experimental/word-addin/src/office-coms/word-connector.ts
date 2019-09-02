@@ -302,9 +302,10 @@ export class WordConnector implements IWordConnector {
 				{ forceConsent: false },
 				(result: any) => {
 					if (result.status === "succeeded") {
+
 						resolve(result.value);
 					} else {
-						reject({ message: result.error });
+						reject({ message: result.error.message });
 					}
 				}
 			);

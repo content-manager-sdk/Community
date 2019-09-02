@@ -10,6 +10,8 @@ import { ITrimConnector } from "src/trim-coms/trim-connector";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 import { IAppStore } from "src/stores/AppStore";
 
+import { getQueryStringValue } from "../utils/getQueryStringValue";
+
 interface IProps {
 	appStore?: IAppStore;
 	trimConnector?: ITrimConnector;
@@ -24,8 +26,7 @@ export class BootStrap extends React.Component<
 
 		let filter = "";
 		try {
-			const params = new URLSearchParams(window.location.search);
-			filter = params.get("filter") || "";
+			filter = getQueryStringValue("filter") || "";
 		} catch {
 			// I only have this try/catch to make the tests work
 		}

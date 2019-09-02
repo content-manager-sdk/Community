@@ -19,11 +19,12 @@ export interface IAppStore {
 	messages: TrimMessages;
 	fetchBaseSettingFromTrim: any;
 	resetError(): void;
-	setError(message: string): void;
+	setError(error: any, module?: string): void;
 }
 
 export class AppStore implements IAppStore {
 	@observable public errorMessage: string;
+	@observable public errorBody: any;
 	@observable public documentInfo: IDriveInformation = {
 		Id: "",
 		Uri: 0,
@@ -43,49 +44,50 @@ export class AppStore implements IAppStore {
 	}
 
 	// tslint:disable-next-line
-	public fetchBaseSettingFromTrim = flow(function*(
+	public fetchBaseSettingFromTrim = function(
 		this: AppStore,
 		fromDialog: boolean
 	) {
-		try {
-			const response: ILocation = yield this.trimConnector.getMe();
-			const messagesResponse: any = yield this.trimConnector.getMessages();
+		const thisthis = this;
+		const tc = this.trimConnector;
 
-			if (response != null && messagesResponse != null) {
-				this.me = response;
-
-				this.messages = messagesResponse;
-
-				// // temporary - need to go in TRIM Messages
-				// this.messages.web_Register = "Register in Content Manager";
-				// this.messages.web_SelectRecordType = "Select a Record Type";
-				// this.messages.web_Actions = "Actions";
-				// this.messages.web_Checkin = "Check In";
-				// this.messages.web_Finalize = "Make Final";
-				// this.messages.bob_sbMe = "Me";
-			}
-
-			// not happy with this
-			// it fails when we open as a dialog
-			// I do not need the dpcumentInfo when opened as a dialog
-			// so it would be better not to call at all when opened as a dialog...
-			if (!fromDialog) {
-				this.WebUrl = yield this.wordConnector.getWebUrl();
-
-				const tokens = this.WebUrl.split("/");
-
-				this.FileName = tokens[tokens.length - 1].split(".")[0];
-				this.documentInfo = yield this.trimConnector.getDriveId(this.WebUrl);
-			}
-			this.status = "WAITING";
-			// this.status =
-			// 	this.documentInfo.found || !this.documentInfo.message
-			// 		? "WAITING"
-			// 		: "ERROR";
-		} catch (error) {
-			this.setError(error.message);
-		}
-	});
+		this.trimConnector
+			.getMe()
+			.then(function(me) {
+				thisthis.setMe(me);
+			})
+			.then(function() {
+				return tc.getMessages();
+			})
+			.then(function(messages) {
+				thisthis.setMessages(messages);
+			})
+			.then(function() {
+				if (!fromDialog) {
+					thisthis.wordConnector
+						.getWebUrl()
+						.then(function(webUrl: string) {
+							thisthis.WebUrl = webUrl;
+							const tokens = thisthis.WebUrl.split("/");
+							thisthis.setFileName(tokens[tokens.length - 1].split(".")[0]);
+						})
+						.then(function() {
+							tc.getDriveId(thisthis.WebUrl).then(function(documentInfo) {
+								thisthis.setDocumentInfo(documentInfo);
+								thisthis.setStatus("WAITING");
+							});
+						})
+						.catch(function(error) {
+							thisthis.setError(error, "fetch base settings for dialog");
+						});
+				} else {
+					thisthis.setStatus("WAITING");
+				}
+			})
+			.catch(function(error) {
+				thisthis.setError(error, "fetch base settings");
+			});
+	};
 
 	@computed
 	get ApplicationDisplayName() {
@@ -143,13 +145,35 @@ export class AppStore implements IAppStore {
 				this.documentInfo.CommandDefs = newRecord.CommandDefs!;
 			}
 		} catch (error) {
-			this.setError(error.message);
+			this.setError(error.message, "create record");
 		}
 	});
 
 	@action.bound
-	public setError = (message: string) => {
-		this.errorMessage = message;
+	public setStatus = (status: string) => {
+		this.status = status;
+	};
+
+	@action.bound
+	public setFileName = (fileName: string) => {
+		this.FileName = fileName;
+	};
+
+	@action.bound
+	public setMessages = (messages: TrimMessages) => {
+		this.messages = messages;
+	};
+
+	@action.bound
+	public setMe = (me: ILocation) => {
+		this.me = me;
+	};
+
+	@action.bound
+	public setError = (error: any, module?: string) => {
+		const message = error.message || "no message";
+		this.errorMessage = module ? message + " (" + module + ")" : message;
+		this.errorBody = error;
 		this.status = "ERROR";
 	};
 

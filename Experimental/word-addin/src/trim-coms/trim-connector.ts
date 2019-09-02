@@ -11,7 +11,10 @@ const BASE_URI = config.BASE_URL.endsWith("/")
 
 export const SERVICEAPI_BASE_URI = BASE_URI + config.SERVICEAPI_PATH;
 
-export type ITokenCallback = (accessToken: string) => void;
+export type ITokenCallback = (
+	accessToken: string,
+	errorMessage: string
+) => void;
 
 export interface ITrimProperty {
 	StringValue?: string;
@@ -345,7 +348,7 @@ export class TrimConnector implements ITrimConnector {
 		return this.makeRequest(
 			{ path: `OpenFile/${recordUri}`, method: "get" },
 			(data: any) => {
-				return data.WebUrl;
+				return JSON.stringify(data);
 			}
 		);
 	}
@@ -532,9 +535,12 @@ export class TrimConnector implements ITrimConnector {
 
 	private makeRequest<T>(config: any, parseCallback: any): Promise<T> {
 		return new Promise((resolve, reject) => {
-			this.credentialsResolver((accessToken) => {
-				const options = this.makeOptions({ ...{ accessToken }, ...config });
+			this.credentialsResolver((accessToken, errorMessage) => {
+				if (errorMessage) {
+					reject({ message: errorMessage });
+				}
 
+				const options = this.makeOptions({ ...{ accessToken }, ...config });
 				Axios(options)
 					.then((response) => {
 						if (
@@ -553,15 +559,17 @@ export class TrimConnector implements ITrimConnector {
 						}
 					})
 					.catch((error) => {
-						if (error.response) {
+						if (error.response!.data!.ResponseStatus) {
 							reject({
 								message:
 									error.response.data.ResponseStatus.Message ||
 									error.response.data.ResponseStatus.ErrorCode,
+								data: error,
 							});
 						} else {
 							reject({
 								message: error.message,
+								data: error,
 							});
 						}
 					});

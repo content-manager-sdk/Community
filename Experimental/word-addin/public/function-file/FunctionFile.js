@@ -94,11 +94,15 @@ function insertObjectFromTrim(event) {
 		dialog.close();
 	};
 
-	const extentsions = "docx";
+	const extensions = "docx";
 
 	doOpen(
 		event,
-		`recExtension:${extentsions} OR recContains:[recExtension:${extentsions}${extentsions}]`,
+		"recExtension:" +
+			extensions +
+			" OR recContains:[recExtension:" +
+			extensions +
+			"]",
 		fn
 	);
 }
@@ -138,11 +142,15 @@ function insertTextFromTrim(event) {
 		dialog.close();
 	};
 
-	const extentsions = "txt,log,csv,1st,html,lst,md,text,xml";
+	const extensions = "txt,log,csv,1st,html,lst,md,text,xml";
 
 	doOpen(
 		event,
-		`recExtension:${extentsions} OR recContains:[recExtension:${extentsions}${extentsions}]`,
+		"recExtension:" +
+			extensions +
+			" OR recContains:[recExtension:" +
+			extensions +
+			"]",
 		fn
 	);
 }
@@ -173,27 +181,45 @@ function insertPictureFromTrim(event) {
 		}
 		dialog.close();
 	};
-	const extentsions = "ai,bmp,gif,ico,png,ps,psd,jpeg,tif,tiff,jpg";
+	const extensions = "ai,bmp,gif,ico,png,ps,psd,jpeg,tif,tiff,jpg";
 
 	doOpen(
 		event,
-		`recExtension:${extentsions} OR recContains:[recExtension:${extentsions}${extentsions}]`,
+		"recExtension:" +
+			extensions +
+			" OR recContains:[recExtension:" +
+			extensions +
+			"]",
 		fn
 	);
 }
 
 function openFromTrim(event) {
+	let openUrl = "";
 	const fn = function(args) {
 		if (args.message !== "0") {
-			open(args.message, "_blank");
+			openUrl = args.message;
 		}
-		dialog.close();
+		const response = JSON.parse(openUrl);
+		try {
+			dialog.close();
+		} finally {
+			if (!response.UserHasAccess) {
+				noAccessMsg(response.WebUrl);
+			} else if (Office.context.diagnostics.platform === "PC") {
+				open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
+			} else {
+				open(response.WebUrl, "_blank");
+			}
+		}
 	};
 
-	doOpen(event, "", fn);
+	doOpen(event, "", fn, function(args) {
+		console.log(args);
+	});
 }
 
-function doOpen(event, filter, fn) {
+function doOpen(event, filter, fn, fnEv) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
 			const root = getRoot();
@@ -209,6 +235,10 @@ function doOpen(event, filter, fn) {
 				function(asyncResult) {
 					dialog = asyncResult.value;
 					dialog.addEventHandler(Office.EventType.DialogMessageReceived, fn);
+
+					if (fnEv) {
+						dialog.addEventHandler(Office.EventType.DialogEventReceived, fnEv);
+					}
 				}
 			);
 			event.completed();
@@ -223,4 +253,32 @@ function doOpen(event, filter, fn) {
 	// 	}
 	// 	dialog.close();
 	// }
+}
+
+function noAccessMsg(url) {
+	const root = getRoot();
+
+	const fullUrl = root + "home/dialog.html";
+
+	// I wait for half a second otherwise I get an error that another dialog is already open
+
+	setTimeout(function() {
+		Office.context.ui.displayDialogAsync(
+			fullUrl,
+			{ height: 55, width: 50, displayInIframe: true },
+			function(asyncResult) {
+				if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+					console.log(
+						(asyncResult.error.code = ": " + asyncResult.error.message)
+					);
+				} else {
+					dialog = asyncResult.value;
+					dialog.addEventHandler(
+						Office.EventType.DialogMessageReceived,
+						function() {}
+					);
+				}
+			}
+		);
+	}, 500);
 }
