@@ -44,6 +44,12 @@
     <Reference Include="HP.HPTRIM.ServiceAPI.Model">
       <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Graph, Version=1.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.1.17.0\lib\net45\Microsoft.Graph.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Graph.Core, Version=1.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.Core.1.17.0\lib\net45\Microsoft.Graph.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Identity.Client, Version=2.5.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Identity.Client.2.5.0-preview\lib\net45\Microsoft.Identity.Client.dll</HintPath>
     </Reference>
@@ -97,6 +103,9 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -152,6 +161,9 @@ copy $(TargetDir)System.Net.Http.Extensions.dll D:\trunk\trim\CSharp\HP.HPTRIM.S
 copy $(TargetDir)System.Net.Http.Primitives.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)Microsoft.Graph.Core.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)Microsoft.Graph.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 
 copy $(TargetPath) D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)DotNetOpenAuth.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
@@ -164,6 +176,9 @@ copy $(TargetDir)System.IdentityModel.Tokens.Jwt.dll D:\trunk\trim\Phoenix\HP.HP
 copy $(TargetDir)System.Net.Http.Extensions.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)System.Net.Http.Primitives.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
+copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.Graph.Core.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.Graph.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -145,7 +145,7 @@ export class AppStore implements IAppStore {
 				this.documentInfo.CommandDefs = newRecord.CommandDefs!;
 			}
 		} catch (error) {
-			this.setError(error.message, "create record");
+			this.setError(error, "create record");
 		}
 	});
 

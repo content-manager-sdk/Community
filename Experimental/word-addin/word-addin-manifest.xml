@@ -12,7 +12,7 @@
   <Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.6.106.0</Version>
+  <Version>1.6.107.0</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -30,8 +30,8 @@
 
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
-    <AppDomain>AppDomain1</AppDomain>
-    <AppDomain>AppDomain2</AppDomain>
+    <AppDomain>localhost</AppDomain>
+    <AppDomain>cmofficedev-my.sharepoint.com</AppDomain>
     <AppDomain>AppDomain3</AppDomain>
   </AppDomains>
   <!--End Basic Settings. -->

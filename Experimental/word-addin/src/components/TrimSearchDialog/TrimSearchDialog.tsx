@@ -202,7 +202,7 @@ export class TrimSearchDialog
 											Office.context.ui.messageParent(response);
 										})
 										.catch((error) => {
-											appStore!.setError(error.message);
+											appStore!.setError(error);
 										})
 										.finally(() => {
 											this.setState({ isRunning: false });

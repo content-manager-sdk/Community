@@ -70,26 +70,39 @@ namespace OneDriveAuthPlugin
 			return JsonConvert.DeserializeObject<FileUploadSession>(jsonData);
 		}
 
-		internal static async Task<T> PostFile<T>(string itemPath, string accessToken, string filePath) where T : class
+		internal static async Task<OneDriveItem> PostFile(string itemPath, string accessToken, string filePath) 
 		{
+			string jsonData = null;
 			using (var fileStream = File.OpenRead(filePath))
 			{
-				System.Net.Http.StreamContent content = new StreamContent(fileStream);
-				//	content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filePath));
-				content.Headers.ContentRange = new ContentRangeHeaderValue(0, fileStream.Length-1, fileStream.Length) { Unit = "bytes" };
-				content.Headers.ContentLength = fileStream.Length;
+				int blockSize = 10000000;
 
-				string jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
-
-				if (typeof(T) == typeof(string))
+				long startAt = 0;
+				while (startAt < fileStream.Length)
 				{
-					return jsonData as T;
+					byte[] data = new byte[blockSize];
+				//	atEnd = fileStream.Read(data, 0, blockSize) < blockSize;
+
+					int bytesRead = fileStream.Read(data, 0, blockSize);
+
+					byte[] newData = new byte[bytesRead];
+
+					Array.Copy(data, newData, bytesRead);
+
+					System.Net.Http.ByteArrayContent content = new ByteArrayContent(newData);
+					//	content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filePath));
+					content.Headers.ContentRange = new ContentRangeHeaderValue(startAt, (startAt + bytesRead)-1, fileStream.Length) { Unit = "bytes" };
+					content.Headers.ContentLength = fileStream.Length;
+
+					jsonData = await SendRequestWithAccessToken(itemPath, accessToken, content);
+
+					startAt += bytesRead;
+
 				}
-				// Convert to .NET class and populate the properties of the model objects,
-				// and then populate the IEnumerable object and return it.
-				//JObject jsonArray = jsonData;
-				return JsonConvert.DeserializeObject<T>(jsonData);
+
+				
 			}
+			return JsonConvert.DeserializeObject<OneDriveItem>(jsonData);
 		}
 
 
@@ -170,9 +183,7 @@ namespace OneDriveAuthPlugin
 				if (requestContent is StringContent)
 				{
 					method = HttpMethod.Post;
-				}
-
-				if (requestContent is StreamContent)
+				} else if (requestContent is StreamContent || requestContent is ByteArrayContent)
 				{
 					method = HttpMethod.Put;
 				}

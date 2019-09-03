@@ -214,9 +214,7 @@ function openFromTrim(event) {
 		}
 	};
 
-	doOpen(event, "", fn, function(args) {
-		console.log(args);
-	});
+	doOpen(event, "", fn);
 }
 
 function doOpen(event, filter, fn, fnEv) {
