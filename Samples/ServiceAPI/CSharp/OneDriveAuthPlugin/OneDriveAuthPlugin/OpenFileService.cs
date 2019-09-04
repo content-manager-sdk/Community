@@ -33,7 +33,7 @@ namespace OneDriveAuthPlugin
 	{
 		private static Microsoft.Graph.GraphServiceClient getClient(string accessToken)
 		{
-		
+
 
 			return new Microsoft.Graph.GraphServiceClient(new Microsoft.Graph.DelegateAuthenticationProvider((requestMessage) =>
 			{
@@ -53,14 +53,18 @@ namespace OneDriveAuthPlugin
 
 			using (var file = System.IO.File.OpenRead(filePath))
 			{
-			
+
 
 				var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
 
+
 				var uploadSession = await graphServiceClient.Drives[documentFolder.ParentReference.DriveId].Items[documentFolder.Id].ItemWithPath(fileName).CreateUploadSession().Request().PostAsync();
+
+				string ul = uploadSession.UploadUrl += "&$select=Id,ParentReference,WebUrl,WebDavUrl";
 
 				var maxChunkSize = (320 * 1024) * 10; // 5000 KB - Change this to your chunk size. 5MB is the default.
 				var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, file, maxChunkSize);
+
 
 				// Setup the chunk request necessities
 				var chunkRequests = provider.GetUploadChunkRequests();
@@ -101,15 +105,11 @@ namespace OneDriveAuthPlugin
 			var response = new OpenFileResponse() { UserHasAccess = true };
 			var record = new Record(this.Database, request.Uri);
 
-		//	string token = await getToken();
-
 			string driveId = record.SpURL;
-		//	string webUrl = record.SpURL;
 
-			OneDriveItem fileResult = null;
 			if (!string.IsNullOrWhiteSpace(driveId))
 			{
-
+				OneDriveItem fileResult = null;
 				string token = await getToken();
 
 				try
@@ -133,23 +133,22 @@ namespace OneDriveAuthPlugin
 			{
 				record.GetDocument(null, true, null, null);
 
-				try { 
-				string token = await getToken();
-				string folderId = string.Empty;
-
-				//	try
-				//	{
-				var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
-				folderId = documentFolder.Id;
-
-				if (!record.IsDocumentInClientCache)
+				try
 				{
-					record.LoadDocumentIntoClientCache();
-				}
+					string token = await getToken();
+					string folderId = string.Empty;
 
-				Regex pattern = new Regex("[\\\\/<>|?]|[\n]{2}");
-				
-				string fileName = $"{Path.GetFileNameWithoutExtension(record.SuggestedFileName)} ({pattern.Replace(record.Number, "_")}){Path.GetExtension(record.SuggestedFileName)}" ;
+					var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
+					folderId = documentFolder.Id;
+
+					if (!record.IsDocumentInClientCache)
+					{
+						record.LoadDocumentIntoClientCache();
+					}
+
+					Regex pattern = new Regex("[\\\\/<>|?]|[\n]{2}");
+
+					string fileName = $"{Path.GetFileNameWithoutExtension(record.SuggestedFileName)} ({pattern.Replace(record.Number, "_")}){Path.GetExtension(record.SuggestedFileName)}";
 
 
 
@@ -158,19 +157,17 @@ namespace OneDriveAuthPlugin
 					record.GetDocument(null, true, null, uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id);
 					record.SpURL = uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id;// uploadedFile. fileItem.getDriveAndId();
 
-				fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(record.SpURL), token, null);
+					record.Save();
 
-				record.Save();
-				
 
-				response.WebUrl = fileResult.WebUrl;
-				response.WebDavUrl = fileResult.WebDavUrl;
+					response.WebUrl = uploadedFile.WebUrl;
+					response.WebDavUrl = uploadedFile.WebDavUrl;
 
 				}
 				catch
 				{
 					record.UndoCheckout(null);
-				//	return new Error
+					//	return new Error
 					throw;
 				}
 			}
