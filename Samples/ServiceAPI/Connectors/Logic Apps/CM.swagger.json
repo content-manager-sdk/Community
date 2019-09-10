@@ -1,0 +1,157 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "CM",
+		"description": "Interface to Content Manager web service to create/update and find Records.",
+		"version": "1.0"
+	},
+	"host": "localhost",
+	"basePath": "/ServiceAPI",
+	"schemes": ["https"],
+	"consumes": [],
+	"produces": [],
+	"paths": {
+		"/record": {
+			"get": {
+				"responses": {
+					"default": {
+						"description": "default",
+						"schema": {
+							"$ref": "#/definitions/RecordsResponse"
+						}
+					}
+				},
+				"summary": "Find Records",
+				"description": "Find Records",
+				"operationId": "FindRecords",
+				"parameters": [
+					{
+						"name": "q",
+						"in": "query",
+						"required": true,
+						"type": "string",
+						"default": "",
+						"description": "Search query"
+					},
+					{
+						"name": "properties",
+						"in": "query",
+						"required": true,
+						"type": "string",
+						"default": "RecordTitle,RecordNumber",
+						"x-ms-visibility": "internal"
+					},
+					{
+						"name": "format",
+						"in": "query",
+						"required": true,
+						"type": "string",
+						"default": "json",
+						"x-ms-visibility": "internal"
+					}
+				]
+			},
+			"post": {
+				"responses": {
+					"default": {
+						"description": "default",
+						"schema": {
+							"$ref": "#/definitions/RecordsResponse"
+						}
+					}
+				},
+				"summary": "Create or Update Record",
+				"consumes": ["multipart/form-data"],
+				"description": "Create or update a Record",
+				"operationId": "CreateUpdateRecord",
+				"parameters": [
+					{
+						"name": "properties",
+						"in": "formData",
+						"required": true,
+						"type": "string",
+						"default": "RecordTitle,RecordNumber",
+						"x-ms-visibility": "internal"
+					},
+					{
+						"name": "RecordContainer",
+						"in": "formData",
+						"type": "string"
+					},
+					{
+						"name": "RecordRecordType",
+						"in": "formData",
+						"type": "string"
+					},
+					{ "name": "RecordTitle", "in": "formData", "type": "string" },
+					{ "in": "formData", "type": "file", "name": "file" }
+				]
+			}
+		}
+	},
+	"definitions": {
+		"Record": {
+			"type": "object",
+			"properties": {
+				"RecordTitle": {
+					"type": "object",
+					"properties": {
+						"Value": {
+							"type": "string",
+							"title": "RecordTitle"
+						}
+					}
+				},
+				"NameString": { "type": "string" },
+
+				"Uri": {
+					"type": "integer",
+					"format": "int64"
+				}
+			}
+		},
+		"RecordsResponse": {
+			"type": "object",
+			"properties": {
+				"Results": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Record"
+					},
+					"description": "Results"
+				},
+
+				"TotalResults": {
+					"type": "integer",
+					"format": "int32",
+					"description": "TotalResults"
+				},
+				"Count": {
+					"type": "integer",
+					"format": "int32",
+					"description": "Count"
+				},
+				"HasMoreItems": {
+					"type": "boolean",
+					"description": "HasMoreItems"
+				},
+
+				"ResponseStatus": {
+					"type": "object",
+					"properties": {},
+					"description": "ResponseStatus"
+				}
+			}
+		}
+	},
+
+	"parameters": {},
+	"responses": {},
+	"securityDefinitions": {
+		"undefined": {
+			"type": "basic"
+		}
+	},
+	"security": [],
+	"tags": []
+}
