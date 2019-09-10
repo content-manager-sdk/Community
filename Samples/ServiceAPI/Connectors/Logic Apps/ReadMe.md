@@ -1,6 +1,6 @@
 # Logic Apps Connector
 
-Microsoft Azure Logic Apps connectors are defined using OpenAPI. While it is possible to generate an OpenAPI description for the entire ServiceAPI this is not suitable for creating a Logic Apps connector because of its size and complexity.
+Microsoft Azure Logic Apps connectors are defined using [OpenAPI 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md). While it is possible to generate an OpenAPI description for the entire ServiceAPI this is not suitable for creating a Logic Apps connector because of its size and complexity.
 
 This OpenAPI file is a small subset of the ServiceAPI supporting only very simple record creation and searching. Depending on demand this could grow to either a more comprehensive definition or a tool to generate a bespoke definition (e.g. including 'additional fields').
 
