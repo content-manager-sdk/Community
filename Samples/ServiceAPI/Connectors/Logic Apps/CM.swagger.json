@@ -2,7 +2,7 @@
 	"swagger": "2.0",
 	"info": {
 		"title": "CM",
-		"description": "Interface to Content Manager web service to create/update and find Records.",
+		"description": "Interface to Content Manager web service to create, update and find Records.",
 		"version": "1.0"
 	},
 	"host": "localhost",
