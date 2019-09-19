@@ -75,7 +75,11 @@ export class NewRecord extends React.Component<
 	};
 
 	private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
-		this.props.appStore.createRecord(this.recordTypeUri, this.recordProps);
+		const { appStore, wordConnector } = this.props;
+
+		appStore.createRecord(this.recordTypeUri, this.recordProps).then(() => {
+			wordConnector!.setAutoOpen(true);
+		});
 	};
 
 	private _onPropertySheetChange = (newProps: any) => {

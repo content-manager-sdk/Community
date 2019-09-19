@@ -109,6 +109,8 @@ body {
 }
 .new-record-body {
 	margin-top: 8px;
+	height: 100%;
+	position: fixed;
 }
 .new-record-body .ms-Pivot {
 	border-bottom: 1px groove;
@@ -116,4 +118,9 @@ body {
 
 .ms-Spinner {
 	margin-top: 30px;
+}
+
+div.trim-properties {
+	max-height: calc(100% - 80px);
+	overflow-y: auto;
 }

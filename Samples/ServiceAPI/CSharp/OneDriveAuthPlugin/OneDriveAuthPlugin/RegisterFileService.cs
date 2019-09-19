@@ -202,7 +202,8 @@ namespace OneDriveAuthPlugin
 			OneDriveItem fileResult = null;
 			try
 			{
-				if (!string.IsNullOrWhiteSpace(request.WebUrl))
+				if (!string.IsNullOrWhiteSpace(request.WebUrl) && new string[] { "https://", "http://"}
+				.Any(s => request.WebUrl.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
 				{
 
 					log.Debug("GetItem");
@@ -222,32 +223,41 @@ namespace OneDriveAuthPlugin
 			{
 				throw;
 			}
-					   			
 
-			var registeredFile = new RegisterdFileResponse() { Id = fileResult?.getDriveAndId(), DriveItem = fileResult };
+			RegisterdFileResponse registeredFile = new RegisterdFileResponse();
 
-			TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);
-			TrimSearchClause clause = new TrimSearchClause(this.Database, BaseObjectTypes.Record, SearchClauseIds.RecordSpURL);
-			clause.SetCriteriaFromString(fileResult.getDriveAndId());
-
-			search.AddSearchClause(clause);
-
-			var uris = search.GetResultAsUriArray(2);
-
-			if (uris.Count == 1)
+			if (fileResult != null)
 			{
-				updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
-			}
-			//if (request.Uri > 0)
-			//{
-			//	Record record = new Record(this.Database, request.Uri);
-			//	response.RecordTitle = record.Title;
-			//	response.Name = this.Database.CurrentUser.FormattedName;
-			//}
+				registeredFile.Id = fileResult?.getDriveAndId();
+				registeredFile.DriveItem = fileResult;
+
+				TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);
+				TrimSearchClause clause = new TrimSearchClause(this.Database, BaseObjectTypes.Record, SearchClauseIds.RecordSpURL);
+				clause.SetCriteriaFromString(fileResult.getDriveAndId());
+
+				search.AddSearchClause(clause);
+
+				var uris = search.GetResultAsUriArray(2);
+
+				if (uris.Count == 1)
+				{
+					updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
+				}
+
+				//if (request.Uri > 0)
+				//{
+				//	Record record = new Record(this.Database, request.Uri);
+				//	response.RecordTitle = record.Title;
+				//	response.Name = this.Database.CurrentUser.FormattedName;
+				//}
 
 
+
+				
+			} 			
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };
+
 			log.Debug("Finished");
 			return response;
 		}

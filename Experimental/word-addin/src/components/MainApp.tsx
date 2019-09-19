@@ -9,10 +9,9 @@ export class MainApp extends React.Component<
 > {
 	public render() {
 		const { appStore, className } = this.props;
-
 		if (appStore!.RecordUri > 0) {
-			return <ExistingRecord />;
-		} else if (appStore!.DriveId !== "") {
+			return <ExistingRecord className={className} />;
+		} else if (appStore!.DriveId !== "" && appStore.status !== "STARTING") {
 			return <NewRecord className={className} />;
 		} else {
 			return null;

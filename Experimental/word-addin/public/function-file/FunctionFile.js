@@ -164,7 +164,7 @@ function insertPictureFromTrim(event) {
 				// create a proxy range object with the results.
 				var range = context.document.getSelection();
 
-				// Queue a commmand to delete the range object.
+				// Queue a command to delete the range object.
 				range.insertInlinePictureFromBase64(args.message, "Replace");
 
 				// Synchronize the document state by executing the queued commands,

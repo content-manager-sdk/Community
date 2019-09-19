@@ -15,6 +15,7 @@ export class ExistingRecord extends React.Component<
 		appStore?: any;
 		trimConnector?: ITrimConnector;
 		wordConnector?: IWordConnector;
+		className?: string;
 	},
 	{ menuMessage: string }
 > {
@@ -41,6 +42,7 @@ export class ExistingRecord extends React.Component<
 
 			open(`${webClientUrl}?uri=${appStore.documentInfo.Uri}`, "_blank");
 		} else {
+			appStore.setStatus("STARTING");
 			const me = this;
 			wordConnector!.saveDocument().then(() => {
 				const runAction = (fileName: string) => {
@@ -59,6 +61,9 @@ export class ExistingRecord extends React.Component<
 							setTimeout(function() {
 								me._dismissMessage();
 							}, 3000);
+						})
+						.finally(() => {
+							appStore.setStatus("WAITING");
 						});
 				};
 
@@ -82,7 +87,7 @@ export class ExistingRecord extends React.Component<
 	};
 
 	public render() {
-		const { appStore } = this.props;
+		const { appStore, className } = this.props;
 		const menuItems = appStore.documentInfo.CommandDefs.map(
 			(commandDef: ICommandDef) => {
 				return {
@@ -96,7 +101,7 @@ export class ExistingRecord extends React.Component<
 
 		const { menuMessage } = this.state;
 		return (
-			<React.Fragment>
+			<div className={className}>
 				<DefaultButton
 					className="trim-action-button"
 					primary
@@ -112,7 +117,7 @@ export class ExistingRecord extends React.Component<
 					</MessageBar>
 				)}
 				<DetailsView />
-			</React.Fragment>
+			</div>
 		);
 	}
 }

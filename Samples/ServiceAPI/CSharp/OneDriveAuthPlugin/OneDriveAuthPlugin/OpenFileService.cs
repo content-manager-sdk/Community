@@ -1,12 +1,16 @@
-﻿using HP.HPTRIM.SDK;
+﻿using DocumentFormat.OpenXml.Packaging;
+using HP.HPTRIM.SDK;
 using HP.HPTRIM.Service;
 using Microsoft.Graph;
+using Office_OOXML_EmbedAddin;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -29,11 +33,31 @@ namespace OneDriveAuthPlugin
 		public ServiceStack.ResponseStatus ResponseStatus { get; set; }
 	}
 
+	//public class MyClientFactory : Microsoft.IdentityModel.Clients.ActiveDirectory.IHttpClientFactory
+	//{
+	//	private HttpClient httpClient;
+
+	//	public MyClientFactory(HttpClientHandler httpClientHandler)
+	//	{
+	//		httpClient = new HttpClient(httpClientHandler);
+	//	}
+	//	public HttpClient GetHttpClient()
+	//	{
+	//		return httpClient;
+	//	}
+	//}
+
 	public class OpenFileService : BaseOneDriveService
 	{
 		private static Microsoft.Graph.GraphServiceClient getClient(string accessToken)
 		{
+			var httpClientHandler = new HttpClientHandler
+			{
+				Proxy = new WebProxy("http://localhost:8888"),
+				UseDefaultCredentials = true
+			};
 
+			var httpProvider = new HttpProvider(httpClientHandler, false);
 
 			return new Microsoft.Graph.GraphServiceClient(new Microsoft.Graph.DelegateAuthenticationProvider((requestMessage) =>
 			{
@@ -53,7 +77,11 @@ namespace OneDriveAuthPlugin
 
 			using (var file = System.IO.File.OpenRead(filePath))
 			{
+				MemoryStream stream = new MemoryStream();
+				file.CopyTo(stream);
 
+
+				autoOpen(stream);
 
 				var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
 
@@ -63,7 +91,7 @@ namespace OneDriveAuthPlugin
 				string ul = uploadSession.UploadUrl += "&$select=Id,ParentReference,WebUrl,WebDavUrl";
 
 				var maxChunkSize = (320 * 1024) * 10; // 5000 KB - Change this to your chunk size. 5MB is the default.
-				var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, file, maxChunkSize);
+				var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, stream, maxChunkSize);
 
 
 				// Setup the chunk request necessities
@@ -131,7 +159,6 @@ namespace OneDriveAuthPlugin
 			}
 			else if (record.IsElectronic)
 			{
-				record.GetDocument(null, true, null, null);
 
 				try
 				{
@@ -166,7 +193,11 @@ namespace OneDriveAuthPlugin
 				}
 				catch
 				{
-					record.UndoCheckout(null);
+					try
+					{
+						record.UndoCheckout(null);
+					}
+					catch { }
 					//	return new Error
 					throw;
 				}
@@ -176,6 +207,19 @@ namespace OneDriveAuthPlugin
 				throw new Exception("Record is not a valid document.");
 			}
 			return response;
+		}
+
+		private void autoOpen(Stream stream)
+		{
+			string addinGuid = ConfigurationManager.AppSettings["owa:Id"];
+			string addinVersion = ConfigurationManager.AppSettings["owa:Version"];
+
+			using (var document = WordprocessingDocument.Open(stream, true))
+				{
+					var webExTaskpanesPart = document.AddWebExTaskpanesPart();
+					OOXMLHelper.CreateWebExTaskpanesPart(webExTaskpanesPart, addinGuid, addinVersion);
+				}				
+
 		}
 
 		// I am not 100% sure but the OnEndRequest method of Disposing seems to get called before the async services, that is why I am disposing here.

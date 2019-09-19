@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.9.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.9.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetOpenAuth.Ultimate.4.3.4.13329\lib\net45-full\DotNetOpenAuth.dll</HintPath>
     </Reference>
@@ -114,6 +117,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AadAuthProvider.cs" />
@@ -127,6 +131,7 @@
     <Compile Include="MyCommandDef.cs" />
     <Compile Include="ODataHelper.cs" />
     <Compile Include="OneDriveAuthPlugin.cs" />
+    <Compile Include="OOXMLHelper.cs" />
     <Compile Include="WriteFileService.cs" />
     <Compile Include="OpenFileService.cs" />
     <Compile Include="OperationType.cs" />
@@ -164,6 +169,7 @@ copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\CSharp\HP.HPTRIM.Se
 copy $(TargetDir)Microsoft.Graph.Core.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.Graph.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)DocumentFormat.OpenXml.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 
 copy $(TargetPath) D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)DotNetOpenAuth.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
@@ -179,6 +185,7 @@ copy $(TargetDir)ServiceStack.Authentication.OAuth2.dll D:\trunk\trim\Phoenix\HP
 copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)Microsoft.Graph.Core.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)Microsoft.Graph.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
+copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)DocumentFormat.OpenXml.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -70,15 +70,22 @@ export class AppStore implements IAppStore {
 							thisthis.WebUrl = webUrl;
 							const tokens = thisthis.WebUrl.split("/");
 							thisthis.setFileName(tokens[tokens.length - 1].split(".")[0]);
+							return webUrl;
 						})
-						.then(function() {
-							tc.getDriveId(thisthis.WebUrl).then(function(documentInfo) {
-								thisthis.setDocumentInfo(documentInfo);
-								thisthis.setStatus("WAITING");
-							});
+						.then((webUrl: string) => {
+							return tc.getDriveId(webUrl);
+						})
+						.then(function(documentInfo) {
+							console.log("hhhhh");
+							thisthis.setDocumentInfo(documentInfo);
 						})
 						.catch(function(error) {
 							thisthis.setError(error, "fetch base settings for dialog");
+						})
+						.finally(() => {
+							if (thisthis.status !== "ERROR") {
+								thisthis.setStatus("WAITING");
+							}
 						});
 				} else {
 					thisthis.setStatus("WAITING");
@@ -131,6 +138,7 @@ export class AppStore implements IAppStore {
 		recordType: number,
 		properties: any
 	) {
+		this.setStatus("STARTING");
 		try {
 			const newRecord: ITrimMainObject = yield this.trimConnector.registerInTrim(
 				recordType,
@@ -146,6 +154,8 @@ export class AppStore implements IAppStore {
 			}
 		} catch (error) {
 			this.setError(error, "create record");
+		} finally {
+			this.setStatus("WAITING");
 		}
 	});
 

@@ -143,7 +143,11 @@ namespace OneDriveAuthPlugin
 			ResourceId = AppSettings.Get($"oauth.{Provider}.ResourceId", "00000002-0000-0000-c000-000000000000");
 			//Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "user_impersonation" });
 			//	Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "openid", "https://graph.microsoft.com/files.read.all" });
-			Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "openid", "https://graph.microsoft.com/files.read.all" });
+
+
+			//Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "openid", "https://graph.microsoft.com/files.read.all" });
+			Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "openid" });
+
 			FailureRedirectPath = AppSettings.Get($"oauth.{Provider}.FailureRedirectPath", "/");
 			if (RedirectUrl != null && LogConfigurationWarnings)
 				Log.Warn($"{Provider} auth provider does not use the RedirectUrl, but one has been configured.");

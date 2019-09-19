@@ -42,7 +42,9 @@ namespace OneDriveAuthPlugin
 
 			if (task.Result.IsValid == false)
 			{
+
 				Log.Error(task.Result.Message);
+				Log.Info(accessToken);
 			}
 
 			return task.Result.PreferredName;

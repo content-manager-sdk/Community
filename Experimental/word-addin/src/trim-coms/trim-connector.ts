@@ -339,7 +339,9 @@ export class TrimConnector implements ITrimConnector {
 		return this.makeRequest(
 			{ path: "RegisterFile", method: "get", data: { webUrl } },
 			(data: any) => {
-				return data.Results[0];
+				return data.Results
+					? data.Results[0]
+					: { Id: "", Uri: 0, CommandDefs: [] };
 			}
 		);
 	}
