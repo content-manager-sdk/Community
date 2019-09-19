@@ -460,6 +460,10 @@ export class TrimObjectSearchList extends React.Component<
 					RecordWorkTray: { src: "recworktray", q: "recWorkTray" },
 					RecordInTray: { src: "recintray", q: "recInTray" },
 					RecordDueOrInTray: { src: "recinduetray", q: "recDueOrInTray" },
+					RecordCheckedOutBy: {
+						src: "rec_docstray",
+						q: "recCheckedOutBy:me",
+					},
 				},
 				[BaseObjectTypes.Location]: {
 					Favorite: { src: "locfavorites", q: "unkFavorite" },
