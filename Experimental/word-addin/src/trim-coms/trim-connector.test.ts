@@ -10,6 +10,7 @@ import {
 import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
 import CommandIds from "./trim-command-ids";
+import { AssertionError } from "assert";
 
 //import * as fetchMock from "fetch-mock";
 
@@ -21,7 +22,7 @@ const mock = new MockAdapter(axios);
 describe("Test makeFriendlySearchQuery", () => {
 	const trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {
-		callback("token123");
+		callback("token123", "");
 	};
 
 	it("shortcut for Records", () => {
@@ -74,7 +75,7 @@ describe("Test makeFriendlySearchQuery", () => {
 describe("Test fetch from TRIM", () => {
 	const trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {
-		callback("token123");
+		callback("token123", "");
 	};
 
 	it("Record Types are returned", () => {
@@ -408,6 +409,39 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("cancelled the request", (done) => {
+		let postConfig: any;
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			postConfig = config;
+			setTimeout(() => {}, 10);
+			return [
+				200,
+				{
+					Results: [
+						{
+							Uri: 123,
+						},
+					],
+				},
+			];
+		});
+
+		let completed = false;
+
+		trimConnector
+			.registerInTrim(1, { RecordTypedTitle: "test" })
+
+			.then((data) => {
+				completed = true;
+			});
+		trimConnector.cancel();
+
+		setTimeout(() => {
+			expect(completed).toBe(false);
+			done();
+		});
+	});
+
 	it("sends the token with a request", () => {
 		let token = "";
 		let webUrl = "";
@@ -567,8 +601,15 @@ describe("Test fetch from TRIM", () => {
 		});
 
 		it("sends a Uri for the Check in", async () => {
-			await trimConnector.runAction(CommandIds.RecCheckIn, 786);
-			expect(postBody).toEqual(JSON.stringify({ Uri: 786, Action: "checkin" }));
+			await trimConnector.runAction(CommandIds.RecCheckIn, 786, "", "");
+			expect(postBody).toEqual(
+				JSON.stringify({
+					Uri: 786,
+					Action: "checkin",
+					fileName: "",
+					webUrl: "",
+				})
+			);
 		});
 
 		it("sends an action the Set as Final", async () => {
@@ -577,7 +618,7 @@ describe("Test fetch from TRIM", () => {
 				Uri: 999,
 			};
 
-			await trimConnector.runAction(CommandIds.RecDocFinal, 999);
+			await trimConnector.runAction(CommandIds.RecDocFinal, 999, "", "");
 			expect(postBody).toEqual(JSON.stringify(expectedResponse));
 		});
 
@@ -588,7 +629,12 @@ describe("Test fetch from TRIM", () => {
 				Uri: 9000000001,
 			};
 
-			await trimConnector.runAction(CommandIds.AddToFavorites, 9000000001);
+			await trimConnector.runAction(
+				CommandIds.AddToFavorites,
+				9000000001,
+				"",
+				""
+			);
 			expect(postBody).toEqual(JSON.stringify(expectedResponse));
 		});
 
@@ -599,7 +645,12 @@ describe("Test fetch from TRIM", () => {
 				Uri: 9000000001,
 			};
 
-			await trimConnector.runAction(CommandIds.RemoveFromFavorites, 9000000001);
+			await trimConnector.runAction(
+				CommandIds.RemoveFromFavorites,
+				9000000001,
+				"",
+				""
+			);
 			expect(postBody).toEqual(JSON.stringify(expectedResponse));
 		});
 	});

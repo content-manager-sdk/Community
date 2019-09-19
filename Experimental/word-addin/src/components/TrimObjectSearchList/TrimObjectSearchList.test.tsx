@@ -31,6 +31,7 @@ describe("Trim object search list", function() {
 	let hasMore = true;
 	let includeAlternateWhenShowingFolderContents = false;
 	let testSortBy = "";
+	let cancelCalled = false;
 
 	beforeEach(() => {
 		testPurpose = 0;
@@ -44,6 +45,7 @@ describe("Trim object search list", function() {
 
 		wrapper = makeWrapper();
 		wrapperDialog = makeWrapper("all", false, true);
+		cancelCalled = false;
 	});
 
 	const makeWrapper = (
@@ -103,6 +105,10 @@ describe("Trim object search list", function() {
 		});
 	};
 
+	const doCancel = function() {
+		cancelCalled = true;
+	};
+
 	const doClauseDefs = function(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {
@@ -125,6 +131,7 @@ describe("Trim object search list", function() {
 	};
 
 	trimConnector.search = doSearch.bind(trimConnector);
+	trimConnector.cancel = doCancel.bind(trimConnector);
 	trimConnector.getSearchClauseDefinitions = doClauseDefs.bind(trimConnector);
 
 	it("list element found", () => {
@@ -194,6 +201,18 @@ describe("Trim object search list", function() {
 					.at(0)
 					.props().items!.length
 			).toBe(1);
+
+			done();
+		});
+	});
+
+	it("cancel previous search when a new search run", async (done) => {
+		const shortCut = wrapper.find("li");
+
+		shortCut.at(0).simulate("click");
+
+		setImmediate(() => {
+			expect(cancelCalled).toBe(true);
 
 			done();
 		});
@@ -338,9 +357,7 @@ describe("Trim object search list", function() {
 			trimType: BaseObjectTypes.Location,
 		},
 	].forEach((s) => {
-		it(`search event fires when navigate clicked ${s.includeAlt} - ${
-			s.expected
-		} - ${s.trimType}`, async (done) => {
+		it(`search event fires when navigate clicked ${s.includeAlt} - ${s.expected} - ${s.trimType}`, async (done) => {
 			const spec = { ...s, contentsInReverseDateOrder: false };
 			const wrapper = getWrapper(spec);
 

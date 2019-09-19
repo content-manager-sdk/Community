@@ -197,19 +197,22 @@ function insertPictureFromTrim(event) {
 function openFromTrim(event) {
 	let openUrl = "";
 	const fn = function(args) {
-		if (args.message !== "0") {
-			openUrl = args.message;
-		}
-		const response = JSON.parse(openUrl);
-		try {
+		if (args.message === "0") {
 			dialog.close();
-		} finally {
-			if (!response.UserHasAccess) {
-				noAccessMsg(response.WebUrl);
-			} else if (Office.context.diagnostics.platform === "PC") {
-				open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
-			} else {
-				open(response.WebUrl, "_blank");
+		} else {
+			openUrl = args.message;
+
+			const response = JSON.parse(openUrl);
+			try {
+				dialog.close();
+			} finally {
+				if (!response.UserHasAccess) {
+					noAccessMsg(response.WebUrl);
+				} else if (Office.context.diagnostics.platform === "PC") {
+					open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
+				} else {
+					open(response.WebUrl, "_blank");
+				}
 			}
 		}
 	};

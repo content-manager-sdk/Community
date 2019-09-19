@@ -127,6 +127,8 @@ export class TrimObjectSearchList extends React.Component<
 		this._newQuery = ``;
 
 		if (query && trimConnector && trimType) {
+			trimConnector.cancel();
+
 			trimConnector!
 				.search<ISearchResults<ITrimMainObject>>({
 					trimType: trimType,
@@ -273,9 +275,7 @@ export class TrimObjectSearchList extends React.Component<
 												}}
 											>
 												<img
-													src={`${process.env.PUBLIC_URL}/assets/${
-														sc.src
-													}_x32.png`}
+													src={`${process.env.PUBLIC_URL}/assets/${sc.src}_x32.png`}
 												/>
 												{dialogDisplay === true && (
 													<Text variant={"smallPlus"} block={true}>

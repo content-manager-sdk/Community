@@ -125,6 +125,7 @@ export interface IDatabase {
 }
 
 export interface ITrimConnector {
+	cancel: () => void;
 	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
 	getMessages(): Promise<any>;
@@ -161,6 +162,13 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
+	CancelToken = Axios.CancelToken;
+	source = this.CancelToken.source();
+
+	cancel(): void {
+		this.source.cancel();
+	}
+
 	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string {
 		switch (trimType) {
 			case BaseObjectTypes.Record:
@@ -536,6 +544,8 @@ export class TrimConnector implements ITrimConnector {
 	};
 
 	private makeRequest<T>(config: any, parseCallback: any): Promise<T> {
+		this.source = this.CancelToken.source();
+
 		return new Promise((resolve, reject) => {
 			this.credentialsResolver((accessToken, errorMessage) => {
 				if (errorMessage) {
@@ -543,6 +553,7 @@ export class TrimConnector implements ITrimConnector {
 				}
 
 				const options = this.makeOptions({ ...{ accessToken }, ...config });
+				options.cancelToken = this.source.token;
 				Axios(options)
 					.then((response) => {
 						if (
@@ -561,22 +572,26 @@ export class TrimConnector implements ITrimConnector {
 						}
 					})
 					.catch((error) => {
-						if (
-							error.response &&
-							error.response.data &&
-							error.response.data.ResponseStatus
-						) {
-							reject({
-								message:
-									error.response.data.ResponseStatus.Message ||
-									error.response.data.ResponseStatus.ErrorCode,
-								data: error,
-							});
+						if (Axios.isCancel(error)) {
+							console.log("Request canceled", error.message);
 						} else {
-							reject({
-								message: error.message,
-								data: error,
-							});
+							if (
+								error.response &&
+								error.response.data &&
+								error.response.data.ResponseStatus
+							) {
+								reject({
+									message:
+										error.response.data.ResponseStatus.Message ||
+										error.response.data.ResponseStatus.ErrorCode,
+									data: error,
+								});
+							} else {
+								reject({
+									message: error.message,
+									data: error,
+								});
+							}
 						}
 					});
 			});
