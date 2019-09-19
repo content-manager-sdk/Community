@@ -11,13 +11,15 @@ import {
 import { PrimaryButton } from "office-ui-fabric-react";
 
 describe("Trim search dialog", function() {
-	let thisError = "";
+	let thisError = null;
 
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
 	const getDriveUrl = function(uri: number): Promise<string> {
+		console.log("11111111111111111111111111111");
 		return new Promise(function(resolve, reject) {
+			console.log("222222222222222222222222222");
 			reject({ message: "the error" });
 		});
 	};
@@ -28,7 +30,7 @@ describe("Trim search dialog", function() {
 		});
 	};
 
-	trimConnector.getDriveUrl = getDriveUrl.bind(trimConnector);
+	trimConnector["getDriveUrl"] = getDriveUrl.bind(trimConnector);
 	trimConnector.getRecordAsText = getRecordAsText.bind(trimConnector);
 
 	const mockAppStore = {
@@ -36,7 +38,7 @@ describe("Trim search dialog", function() {
 		resetError: null,
 		messages: null,
 		status: "",
-		setError: function(message: string) {
+		setError: function(message: any) {
 			thisError = message;
 		},
 	};
@@ -69,7 +71,7 @@ describe("Trim search dialog", function() {
 
 		setTimeout(function() {
 			try {
-				expect(thisError).toEqual("the error");
+				expect(thisError).toEqual({ message: "the error" });
 				done();
 			} catch (e) {
 				done.fail(e);

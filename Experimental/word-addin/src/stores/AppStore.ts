@@ -1,4 +1,4 @@
-import { action, computed, configure, flow, observable } from "mobx";
+import { action, computed, configure, observable } from "mobx";
 import { IWordUrl } from "../office-coms/word-connector";
 import {
 	IDriveInformation,
@@ -43,19 +43,17 @@ export class AppStore implements IAppStore {
 		configure({ enforceActions: "observed" });
 	}
 
-	// tslint:disable-next-line
-	public fetchBaseSettingFromTrim = function(
-		this: AppStore,
-		fromDialog: boolean
-	) {
+	public fetchBaseSettingFromTrim = (fromDialog: boolean) => {
 		const thisthis = this;
 		const tc = this.trimConnector;
 
 		this.trimConnector
 			.getMe()
-			.then(function(me) {
-				thisthis.setMe(me);
-			})
+			.then(
+				function(this: any, me: ILocation) {
+					this.setMe(me);
+				}.bind(this)
+			)
 			.then(function() {
 				return tc.getMessages();
 			})
@@ -76,16 +74,11 @@ export class AppStore implements IAppStore {
 							return tc.getDriveId(webUrl);
 						})
 						.then(function(documentInfo) {
-							console.log("hhhhh");
 							thisthis.setDocumentInfo(documentInfo);
+							thisthis.setStatus("WAITING");
 						})
 						.catch(function(error) {
 							thisthis.setError(error, "fetch base settings for dialog");
-						})
-						.finally(() => {
-							if (thisthis.status !== "ERROR") {
-								thisthis.setStatus("WAITING");
-							}
 						});
 				} else {
 					thisthis.setStatus("WAITING");
@@ -132,32 +125,26 @@ export class AppStore implements IAppStore {
 	setDocumentInfo(documentInfo: IDriveInformation) {
 		this.documentInfo = documentInfo;
 	}
-	// tslint:disable-next-line
-	public createRecord = flow(function*(
-		this: AppStore,
-		recordType: number,
-		properties: any
-	) {
-		this.setStatus("STARTING");
-		try {
-			const newRecord: ITrimMainObject = yield this.trimConnector.registerInTrim(
-				recordType,
-				{
-					...properties,
-					...{ RecordSpURL: this.documentInfo.Id },
-				}
-			);
 
-			if (newRecord.Uri > 0) {
-				this.documentInfo.Uri = newRecord.Uri;
-				this.documentInfo.CommandDefs = newRecord.CommandDefs!;
-			}
-		} catch (error) {
-			this.setError(error, "create record");
-		} finally {
-			this.setStatus("WAITING");
-		}
-	});
+	public createRecord = (recordType: number, properties: any) => {
+		this.setStatus("STARTING");
+
+		this.trimConnector
+			.registerInTrim(recordType, {
+				...properties,
+				...{ RecordSpURL: this.documentInfo.Id },
+			})
+			.then((newRecord: ITrimMainObject) => {
+				if (newRecord.Uri > 0) {
+					this.documentInfo.Uri = newRecord.Uri;
+					this.documentInfo.CommandDefs = newRecord.CommandDefs!;
+				}
+				this.setStatus("WAITING");
+			})
+			.catch((error) => {
+				this.setError(error, "create record");
+			});
+	};
 
 	@action.bound
 	public setStatus = (status: string) => {
@@ -181,8 +168,15 @@ export class AppStore implements IAppStore {
 
 	@action.bound
 	public setError = (error: any, module?: string) => {
-		const message = error.message || "no message";
+		let message;
+		if (typeof error === "string" || error instanceof String) {
+			message = error;
+		} else {
+			message = error.message || "no message";
+		}
+
 		this.errorMessage = module ? message + " (" + module + ")" : message;
+
 		this.errorBody = error;
 		this.status = "ERROR";
 	};

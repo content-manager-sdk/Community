@@ -24,6 +24,7 @@ describe("Existing Record", () => {
 					setDocumentInfo: (documentInfo) => {
 						updatedDocumentInfo = documentInfo;
 					},
+					setStatus: (status: string) => {},
 					RecordUri: 7,
 					Id: "my id",
 					messages: {
@@ -129,9 +130,13 @@ describe("Existing Record", () => {
 		menuItem.onClick(null, menuItem);
 
 		setImmediate(() => {
-			expect(checkinUri).toEqual(7);
-			expect(finalizeUri).toEqual(0);
-			done();
+			try {
+				expect(checkinUri).toEqual(7);
+				expect(finalizeUri).toEqual(0);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 
@@ -144,9 +149,13 @@ describe("Existing Record", () => {
 		menuItem.onClick(null, menuItem);
 
 		setImmediate(() => {
-			expect(checkinUri).toEqual(0);
-			expect(finalizeUri).toEqual(7);
-			done();
+			try {
+				expect(checkinUri).toEqual(0);
+				expect(finalizeUri).toEqual(7);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 
@@ -159,7 +168,7 @@ describe("Existing Record", () => {
 		).toBeTruthy();
 	});
 
-	it("sets the documentInfo on state after an action", async (done) => {
+	it("sets the documentInfo on state after an action", (done) => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(1);
@@ -168,8 +177,12 @@ describe("Existing Record", () => {
 		menuItem.onClick(null, menuItem);
 
 		setImmediate(() => {
-			expect(updatedDocumentInfo).toEqual(returnedDocumentInfo);
-			done();
+			try {
+				expect(updatedDocumentInfo).toEqual(returnedDocumentInfo);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 });

@@ -37,6 +37,10 @@ describe("New Record layout", function() {
 		createRecord: (recordUri, recordProps) => {
 			mockStore.RecordUri = recordUri;
 			mockStore.RecordProps = recordProps;
+
+			return new Promise(function(resolve) {
+				resolve();
+			});
 		},
 		FileName: "default title",
 	};

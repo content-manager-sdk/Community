@@ -34,6 +34,9 @@ class MockWordConnector implements IWordUrl {
 let postedProperties: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	getRecordAsText(recordUri: number): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
 	getDriveUrl(recordUri: number): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
@@ -129,78 +132,126 @@ beforeEach(() => {
 });
 
 describe("Test basic setup from Trim", () => {
-	it("the display name is david", () => {
-		expect.assertions(3);
+	it("the display name is david", (done) => {
 		expect(appStore.status).toBe("STARTING");
-		return appStore.fetchBaseSettingFromTrim(false).then(() => {
-			expect(appStore.UserProfile.DisplayName).toBe("david");
-			expect(appStore.status).toBe("WAITING");
+		appStore.fetchBaseSettingFromTrim(false);
+		setImmediate(() => {
+			try {
+				expect(appStore.UserProfile.DisplayName).toBe("david");
+				expect(appStore.status).toBe("WAITING");
+				expect.assertions(3);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 
-	it("Content Manager name is returned", async () => {
+	it("Content Manager name is returned", (done) => {
 		expect.assertions(1);
 
-		await appStore.fetchBaseSettingFromTrim(false);
-		expect(appStore.ApplicationDisplayName).toBe("Content Manager");
+		appStore.fetchBaseSettingFromTrim(false);
+
+		setTimeout(() => {
+			expect(appStore.ApplicationDisplayName).toBe("Content Manager");
+			done();
+		});
 	});
 
-	it("Message from getMessage", async () => {
+	it("Message from getMessage", (done) => {
 		expect.assertions(1);
-		await appStore.fetchBaseSettingFromTrim(false);
-		expect(appStore.messages["web_HPRM"]).toBe("Content Manager");
+		appStore.fetchBaseSettingFromTrim(false);
+
+		setTimeout(() => {
+			expect(appStore.messages["web_HPRM"]).toBe("Content Manager");
+			done();
+		});
 	});
 
-	test("Error in Word Connector is handled", async () => {
+	test("Error in Word Connector is handled", (done) => {
 		Mock_Action = "ERROR";
 
-		expect.assertions(1);
+		appStore.fetchBaseSettingFromTrim(false);
 
-		await appStore.fetchBaseSettingFromTrim(false);
-		expect(appStore.status).toBe("ERROR");
+		setTimeout(() => {
+			try {
+				expect(appStore.status).toBe("ERROR");
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail();
+			}
+		});
 	});
 
-	test("word conector URI found", async () => {
+	test("word connector URI found", (done) => {
 		Mock_Action = "";
 
-		expect.assertions(3);
 		expect(appStore.RecordUri).toBe(0);
-		await appStore.fetchBaseSettingFromTrim(false);
-		expect(appStore.RecordUri).toBe(567);
-
-		expect(appStore.status).toBe("WAITING");
+		appStore.fetchBaseSettingFromTrim(false);
+		setTimeout(() => {
+			try {
+				expect(appStore.RecordUri).toBe(567);
+				expect(appStore.status).toBe("WAITING");
+				expect.assertions(3);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
-	test("word conector URI not found", async () => {
+	test("word connector URI not found", (done) => {
 		Mock_Action = "NOT_FOUND";
 
-		expect.assertions(3);
 		expect(appStore.RecordUri).toBe(0);
-		await appStore.fetchBaseSettingFromTrim(false);
-		expect(appStore.RecordUri).toBe(0);
-		expect(appStore.status).toBe("WAITING");
+		appStore.fetchBaseSettingFromTrim(false);
+
+		setTimeout(() => {
+			expect(appStore.RecordUri).toBe(0);
+			expect(appStore.status).toBe("WAITING");
+			expect.assertions(3);
+			done();
+		});
 	});
 
-	test("Error handled", async () => {
+	test("Error handled", (done) => {
 		Mock_Trim_Action = "ERROR";
 
-		expect.assertions(3);
 		expect(appStore.status).toBe("STARTING");
-		await appStore.fetchBaseSettingFromTrim(false);
-		expect(appStore.errorMessage).toBe("error");
+		appStore.fetchBaseSettingFromTrim(false);
 
-		expect(appStore.status).toBe("ERROR");
+		setTimeout(() => {
+			try {
+				expect(appStore.errorMessage).toBe("error (fetch base settings)");
+
+				expect(appStore.status).toBe("ERROR");
+				expect.assertions(3);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
-	test("Error handled on createRecord", async () => {
+	test("Error handled on createRecord", (done) => {
 		Mock_Trim_Action = "ERROR";
 
-		expect.assertions(3);
 		expect(appStore.status).toBe("STARTING");
-		await appStore.createRecord(1, {});
-		expect(appStore.errorMessage).toBe("error");
 
-		expect(appStore.status).toBe("ERROR");
+		appStore.createRecord(1, {});
+
+		setTimeout(function() {
+			try {
+				expect(appStore.errorMessage).toBe("error (create record)");
+
+				expect(appStore.status).toBe("ERROR");
+				expect.assertions(3);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("updates the store after a document has been registered in TRIM", async () => {
@@ -209,13 +260,21 @@ describe("Test basic setup from Trim", () => {
 		expect(appStore.documentInfo.Uri).toBe(567);
 	});
 
-	it("sets the Drive Id in the TRIM External ID when stored in TRIM", async () => {
+	it("sets the Drive Id in the TRIM External ID when stored in TRIM", (done) => {
 		postedProperties = null;
 
 		expect.assertions(1);
-		await appStore.fetchBaseSettingFromTrim(false);
-		await appStore.createRecord(2, {});
-		expect(postedProperties["RecordSpURL"]).toBe("abc");
+
+		setTimeout(function() {
+			try {
+				appStore.setDocumentInfo({ Id: "abc", Uri: 0, CommandDefs: [] });
+				appStore.createRecord(2, {});
+				expect(postedProperties["RecordSpURL"]).toBe("abc");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	describe("Test operation", () => {

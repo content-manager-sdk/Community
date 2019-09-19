@@ -201,11 +201,11 @@ export class TrimSearchDialog
 										.then((response: string) => {
 											Office.context.ui.messageParent(response);
 										})
+										// .finally(() => {
+										// 	this.setState({ isRunning: false });
+										// })
 										.catch((error) => {
 											appStore!.setError(error);
-										})
-										.finally(() => {
-											this.setState({ isRunning: false });
 										});
 								} else {
 									Office.context.ui.messageParent("0");

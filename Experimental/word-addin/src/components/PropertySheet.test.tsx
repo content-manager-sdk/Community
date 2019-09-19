@@ -121,8 +121,6 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		//  expect(wrapper.find("label").exists()).toBeTruthy();
-		//  expect(wrapper.find("label").text()).toEqual("Title (Free Text Part)");
 		expect(wrapperWithForm.find(TextField).exists()).toBeTruthy();
 		expect(wrapperWithForm.find(TextField).props().label).toEqual(
 			"Title (Free Text Part)"

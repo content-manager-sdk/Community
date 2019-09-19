@@ -1,5 +1,4 @@
 import * as React from "react";
-import { observable, action } from "mobx";
 import { observer } from "mobx-react";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
@@ -16,19 +15,33 @@ import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import TrimNumberField, {
 	TrimNumberFieldHelpers,
 } from "./TrimNumberField/TrimNumberField";
+
+export interface IPropertySheetState {
+	isTextFieldMultiline: any;
+}
+
+export interface IPropertySheetProps {
+	formDefinition: any;
+	defaultRecordTitle?: string;
+	onChange?: (newValue?: any) => void;
+}
+
 export class PropertySheet extends React.Component<
-	{
-		formDefinition: any;
-		defaultRecordTitle?: string;
-		onChange?: (newValue?: any) => void;
-	},
-	any
+	IPropertySheetProps,
+	IPropertySheetState
 > {
+	constructor(props: IPropertySheetProps) {
+		super(props);
+		this.state = { isTextFieldMultiline: {} };
+	}
+
 	private formValues: any = {};
-	@observable isTextFieldMultiline: any = {};
-	@action.bound
+
 	setMultiLine(propName: string, multiline: boolean) {
-		this.isTextFieldMultiline[propName] = multiline;
+		const newState = this.state;
+		newState.isTextFieldMultiline[propName] = multiline;
+
+		this.setState(newState);
 	}
 
 	private _onSelectObject = (propName: string) => (
@@ -64,7 +77,8 @@ export class PropertySheet extends React.Component<
 		newText: string
 	) => {
 		const newMultiline = newText.length > 40;
-		if (newMultiline !== this.isTextFieldMultiline[propName]) {
+		const { isTextFieldMultiline } = this.state;
+		if (newMultiline !== isTextFieldMultiline[propName]) {
 			this.setMultiLine(propName, newMultiline);
 		}
 		const { onChange } = this.props;
@@ -75,6 +89,7 @@ export class PropertySheet extends React.Component<
 	};
 
 	private makePageItems = (formItems: any) => {
+		const { isTextFieldMultiline } = this.state;
 		return formItems.map((pageItem: any) => {
 			const commonProps = { key: pageItem.Name, label: pageItem.Caption };
 
@@ -99,11 +114,12 @@ export class PropertySheet extends React.Component<
 					if (pageItem.Value) {
 						this._onTextChange(pageItem.Name)(null, pageItem.Value);
 					}
+
 					return (
 						<TextField
 							{...commonProps}
 							multiline={
-								pageItem.MultiLine || this.isTextFieldMultiline[pageItem.Name]
+								pageItem.MultiLine || isTextFieldMultiline[pageItem.Name]
 							}
 							defaultValue={
 								pageItem.Name === "RecordTypedTitle"
