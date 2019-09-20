@@ -92,17 +92,15 @@ export class TrimObjectSearchList extends React.Component<
 	): void {
 		if (start < 2) {
 			this._hasMore = true;
+			this.setState((prevState) => ({
+				isRunning: true,
+			}));
 		}
 
 		if (/*this._searchRunning === true || */ this._hasMore === false) {
 			return;
 		}
 
-		this.setState((prevState) => ({
-			isRunning: true,
-		}));
-
-		//this._searchRunning = true;
 		const {
 			trimConnector,
 			trimType,
