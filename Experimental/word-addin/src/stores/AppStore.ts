@@ -129,15 +129,20 @@ export class AppStore implements IAppStore {
 	public createRecord = (recordType: number, properties: any) => {
 		this.setStatus("STARTING");
 
-		this.trimConnector
+		return this.trimConnector
 			.registerInTrim(recordType, {
 				...properties,
 				...{ RecordSpURL: this.documentInfo.Id },
 			})
 			.then((newRecord: ITrimMainObject) => {
 				if (newRecord.Uri > 0) {
-					this.documentInfo.Uri = newRecord.Uri;
-					this.documentInfo.CommandDefs = newRecord.CommandDefs!;
+					this.setDocumentInfo({
+						Uri: newRecord.Uri,
+						CommandDefs: newRecord.CommandDefs!,
+						Id: this.documentInfo.Id,
+					});
+					//this.documentInfo.Uri = newRecord.Uri;
+					//	this.documentInfo.CommandDefs = newRecord.CommandDefs!;
 				}
 				this.setStatus("WAITING");
 			})
