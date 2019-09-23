@@ -86,7 +86,7 @@ describe("Test fetch from TRIM", () => {
 					q: "all",
 					properties: "NameString,PossiblyHasSubordinates,Icon",
 					purpose: 3,
-					pageSize: 20,
+					pageSize: 30,
 					start: 1,
 					ExcludeCount: true,
 				},
@@ -174,7 +174,7 @@ describe("Test fetch from TRIM", () => {
 					q: "all",
 					properties: "NameString,PossiblyHasSubordinates,Icon",
 					purpose: 3,
-					pageSize: 20,
+					pageSize: 30,
 					start: 1,
 					purposeExtra: 123,
 					ExcludeCount: true,
@@ -683,6 +683,42 @@ describe("Test fetch from TRIM", () => {
 			expect(data[0].Caption).toEqual("test caption");
 			expect(data[0].InternalName).toEqual("Acl");
 			expect(data[0].ToolTip).toEqual("test tooltip");
+		});
+	});
+
+	describe("Object Definitions", () => {
+		it("returns the object definitions", async () => {
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/ObjectDef`, {
+					params: {
+						ObjectType: "Main",
+					},
+				})
+				.reply(function(config: any) {
+					return [
+						200,
+						{
+							ObjectDefs: [
+								{
+									CaptionPlural: "Saved Searches",
+									Caption: "Saved Search",
+									Abbreviation: "srh",
+									Name: "savedSearch",
+									Id: "SavedSearch",
+								},
+							],
+							ResponseStatus: {},
+						},
+					];
+				});
+
+			const data = await trimConnector.getObjectDefinitions();
+
+			expect(data.length).toBe(1);
+			expect(data[0].Caption).toEqual("Saved Search");
+			expect(data[0].CaptionPlural).toEqual("Saved Searches");
+			expect(data[0].Id).toEqual("SavedSearch");
+			expect.assertions(4);
 		});
 	});
 

@@ -13,12 +13,12 @@
 }
 
 .object-picker {
-	height: 260px;
+	height: 380px;
 	overflow: hidden;
 }
 
 .object-picker .trim-list-container {
 	width: 100%;
-	height: 260px;
+	height: 380px;
 	overflow: auto;
 }

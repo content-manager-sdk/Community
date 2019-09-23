@@ -232,7 +232,7 @@ function doOpen(event, filter, fn, fnEv) {
 					Math.random() +
 					"&filter=" +
 					filter,
-				{ height: 55, width: 50, displayInIframe: true },
+				{ height: 64, width: 50, displayInIframe: true },
 				function(asyncResult) {
 					dialog = asyncResult.value;
 					dialog.addEventHandler(Office.EventType.DialogMessageReceived, fn);

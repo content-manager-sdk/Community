@@ -17,9 +17,7 @@ describe("Trim search dialog", function() {
 	trimConnector.credentialsResolver = (callback) => {};
 
 	const getDriveUrl = function(uri: number): Promise<string> {
-		console.log("11111111111111111111111111111");
 		return new Promise(function(resolve, reject) {
-			console.log("222222222222222222222222222");
 			reject({ message: "the error" });
 		});
 	};

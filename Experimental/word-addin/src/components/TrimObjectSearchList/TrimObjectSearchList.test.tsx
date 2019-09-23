@@ -11,6 +11,7 @@ import {
 	ISearchResults,
 	ISearchClauseDef,
 	IClassification,
+	IObjectDef,
 } from "../../trim-coms/trim-connector";
 import { List } from "office-ui-fabric-react/lib/List";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
@@ -130,10 +131,24 @@ describe("Trim object search list", function() {
 		});
 	};
 
+	const doObjectDefs = function(
+		trimType: BaseObjectTypes
+	): Promise<IObjectDef[]> {
+		return new Promise(function(resolve) {
+			resolve([
+				{
+					Caption: "Saved Search",
+					CaptionPlural: "Saved Search",
+					Id: "SavedSearch",
+				},
+			]);
+		});
+	};
+
 	trimConnector.search = doSearch.bind(trimConnector);
 	trimConnector.cancel = doCancel.bind(trimConnector);
 	trimConnector.getSearchClauseDefinitions = doClauseDefs.bind(trimConnector);
-
+	trimConnector.getObjectDefinitions = doObjectDefs.bind(trimConnector);
 	it("list element found", () => {
 		expect(wrapper.find(List).exists()).toBeTruthy();
 	});
@@ -167,6 +182,73 @@ describe("Trim object search list", function() {
 		expect(testSortBy).toBeFalsy();
 	});
 
+	it("sends the correct query for saved search", () => {
+		const shortCut = wrapper.find(
+			`div.trim-search-shortcuts li[data-shortcut="SavedSearch"]`
+		);
+
+		expect(shortCut.at(0)).toBeTruthy();
+
+		shortCut.at(0).simulate("click");
+
+		expect(testQ).toBe("srhOwner:me or srhPublic");
+	});
+
+	it("sends no purposes for saved search", () => {
+		const shortCut = wrapper.find(
+			`div.trim-search-shortcuts li[data-shortcut="SavedSearch"]`
+		);
+
+		expect(shortCut.at(0)).toBeTruthy();
+
+		shortCut.at(0).simulate("click");
+
+		expect(testPurpose).toBe(0);
+		expect(testPurposeExtra).toBe(0);
+	});
+
+	it("sends the correct filter for saved search", () => {
+		const shortCut = wrapper.find(
+			`div.trim-search-shortcuts li[data-shortcut="SavedSearch"]`
+		);
+
+		expect(shortCut.at(0)).toBeTruthy();
+
+		shortCut.at(0).simulate("click");
+
+		expect(testFilter).toBe("srhType:Record");
+	});
+
+	it("sends the correct object type saved search", () => {
+		const shortCut = wrapper.find(
+			`div.trim-search-shortcuts li[data-shortcut="SavedSearch"]`
+		);
+
+		expect(shortCut.at(0)).toBeTruthy();
+
+		shortCut.at(0).simulate("click");
+
+		expect(testTrimType).toBe("SavedSearch");
+	});
+
+	it("sends the correct object type on scroll down", () => {
+		const shortCut = wrapper.find(
+			`div.trim-search-shortcuts li[data-shortcut="SavedSearch"]`
+		);
+
+		shortCut.at(0).simulate("click");
+
+		const listContainer = wrapper.find("div.trim-list-container");
+
+		listContainer
+			.at(0)
+			.simulate("scroll", { currentTarget: { scrollTop: 10 } });
+
+		wrapper.instance()._onRenderCell({ Icon: {} }, 0);
+
+		expect(testTrimType).toBe("SavedSearch");
+	});
+
 	it("no text below shortcut", () => {
 		const text = wrapper.find("div.trim-search-shortcuts").find(Text);
 
@@ -176,15 +258,15 @@ describe("Trim object search list", function() {
 	it(" text below shortcut", () => {
 		const text = wrapperDialog.find("div.trim-search-shortcuts").find(Text);
 
-		expect.assertions(2);
-
-		expect(text.length).toEqual(6);
+		expect(text.length).toEqual(9);
 		expect(
 			text
 				.at(0)
 				.childAt(0)
 				.text()
 		).toEqual("My Containers");
+
+		expect.assertions(2);
 	});
 
 	//My Containers
@@ -356,19 +438,67 @@ describe("Trim object search list", function() {
 			expected: "locMembers:1",
 			trimType: BaseObjectTypes.Location,
 		},
+		{
+			includeAlt: true,
+			expected: "srhParent:1",
+			trimType: BaseObjectTypes.SavedSearch,
+		},
+		{
+			includeAlt: true,
+			expected: "lblParent:1",
+			trimType: BaseObjectTypes.UserLabel,
+		},
 	].forEach((s) => {
-		it(`search event fires when navigate clicked ${s.includeAlt} - ${s.expected} - ${s.trimType}`, async (done) => {
+		it(`search event fires when navigate clicked ${s.includeAlt} - ${s.expected} - ${s.trimType}`, (done) => {
 			const spec = { ...s, contentsInReverseDateOrder: false };
 			const wrapper = getWrapper(spec);
-
 			setTimeout(() => {
-				clickNavigateOnListItem(wrapper);
+				try {
+					clickNavigateOnListItem(wrapper);
 
+					expect.assertions(1);
+
+					expect(testQ).toBe(spec.expected);
+
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			});
+		});
+	});
+
+	it("loads records when saved search clicked", (done) => {
+		const wrapper = getWrapper({
+			includeAlt: true,
+			trimType: BaseObjectTypes.SavedSearch,
+			contentsInReverseDateOrder: false,
+		});
+
+		setTimeout(() => {
+			wrapper.find(List).simulate("click", {
+				preventDefault: function() {},
+				nativeEvent: {
+					target: {
+						parentElement: {
+							getAttribute: function() {
+								return "1";
+							},
+							classList: { toggle: function() {} },
+						},
+					},
+				},
+			});
+
+			try {
 				expect.assertions(1);
 
-				expect(testQ).toBe(spec.expected);
+				expect(testQ).toBe("unkSaved:1");
+
 				done();
-			});
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 

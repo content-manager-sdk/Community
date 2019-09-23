@@ -61,8 +61,6 @@ export class ExistingRecord extends React.Component<
 							setTimeout(function() {
 								me._dismissMessage();
 							}, 3000);
-						})
-						.finally(() => {
 							appStore.setStatus("WAITING");
 						});
 				};

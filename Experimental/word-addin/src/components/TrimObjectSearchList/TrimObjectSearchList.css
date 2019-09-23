@@ -19,7 +19,7 @@
 	box-sizing: border-box;
 } */
 .trim-list-container {
-	border-left: 1px solid;
+	/*	border-left: 1px solid;*/
 	padding-left: 4px;
 }
 
@@ -31,6 +31,7 @@
 	position: relative;
 	display: block;
 	padding-right: 4px;
+	border-right: 1px solid;
 }
 
 .shortcut-dialog {

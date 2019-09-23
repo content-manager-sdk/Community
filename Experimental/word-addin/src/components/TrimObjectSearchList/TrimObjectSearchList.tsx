@@ -28,6 +28,7 @@ export interface ITrimObjectSearchListState {
 	searchShortCuts: any;
 	selectedUri: number;
 	isRunning: boolean;
+	trimType: BaseObjectTypes;
 }
 
 export class TrimObjectSearchList extends React.Component<
@@ -47,6 +48,7 @@ export class TrimObjectSearchList extends React.Component<
 			prevProps.q !== this.props.q ||
 			prevProps.advancedSearch !== this.props.advancedSearch
 		) {
+			this._newQuery = "";
 			this.doSearch(1, ``, true);
 		}
 
@@ -58,18 +60,34 @@ export class TrimObjectSearchList extends React.Component<
 	componentDidMount() {
 		const { trimConnector, trimType } = this.props;
 		if (trimConnector) {
-			trimConnector!.getSearchClauseDefinitions(trimType!).then((data) => {
-				const sc = { ...this.state.searchShortCuts };
+			trimConnector!
+				.getSearchClauseDefinitions(trimType!)
+				.then((data) => {
+					const sc = { ...this.state.searchShortCuts };
 
-				data.forEach((clauseDef) => {
-					if (sc[trimType!][clauseDef.Id]) {
-						sc[trimType!][clauseDef.Id].ToolTip = clauseDef.ToolTip;
-						sc[trimType!][clauseDef.Id].Caption = clauseDef.Caption;
-					}
+					data.forEach((clauseDef) => {
+						if (sc[trimType!][clauseDef.Id]) {
+							sc[trimType!][clauseDef.Id].ToolTip = clauseDef.ToolTip;
+							sc[trimType!][clauseDef.Id].Caption = clauseDef.Caption;
+							sc[trimType!][clauseDef.Id].TrimType = trimType;
+						}
+					});
+				})
+				.then(() => {
+					return trimConnector.getObjectDefinitions();
+				})
+				.then((objectDefs) => {
+					const sc = { ...this.state.searchShortCuts };
+
+					objectDefs.forEach((objectDef) => {
+						if (sc[trimType!][objectDef.Id]) {
+							sc[trimType!][objectDef.Id].Caption = objectDef.CaptionPlural;
+							sc[trimType!][objectDef.Id].TrimType = objectDef.Id;
+						}
+					});
+
+					this.setState({ searchShortCuts: sc });
 				});
-
-				this.setState({ searchShortCuts: sc });
-			});
 
 			if (trimType === BaseObjectTypes.Location) {
 				trimConnector!.getMessages().then((messages) => {
@@ -88,7 +106,9 @@ export class TrimObjectSearchList extends React.Component<
 	private doSearch(
 		start: number = 1,
 		sortBy: string = "",
-		userSearch = false
+		userSearch = false,
+		navTrimType: BaseObjectTypes = BaseObjectTypes.Unknown,
+		navFilter: string = ""
 	): void {
 		if (start < 2) {
 			this._hasMore = true;
@@ -103,7 +123,6 @@ export class TrimObjectSearchList extends React.Component<
 
 		const {
 			trimConnector,
-			trimType,
 			q,
 			purpose,
 			purposeExtra,
@@ -111,9 +130,18 @@ export class TrimObjectSearchList extends React.Component<
 			filterSearch,
 		} = this.props;
 
+		let { trimType } = this.state;
+
+		if (navTrimType && trimType !== navTrimType) {
+			this.setState({ trimType: navTrimType });
+		}
+
+		let actualTrimType = navTrimType || trimType;
+		const actualFilter = navFilter || filter;
+
 		let query = this._newQuery;
 		if (q && !query && userSearch && !this.props.advancedSearch) {
-			query = trimConnector!.makeFriendlySearchQuery(trimType!, q!);
+			query = trimConnector!.makeFriendlySearchQuery(actualTrimType!, q!);
 		} else if (!this._newQuery) {
 			query = q!;
 		}
@@ -122,18 +150,20 @@ export class TrimObjectSearchList extends React.Component<
 			query = query + ` AND (${filterSearch})`;
 		}
 
-		this._newQuery = ``;
+		const actualPurpose = actualTrimType === this.props.trimType ? purpose : 0;
+		const actualPurposeExtra =
+			actualTrimType === this.props.trimType ? purposeExtra : 0;
 
-		if (query && trimConnector && trimType) {
+		if (query && trimConnector && actualTrimType) {
 			trimConnector.cancel();
 
 			trimConnector!
 				.search<ISearchResults<ITrimMainObject>>({
-					trimType: trimType,
+					trimType: actualTrimType,
 					q: query,
-					filter: filter,
-					purpose: purpose || 0,
-					purposeExtra: purposeExtra || 0,
+					filter: actualFilter,
+					purpose: actualPurpose || 0,
+					purposeExtra: actualPurposeExtra || 0,
 					start,
 					sortBy,
 				})
@@ -168,7 +198,9 @@ export class TrimObjectSearchList extends React.Component<
 	}
 
 	private _onTrimObjectContainerSearch(uri: number): void {
-		const { includeAlternateWhenShowingFolderContents, trimType } = this.props;
+		const { includeAlternateWhenShowingFolderContents } = this.props;
+
+		const { trimType } = this.state;
 
 		let clause = includeAlternateWhenShowingFolderContents
 			? "recContainerEx"
@@ -186,6 +218,13 @@ export class TrimObjectSearchList extends React.Component<
 			clause = "lkiParent";
 		}
 
+		if (trimType === BaseObjectTypes.SavedSearch) {
+			clause = "srhParent";
+		}
+
+		if (trimType === BaseObjectTypes.UserLabel) {
+			clause = "lblParent";
+		}
 		const ancestors = this.state.ancestors.slice(0);
 		const currentAncestor = ancestors.find((a) => {
 			return a.Uri === uri;
@@ -204,10 +243,14 @@ export class TrimObjectSearchList extends React.Component<
 		}
 		this.setState({ ancestors: ancestors });
 
-		this._onShortcutClick(`${clause}:${uri}`, true);
+		this._onShortcutClick(`${clause}:${uri}`, true, trimType!);
 	}
 
-	private _onShortcutClick = (query: string, containerSearch = false) => {
+	private _onShortcutClick = (
+		query: string,
+		containerSearch = false,
+		trimType: BaseObjectTypes
+	) => {
 		if (!containerSearch) {
 			this.setState({ ancestors: [] });
 		}
@@ -220,7 +263,15 @@ export class TrimObjectSearchList extends React.Component<
 		) {
 			this.doSearch(1, "recRegisteredOn-");
 		} else {
-			this.doSearch();
+			this.doSearch(
+				1,
+				"",
+				false,
+				trimType,
+				trimType === BaseObjectTypes.SavedSearch
+					? `srhType:${this.props.trimType}`
+					: ""
+			);
 		}
 	};
 
@@ -249,28 +300,29 @@ export class TrimObjectSearchList extends React.Component<
 								(key: any, index: number) => {
 									const sc = searchShortCuts[trimType!][key];
 									return (
-										<TooltipHost
+										<li
 											key={key}
-											tooltipProps={{
-												onRenderContent: () => {
-													return (
-														<div>
-															<div className="ms-fontWeight-semibold">
-																{sc.Caption}
-															</div>
-															<div>{sc.ToolTip}</div>
-														</div>
-													);
-												},
+											data-shortcut={key}
+											onClick={() => {
+												this._onShortcutClick(sc.q, false, sc.TrimType);
 											}}
-											id="myID"
-											calloutProps={{ gapSpace: 0 }}
 										>
-											<li
+											<TooltipHost
 												key={key}
-												onClick={() => {
-													this._onShortcutClick(sc.q);
+												tooltipProps={{
+													onRenderContent: () => {
+														return (
+															<div>
+																<div className="ms-fontWeight-semibold">
+																	{sc.Caption}
+																</div>
+																<div>{sc.ToolTip}</div>
+															</div>
+														);
+													},
 												}}
+												id="myID"
+												calloutProps={{ gapSpace: 0 }}
 											>
 												<img
 													src={`${process.env.PUBLIC_URL}/assets/${sc.src}_x32.png`}
@@ -280,8 +332,8 @@ export class TrimObjectSearchList extends React.Component<
 														{sc.Caption}
 													</Text>
 												)}
-											</li>
-										</TooltipHost>
+											</TooltipHost>
+										</li>
 									);
 								}
 							)}
@@ -347,20 +399,18 @@ export class TrimObjectSearchList extends React.Component<
 			this._previousSelected = el;
 			el.classList.toggle("trim-is-selected");
 			const uri = Number(el.getAttribute("data-trim-uri"));
-			//	const { items } = this.state;
-
-			//	for (let counter = 0; counter < items.length; counter++) {
-			//		items[counter].Selected = items[counter].Uri === uri;
-			//	}
-			//	this.setState({ items: [...items] });
-
-			//console.log("bb: " + uri);
 
 			if (target.classList && target.classList.contains("trim-find-children")) {
 				this._onTrimObjectContainerSearch(uri);
 			} else {
-				this.forceUpdate();
-				this._onTrimObjectSelected(uri);
+				if (this.state.trimType === BaseObjectTypes.UserLabel) {
+					this._onShortcutClick(`unkLabel	:${uri}`, false, this.props.trimType!);
+				} else if (this.state.trimType === BaseObjectTypes.SavedSearch) {
+					this._onShortcutClick(`unkSaved:${uri}`, false, this.props.trimType!);
+				} else {
+					this.forceUpdate();
+					this._onTrimObjectSelected(uri);
+				}
 			}
 		}
 	};
@@ -435,6 +485,7 @@ export class TrimObjectSearchList extends React.Component<
 		props: ITrimObjectSearchListProps = this.props
 	): ITrimObjectSearchListState {
 		return {
+			trimType: props.trimType!,
 			q: "",
 			items: [],
 			ancestors: [],
@@ -462,6 +513,14 @@ export class TrimObjectSearchList extends React.Component<
 						src: "rec_docstray",
 						q: "recCheckedOutBy:me",
 					},
+					SavedSearch: {
+						src: "savedsearch",
+						q: "srhOwner:me or srhPublic",
+					},
+					UserLabel: {
+						src: "Labels",
+						q: "unkTop",
+					},
 				},
 				[BaseObjectTypes.Location]: {
 					Favorite: { src: "locfavorites", q: "unkFavorite" },
@@ -475,6 +534,12 @@ export class TrimObjectSearchList extends React.Component<
 					Owner: { src: "fpplans", q: "plnOwner:me" },
 				},
 				[BaseObjectTypes.LookupItem]: {
+					Top: { src: "navContents", q: "unkTop" },
+				},
+				[BaseObjectTypes.SavedSearch]: {
+					Top: { src: "navContents", q: "unkTop" },
+				},
+				[BaseObjectTypes.UserLabel]: {
 					Top: { src: "navContents", q: "unkTop" },
 				},
 			},

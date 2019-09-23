@@ -71,10 +71,11 @@ export interface ITrimMainObject {
 	Icon?: IIcon;
 	Uri: number;
 	NameString?: string;
-	CommandDefs?: [];
+	CommandDefs?: ICommandDef[];
 	PossiblyHasSubordinates?: boolean;
 	ToolTip?: string;
 	Selected?: boolean;
+	TrimType?: BaseObjectTypes;
 }
 
 export interface ITrimField {
@@ -102,6 +103,12 @@ export interface ICommandDef {
 	Tooltip: string;
 	StatusBarMessage: string;
 	IsEnabled: boolean;
+}
+
+export interface IObjectDef {
+	Id: string;
+	Caption: string;
+	CaptionPlural: string;
 }
 
 export interface ISearchClauseDef {
@@ -132,6 +139,7 @@ export interface ITrimConnector {
 	getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]>;
+	getObjectDefinitions(): Promise<IObjectDef[]>;
 	getSearchOptions(): Promise<ISearchOptions>;
 	getDatabaseProperties(): Promise<IDatabase>;
 	search<T>(
@@ -252,6 +260,29 @@ export class TrimConnector implements ITrimConnector {
 		localStorage.setItem(key, JSON.stringify(cacheData));
 	}
 
+	public getObjectDefinitions(): Promise<IObjectDef[]> {
+		const params = {
+			ObjectType: "Main",
+		};
+
+		let cachedResults = this.getFromCache("object-definitions");
+
+		if (cachedResults) {
+			return new Promise((resolve) => {
+				resolve(cachedResults);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: "ObjectDef", method: "get", data: params },
+				(data: any) => {
+					cachedResults = data.ObjectDefs;
+					this.setCache("ObjectDef", cachedResults);
+
+					return data.ObjectDefs;
+				}
+			);
+		}
+	}
 	public getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {
@@ -450,7 +481,7 @@ export class TrimConnector implements ITrimConnector {
 		} = options;
 
 		const params = {
-			pageSize: 20,
+			pageSize: 30,
 			properties: "NameString,PossiblyHasSubordinates,Icon",
 			purpose,
 			q,
@@ -560,6 +591,7 @@ export class TrimConnector implements ITrimConnector {
 							response.data.CommandDefs ||
 							response.data.Messages ||
 							response.data.SearchClauseDefs ||
+							response.data.ObjectDefs ||
 							response.data.UserOptions ||
 							response.data.WebUrl ||
 							response.data.Results ||
