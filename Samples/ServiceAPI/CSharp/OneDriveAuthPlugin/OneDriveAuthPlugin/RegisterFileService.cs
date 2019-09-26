@@ -44,6 +44,7 @@ namespace OneDriveAuthPlugin
 		public long Uri { get; set; }
 		public OneDriveItem DriveItem { get; set; }
 		public IList<MyCommandDef> CommandDefs { get; set; }
+		public string RecordType { get; set; }
 
 	}
 
@@ -85,6 +86,7 @@ namespace OneDriveAuthPlugin
 		private void updateFromRecord(RegisterdFileResponse fileToUpdate, Record fromRecord)
 		{
 			fileToUpdate.Uri = fromRecord.Uri;
+			fileToUpdate.RecordType = fromRecord.RecordType.Name;
 			fileToUpdate.CommandDefs = getCommandDefs(fromRecord);
 
 		}

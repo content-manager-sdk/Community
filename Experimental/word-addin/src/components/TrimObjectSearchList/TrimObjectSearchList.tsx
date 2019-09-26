@@ -284,61 +284,63 @@ export class TrimObjectSearchList extends React.Component<
 	};
 
 	public render(): JSX.Element {
-		const { trimType, dialogDisplay } = this.props;
+		const { trimType, dialogDisplay, excludeShortCuts } = this.props;
 		const { searchShortCuts, items, ancestors, isRunning } = this.state;
 
 		return (
 			<div className="trim-search-list">
 				<div className="trim-search-list-outer">
-					<div
-						className={`trim-search-shortcuts shortcut-${
-							dialogDisplay ? "dialog" : "combo"
-						}`}
-					>
-						<ul>
-							{Object.keys(searchShortCuts[trimType!]).map(
-								(key: any, index: number) => {
-									const sc = searchShortCuts[trimType!][key];
-									return (
-										<li
-											key={key}
-											data-shortcut={key}
-											onClick={() => {
-												this._onShortcutClick(sc.q, false, sc.TrimType);
-											}}
-										>
-											<TooltipHost
+					{excludeShortCuts !== true && (
+						<div
+							className={`trim-search-shortcuts shortcut-${
+								dialogDisplay ? "dialog" : "combo"
+							}`}
+						>
+							<ul>
+								{Object.keys(searchShortCuts[trimType!]).map(
+									(key: any, index: number) => {
+										const sc = searchShortCuts[trimType!][key];
+										return (
+											<li
 												key={key}
-												tooltipProps={{
-													onRenderContent: () => {
-														return (
-															<div>
-																<div className="ms-fontWeight-semibold">
-																	{sc.Caption}
-																</div>
-																<div>{sc.ToolTip}</div>
-															</div>
-														);
-													},
+												data-shortcut={key}
+												onClick={() => {
+													this._onShortcutClick(sc.q, false, sc.TrimType);
 												}}
-												id="myID"
-												calloutProps={{ gapSpace: 0 }}
 											>
-												<img
-													src={`${process.env.PUBLIC_URL}/assets/${sc.src}_x32.png`}
-												/>
-												{dialogDisplay === true && (
-													<Text variant={"smallPlus"} block={true}>
-														{sc.Caption}
-													</Text>
-												)}
-											</TooltipHost>
-										</li>
-									);
-								}
-							)}
-						</ul>
-					</div>
+												<TooltipHost
+													key={key}
+													tooltipProps={{
+														onRenderContent: () => {
+															return (
+																<div>
+																	<div className="ms-fontWeight-semibold">
+																		{sc.Caption}
+																	</div>
+																	<div>{sc.ToolTip}</div>
+																</div>
+															);
+														},
+													}}
+													id="myID"
+													calloutProps={{ gapSpace: 0 }}
+												>
+													<img
+														src={`${process.env.PUBLIC_URL}/assets/${sc.src}_x32.png`}
+													/>
+													{dialogDisplay === true && (
+														<Text variant={"smallPlus"} block={true}>
+															{sc.Caption}
+														</Text>
+													)}
+												</TooltipHost>
+											</li>
+										);
+									}
+								)}
+							</ul>
+						</div>
+					)}
 					<div
 						className={`trim-list-container is-scrollable ${
 							dialogDisplay ? "dialog-sizing" : "slim-sizing"

@@ -155,7 +155,7 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
-copy $(TargetDir)DotNetOpenAuth.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)DotNetOpenAuth.dll %25sapiPath D:\trunk\\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.IdentityModel.Logging.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.IdentityModel.Protocols.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.IdentityModel.Protocols.OpenIdConnect.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*

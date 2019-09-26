@@ -3,7 +3,7 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import { ExistingRecord } from "./ExistingRecord";
 import DetailsView from "./DetailsView";
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
+import { IconButton } from "office-ui-fabric-react/lib/Button";
 import { ICommandDef, IDriveInformation } from "../trim-coms/trim-connector";
 import { CommandIds } from "../trim-coms/trim-command-ids";
 
@@ -99,33 +99,34 @@ describe("Existing Record", () => {
 	});
 
 	it("contains an action button", function(this: any) {
-		expect.assertions(8);
+		expect.assertions(9);
 		const wrapper = makeWrapper();
-		expect(wrapper.find(DefaultButton).exists()).toBeTruthy();
-		expect(wrapper.find(DefaultButton).props().menuProps.items.length).toEqual(
-			2
-		);
-		expect(wrapper.find(DefaultButton).props().menuProps.items[0].text).toEqual(
+		expect(wrapper.find(IconButton).exists()).toBeTruthy();
+		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(2);
+		expect(wrapper.find(IconButton).props().menuProps.items[0].text).toEqual(
 			"Checkin"
 		);
-		expect(wrapper.find(DefaultButton).props().menuProps.items[1].text).toEqual(
+		expect(wrapper.find(IconButton).props().menuProps.items[1].text).toEqual(
 			"Make Final"
 		);
 
 		expect(
-			wrapper.find(DefaultButton).props().menuProps.items[1].disabled
+			wrapper.find(IconButton).props().menuProps.items[1].disabled
 		).toBeFalsy();
 
-		expect(wrapper.find(DefaultButton).props().split).toBeTruthy();
-		expect(wrapper.find(DefaultButton).props().primary).toBeTruthy();
-		expect(wrapper.find(DefaultButton).props().text).toEqual("Actions");
+		expect(wrapper.find(IconButton).props().split).toBeTruthy();
+		expect(wrapper.find(IconButton).props().primary).toBeTruthy();
+		expect(wrapper.find(IconButton).props().text).toBeUndefined();
+		expect(wrapper.find(IconButton).props().iconProps).toEqual({
+			iconName: "CollapseMenu",
+		});
 	});
 
 	it("calls checkin when checkin button clicked", async (done) => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		const menuItem = wrapper.find(DefaultButton).props().menuProps.items[0];
+		const menuItem = wrapper.find(IconButton).props().menuProps.items[0];
 
 		menuItem.onClick(null, menuItem);
 
@@ -144,7 +145,7 @@ describe("Existing Record", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		const menuItem = wrapper.find(DefaultButton).props().menuProps.items[1];
+		const menuItem = wrapper.find(IconButton).props().menuProps.items[1];
 
 		menuItem.onClick(null, menuItem);
 
@@ -164,7 +165,7 @@ describe("Existing Record", () => {
 		expect.assertions(1);
 
 		expect(
-			wrapper.find(DefaultButton).props().menuProps.items[1].disabled
+			wrapper.find(IconButton).props().menuProps.items[1].disabled
 		).toBeTruthy();
 	});
 
@@ -172,7 +173,7 @@ describe("Existing Record", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(1);
-		const menuItem = wrapper.find(DefaultButton).props().menuProps.items[1];
+		const menuItem = wrapper.find(IconButton).props().menuProps.items[1];
 
 		menuItem.onClick(null, menuItem);
 

@@ -1,14 +1,20 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import DetailsView from "./DetailsView";
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
+import { IconButton } from "office-ui-fabric-react/lib/Button";
 import { ITrimConnector, ICommandDef } from "src/trim-coms/trim-connector";
 import { IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
 import { CommandIds } from "../trim-coms/trim-command-ids";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
-import { IWordConnector } from "src/office-coms/word-connector";
-
-const config = (global as any).config;
+import { IWordConnector } from "../office-coms/word-connector";
+import {
+	Pivot,
+	PivotItem,
+	PivotLinkFormat,
+	PivotLinkSize,
+} from "office-ui-fabric-react/lib/Pivot";
+import LinkComposer from "./LinkComposer/LinkComposer";
+import ContextList from "./ContextList/ContextList";
 
 export class ExistingRecord extends React.Component<
 	{
@@ -35,12 +41,7 @@ export class ExistingRecord extends React.Component<
 	) => {
 		const { trimConnector, wordConnector, appStore } = this.props;
 		if (item.key === "Properties") {
-			let webClientUrl =
-				(config.BASE_URL.endsWith("/")
-					? config.BASE_URL
-					: config.BASE_URL + "/") + config.WEB_CLIENT;
-
-			open(`${webClientUrl}?uri=${appStore.documentInfo.Uri}`, "_blank");
+			appStore.openInCM(appStore.documentInfo.Uri);
 		} else {
 			appStore.setStatus("STARTING");
 			const me = this;
@@ -98,23 +99,38 @@ export class ExistingRecord extends React.Component<
 		);
 
 		const { menuMessage } = this.state;
+
 		return (
 			<div className={className}>
-				<DefaultButton
-					className="trim-action-button"
-					primary
-					split={true}
-					text={appStore.messages.web_Actions}
-					menuProps={{
-						items: menuItems,
-					}}
-				/>
-				{menuMessage && (
-					<MessageBar onDismiss={this._dismissMessage}>
-						{menuMessage}
-					</MessageBar>
-				)}
-				<DetailsView />
+				<Pivot
+					linkFormat={PivotLinkFormat.tabs}
+					linkSize={PivotLinkSize.normal}
+				>
+					<PivotItem headerText="Properties" key={1}>
+						<hr />
+						<div>
+							<IconButton
+								className="trim-action-button"
+								primary
+								split={true}
+								iconProps={{ iconName: "CollapseMenu" }}
+								menuProps={{
+									items: menuItems,
+								}}
+							/>
+							{menuMessage && (
+								<MessageBar onDismiss={this._dismissMessage}>
+									{menuMessage}
+								</MessageBar>
+							)}
+							<DetailsView />
+						</div>
+					</PivotItem>
+					<PivotItem headerText="Context" key={2}>
+						<hr />
+						<ContextList />
+					</PivotItem>
+				</Pivot>
 			</div>
 		);
 	}

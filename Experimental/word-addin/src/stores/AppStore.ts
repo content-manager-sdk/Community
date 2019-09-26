@@ -8,6 +8,8 @@ import {
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
 
+const config = (global as any).config;
+
 export interface IUserProfile {
 	DisplayName: string;
 }
@@ -20,6 +22,8 @@ export interface IAppStore {
 	fetchBaseSettingFromTrim: any;
 	resetError(): void;
 	setError(error: any, module?: string): void;
+	openInCM(uri: number): void;
+	getWebClientUrl(uri: number): void;
 }
 
 export class AppStore implements IAppStore {
@@ -29,6 +33,7 @@ export class AppStore implements IAppStore {
 		Id: "",
 		Uri: 0,
 		CommandDefs: [],
+		RecordType: "",
 	};
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
@@ -114,6 +119,14 @@ export class AppStore implements IAppStore {
 	}
 
 	@computed
+	get RecordType(): string {
+		if (this.documentInfo != null) {
+			return this.documentInfo.RecordType;
+		}
+		return "";
+	}
+
+	@computed
 	get DriveId(): string {
 		if (this.documentInfo != null) {
 			return this.documentInfo.Id;
@@ -140,9 +153,8 @@ export class AppStore implements IAppStore {
 						Uri: newRecord.Uri,
 						CommandDefs: newRecord.CommandDefs!,
 						Id: this.documentInfo.Id,
+						RecordType: this.documentInfo.RecordType,
 					});
-					//this.documentInfo.Uri = newRecord.Uri;
-					//	this.documentInfo.CommandDefs = newRecord.CommandDefs!;
 				}
 				this.setStatus("WAITING");
 			})
@@ -150,6 +162,21 @@ export class AppStore implements IAppStore {
 				this.setError(error, "create record");
 			});
 	};
+
+	public getWebClientUrl(uri: number): string {
+		let webClientUrl =
+			(config.BASE_URL.endsWith("/")
+				? config.BASE_URL
+				: config.BASE_URL + "/") + config.WEB_CLIENT;
+
+		return `${webClientUrl}?uri=${uri}`;
+	}
+
+	public openInCM(uri: number): void {
+		const url = this.getWebClientUrl(uri);
+
+		open(url, "_blank");
+	}
 
 	@action.bound
 	public setStatus = (status: string) => {

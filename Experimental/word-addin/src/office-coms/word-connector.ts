@@ -13,6 +13,7 @@ export interface IWordConnector extends IWordUrl {
 	getUri(): Promise<IGetRecordUriResponse>;
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	insertText(textToInsert: string): void;
+	insertLink(textToInsert: string, url: string): void;
 	setAutoOpen(autoOpen: boolean): void;
 	getAutoOpen(): boolean;
 	saveDocument(): Promise<void>;
@@ -192,6 +193,30 @@ export class WordConnector implements IWordConnector {
 		);
 	}
 
+	public insertLink(textToInsert: string, url: string): void {
+		Word.run(function(context) {
+			// Create a range proxy object for the current selection.
+			var range = context.document.getSelection();
+
+			// Queue a command to insert text at the end of the selection.
+			range.insertHtml(
+				`<a href="${url}">${textToInsert}</a>`,
+				Word.InsertLocation.end
+			);
+
+			// Synchronize the document state by executing the queued commands,
+			// and return a promise to indicate task completion.
+			return context.sync().then(function() {
+				console.log("Inserted the text at the end of the selection.");
+			});
+		}).catch(function(error) {
+			console.log("Error: " + JSON.stringify(error));
+			if (error instanceof OfficeExtension.Error) {
+				console.log("Debug info: " + JSON.stringify(error.debugInfo));
+			}
+		});
+	}
+
 	public saveDocument(): Promise<void> {
 		return new Promise((resolve, reject) => {
 			Word.run((context) => {
@@ -302,7 +327,6 @@ export class WordConnector implements IWordConnector {
 				{ forceConsent: false },
 				(result: any) => {
 					if (result.status === "succeeded") {
-
 						resolve(result.value);
 					} else {
 						reject({ message: result.error.message });

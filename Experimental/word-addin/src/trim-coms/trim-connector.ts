@@ -59,6 +59,7 @@ export interface ISearchResults<T extends ITrimMainObject> {
 export interface IDriveInformation {
 	Id: string;
 	Uri: number;
+	RecordType: string;
 	CommandDefs: ICommandDef[];
 }
 
@@ -457,7 +458,9 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.bob_sbMe = "Me";
 					data.Messages.web_GoToTextSearch = "Go to text search";
 					data.Messages.web_GoToAdvancedSearch = "Go to advanced search";
-
+					data.Messages.web_GoToCM = "Open in Content Manager";
+					data.Messages.web_Paste_Title = "Paste title";
+					data.Messages.web_Please_Select = "Please select a Record";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

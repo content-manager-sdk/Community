@@ -43,7 +43,6 @@ body {
 	right: 0px;
 	left: 0px;
 	padding: 0 6px 0 6px;
-	overflow-y: scroll;
 }
 
 .trim-search-shortcuts li {
@@ -123,4 +122,8 @@ body {
 div.trim-properties {
 	max-height: calc(100% - 80px);
 	overflow-y: auto;
+}
+
+.trim-action-button .ms-Button-menuIcon {
+	display: none;
 }

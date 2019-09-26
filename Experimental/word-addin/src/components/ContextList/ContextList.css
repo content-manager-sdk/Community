@@ -1,0 +1,7 @@
+.context-list .trim-list-container {
+	overflow: auto;
+	bottom: 20px;
+	position: fixed;
+	left: 10px;
+	top: 130px;
+}
