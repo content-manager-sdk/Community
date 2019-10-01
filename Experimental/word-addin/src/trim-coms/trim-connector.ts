@@ -461,6 +461,14 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_GoToCM = "Open in Content Manager";
 					data.Messages.web_Paste_Title = "Paste title";
 					data.Messages.web_Please_Select = "Please select a Record";
+
+					data.Messages.web_Show = "Show";
+					data.Messages.web_in_Same_Container = "in same container";
+					data.Messages.web_with_Same_Contacts = "with same contacts";
+					data.Messages.web_Related_To = "related to";
+					data.Messages.web_All_Related_To = "all related to";
+					data.Messages.web_Search_Content = "Content:";
+
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

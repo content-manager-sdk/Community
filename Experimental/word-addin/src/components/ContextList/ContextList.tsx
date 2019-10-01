@@ -17,6 +17,7 @@ import {
 	IComboBoxOption,
 	mergeStyles,
 	FocusTrapZone,
+	SelectableOptionMenuItemType,
 } from "office-ui-fabric-react";
 
 import { debounce } from "throttle-debounce";
@@ -25,17 +26,22 @@ const wrapperClassName = mergeStyles({
 	selectors: {
 		"& .ms-ComboBox-container": {
 			display: "inline",
-			float: "right",
+			float: "left",
+			marginLeft: "4px",
+		},
+		"& .context-list-title": {
+			float: "left",
+			width: "70px",
+		},
+		"& .context-list-title .ms-Button--icon": {
+			display: "none",
+		},
+		"& .context-list-title .ms-ComboBox": {
+			paddingRight: "5px",
+			paddingLeft: "5px",
 		},
 	},
 });
-
-const comboOptions: IComboBoxOption[] = [
-	{ key: "container", text: "in same container" },
-	{ key: "contacts", text: "with same contacts" },
-	{ key: "related", text: "related to" },
-	{ key: "all_related", text: "all related to" },
-];
 
 export class ContextList extends React.Component<
 	{
@@ -44,11 +50,12 @@ export class ContextList extends React.Component<
 		wordConnector?: IWordConnector;
 		className?: string;
 	},
-	{ selectRecord: ITrimMainObject; searchQuery: string }
+	{ selectRecord: ITrimMainObject; searchQuery: string; searchType: string }
 > {
 	private _searchList = createRef<ITrimObjectSearchList>();
 	private _basicComboBox = React.createRef<IComboBox>();
 	autocompleteSearchDebounced: any;
+
 	constructor(props: {
 		appStore?: any;
 		trimConnector?: ITrimConnector;
@@ -59,12 +66,39 @@ export class ContextList extends React.Component<
 		this.state = {
 			selectRecord: { Uri: 0 },
 			searchQuery: this._getQuery("container"),
+			searchType: "goto",
 		};
 
 		this.autocompleteSearchDebounced = debounce(1000, this.__textChanged);
 	}
 
+	private getComboOptions = (): IComboBoxOption[] => {
+		const { appStore } = this.props;
+
+		return [
+			// {
+			// 	key: "Header1",
+			// 	text: "Navigate to",
+			// 	itemType: SelectableOptionMenuItemType.Header,
+			// },
+			{ key: "container", text: appStore.messages.web_in_Same_Container },
+			{ key: "contacts", text: appStore.messages.web_with_Same_Contacts },
+			{ key: "related", text: appStore.messages.web_Related_To },
+			{ key: "all_related", text: appStore.messages.web_All_Related_To },
+			// {
+			// 	key: "Header2",
+			// 	text: "Quick search",
+			// 	itemType: SelectableOptionMenuItemType.Header,
+			// },
+			// { key: "search_content", text: appStore.messages.web_Search_Content },
+		];
+	};
+
 	private _getQuery(key: string) {
+		if (key.startsWith("search_")) {
+			return "";
+		}
+
 		const { appStore } = this.props;
 
 		const searches = {
@@ -117,6 +151,30 @@ export class ContextList extends React.Component<
 		}
 	};
 
+	private _comboChangeSearchType = (
+		event: React.FormEvent<IComboBox>,
+		option?: IComboBoxOption,
+		index?: number,
+		value?: string
+	): void => {
+		if (option) {
+			const key = option.key as string;
+
+			if (key === "goto") {
+				this.setState({
+					searchQuery: this._getQuery("container"),
+					searchType: key,
+				});
+			} else {
+				this.setState({ searchQuery: "", searchType: key });
+
+				if (this._basicComboBox.current) {
+					this._basicComboBox.current.focus();
+				}
+			}
+		}
+	};
+
 	private __textChanged = (value: string): void => {
 		this.setState({ searchQuery: value! });
 	};
@@ -128,11 +186,11 @@ export class ContextList extends React.Component<
 	): void => {
 		if (value) {
 			this.autocompleteSearchDebounced(value);
-			//this.setState({ searchQuery: value! });
 		}
 	};
 
 	private _findCannedSearch = (searchQuery: string): number => {
+		const comboOptions = this.getComboOptions();
 		for (let counter = 0; counter < comboOptions.length; counter++) {
 			if (searchQuery === this._getQuery(comboOptions[counter].key as string)) {
 				return counter;
@@ -143,8 +201,21 @@ export class ContextList extends React.Component<
 
 	public render() {
 		const { appStore } = this.props;
-		const { searchQuery } = this.state;
+		const { searchQuery, searchType } = this.state;
 
+		const searchTypeOptions: IComboBoxOption[] = [
+			{ key: "goto", text: "Show" },
+			{
+				key: "Header1",
+				text: "Quick search",
+				itemType: SelectableOptionMenuItemType.Header,
+			},
+			{ key: "content", text: "Content", data: "recContent:" },
+			{ key: "title", text: "Title", data: "recTitle:" },
+			{ key: "anyWord", text: "Any word", data: "recAnyWord:" },
+		];
+
+		const comboOptions = this.getComboOptions();
 		const cannedSearchNumber = this._findCannedSearch(searchQuery);
 		const defaultProps =
 			cannedSearchNumber > -1
@@ -152,8 +223,6 @@ export class ContextList extends React.Component<
 						selectedKey: comboOptions[cannedSearchNumber].key,
 				  }
 				: { value: searchQuery };
-
-		console.log(defaultProps);
 
 		const contextMenuProps: IContextualMenuProps = {
 			items: [
@@ -184,6 +253,16 @@ export class ContextList extends React.Component<
 			],
 		};
 
+		let fullSearchQuery = searchQuery;
+
+		if (searchType != "goto" && fullSearchQuery) {
+			searchTypeOptions.forEach((so) => {
+				if (so.key === searchType) {
+					fullSearchQuery = so.data + fullSearchQuery;
+				}
+			});
+		}
+
 		return (
 			<div className={wrapperClassName}>
 				<IconButton
@@ -193,7 +272,15 @@ export class ContextList extends React.Component<
 					split={false}
 				/>
 				<h3>
-					<span>Show </span>
+					{/* <span className="context-list-title">
+						{appStore.messages.web_Show}
+					</span> */}
+					<ComboBox
+						className="context-list-title"
+						options={searchTypeOptions}
+						selectedKey={searchType}
+						onChange={this._comboChangeSearchType}
+					/>
 					<ComboBox
 						{...defaultProps}
 						options={comboOptions}
@@ -212,7 +299,7 @@ export class ContextList extends React.Component<
 					<TrimObjectSearchList
 						componentRef={this._searchList}
 						trimType={BaseObjectTypes.Record}
-						q={searchQuery}
+						q={fullSearchQuery}
 						contentsInReverseDateOrder={true}
 						includeAlternateWhenShowingFolderContents={true}
 						excludeShortCuts={true}

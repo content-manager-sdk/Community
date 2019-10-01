@@ -96,6 +96,7 @@ describe("Context List", function() {
 		{ key: "contacts", expected: "recSameContact:7" },
 		{ key: "related", expected: "recRelated:7" },
 		{ key: "all_related", expected: "recAllRelated:7" },
+		{ key: "search_content", expected: "" },
 	].forEach((s) => {
 		it(`selects new search context for ${s.key}`, () => {
 			const wrapper = shallow<ContextList>(
@@ -104,6 +105,7 @@ describe("Context List", function() {
 
 			wrapper
 				.find(ComboBox)
+				.last()
 				.props()
 				.onChange(null, { key: s.key, text: "" }, 1, null);
 
@@ -112,5 +114,71 @@ describe("Context List", function() {
 			expect(searchList.props().q).toEqual(s.expected);
 			expect.assertions(1);
 		});
+	});
+
+	it("clears the search on content search", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} />
+		);
+
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(null, { key: "content", text: "" }, 1, null);
+
+		expect(wrapper.state().searchQuery).toEqual("");
+		expect(wrapper.state().searchType).toEqual("content");
+
+		const list = wrapper.find(TrimObjectSearchList);
+
+		expect(list.props().q).toEqual("");
+
+		expect.assertions(3);
+	});
+
+	it("do content search", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} />
+		);
+
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(null, { key: "content", text: "" }, 1, null);
+
+		wrapper.setState({ searchQuery: "test" });
+
+		const list = wrapper.find(TrimObjectSearchList);
+
+		expect(list.props().q).toEqual("recContent:test");
+
+		expect.assertions(1);
+	});
+
+	it("re-sets the search on selection of 'show'", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} />
+		);
+
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(null, { key: "content", text: "" }, 1, null);
+
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(null, { key: "goto", text: "" }, 1, null);
+
+		expect(wrapper.state().searchQuery).toEqual(
+			"recContainerEx:[recContainsEx:7]"
+		);
+
+		expect(wrapper.state().searchType).toEqual("goto");
+		expect.assertions(2);
 	});
 });

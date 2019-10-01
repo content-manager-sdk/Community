@@ -3,5 +3,6 @@
 	bottom: 20px;
 	position: fixed;
 	left: 10px;
-	top: 130px;
+	top: 110px;
+	width: calc(100% - 12px);
 }

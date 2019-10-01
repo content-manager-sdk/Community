@@ -13,7 +13,6 @@ import {
 	PivotLinkFormat,
 	PivotLinkSize,
 } from "office-ui-fabric-react/lib/Pivot";
-import LinkComposer from "./LinkComposer/LinkComposer";
 import ContextList from "./ContextList/ContextList";
 
 export class ExistingRecord extends React.Component<
