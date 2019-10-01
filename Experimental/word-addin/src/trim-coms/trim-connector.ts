@@ -512,7 +512,7 @@ export class TrimConnector implements ITrimConnector {
 		}
 
 		if (purposeExtra) {
-			params.["purposeExtra"] = purposeExtra;
+			params["purposeExtra"] = purposeExtra;
 		}
 
 		if (trimType === BaseObjectTypes.Classification) {
@@ -619,7 +619,6 @@ export class TrimConnector implements ITrimConnector {
 					})
 					.catch((error) => {
 						if (Axios.isCancel(error)) {
-							
 						} else {
 							if (
 								error.response &&
@@ -630,12 +629,12 @@ export class TrimConnector implements ITrimConnector {
 									data: error,
 									message:
 										error.response.data.ResponseStatus.Message ||
-										error.response.data.ResponseStatus.ErrorCode,									
+										error.response.data.ResponseStatus.ErrorCode,
 								});
 							} else {
 								reject({
 									data: error,
-									message: error.message,									
+									message: error.message,
 								});
 							}
 						}
