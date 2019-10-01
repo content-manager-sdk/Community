@@ -161,7 +161,7 @@ export interface ITrimConnector {
 
 	runAction(
 		commandId: CommandIds,
-		Uri: number,
+		uri: number,
 		fileName: string,
 		webUrl: string
 	): Promise<IDriveInformation>;
@@ -171,14 +171,18 @@ export interface ITrimConnector {
 }
 
 export class TrimConnector implements ITrimConnector {
-	CancelToken = Axios.CancelToken;
-	source = this.CancelToken.source();
+	private CancelToken = Axios.CancelToken;
+	private source = this.CancelToken.source();
+	private _databaseProperties: IDatabase;
 
-	cancel(): void {
+	public cancel(): void {
 		this.source.cancel();
 	}
 
-	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string {
+	public makeFriendlySearchQuery(
+		trimType: BaseObjectTypes,
+		query: string
+	): string {
 		switch (trimType) {
 			case BaseObjectTypes.Record:
 				return `recAnyWord:${query}* OR recNumber:${query}*`;
@@ -191,7 +195,6 @@ export class TrimConnector implements ITrimConnector {
 		}
 	}
 
-	private _databaseProperties: IDatabase;
 	public getDatabaseProperties(): Promise<IDatabase> {
 		if (this._databaseProperties) {
 			return new Promise((resolve) => {
@@ -207,7 +210,7 @@ export class TrimConnector implements ITrimConnector {
 				(data: any) => {
 					const prefix = "Database";
 					let databaseProperties = {};
-					for (var key in data.Results[0]) {
+					for (const key in data.Results[0]) {
 						if (key.startsWith(prefix)) {
 							databaseProperties[key.substring(prefix.length)] =
 								data.Results[0][key].Value;
@@ -233,8 +236,8 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "UserOptions/Search", method: "get" },
 				(data: any) => {
 					const prefix = "SearchUserOptions";
-					let searchOptionsCache = {};
-					for (var key in data.UserOptions) {
+					const searchOptionsCache = {};
+					for (let key in data.UserOptions) {
 						if (key.startsWith(prefix)) {
 							searchOptionsCache[key.substring(prefix.length)] =
 								data.UserOptions[key].Value;
@@ -323,25 +326,25 @@ export class TrimConnector implements ITrimConnector {
 
 	public runAction(
 		commandId: CommandIds,
-		Uri: number,
+		uri: number,
 		fileName: string,
 		webUrl: string
 	): Promise<IDriveInformation> {
 		const path = "DriveFile";
 
 		const postBodies = {
-			[CommandIds.RecCheckIn]: { Uri, Action: "checkin", fileName, webUrl },
+			[CommandIds.RecCheckIn]: { uri, Action: "checkin", fileName, webUrl },
 			[CommandIds.RecDocFinal]: {
 				Action: "finalize",
-				Uri,
+				uri,
 			},
 			[CommandIds.AddToFavorites]: {
 				Action: "AddToFavorites",
-				Uri,
+				uri,
 			},
 			[CommandIds.RemoveFromFavorites]: {
 				Action: "RemoveFromFavorites",
-				Uri,
+				uri,
 			},
 		};
 
@@ -509,7 +512,7 @@ export class TrimConnector implements ITrimConnector {
 		}
 
 		if (purposeExtra) {
-			params["purposeExtra"] = purposeExtra;
+			params.["purposeExtra"] = purposeExtra;
 		}
 
 		if (trimType === BaseObjectTypes.Classification) {
@@ -528,9 +531,9 @@ export class TrimConnector implements ITrimConnector {
 				return {
 					hasMoreItems: data.HasMoreItems,
 					results: data.Results.map((trimObject: T) => {
-						let newObject = {};
+						const newObject = {};
 
-						for (var key in trimObject) {
+						for (const key in trimObject) {
 							if (key.startsWith(trimType)) {
 								newObject[key.substring(trimType.length)] = trimObject[key];
 							} else {
@@ -616,7 +619,7 @@ export class TrimConnector implements ITrimConnector {
 					})
 					.catch((error) => {
 						if (Axios.isCancel(error)) {
-							console.log("Request canceled", error.message);
+							
 						} else {
 							if (
 								error.response &&
@@ -624,15 +627,15 @@ export class TrimConnector implements ITrimConnector {
 								error.response.data.ResponseStatus
 							) {
 								reject({
+									data: error,
 									message:
 										error.response.data.ResponseStatus.Message ||
-										error.response.data.ResponseStatus.ErrorCode,
-									data: error,
+										error.response.data.ResponseStatus.ErrorCode,									
 								});
 							} else {
 								reject({
-									message: error.message,
 									data: error,
+									message: error.message,									
 								});
 							}
 						}
