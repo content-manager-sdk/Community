@@ -85,14 +85,6 @@
 					},
 					{ "name": "RecordTitle", "in": "formData", "type": "string" },
 					{ "in": "formData", "type": "file", "name": "file" },
-					{
-						"name": "X-Forwarded-For",
-						"type": "string",
-						"in": "header",
-						"required": true,
-						"default": "acme.com",
-						"x-ms-visibility": "internal"
-					}
 				]
 			}
 		}
