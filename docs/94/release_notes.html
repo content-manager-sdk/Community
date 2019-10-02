@@ -175,6 +175,8 @@ $(document).ready(function(){initNavTree('release_notes.html','');});
 </div>
 <div class="textblock"><h1><a class="anchor" id="rn_94"></a>
 Content Manager 9.4</h1>
+<h2>BREAKING CHANGE - History.EventType changed enum type</h2>
+<p>In previous versions the property <a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_history.html#a00a85b877f0fe4989f71f3152a7bfe3a">History.EventType</a> was of type HistoryTypes, it is now of type <a class="el" href="namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a475391219dea6e4ff8c8488078f77fbf">Events</a> which does not map directly to HistoryTypes. any code that relies on this property will need to be reviewed.</p>
 <h2><a class="anchor" id="rn_94_CR_68013"></a>
 Hide records and record types for customized SDK applications - doesn't work</h2>
 <p><b>ER</b> <a href="https://softwaresupport.softwaregrp.com/doc/KM03300730">KM03300730</a></p>
