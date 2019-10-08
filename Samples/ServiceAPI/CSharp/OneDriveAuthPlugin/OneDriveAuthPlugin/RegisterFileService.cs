@@ -45,6 +45,9 @@ namespace OneDriveAuthPlugin
 		public OneDriveItem DriveItem { get; set; }
 		public IList<MyCommandDef> CommandDefs { get; set; }
 		public string RecordType { get; set; }
+		public TrimOptions Options { get; set; }
+
+		public Dictionary<string, IList<MyEnumItem>> Enums {get; set;}
 
 	}
 
@@ -227,6 +230,29 @@ namespace OneDriveAuthPlugin
 			}
 
 			RegisterdFileResponse registeredFile = new RegisterdFileResponse();
+
+			DroppedFilesUserOptions fileOptions = new DroppedFilesUserOptions(this.Database);
+			var options = new TrimOptions();
+			if (fileOptions.UseDefaultRecordTypeInOffice == true)
+			{
+				options.DefaultDocumentRecordType = fileOptions.RecordType.Uri;
+			}
+
+			registeredFile.Options = options;
+
+			var enumItems = new List<MyEnumItem>();
+
+			HP.HPTRIM.SDK.Enum relationshipEnum = new HP.HPTRIM.SDK.Enum(AllEnumerations.RecordRelationshipType, this.Database);
+
+			foreach (var relEnum in relationshipEnum.GetItemArray(new int[] {(int)RecordRelationshipType.InSharepointSite, (int)RecordRelationshipType.IsInSeries, (int)RecordRelationshipType.IsRootPart, (int)RecordRelationshipType.IsTempCopy, (int)RecordRelationshipType.IsVersion, (int)RecordRelationshipType.RedactionOf }, true).OrderBy(ei => ei.Caption))
+			{
+				enumItems.Add(new MyEnumItem() { Id = relEnum.Name, Caption = relEnum.Caption });
+			}
+
+			Dictionary<string, IList<MyEnumItem>> enumDetails = new Dictionary<string, IList<MyEnumItem>>();
+			enumDetails.Add("RecordRelationshipType", enumItems);
+
+			registeredFile.Enums = enumDetails;
 
 			if (fileResult != null)
 			{

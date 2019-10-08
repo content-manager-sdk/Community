@@ -33,7 +33,7 @@ describe("New Record layout", function() {
 			web_Register: "Register",
 			web_SelectRecordType: "Select a Record Type",
 		},
-
+		documentInfo: { Options: {} },
 		createRecord: (recordUri, recordProps) => {
 			mockStore.RecordUri = recordUri;
 			mockStore.RecordProps = recordProps;

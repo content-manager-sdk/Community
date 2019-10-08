@@ -118,7 +118,7 @@ describe("Existing Record", () => {
 		expect(wrapper.find(IconButton).props().primary).toBeTruthy();
 		expect(wrapper.find(IconButton).props().text).toBeUndefined();
 		expect(wrapper.find(IconButton).props().iconProps).toEqual({
-			iconName: "CollapseMenu",
+			iconName: "GlobalNavButton",
 		});
 	});
 

@@ -3,7 +3,12 @@ import { inject, observer } from "mobx-react";
 import "./ContextList.css";
 
 import { IconButton } from "office-ui-fabric-react/lib/Button";
-import { ITrimConnector, ITrimMainObject } from "src/trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	ITrimMainObject,
+	IEnumDetails,
+	ISearchClauseOrFieldDef,
+} from "src/trim-coms/trim-connector";
 import { IContextualMenuProps } from "office-ui-fabric-react/lib/ContextualMenu";
 
 import { IWordConnector } from "src/office-coms/word-connector";
@@ -18,14 +23,21 @@ import {
 	mergeStyles,
 	FocusTrapZone,
 	SelectableOptionMenuItemType,
+	TextField,
 } from "office-ui-fabric-react";
 
 import { debounce } from "throttle-debounce";
+
+const config = (global as any).config;
 
 const wrapperClassName = mergeStyles({
 	selectors: {
 		"& .ms-ComboBox-container": {
 			display: "inline",
+			float: "left",
+			marginLeft: "4px",
+		},
+		"& .trim-search-text": {
 			float: "left",
 			marginLeft: "4px",
 		},
@@ -50,7 +62,12 @@ export class ContextList extends React.Component<
 		wordConnector?: IWordConnector;
 		className?: string;
 	},
-	{ selectRecord: ITrimMainObject; searchQuery: string; searchType: string }
+	{
+		selectRecord: ITrimMainObject;
+		searchQuery: string;
+		searchType: string;
+		searchTypeOptions: IComboBoxOption[];
+	}
 > {
 	private _searchList = createRef<ITrimObjectSearchList>();
 	private _basicComboBox = React.createRef<IComboBox>();
@@ -67,9 +84,61 @@ export class ContextList extends React.Component<
 			selectRecord: { Uri: 0 },
 			searchQuery: this._getQuery("container"),
 			searchType: "goto",
+			searchTypeOptions: [],
 		};
 
 		this.autocompleteSearchDebounced = debounce(1000, this.__textChanged);
+	}
+
+	componentDidMount() {
+		const groupBy = function(list: any, keyGetter: any) {
+			const map = new Map();
+			list.forEach((item: any) => {
+				const key = keyGetter(item);
+				const collection = map.get(key);
+				if (!collection) {
+					map.set(key, [item]);
+				} else {
+					collection.push(item);
+				}
+			});
+			return map;
+		};
+
+		const { trimConnector } = this.props;
+		const searchClauses = config.SEARCH_CLAUSES || ["anyWord", "content"];
+		let searchTypeOptions: IComboBoxOption[] = [{ key: "goto", text: "Show" }];
+		const trimType = BaseObjectTypes.Record;
+		let lastGroup = "";
+		trimConnector!.getSearchClauseOrFieldDefinitions(trimType).then((data) => {
+			groupBy(data, function(sc: any) {
+				return sc.MethodGroup;
+			}).forEach((clauseDefs: ISearchClauseOrFieldDef[]) => {
+				clauseDefs.forEach((clauseDef: ISearchClauseOrFieldDef) => {
+					if (
+						clauseDef.IsFavorite ||
+						clauseDef.IsRecent ||
+						searchClauses.includes(clauseDef.ClauseName)
+					) {
+						if (lastGroup !== clauseDef.MethodGroup) {
+							lastGroup = clauseDef.MethodGroup;
+							searchTypeOptions.push({
+								key: clauseDef.MethodGroup,
+								text: clauseDef.MethodGroup,
+								itemType: SelectableOptionMenuItemType.Header,
+							});
+						}
+						searchTypeOptions.push({
+							key: clauseDef.ClauseName,
+							text: clauseDef.Caption,
+							data: clauseDef,
+						});
+					}
+				});
+			});
+
+			this.setState({ searchTypeOptions: searchTypeOptions });
+		});
 	}
 
 	private getComboOptions = (): IComboBoxOption[] => {
@@ -166,10 +235,18 @@ export class ContextList extends React.Component<
 					searchType: key,
 				});
 			} else {
-				this.setState({ searchQuery: "", searchType: key });
+				if (
+					option.data &&
+					(option.data.ParameterFormat === "Boolean" ||
+						option.data.SearchParameterFormat === "Boolean")
+				) {
+					this.setState({ searchQuery: option.text, searchType: key });
+				} else {
+					this.setState({ searchQuery: "", searchType: key });
 
-				if (this._basicComboBox.current) {
-					this._basicComboBox.current.focus();
+					if (this._basicComboBox.current) {
+						this._basicComboBox.current.focus();
+					}
 				}
 			}
 		}
@@ -189,6 +266,12 @@ export class ContextList extends React.Component<
 		}
 	};
 
+	private _textChange = (newValue: any): void => {
+		if (newValue) {
+			this.autocompleteSearchDebounced(newValue);
+		}
+	};
+
 	private _findCannedSearch = (searchQuery: string): number => {
 		const comboOptions = this.getComboOptions();
 		for (let counter = 0; counter < comboOptions.length; counter++) {
@@ -200,20 +283,13 @@ export class ContextList extends React.Component<
 	};
 
 	public render() {
-		const { appStore } = this.props;
-		const { searchQuery, searchType } = this.state;
-
-		const searchTypeOptions: IComboBoxOption[] = [
-			{ key: "goto", text: "Show" },
-			{
-				key: "Header1",
-				text: "Quick search",
-				itemType: SelectableOptionMenuItemType.Header,
-			},
-			{ key: "content", text: "Content", data: "recContent:" },
-			{ key: "title", text: "Title", data: "recTitle:" },
-			{ key: "anyWord", text: "Any word", data: "recAnyWord:" },
-		];
+		const { appStore, trimConnector } = this.props;
+		const {
+			searchQuery,
+			searchType,
+			selectRecord,
+			searchTypeOptions,
+		} = this.state;
 
 		const comboOptions = this.getComboOptions();
 		const cannedSearchNumber = this._findCannedSearch(searchQuery);
@@ -244,21 +320,55 @@ export class ContextList extends React.Component<
 				},
 				{
 					key: "pasteTitle",
-					text: "Paste link",
+					text: appStore.messages.web_Paste_Link,
 					iconProps: { iconName: "PasteAsText" },
 					onClick: () => {
 						this._openInCM("INSERT_LINK");
+					},
+				},
+				{
+					key: "addRelationshipto",
+					text: appStore.messages.web_Add_Relationship,
+					title: appStore.messages.web_Add_RelationshipTitle,
+					subMenuProps: {
+						items: appStore.documentInfo.Enums.RecordRelationshipType.map(
+							(rel: IEnumDetails) => {
+								return {
+									key: rel.Id,
+									text: rel.Caption,
+									onClick: () => {
+										trimConnector!
+											.createRelationship(
+												appStore.RecordUri,
+												selectRecord.Uri,
+												rel.Id
+											)
+											.then(() => {});
+									},
+								};
+							}
+						),
 					},
 				},
 			],
 		};
 
 		let fullSearchQuery = searchQuery;
+		let searchFormat = "";
 
-		if (searchType != "goto" && fullSearchQuery) {
+		if (searchType != "goto") {
 			searchTypeOptions.forEach((so) => {
 				if (so.key === searchType) {
-					fullSearchQuery = so.data + fullSearchQuery;
+					searchFormat =
+						so.data.SearchParameterFormat || so.data.ParameterFormat;
+					if (
+						so.data.ParameterFormat === "Boolean" ||
+						so.data.SearchParameterFormat === "Boolean"
+					) {
+						fullSearchQuery = so.text;
+					} else if (fullSearchQuery) {
+						fullSearchQuery = so.text + ":" + fullSearchQuery;
+					}
 				}
 			});
 		}
@@ -267,29 +377,35 @@ export class ContextList extends React.Component<
 			<div className={wrapperClassName}>
 				<IconButton
 					className="trim-action-button"
-					iconProps={{ iconName: "CollapseMenu" }}
+					iconProps={{ iconName: "GlobalNavButton" }}
 					menuProps={contextMenuProps}
 					split={false}
 				/>
 				<h3>
-					{/* <span className="context-list-title">
-						{appStore.messages.web_Show}
-					</span> */}
 					<ComboBox
 						className="context-list-title"
 						options={searchTypeOptions}
 						selectedKey={searchType}
 						onChange={this._comboChangeSearchType}
 					/>
-					<ComboBox
-						{...defaultProps}
-						options={comboOptions}
-						componentRef={this._basicComboBox}
-						onChange={this._comboChange}
-						allowFreeform={true}
-						autoComplete="off"
-						onPendingValueChanged={this._pendingChange}
-					/>
+
+					{searchType === "goto" ? (
+						<ComboBox
+							{...defaultProps}
+							options={comboOptions}
+							componentRef={this._basicComboBox}
+							onChange={this._comboChange}
+							allowFreeform={false}
+							autoComplete="off"
+							onPendingValueChanged={this._pendingChange}
+							className="trim-search-query"
+						/>
+					) : searchFormat === "Boolean" ? null : (
+						<TextField
+							onBeforeChange={this._textChange}
+							className="trim-search-text"
+						/>
+					)}
 				</h3>
 
 				<FocusTrapZone

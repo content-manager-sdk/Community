@@ -34,6 +34,8 @@ export class AppStore implements IAppStore {
 		Uri: 0,
 		CommandDefs: [],
 		RecordType: "",
+		Options: { DefaultDocumentRecordType: 0 },
+		Enums: { RecordRelationshipType: [] },
 	};
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
@@ -154,6 +156,8 @@ export class AppStore implements IAppStore {
 						CommandDefs: newRecord.CommandDefs!,
 						Id: this.documentInfo.Id,
 						RecordType: this.documentInfo.RecordType,
+						Options: this.documentInfo.Options,
+						Enums: this.documentInfo.Enums,
 					});
 				}
 				this.setStatus("WAITING");

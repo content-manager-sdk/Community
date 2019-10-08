@@ -62,6 +62,12 @@ export class NewRecord extends React.Component<
 						return { key: o.Uri, text: o.NameString } as IDropdownOption;
 					})
 				);
+
+				if (appStore.documentInfo.Options.DefaultDocumentRecordType > 0) {
+					me.recordTypeUri =
+						appStore.documentInfo.Options.DefaultDocumentRecordType;
+					me.setPropertySheet();
+				}
 			});
 	}
 
@@ -95,6 +101,9 @@ export class NewRecord extends React.Component<
 					options={this.recordTypes}
 					placeholder={appStore.messages.web_SelectRecordType}
 					onChange={this._onChange}
+					defaultSelectedKey={
+						appStore.documentInfo.Options.DefaultDocumentRecordType
+					}
 				/>
 				<div className="new-record-body">
 					<PropertySheet
@@ -102,7 +111,7 @@ export class NewRecord extends React.Component<
 						defaultRecordTitle={this.recordProps["RecordTypedTitle"]}
 						onChange={this._onPropertySheetChange}
 					/>
-					<PrimaryButton onClick={this._onClick}>
+					<PrimaryButton className="trim-register" onClick={this._onClick}>
 						{appStore.messages.web_Register}
 					</PrimaryButton>
 				</div>

@@ -123,8 +123,13 @@ body {
 div.trim-properties {
 	max-height: calc(100% - 80px);
 	overflow-y: auto;
+	margin-bottom: 10px;
 }
 
 .trim-action-button .ms-Button-menuIcon {
 	display: none;
+}
+
+.trim-register {
+	margin-top: 10px;
 }

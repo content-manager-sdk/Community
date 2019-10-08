@@ -56,11 +56,22 @@ export interface ISearchResults<T extends ITrimMainObject> {
 	results: T[];
 }
 
+export interface IEnumDetails {
+	Id: string;
+	Caption: string;
+}
+
+export interface IEnums {
+	RecordRelationshipType: IEnumDetails[];
+}
+
 export interface IDriveInformation {
 	Id: string;
 	Uri: number;
 	RecordType: string;
 	CommandDefs: ICommandDef[];
+	Options: ITrimOptions;
+	Enums: IEnums;
 }
 
 export interface IIcon {
@@ -106,6 +117,10 @@ export interface ICommandDef {
 	IsEnabled: boolean;
 }
 
+export interface ITrimOptions {
+	DefaultDocumentRecordType: number;
+}
+
 export interface IObjectDef {
 	Id: string;
 	Caption: string;
@@ -117,6 +132,17 @@ export interface ISearchClauseDef {
 	InternalName: string;
 	Caption: string;
 	ToolTip: string;
+	MethodGroup: string;
+}
+
+export interface ISearchClauseOrFieldDef {
+	Caption: string;
+	MethodGroup: string;
+	ClauseName: string;
+	IsRecent: boolean;
+	IsFavorite: boolean;
+	ParameterFormat: string;
+	SearchParameterFormat: string;
 }
 
 export interface ISearchOptions {
@@ -140,6 +166,10 @@ export interface ITrimConnector {
 	getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]>;
+	getSearchClauseOrFieldDefinitions(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseOrFieldDef[]>;
+
 	getObjectDefinitions(): Promise<IObjectDef[]>;
 	getSearchOptions(): Promise<ISearchOptions>;
 	getDatabaseProperties(): Promise<IDatabase>;
@@ -165,6 +195,12 @@ export interface ITrimConnector {
 		fileName: string,
 		webUrl: string
 	): Promise<IDriveInformation>;
+
+	createRelationship(
+		uri: number,
+		relatedRecord: number,
+		relationshipType: string
+	): Promise<void>;
 
 	writeFileSlice(data: number[], fileName: string): Promise<string>;
 	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string;
@@ -312,6 +348,32 @@ export class TrimConnector implements ITrimConnector {
 			);
 		}
 	}
+
+	public getSearchClauseOrFieldDefinitions(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseOrFieldDef[]> {
+		const params = {
+			TrimType: trimType,
+		};
+
+		const cachedResults = this.getFromCache("search-field-clauses") || {};
+
+		if (cachedResults[trimType]) {
+			return new Promise((resolve) => {
+				resolve(cachedResults[trimType]);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: "SearchClauseOrFieldDef", method: "get", data: params },
+				(data: any) => {
+					cachedResults[trimType] = data.SearchClauseOrFieldDefs;
+					this.setCache("search-field-clauses", cachedResults);
+					//this._searchClauseCache[trimType] = data.SearchClauseDefs;
+					return data.SearchClauseOrFieldDefs;
+				}
+			);
+		}
+	}
 	public credentialsResolver: (callback: ITokenCallback) => void;
 
 	writeFileSlice(data: number[], fileName: string): Promise<string> {
@@ -352,6 +414,29 @@ export class TrimConnector implements ITrimConnector {
 			{ path, method: "post", data: postBodies[commandId] },
 			(data: any) => {
 				return data.Results[0];
+			}
+		);
+	}
+
+	createRelationship(
+		uri: number,
+		relatedRecord: number,
+		relationshipType: string
+	): Promise<void> {
+		const body = {
+			Uri: uri,
+			ChildRelationships: [
+				{
+					RecordRelationshipRelationType: `${relationshipType}`,
+					RecordRelationshipRelatedRecord: { Uri: relatedRecord },
+				},
+			],
+		};
+
+		return this.makeRequest(
+			{ path: "Record", method: "post", data: body },
+			(data: any) => {
+				return;
 			}
 		);
 	}
@@ -471,7 +556,9 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Related_To = "related to";
 					data.Messages.web_All_Related_To = "all related to";
 					data.Messages.web_Search_Content = "Content:";
-
+					data.Messages.web_Add_Relationship = "Add relationship";
+					data.Messages.web_Add_RelationshipTitle =
+						"Add relationship from the open document to the selected record.";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 
@@ -605,6 +692,7 @@ export class TrimConnector implements ITrimConnector {
 							response.data.CommandDefs ||
 							response.data.Messages ||
 							response.data.SearchClauseDefs ||
+							response.data.SearchClauseOrFieldDefs ||
 							response.data.ObjectDefs ||
 							response.data.UserOptions ||
 							response.data.WebUrl ||

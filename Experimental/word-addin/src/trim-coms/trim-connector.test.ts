@@ -604,7 +604,7 @@ describe("Test fetch from TRIM", () => {
 			await trimConnector.runAction(CommandIds.RecCheckIn, 786, "", "");
 			expect(postBody).toEqual(
 				JSON.stringify({
-					Uri: 786,
+					uri: 786,
 					Action: "checkin",
 					fileName: "",
 					webUrl: "",
@@ -615,7 +615,7 @@ describe("Test fetch from TRIM", () => {
 		it("sends an action the Set as Final", async () => {
 			const expectedResponse = {
 				Action: "finalize",
-				Uri: 999,
+				uri: 999,
 			};
 
 			await trimConnector.runAction(CommandIds.RecDocFinal, 999, "", "");
@@ -626,7 +626,7 @@ describe("Test fetch from TRIM", () => {
 			expect.assertions(1);
 			const expectedResponse = {
 				Action: "AddToFavorites",
-				Uri: 9000000001,
+				uri: 9000000001,
 			};
 
 			await trimConnector.runAction(
@@ -642,7 +642,7 @@ describe("Test fetch from TRIM", () => {
 			expect.assertions(1);
 			const expectedResponse = {
 				Action: "RemoveFromFavorites",
-				Uri: 9000000001,
+				uri: 9000000001,
 			};
 
 			await trimConnector.runAction(
@@ -652,6 +652,32 @@ describe("Test fetch from TRIM", () => {
 				""
 			);
 			expect(postBody).toEqual(JSON.stringify(expectedResponse));
+		});
+	});
+	describe("TRIM child collections", () => {
+		let postBody: any;
+		beforeEach(() => {
+			mock.reset();
+			postBody = null;
+			mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply((config) => {
+				postBody = config.data;
+				return [200, { Results: [{}] }];
+			});
+		});
+		it("posts the correct body for add relationship", async () => {
+			await trimConnector.createRelationship(1, 2, "IsAltIn");
+
+			expect(postBody).toEqual(
+				JSON.stringify({
+					Uri: 1,
+					ChildRelationships: [
+						{
+							RecordRelationshipRelationType: "IsAltIn",
+							RecordRelationshipRelatedRecord: { Uri: 2 },
+						},
+					],
+				})
+			);
 		});
 	});
 

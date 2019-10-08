@@ -56,7 +56,7 @@ export class ExistingRecord extends React.Component<
 						.then((data) => {
 							appStore.setDocumentInfo(data);
 							me.setState({
-								menuMessage: `Action completed successfuly '${item.text}'.`,
+								menuMessage: `Action completed successfully '${item.text}'.`,
 							});
 							setTimeout(function() {
 								me._dismissMessage();
@@ -112,7 +112,7 @@ export class ExistingRecord extends React.Component<
 								className="trim-action-button"
 								primary
 								split={true}
-								iconProps={{ iconName: "CollapseMenu" }}
+								iconProps={{ iconName: "GlobalNavButton" }}
 								menuProps={{
 									items: menuItems,
 								}}

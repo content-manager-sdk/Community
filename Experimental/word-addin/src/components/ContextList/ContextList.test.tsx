@@ -10,8 +10,11 @@ import {
 	ISearchResults,
 	ISearchClauseDef,
 	IObjectDef,
+	ISearchClauseOrFieldDef,
 } from "../../trim-coms/trim-connector";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { doesNotReject } from "assert";
 
 describe("Context List", function() {
 	let testUri = 0;
@@ -19,6 +22,46 @@ describe("Context List", function() {
 	let testText = "";
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
+
+	const doClauseDefs = function(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseOrFieldDef[]> {
+		return new Promise(function(resolve) {
+			resolve([
+				{
+					ClauseName: "content",
+					Caption: "Content",
+					MethodGroup: "Text",
+					IsRecent: false,
+					IsFavorite: false,
+					ParameterFormat: "String",
+					SearchParameterFormat: "String",
+				},
+				{
+					Caption: "Any Word",
+					ClauseName: "anyWord",
+					MethodGroup: "Text",
+					IsRecent: false,
+					IsFavorite: false,
+					ParameterFormat: "String",
+					SearchParameterFormat: "String",
+				},
+				{
+					Caption: "All",
+					ClauseName: "all",
+					MethodGroup: "Text",
+					IsRecent: false,
+					IsFavorite: true,
+					ParameterFormat: "Boolean",
+					SearchParameterFormat: "Boolean",
+				},
+			]);
+		});
+	};
+
+	trimConnector.getSearchClauseOrFieldDefinitions = doClauseDefs.bind(
+		trimConnector
+	);
 
 	const mockWordConnector = {
 		insertText(textToInsert: string): void {
@@ -38,11 +81,12 @@ describe("Context List", function() {
 			testUri = uri;
 		},
 		RecordUri: 7,
+		documentInfo: { Enums: { RecordRelationshipType: [] } },
 	};
 
 	it("has menu button", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} />
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
 		expect(wrapper.find(IconButton)).toBeTruthy();
@@ -50,7 +94,7 @@ describe("Context List", function() {
 
 	it("calls search in trim connector", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} />
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
 		wrapper.setState({ selectRecord: { Uri: 3 } });
@@ -65,7 +109,7 @@ describe("Context List", function() {
 
 	it("Error when object not select", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} />
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
 		const menuItem = wrapper.find(IconButton).props().menuProps.items[0];
@@ -78,7 +122,11 @@ describe("Context List", function() {
 
 	it("calls paste title", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} wordConnector={mockWordConnector} />
+			<ContextList
+				appStore={mockAppStore}
+				wordConnector={mockWordConnector}
+				trimConnector={trimConnector}
+			/>
 		);
 
 		wrapper.setState({ selectRecord: { Uri: 3, ToolTip: "a title" } });
@@ -100,7 +148,7 @@ describe("Context List", function() {
 	].forEach((s) => {
 		it(`selects new search context for ${s.key}`, () => {
 			const wrapper = shallow<ContextList>(
-				<ContextList appStore={mockAppStore} />
+				<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 			);
 
 			wrapper
@@ -118,7 +166,7 @@ describe("Context List", function() {
 
 	it("clears the search on content search", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} />
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
 		wrapper
@@ -137,48 +185,160 @@ describe("Context List", function() {
 		expect.assertions(3);
 	});
 
-	it("do content search", () => {
+	it("do content search", (done) => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} />
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
-		wrapper
-			.find(ComboBox)
-			.first()
-			.props()
-			.onChange(null, { key: "content", text: "" }, 1, null);
+		setTimeout(() => {
+			wrapper
+				.find(ComboBox)
+				.first()
+				.props()
+				.onChange(null, { key: "content", text: "" }, 1, null);
 
-		wrapper.setState({ searchQuery: "test" });
+			wrapper.setState({ searchQuery: "test" });
 
-		const list = wrapper.find(TrimObjectSearchList);
+			const list = wrapper.find(TrimObjectSearchList);
 
-		expect(list.props().q).toEqual("recContent:test");
+			expect(list.props().q).toEqual("Content:test");
 
-		expect.assertions(1);
+			expect.assertions(1);
+			done();
+		});
 	});
 
-	it("re-sets the search on selection of 'show'", () => {
+	it("re-sets the search on selection of 'show'", (done) => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} />
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
-		wrapper
-			.find(ComboBox)
-			.first()
-			.props()
-			.onChange(null, { key: "content", text: "" }, 1, null);
+		setTimeout(() => {
+			try {
+				wrapper
+					.find(ComboBox)
+					.first()
+					.props()
+					.onChange(null, { key: "content", text: "" }, 1, null);
 
-		wrapper
-			.find(ComboBox)
-			.first()
-			.props()
-			.onChange(null, { key: "goto", text: "" }, 1, null);
+				wrapper
+					.find(ComboBox)
+					.first()
+					.props()
+					.onChange(null, { key: "goto", text: "" }, 1, null);
 
-		expect(wrapper.state().searchQuery).toEqual(
-			"recContainerEx:[recContainsEx:7]"
+				expect(wrapper.state().searchQuery).toEqual(
+					"recContainerEx:[recContainsEx:7]"
+				);
+
+				expect(wrapper.state().searchType).toEqual("goto");
+				expect.assertions(2);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("gets goto clause from TrimConnector", (done) => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
 		);
 
-		expect(wrapper.state().searchType).toEqual("goto");
-		expect.assertions(2);
+		setTimeout(() => {
+			const combo = wrapper.find(ComboBox).first();
+
+			expect(combo.props().options[0]).toEqual({ key: "goto", text: "Show" });
+
+			expect.assertions(1);
+			done();
+		});
+	});
+
+	it("gets first header from TrimConnector", (done) => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
+		);
+
+		setTimeout(() => {
+			try {
+				const combo = wrapper.find(ComboBox).first();
+
+				expect(combo.props().options[1]).toEqual({
+					itemType: 2,
+					key: "Text",
+					text: "Text",
+				});
+
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("gets content from TrimConnector", (done) => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
+		);
+
+		setTimeout(() => {
+			try {
+				const combo = wrapper.find(ComboBox).first();
+
+				expect(combo.props().options[2]).toEqual({
+					key: "content",
+					text: "Content",
+					data: {
+						Caption: "Content",
+						ClauseName: "content",
+						IsFavorite: false,
+						IsRecent: false,
+						MethodGroup: "Text",
+						ParameterFormat: "String",
+						SearchParameterFormat: "String",
+					},
+				});
+
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+	it("do 'all' search", (done) => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
+		);
+
+		setTimeout(() => {
+			try {
+				wrapper
+					.find(ComboBox)
+					.first()
+					.props()
+					.onChange(
+						null,
+						{
+							key: "all",
+							text: "",
+							data: { SearchParameterFormat: "Boolean" },
+						},
+						1,
+						null
+					);
+
+				const list = wrapper.find(TrimObjectSearchList);
+
+				expect(list.props().q).toEqual("All");
+
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 });
