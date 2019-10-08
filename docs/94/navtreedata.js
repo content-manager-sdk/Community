@@ -11,6 +11,7 @@ var NAVTREE =
     ] ],
     [ "Release Notes", "release_notes.html", [
       [ "Content Manager 9.4", "release_notes.html#rn_94", [
+        [ "BREAKING CHANGE - History.EventType changed enum type", "release_notes.html#rn_94_History_Event_Type", null ],
         [ "Hide records and record types for customized SDK applications - doesn't work", "release_notes.html#rn_94_CR_68013", null ],
         [ "Unrestricted File Upload Vulnerability", "release_notes.html#rn_94_CR_68008", null ],
         [ "Refine a search to returned the current or latest version of documents", "release_notes.html#rn_94_CR_40696", null ],
