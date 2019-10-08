@@ -15,6 +15,7 @@ import {
 	IComboBoxOption,
 	SelectableOptionMenuItemType,
 	TextField,
+	ITextField,
 } from "office-ui-fabric-react";
 
 import { debounce } from "throttle-debounce";
@@ -38,6 +39,7 @@ export class SearchBar extends React.Component<
 	}
 > {
 	private _basicComboBox = React.createRef<IComboBox>();
+	private _textField = React.createRef<ITextField>();
 	autocompleteSearchDebounced: any;
 
 	constructor(props: {
@@ -177,8 +179,8 @@ export class SearchBar extends React.Component<
 				} else {
 					this.callChange("", key);
 
-					if (this._basicComboBox.current) {
-						this._basicComboBox.current.focus();
+					if (this._textField.current) {
+						this._textField.current.focus();
 					}
 				}
 			}
@@ -213,6 +215,8 @@ export class SearchBar extends React.Component<
 						}
 					}
 				});
+			} else {
+				onChange(newQuery);
 			}
 		}
 
@@ -294,6 +298,8 @@ export class SearchBar extends React.Component<
 					<TextField
 						onBeforeChange={this._textChange}
 						className="trim-search-text"
+						componentRef={this._textField}
+						value={searchQuery}
 					/>
 				)}
 			</span>
