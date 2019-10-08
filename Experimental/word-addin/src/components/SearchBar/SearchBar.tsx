@@ -165,7 +165,6 @@ export class SearchBar extends React.Component<
 	): void => {
 		if (option) {
 			const key = option.key as string;
-
 			if (key === "goto") {
 				this.callChange(this._getQuery("container"), key);
 			} else {
@@ -206,9 +205,11 @@ export class SearchBar extends React.Component<
 							so.data.ParameterFormat === "Boolean" ||
 							so.data.SearchParameterFormat === "Boolean"
 						) {
-							onChange(so.text);
+							onChange(so.key);
 						} else if (fullSearchQuery) {
 							onChange(so.key + ":" + fullSearchQuery);
+						} else {
+							onChange("");
 						}
 					}
 				});
