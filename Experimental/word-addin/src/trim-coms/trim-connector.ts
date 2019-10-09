@@ -133,6 +133,7 @@ export interface ISearchClauseDef {
 	Caption: string;
 	ToolTip: string;
 	MethodGroup: string;
+	IsBlocked: boolean;
 }
 
 export interface ISearchClauseOrFieldDef {
@@ -143,6 +144,7 @@ export interface ISearchClauseOrFieldDef {
 	IsFavorite: boolean;
 	ParameterFormat: string;
 	SearchParameterFormat: string;
+	ClauseDef: ISearchClauseDef;
 }
 
 export interface ISearchOptions {
@@ -204,6 +206,9 @@ export interface ITrimConnector {
 
 	writeFileSlice(data: number[], fileName: string): Promise<string>;
 	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string;
+
+	setLatestClause(trimType: BaseObjectTypes, queryName: string): void;
+	getLatestClause(trimType: BaseObjectTypes): string;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -229,6 +234,16 @@ export class TrimConnector implements ITrimConnector {
 			default:
 				return `${query}*`;
 		}
+	}
+
+	public setLatestClause(trimType: BaseObjectTypes, queryName: string): void {
+		const cacheValue = this.getFromCache("latest-query") || {};
+		cacheValue[trimType] = queryName;
+
+		this.setCache("latest-query", cacheValue);
+	}
+	public getLatestClause(trimType: BaseObjectTypes): string {
+		return (this.getFromCache("latest-query") || {})[trimType];
 	}
 
 	public getDatabaseProperties(): Promise<IDatabase> {

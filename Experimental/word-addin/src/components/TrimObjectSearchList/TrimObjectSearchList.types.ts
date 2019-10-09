@@ -39,4 +39,6 @@ export interface ITrimObjectSearchListProps
 
 	/** Callback for when a given trim object has been selected */
 	onTrimObjectSelected?: (item?: ITrimMainObject) => void;
+
+	onTrimTypeChanged?: (newTrimType: BaseObjectTypes) => void;
 }

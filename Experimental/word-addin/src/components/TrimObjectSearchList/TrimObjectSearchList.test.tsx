@@ -33,6 +33,7 @@ describe("Trim object search list", function() {
 	let includeAlternateWhenShowingFolderContents = false;
 	let testSortBy = "";
 	let cancelCalled = false;
+	let testNewTrimType = BaseObjectTypes.Location;
 
 	beforeEach(() => {
 		testPurpose = 0;
@@ -47,6 +48,7 @@ describe("Trim object search list", function() {
 		wrapper = makeWrapper();
 		wrapperDialog = makeWrapper("all", false, true);
 		cancelCalled = false;
+		testNewTrimType = BaseObjectTypes.Location;
 	});
 
 	const makeWrapper = (
@@ -73,6 +75,9 @@ describe("Trim object search list", function() {
 				contentsInReverseDateOrder={true}
 				advancedSearch={advancedSearch}
 				dialogDisplay={dialogDisplay}
+				onTrimTypeChanged={(newTrimType) => {
+					testNewTrimType = newTrimType;
+				}}
 			/>
 		);
 	};
@@ -120,12 +125,16 @@ describe("Trim object search list", function() {
 					Caption: "",
 					ToolTip: "fav",
 					Id: "Favorite",
+					MethodGroup: "",
+					IsBlocked: false,
 				},
 				{
 					InternalName: "recMyContainers",
 					Caption: "My Containers",
 					ToolTip: "My Containers tooltip",
 					Id: "RecordMyContainers",
+					MethodGroup: "",
+					IsBlocked: false,
 				},
 			]);
 		});
@@ -217,6 +226,16 @@ describe("Trim object search list", function() {
 		shortCut.at(0).simulate("click");
 
 		expect(testFilter).toBe("srhType:Record");
+	});
+
+	it("fires onTrimTypeChange", () => {
+		const shortCut = wrapper.find(
+			`div.trim-search-shortcuts li[data-shortcut="SavedSearch"]`
+		);
+
+		shortCut.at(0).simulate("click");
+
+		expect(testNewTrimType).toBe(BaseObjectTypes.SavedSearch);
 	});
 
 	it("sends the correct object type saved search", () => {

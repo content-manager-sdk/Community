@@ -16,6 +16,9 @@
 	float: right;
 	margin-right: 8px;
 }
+.dialog-list {
+	float: none;
+}
 
 .dialog-list .trim-list-container {
 	position: fixed;
@@ -33,4 +36,7 @@
 
 .slim-sizing {
 	left: 50px;
+}
+.trim-list-clear-float {
+	clear: both;
 }

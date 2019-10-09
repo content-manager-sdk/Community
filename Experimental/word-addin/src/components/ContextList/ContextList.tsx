@@ -15,34 +15,9 @@ import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
-import { mergeStyles, FocusTrapZone } from "office-ui-fabric-react";
+import { FocusTrapZone } from "office-ui-fabric-react";
 
 import SearchBar from "../SearchBar/SearchBar";
-
-const wrapperClassName = mergeStyles({
-	selectors: {
-		"& .ms-ComboBox-container": {
-			display: "inline",
-			float: "left",
-			marginLeft: "4px",
-		},
-		"& .trim-search-text": {
-			float: "left",
-			marginLeft: "4px",
-		},
-		"& .context-list-title": {
-			float: "left",
-			width: "70px",
-		},
-		"& .context-list-title .ms-Button--icon": {
-			display: "none",
-		},
-		"& .context-list-title .ms-ComboBox": {
-			paddingRight: "5px",
-			paddingLeft: "5px",
-		},
-	},
-});
 
 export class ContextList extends React.Component<
 	{
@@ -158,7 +133,7 @@ export class ContextList extends React.Component<
 		};
 
 		return (
-			<div className={wrapperClassName}>
+			<div>
 				<IconButton
 					className="trim-action-button"
 					iconProps={{ iconName: "GlobalNavButton" }}
@@ -168,7 +143,7 @@ export class ContextList extends React.Component<
 				<h3>
 					<SearchBar
 						trimType={BaseObjectTypes.Record}
-						onChange={(newValue) => {
+						onQueryChange={(newValue) => {
 							this.setState({ searchQuery: newValue });
 						}}
 						includeShortCuts={true}

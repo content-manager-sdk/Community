@@ -4,28 +4,20 @@ import {
 	ITrimSearchDialogProps,
 	ITrimSearchDialog,
 } from "./TrimSearchDialog.types";
-import {
-	TextField,
-	ITextField,
-	ITextFieldProps,
-} from "office-ui-fabric-react/lib/TextField";
-
 import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
 import { ITrimMainObject } from "src/trim-coms/trim-connector";
 import {
-	IconButton,
 	PrimaryButton,
 	DefaultButton,
 } from "office-ui-fabric-react/lib/Button";
-import { IconType } from "office-ui-fabric-react/lib/Icon";
 import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { debounce } from "throttle-debounce";
-import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+import SearchBar from "../SearchBar/SearchBar";
 
 export interface ITrimSearchDialogState {
 	isObjectPickerShown?: boolean;
@@ -38,6 +30,7 @@ export interface ITrimSearchDialogState {
 	textSearchHelp: string;
 	advancedSearchHelp: string;
 	isRunning: boolean;
+	navTrimType: BaseObjectTypes;
 }
 
 export class TrimSearchDialog
@@ -45,9 +38,7 @@ export class TrimSearchDialog
 	implements ITrimSearchDialog {
 	autocompleteSearchDebounced: any;
 
-	private _objectPickerDiv = createRef<HTMLDivElement>();
 	private _searchList = createRef<ITrimObjectSearchList>();
-	private _textField = createRef<ITextField>();
 
 	constructor(props: ITrimSearchDialogProps) {
 		super(props);
@@ -117,9 +108,9 @@ export class TrimSearchDialog
 			isRunning,
 			searchStartPoint,
 			textFieldText,
-			advancedSearch,
 			contentsInReverseDateOrder,
 			includeAlternateWhenShowingFolderContents,
+			navTrimType,
 		} = this.state;
 
 		const startSearchAt = textFieldText || searchStartPoint;
@@ -130,24 +121,13 @@ export class TrimSearchDialog
 					<Spinner size={SpinnerSize.large} />
 				) : (
 					<React.Fragment>
-						<div
-							ref={this._objectPickerDiv}
-							role="combobox"
-							className="dialog-header"
-						>
-							<TextField
-								iconProps={{
-									iconName: "Search",
-									onClick: this._onIconClick,
-									className: "trim-ObjectPicker-event--without-label",
-								}}
-								componentRef={this._textField}
-								className="trim-object-picker"
-								onRenderPrefix={this._renderPrefix}
-								onChange={this.changeQuery}
-								value={textFieldText}
-							/>
-						</div>
+						<SearchBar
+							trimType={navTrimType}
+							onQueryChange={this.changeQuery}
+							includeShortCuts={false}
+							wideDisplay={true}
+						/>
+						<div className="trim-list-clear-float" />
 						{startSearchAt && (
 							<FocusTrapZone
 								isClickableOutsideFocusTrap={true}
@@ -167,8 +147,11 @@ export class TrimSearchDialog
 										includeAlternateWhenShowingFolderContents
 									}
 									contentsInReverseDateOrder={contentsInReverseDateOrder}
-									advancedSearch={advancedSearch}
+									advancedSearch={true}
 									dialogDisplay={true}
+									onTrimTypeChanged={(newTrimType) => {
+										this.setState({ navTrimType: newTrimType });
+									}}
 								/>
 							</FocusTrapZone>
 						)}
@@ -230,10 +213,7 @@ export class TrimSearchDialog
 		// }
 	};
 
-	private changeQuery = (
-		ev: React.FormEvent<HTMLInputElement>,
-		newText: string
-	): void => {
+	private changeQuery = (newText: string): void => {
 		this.autocompleteSearchDebounced(newText);
 	};
 
@@ -244,59 +224,10 @@ export class TrimSearchDialog
 		}
 	};
 
-	private _onIconClick = (ev: React.MouseEvent<HTMLElement>): void => {
-		ev.stopPropagation();
-		this._onTextFieldClick();
-	};
-
-	private _renderPrefix = (
-		props?: ITextFieldProps,
-		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
-	): JSX.Element => {
-		const { advancedSearch, textSearchHelp, advancedSearchHelp } = this.state;
-
-		return (
-			<React.Fragment>
-				<TooltipHost
-					content={advancedSearch ? textSearchHelp : advancedSearchHelp}
-					calloutProps={{ gapSpace: 0 }}
-				>
-					<IconButton
-						onClick={this._doAdvancedSearch}
-						className="trim-advanced-search"
-						iconProps={{
-							iconType: IconType.image,
-							imageProps: {
-								src: `${process.env.PUBLIC_URL}/assets/${
-									advancedSearch ? "dbp_searchmethod" : "spanner"
-								}_x24.png`,
-							},
-						}}
-					/>
-				</TooltipHost>
-			</React.Fragment>
-		);
-	};
-
-	private _doAdvancedSearch = () => {
-		const { advancedSearch } = this.state;
-		this.setState({ advancedSearch: !advancedSearch });
-	};
-
-	private _onTextFieldClick = (): void => {
-		// if (!this.state.isObjectPickerShown && !this.props.disabled) {
-		// 	this._showObjectPickerPopup();
-		// } else {
-		// 	// if (this.props.allowTextInput) {
-		// 	this.setState({
-		// 		isObjectPickerShown: false,
-		// 	});
-		// 	//  }
-		// }
-	};
+	private _onTextFieldClick = (): void => {};
 
 	private _getDefaultState(): ITrimSearchDialogState {
-		const { value } = this.props;
+		const { value, trimType } = this.props;
 
 		return {
 			isRunning: false,
@@ -309,6 +240,7 @@ export class TrimSearchDialog
 			advancedSearch: false,
 			textSearchHelp: "",
 			advancedSearchHelp: "",
+			navTrimType: trimType,
 		};
 	}
 }

@@ -16,28 +16,35 @@ import {
 	SelectableOptionMenuItemType,
 	TextField,
 	ITextField,
+	mergeStyles,
+	IBaseProps,
 } from "office-ui-fabric-react";
 
 import { debounce } from "throttle-debounce";
 
 const config = (global as any).config;
+export interface ISearchBar {}
+export interface ISearchBarState {
+	searchQuery: string;
+	searchType: string;
+	searchTypeOptions: IComboBoxOption[];
+	searchFormat: string;
+}
 
-export class SearchBar extends React.Component<
-	{
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		className?: string;
-		trimType: BaseObjectTypes;
-		onChange?: (newQuery: string) => void;
-		includeShortCuts: boolean;
-	},
-	{
-		searchQuery: string;
-		searchType: string;
-		searchTypeOptions: IComboBoxOption[];
-		searchFormat: string;
-	}
-> {
+export interface ISearchBarProps
+	extends IBaseProps<ISearchBar>,
+		React.HTMLAttributes<HTMLElement> {
+	appStore?: any;
+	trimConnector?: ITrimConnector;
+	className?: string;
+	trimType: BaseObjectTypes;
+	onQueryChange?: (newQuery: string) => void;
+	includeShortCuts: boolean;
+	wideDisplay?: boolean;
+}
+
+export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
+	implements ISearchBar {
 	private _basicComboBox = React.createRef<IComboBox>();
 	private _textField = React.createRef<ITextField>();
 	autocompleteSearchDebounced: any;
@@ -48,6 +55,7 @@ export class SearchBar extends React.Component<
 		className?: string;
 		trimType: BaseObjectTypes;
 		includeShortCuts: boolean;
+		wideDisplay: boolean;
 	}) {
 		super(props);
 
@@ -62,42 +70,54 @@ export class SearchBar extends React.Component<
 	}
 
 	componentDidMount() {
-		const { trimType, includeShortCuts, onChange } = this.props;
+		this.loadSearchClauses();
+	}
 
-		if (includeShortCuts && onChange) {
-			onChange(this._getQuery("container"));
+	componentDidUpdate(prevProps: ISearchBarProps, prevState: ISearchBarState) {
+		const { trimType, trimConnector } = this.props;
+
+		if (trimType != prevProps.trimType) {
+			if (trimType !== BaseObjectTypes.Record) {
+				trimConnector!.setLatestClause(trimType, "top");
+			}
+			this.loadSearchClauses();
+		}
+	}
+
+	private loadSearchClauses = (): void => {
+		const {
+			trimType,
+			includeShortCuts,
+			onQueryChange,
+			trimConnector,
+		} = this.props;
+
+		if (includeShortCuts && onQueryChange) {
+			onQueryChange(this._getQuery("container"));
 		}
 
-		const groupBy = function(list: any, keyGetter: any) {
-			const map = new Map();
-			list.forEach((item: any) => {
-				const key = keyGetter(item);
-				const collection = map.get(key);
-				if (!collection) {
-					map.set(key, [item]);
-				} else {
-					collection.push(item);
-				}
-			});
-			return map;
-		};
+		let latestClause = trimConnector!.getLatestClause(trimType);
+		let latestFormat = "";
+		const searchClauses = (config.SEARCH_CLAUSES || {})[trimType] || [
+			"anyWord",
+			"content",
+		];
 
-		const { trimConnector } = this.props;
-		const searchClauses = config.SEARCH_CLAUSES || ["anyWord", "content"];
 		let searchTypeOptions: IComboBoxOption[] = includeShortCuts
 			? [{ key: "goto", text: "Show" }]
 			: [];
 
 		let lastGroup = "";
 		trimConnector!.getSearchClauseOrFieldDefinitions(trimType).then((data) => {
-			groupBy(data, function(sc: any) {
+			this.groupBy(data, function(sc: any) {
 				return sc.MethodGroup;
 			}).forEach((clauseDefs: ISearchClauseOrFieldDef[]) => {
 				clauseDefs.forEach((clauseDef: ISearchClauseOrFieldDef) => {
 					if (
-						clauseDef.IsFavorite ||
-						clauseDef.IsRecent ||
-						searchClauses.includes(clauseDef.ClauseName)
+						(clauseDef.ClauseDef || []).IsBlocked === false &&
+						(clauseDef.IsFavorite ||
+							clauseDef.IsRecent ||
+							searchClauses.includes(clauseDef.ClauseName))
 					) {
 						if (lastGroup !== clauseDef.MethodGroup) {
 							lastGroup = clauseDef.MethodGroup;
@@ -107,6 +127,16 @@ export class SearchBar extends React.Component<
 								itemType: SelectableOptionMenuItemType.Header,
 							});
 						}
+
+						if (!latestClause) {
+							latestClause = clauseDef.ClauseName;
+						}
+
+						if (latestClause === clauseDef.ClauseName) {
+							latestFormat =
+								clauseDef.SearchParameterFormat || clauseDef.ParameterFormat;
+						}
+
 						searchTypeOptions.push({
 							key: clauseDef.ClauseName,
 							text: clauseDef.Caption,
@@ -114,11 +144,62 @@ export class SearchBar extends React.Component<
 						});
 					}
 				});
+
+				if (!includeShortCuts) {
+					this.setState({
+						searchType: latestClause,
+						searchQuery: "",
+						searchFormat: latestFormat,
+					});
+				}
 			});
 
 			this.setState({ searchTypeOptions: searchTypeOptions });
 		});
+	};
+
+	private getStyles(): string {
+		const { wideDisplay } = this.props;
+		return mergeStyles({
+			selectors: {
+				"& .ms-ComboBox-container": {
+					display: "inline",
+					float: "left",
+					marginLeft: "4px",
+				},
+				"& .trim-search-text": {
+					float: "left",
+					marginLeft: "4px",
+					width: `${wideDisplay ? "calc(100% - 180px)" : "170px"}`,
+				},
+				"& .trim-search-query": {
+					width: `${wideDisplay ? "calc(100% - 160px)" : "170px"}`,
+				},
+				"& .context-list-title": {
+					float: "left",
+					width: `${wideDisplay ? "140" : "90"}px`,
+				},
+				"& .context-list-title .ms-ComboBox": {
+					paddingRight: "5px",
+					paddingLeft: "5px",
+				},
+			},
+		});
 	}
+
+	private groupBy = (list: any, keyGetter: any) => {
+		const map = new Map();
+		list.forEach((item: any) => {
+			const key = keyGetter(item);
+			const collection = map.get(key);
+			if (!collection) {
+				map.set(key, [item]);
+			} else {
+				collection.push(item);
+			}
+		});
+		return map;
+	};
 
 	private getComboOptions = (): IComboBoxOption[] => {
 		const { appStore } = this.props;
@@ -188,15 +269,17 @@ export class SearchBar extends React.Component<
 	};
 
 	private callChange(newQuery: string, newSearchType?: string) {
-		const { onChange } = this.props;
+		const { onQueryChange, trimConnector, trimType } = this.props;
 		const { searchTypeOptions, searchType } = this.state;
 
 		const thisSearchType = newSearchType || searchType;
 
-		if (onChange) {
+		if (onQueryChange) {
 			let fullSearchQuery = newQuery;
 
 			if (thisSearchType != "goto") {
+				trimConnector!.setLatestClause(trimType, thisSearchType);
+
 				searchTypeOptions.forEach((so) => {
 					if (so.key === thisSearchType) {
 						this.setState({
@@ -207,16 +290,16 @@ export class SearchBar extends React.Component<
 							so.data.ParameterFormat === "Boolean" ||
 							so.data.SearchParameterFormat === "Boolean"
 						) {
-							onChange(so.key);
+							onQueryChange(so.key);
 						} else if (fullSearchQuery) {
-							onChange(so.key + ":" + fullSearchQuery);
+							onQueryChange(so.key + ":" + fullSearchQuery);
 						} else {
-							onChange("");
+							onQueryChange("");
 						}
 					}
 				});
 			} else {
-				onChange(newQuery);
+				onQueryChange(newQuery);
 			}
 		}
 
@@ -275,7 +358,7 @@ export class SearchBar extends React.Component<
 				: { value: searchQuery };
 
 		return (
-			<span>
+			<div className={this.getStyles()}>
 				<ComboBox
 					className="context-list-title"
 					options={searchTypeOptions}
@@ -302,7 +385,7 @@ export class SearchBar extends React.Component<
 						value={searchQuery}
 					/>
 				)}
-			</span>
+			</div>
 		);
 	}
 }

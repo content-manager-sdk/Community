@@ -128,12 +128,16 @@ export class TrimObjectSearchList extends React.Component<
 			purposeExtra,
 			filter,
 			filterSearch,
+			onTrimTypeChanged,
 		} = this.props;
 
 		let { trimType } = this.state;
 
 		if (navTrimType && trimType !== navTrimType) {
 			this.setState({ trimType: navTrimType });
+			if (onTrimTypeChanged) {
+				onTrimTypeChanged(navTrimType);
+			}
 		}
 
 		let actualTrimType = navTrimType || trimType;
