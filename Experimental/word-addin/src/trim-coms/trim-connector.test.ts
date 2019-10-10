@@ -748,6 +748,46 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
+	describe("Object Caption", () => {
+		it("returns the object definitions", async () => {
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/ObjectDef`, {
+					params: {
+						ObjectType: "Main",
+					},
+				})
+				.reply(function(config: any) {
+					return [
+						200,
+						{
+							ObjectDefs: [
+								{
+									CaptionPlural: "Saved Searches",
+									Caption: "Saved Search",
+									Abbreviation: "srh",
+									Name: "savedSearch",
+									Id: "SavedSearch",
+								},
+							],
+							ResponseStatus: {},
+						},
+					];
+				});
+
+			const data = await trimConnector.getObjectCaption(
+				BaseObjectTypes.SavedSearch
+			);
+
+			const locationData = await trimConnector.getObjectCaption(
+				BaseObjectTypes.Location
+			);
+
+			expect(data).toEqual("Saved Search");
+			expect(locationData).toEqual("Location");
+			expect.assertions(2);
+		});
+	});
+
 	describe("Database properties", () => {
 		it("returns Currency Symbol", async () => {
 			mock

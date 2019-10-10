@@ -110,7 +110,12 @@ class MockTrimConnector implements ITrimConnector {
 	}
 	getMessages(): Promise<any> {
 		return new Promise(function(resolve, reject) {
-			resolve({ web_HPRM: "Content Manager" });
+			resolve({
+				web_HPRM: "Content Manager",
+				bob_needSelectedRow:
+					"Please select the {0} you wish to perform the task on.",
+				web_Test_two: "message {0} and {1}",
+			});
 		});
 	}
 	getMe(): Promise<ILocation> {
@@ -296,6 +301,39 @@ describe("Test basic setup from Trim", () => {
 
 			expect(appStore.errorMessage).toEqual("an error");
 			expect(appStore.status).toEqual("ERROR");
+		});
+
+		[
+			{
+				msg: "bob_needSelectedRow",
+				replacements: ["record"],
+				expected: "Please select the record you wish to perform the task on.",
+			},
+			{ msg: "web_HPRM", expected: "Content Manager" },
+			{
+				msg: "web_Test_two",
+				replacements: ["one", "two"],
+				expected: "message one and two",
+			},
+		].forEach((testData) => {
+			it("sets the error message", (done) => {
+				appStore.errorMessage = "";
+				appStore.status = "WAITING";
+
+				appStore.fetchBaseSettingFromTrim(false);
+
+				setImmediate(() => {
+					try {
+						appStore.setErrorMessage(testData.msg, ...testData.replacements);
+
+						expect(appStore.errorMessage).toEqual(testData.expected);
+						expect(appStore.status).toEqual("ERROR");
+						done();
+					} catch (e) {
+						done.fail(e);
+					}
+				});
+			});
 		});
 	});
 });

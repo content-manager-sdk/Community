@@ -1,67 +1,27 @@
 import * as React from "react";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 import { ContextList } from "./ContextList";
-import { IconButton, ComboBox } from "office-ui-fabric-react";
+import { IconButton } from "office-ui-fabric-react";
 
-import {
-	TrimConnector,
-	ITrimMainObject,
-	ISearchParamaters,
-	ISearchResults,
-	ISearchClauseDef,
-	IObjectDef,
-	ISearchClauseOrFieldDef,
-} from "../../trim-coms/trim-connector";
-import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
-import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
-import { doesNotReject } from "assert";
+import { TrimConnector, IObjectDef } from "../../trim-coms/trim-connector";
 
 describe("Context List", function() {
 	let testUri = 0;
+	let recordUri = 0;
 	let testError = "";
 	let testText = "";
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
-	const doClauseDefs = function(
-		trimType: BaseObjectTypes
-	): Promise<ISearchClauseOrFieldDef[]> {
-		return new Promise(function(resolve) {
-			resolve([
-				{
-					ClauseName: "content",
-					Caption: "Content",
-					MethodGroup: "Text",
-					IsRecent: false,
-					IsFavorite: false,
-					ParameterFormat: "String",
-					SearchParameterFormat: "String",
-				},
-				{
-					Caption: "Any Word",
-					ClauseName: "anyWord",
-					MethodGroup: "Text",
-					IsRecent: false,
-					IsFavorite: false,
-					ParameterFormat: "String",
-					SearchParameterFormat: "String",
-				},
-				{
-					Caption: "All",
-					ClauseName: "all",
-					MethodGroup: "Text",
-					IsRecent: false,
-					IsFavorite: true,
-					ParameterFormat: "Boolean",
-					SearchParameterFormat: "Boolean",
-				},
-			]);
-		});
-	};
+	trimConnector.getMessages = function() {
+		return { bob_needSelectedRow: "test {0}" };
+	}.bind(trimConnector);
 
-	trimConnector.getSearchClauseOrFieldDefinitions = doClauseDefs.bind(
-		trimConnector
-	);
+	trimConnector.getObjectDefinitions = function() {
+		return new Promise((resolve) => {
+			resolve([{ Id: "Record", Caption: "Record" }]);
+		});
+	}.bind(trimConnector);
 
 	const mockWordConnector = {
 		insertText(textToInsert: string): void {
@@ -77,11 +37,18 @@ describe("Context List", function() {
 		setError: function(message: any) {
 			testError = message;
 		},
+		setErrorMessage: function(message) {
+			testError = message;
+		},
 		openInCM: function(uri: number) {
 			testUri = uri;
 		},
-		RecordUri: 7,
-		documentInfo: { Enums: { RecordRelationshipType: [] } },
+		RecordUri: recordUri,
+		documentInfo: {
+			Enums: {
+				RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
+			},
+		},
 	};
 
 	it("has menu button", () => {
@@ -137,5 +104,32 @@ describe("Context List", function() {
 
 		expect(testText).toEqual("a title");
 		expect.assertions(1);
+	});
+
+	it("error on context when record not selected", (done) => {
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				wordConnector={mockWordConnector}
+				trimConnector={trimConnector}
+			/>
+		);
+
+		const menuItem = wrapper
+			.find(IconButton)
+			.props()
+			.menuProps.items.find((mi) => {
+				return mi.key === "addRelationshipto";
+			}).subMenuProps.items[0];
+		menuItem.onClick();
+		setTimeout(() => {
+			try {
+				expect(testError).toEqual("bob_needSelectedRow");
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail();
+			}
+		});
 	});
 });

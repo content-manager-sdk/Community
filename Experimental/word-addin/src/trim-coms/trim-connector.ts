@@ -173,6 +173,7 @@ export interface ITrimConnector {
 	): Promise<ISearchClauseOrFieldDef[]>;
 
 	getObjectDefinitions(): Promise<IObjectDef[]>;
+	getObjectCaption(trimType: BaseObjectTypes): Promise<string>;
 	getSearchOptions(): Promise<ISearchOptions>;
 	getDatabaseProperties(): Promise<IDatabase>;
 	search<T>(
@@ -313,6 +314,21 @@ export class TrimConnector implements ITrimConnector {
 
 	private setCache(key: string, cacheData: any) {
 		localStorage.setItem(key, JSON.stringify(cacheData));
+	}
+
+	public getObjectCaption(trimType: BaseObjectTypes): Promise<string> {
+		return new Promise((resolve) => {
+			this.getObjectDefinitions().then((objectDefs) => {
+				const objectDef = objectDefs.find((objectDef) => {
+					return objectDef.Id == trimType;
+				});
+				if (objectDef) {
+					resolve(objectDef.Caption);
+				} else {
+					resolve(trimType);
+				}
+			});
+		});
 	}
 
 	public getObjectDefinitions(): Promise<IObjectDef[]> {
@@ -564,7 +580,6 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_GoToCM = "Open in Content Manager";
 					data.Messages.web_Paste_Title = "Paste title";
 					data.Messages.web_Please_Select = "Please select a Record";
-
 					data.Messages.web_Show = "Show";
 					data.Messages.web_in_Same_Container = "in same container";
 					data.Messages.web_with_Same_Contacts = "with same contacts";

@@ -22,6 +22,7 @@ export interface IAppStore {
 	fetchBaseSettingFromTrim: any;
 	resetError(): void;
 	setError(error: any, module?: string): void;
+	setErrorMessage(message: string, ...args: string[]): void;
 	openInCM(uri: number): void;
 	getWebClientUrl(uri: number): void;
 }
@@ -216,6 +217,20 @@ export class AppStore implements IAppStore {
 		this.errorBody = error;
 		this.status = "ERROR";
 	};
+
+	@action.bound
+	public setErrorMessage(message: string, ...args: string[]) {
+		let errorMessage = this.messages[message];
+
+		for (let counter = 0; counter < args.length; counter++) {
+			errorMessage = errorMessage.replace(
+				new RegExp("\\{" + counter + "\\}", "g"),
+				args[counter]
+			);
+		}
+
+		this.setError(errorMessage);
+	}
 
 	@action.bound
 	public resetError = () => {

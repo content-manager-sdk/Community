@@ -116,13 +116,30 @@ export class ContextList extends React.Component<
 									key: rel.Id,
 									text: rel.Caption,
 									onClick: () => {
-										trimConnector!
-											.createRelationship(
-												appStore.RecordUri,
-												selectRecord.Uri,
-												rel.Id
-											)
-											.then(() => {});
+										if (selectRecord.Uri < 1) {
+											trimConnector!
+												.getObjectCaption(BaseObjectTypes.Record)
+												.then((caption) => {
+													appStore.setErrorMessage(
+														"bob_needSelectedRow",
+														caption.toLowerCase()
+													);
+												});
+										} else {
+											appStore.setStatus("STARTING");
+											trimConnector!
+												.createRelationship(
+													appStore.RecordUri,
+													selectRecord.Uri,
+													rel.Id
+												)
+												.then(() => {
+													appStore.setStatus("WAITING");
+												})
+												.catch((error) => {
+													appStore.setError(error);
+												});
+										}
 									},
 								};
 							}
