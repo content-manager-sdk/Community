@@ -41,7 +41,7 @@ interface IOptionsInterface {
 	data: any;
 }
 
-interface IPropertyOrFieldDef {
+export interface IPropertyOrFieldDef {
 	Caption: string;
 	Id: string;
 }
@@ -210,6 +210,10 @@ export interface ITrimConnector {
 
 	setLatestClause(trimType: BaseObjectTypes, queryName: string): void;
 	getLatestClause(trimType: BaseObjectTypes): string;
+	setViewPaneProperties(
+		trimObject: ITrimMainObject,
+		propertyIds: string[]
+	): Promise<IPropertyOrFieldDef[]>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -411,7 +415,6 @@ export class TrimConnector implements ITrimConnector {
 		return this.makeRequest(
 			{ path: "WriteFile", method: "post", data: { data, fileName } },
 			(data: any) => {
-				console.log(data);
 				return data.FileName;
 			}
 		);
@@ -449,7 +452,30 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	createRelationship(
+	public setViewPaneProperties(
+		trimObject: ITrimMainObject,
+		propertyIds: string[]
+	): Promise<IPropertyOrFieldDef[]> {
+		const path = "PropertyDef";
+
+		const postBody = {
+			TrimType: trimObject.TrimType,
+			ForObject: trimObject.Uri,
+			PropertiesAndFields: propertyIds.map((pid) => {
+				return { Id: pid };
+			}),
+			ListType: "Detailed",
+		};
+
+		return this.makeRequest(
+			{ path, method: "post", data: postBody },
+			(data: any) => {
+				return data.PropertiesAndFields;
+			}
+		);
+	}
+
+	public createRelationship(
 		uri: number,
 		relatedRecord: number,
 		relationshipType: string
@@ -478,9 +504,10 @@ export class TrimConnector implements ITrimConnector {
 	): Promise<IObjectDetails> {
 		const params = {
 			includePropertyDefs: true,
-			propertySets: "Details",
+			propertySets: "Detailed",
 			propertyValue: "String",
 			stringDisplayType: "ViewPane",
+			properties: "ToolTip,NameString",
 		};
 
 		return this.makeRequest(
@@ -578,7 +605,10 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_GoToTextSearch = "Go to text search";
 					data.Messages.web_GoToAdvancedSearch = "Go to advanced search";
 					data.Messages.web_GoToCM = "Open in Content Manager";
-					data.Messages.web_Paste_Title = "Paste title";
+					data.Messages.web_Paste = "Paste";
+					data.Messages.web_Paste_Title = "Title";
+					data.Messages.web_Paste_Number = "Number";
+					data.Messages.web_Paste_Link = "Link";
 					data.Messages.web_Please_Select = "Please select a Record";
 					data.Messages.web_Show = "Show";
 					data.Messages.web_in_Same_Container = "in same container";
@@ -728,7 +758,8 @@ export class TrimConnector implements ITrimConnector {
 							response.data.WebUrl ||
 							response.data.Results ||
 							response.data.FileName ||
-							response.data.File
+							response.data.File ||
+							response.data.PropertiesAndFields
 						) {
 							resolve(parseCallback(response.data));
 						} else {

@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import { ContextList } from "./ContextList";
 import { IconButton } from "office-ui-fabric-react";
 
-import { TrimConnector, IObjectDef } from "../../trim-coms/trim-connector";
+import { TrimConnector } from "../../trim-coms/trim-connector";
 
 describe("Context List", function() {
 	let testUri = 0;

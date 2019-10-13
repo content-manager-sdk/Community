@@ -98,7 +98,7 @@ export class ContextList extends React.Component<
 					},
 				},
 				{
-					key: "pasteTitle",
+					key: "pasteLink",
 					text: appStore.messages.web_Paste_Link,
 					iconProps: { iconName: "PasteAsText" },
 					onClick: () => {

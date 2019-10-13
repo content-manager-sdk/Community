@@ -1,10 +1,7 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import DetailsView from "./DetailsView";
-import { IconButton } from "office-ui-fabric-react/lib/Button";
-import { ITrimConnector, ICommandDef } from "src/trim-coms/trim-connector";
-import { IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
-import { CommandIds } from "../trim-coms/trim-command-ids";
+import { ITrimConnector, IObjectDetails } from "../trim-coms/trim-connector";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
 import { IWordConnector } from "../office-coms/word-connector";
 import {
@@ -14,6 +11,8 @@ import {
 	PivotLinkSize,
 } from "office-ui-fabric-react/lib/Pivot";
 import ContextList from "./ContextList/ContextList";
+import ObjectContextMenu from "./ObjectContextMenu/ObjectContextMenu";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
 export class ExistingRecord extends React.Component<
 	{
@@ -22,7 +21,7 @@ export class ExistingRecord extends React.Component<
 		wordConnector?: IWordConnector;
 		className?: string;
 	},
-	{ menuMessage: string }
+	{ menuMessage: string; recordDetails: IObjectDetails }
 > {
 	constructor(props: {
 		appStore?: any;
@@ -31,73 +30,30 @@ export class ExistingRecord extends React.Component<
 	}) {
 		super(props);
 
-		this.state = { menuMessage: "" };
+		this.state = {
+			menuMessage: "",
+			recordDetails: { results: [], propertiesAndFields: [] },
+		};
 	}
 
-	private _onActionclickClick = (
-		evt: React.MouseEvent<HTMLElement>,
-		item: IContextualMenuItem
-	) => {
-		const { trimConnector, wordConnector, appStore } = this.props;
-		if (item.key === "Properties") {
-			appStore.openInCM(appStore.documentInfo.Uri);
-		} else {
-			appStore.setStatus("STARTING");
-			const me = this;
-			wordConnector!.saveDocument().then(() => {
-				const runAction = (fileName: string) => {
-					trimConnector!
-						.runAction(
-							item.key as CommandIds,
-							appStore!.RecordUri,
-							fileName,
-							appStore!.WebUrl
-						)
-						.then((data) => {
-							appStore.setDocumentInfo(data);
-							me.setState({
-								menuMessage: `Action completed successfully '${item.text}'.`,
-							});
-							setTimeout(function() {
-								me._dismissMessage();
-							}, 3000);
-							appStore.setStatus("WAITING");
-						});
-				};
+	componentDidMount() {
+		const { trimConnector, appStore } = this.props;
 
-				if (item.key === CommandIds.RecCheckIn) {
-					wordConnector!
-						.getDocumentData((data: number[], fileName: string) => {
-							return trimConnector!.writeFileSlice(data, fileName);
-						})
-						.then((fileName) => {
-							runAction(fileName);
-						});
-				} else {
-					runAction("");
-				}
+		return trimConnector!
+			.getObjectDetails(BaseObjectTypes.Record, appStore.RecordUri)
+			.then((response: IObjectDetails) => {
+				this.setState({ recordDetails: response });
 			});
-		}
-	};
+	}
 
 	private _dismissMessage = () => {
 		this.setState({ menuMessage: "" });
 	};
 
 	public render() {
-		const { appStore, className } = this.props;
-		const menuItems = appStore.documentInfo.CommandDefs.map(
-			(commandDef: ICommandDef) => {
-				return {
-					key: commandDef.CommandId,
-					text: commandDef.Tooltip,
-					onClick: this._onActionclickClick,
-					disabled: !commandDef.IsEnabled,
-				};
-			}
-		);
+		const { className } = this.props;
 
-		const { menuMessage } = this.state;
+		const { menuMessage, recordDetails } = this.state;
 
 		return (
 			<div className={className}>
@@ -108,21 +64,13 @@ export class ExistingRecord extends React.Component<
 					<PivotItem headerText="Properties" key={1}>
 						<hr />
 						<div>
-							<IconButton
-								className="trim-action-button"
-								primary
-								split={true}
-								iconProps={{ iconName: "GlobalNavButton" }}
-								menuProps={{
-									items: menuItems,
-								}}
-							/>
+							<ObjectContextMenu record={recordDetails.results[0]} />
 							{menuMessage && (
 								<MessageBar onDismiss={this._dismissMessage}>
 									{menuMessage}
 								</MessageBar>
 							)}
-							<DetailsView />
+							<DetailsView recordDetails={recordDetails} />
 						</div>
 					</PivotItem>
 					<PivotItem headerText="Context" key={2}>

@@ -3,9 +3,9 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import { ExistingRecord } from "./ExistingRecord";
 import DetailsView from "./DetailsView";
-import { IconButton } from "office-ui-fabric-react/lib/Button";
-import { ICommandDef, IDriveInformation } from "../trim-coms/trim-connector";
+import { IDriveInformation, IObjectDetails } from "../trim-coms/trim-connector";
 import { CommandIds } from "../trim-coms/trim-command-ids";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
 describe("Existing Record", () => {
 	let checkinUri = 0;
@@ -72,6 +72,14 @@ describe("Existing Record", () => {
 				resolve(returnedDocumentInfo);
 			});
 		},
+		getObjectDetails(
+			trimType: BaseObjectTypes,
+			uri: number
+		): Promise<IObjectDetails> {
+			return new Promise(function(resolve) {
+				resolve({ results: [], propertiesAndFields: [] });
+			});
+		},
 	};
 
 	const mockWordConnector = {
@@ -96,94 +104,5 @@ describe("Existing Record", () => {
 				.find(DetailsView)
 				.exists()
 		).toBeTruthy();
-	});
-
-	it("contains an action button", function(this: any) {
-		expect.assertions(9);
-		const wrapper = makeWrapper();
-		expect(wrapper.find(IconButton).exists()).toBeTruthy();
-		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(2);
-		expect(wrapper.find(IconButton).props().menuProps.items[0].text).toEqual(
-			"Checkin"
-		);
-		expect(wrapper.find(IconButton).props().menuProps.items[1].text).toEqual(
-			"Make Final"
-		);
-
-		expect(
-			wrapper.find(IconButton).props().menuProps.items[1].disabled
-		).toBeFalsy();
-
-		expect(wrapper.find(IconButton).props().split).toBeTruthy();
-		expect(wrapper.find(IconButton).props().primary).toBeTruthy();
-		expect(wrapper.find(IconButton).props().text).toBeUndefined();
-		expect(wrapper.find(IconButton).props().iconProps).toEqual({
-			iconName: "GlobalNavButton",
-		});
-	});
-
-	it("calls checkin when checkin button clicked", async (done) => {
-		const wrapper = makeWrapper();
-
-		expect.assertions(2);
-		const menuItem = wrapper.find(IconButton).props().menuProps.items[0];
-
-		menuItem.onClick(null, menuItem);
-
-		setImmediate(() => {
-			try {
-				expect(checkinUri).toEqual(7);
-				expect(finalizeUri).toEqual(0);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
-	});
-
-	it("calls finalize when checkin button clicked", async (done) => {
-		const wrapper = makeWrapper();
-
-		expect.assertions(2);
-		const menuItem = wrapper.find(IconButton).props().menuProps.items[1];
-
-		menuItem.onClick(null, menuItem);
-
-		setImmediate(() => {
-			try {
-				expect(checkinUri).toEqual(0);
-				expect(finalizeUri).toEqual(7);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
-	});
-
-	it("disables Make Final when Record is already finalised", () => {
-		const wrapper = makeWrapper(false);
-		expect.assertions(1);
-
-		expect(
-			wrapper.find(IconButton).props().menuProps.items[1].disabled
-		).toBeTruthy();
-	});
-
-	it("sets the documentInfo on state after an action", (done) => {
-		const wrapper = makeWrapper();
-
-		expect.assertions(1);
-		const menuItem = wrapper.find(IconButton).props().menuProps.items[1];
-
-		menuItem.onClick(null, menuItem);
-
-		setImmediate(() => {
-			try {
-				expect(updatedDocumentInfo).toEqual(returnedDocumentInfo);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
 	});
 });

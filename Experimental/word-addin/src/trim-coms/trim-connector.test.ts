@@ -409,6 +409,63 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("has updated view pane properties", () => {
+		let postConfig: any;
+		mock
+			.onPost(`${SERVICEAPI_BASE_URI}/PropertyDef`)
+			.reply(function(config: any) {
+				postConfig = config;
+
+				return [
+					200,
+					{
+						PropertiesAndFields: [
+							{
+								Id: "RecordTitle",
+								IsEMailAddress: false,
+								IsHyperlink: false,
+								DefaultColumnCharacters: 20,
+								ColumnWidth: 134,
+								IsDefaultDataGridColumn: true,
+								BestFitColumn: false,
+								IconAndOrTextMode: "IconAndText",
+								StringAlignment: "Left",
+								SortMode: "AlphaNoCase",
+								Caption: "Title",
+								ObjectType: "Unknown",
+								PFFormat: "String",
+								Property: {},
+								PropertyId: "RecordTitle",
+								IsAField: false,
+								IsAProperty: true,
+								IsMandatory: false,
+							},
+						],
+						ResponseStatus: {},
+					},
+				];
+			});
+
+		expect.assertions(3);
+
+		return trimConnector
+			.setViewPaneProperties({ Uri: 1, TrimType: BaseObjectTypes.Record }, [
+				"RecordTitle",
+			])
+			.then((data) => {
+				expect(postConfig.data).toEqual(
+					JSON.stringify({
+						TrimType: "Record",
+						ForObject: 1,
+						PropertiesAndFields: [{ Id: "RecordTitle" }],
+						ListType: "Detailed",
+					})
+				);
+				expect(postConfig.headers!["Accept"]).toEqual("application/json");
+				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
+			});
+	});
+
 	it("cancelled the request", (done) => {
 		let postConfig: any;
 		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
@@ -525,10 +582,11 @@ describe("Test fetch from TRIM", () => {
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/Record/678`, {
 					params: {
-						propertySets: "Details",
+						propertySets: "Detailed",
 						propertyValue: "String",
 						stringDisplayType: "ViewPane",
 						includePropertyDefs: true,
+						properties: "ToolTip,NameString",
 					},
 				})
 				.reply((config) => {
