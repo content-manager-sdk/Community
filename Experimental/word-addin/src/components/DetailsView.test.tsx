@@ -6,6 +6,7 @@ import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import TrimConnector, { IObjectDetails } from "../trim-coms/trim-connector";
 import { Label } from "office-ui-fabric-react/lib/Label";
 import { disconnect } from "cluster";
+import { ComboBox, DefaultButton } from "office-ui-fabric-react";
 
 describe("Details View", function() {
 	beforeEach(() => {
@@ -49,13 +50,41 @@ describe("Details View", function() {
 		setUri = trimObject.Uri;
 		setProperties = propertyIds;
 		return new Promise((resolve) => {
-			return [];
+			resolve([]);
+		});
+	}.bind(trimConnector);
+
+	trimConnector.getViewPanePropertyDefs = function(trimType, uri) {
+		return new Promise((resolve) => {
+			resolve([
+				{ Id: "RecordTitle", Caption: "title" },
+				{ Id: "AField", Caption: "A Field" },
+			]);
+		});
+	}.bind(trimConnector);
+
+	trimConnector.getObjectDetails = function(trimType, uri) {
+		return new Promise((resolve) => {
+			resolve({
+				results: [
+					{
+						Uri: 5,
+						RecordTitle: { StringValue: "my record" },
+						RecordNumber: { StringValue: "my record" },
+						RecordAccessControl: { StringValue: "my record" },
+						Fields: {
+							SparkleLevel: { StringValue: "Medium" },
+							AField: { StringValue: "aa" },
+						},
+					},
+				],
+			});
 		});
 	}.bind(trimConnector);
 
 	const wrapper = shallow<DetailsView>(
 		<DetailsView
-			appStore={{ RecordUri: 0, Id: "my id" }}
+			appStore={{ RecordUri: 0, Id: "my id", messages: { web_Add: "Add" } }}
 			trimConnector={trimConnector}
 			wordConnector={mockWordConnector}
 			recordDetails={{}}
@@ -127,5 +156,57 @@ describe("Details View", function() {
 			"RecordAccessControl",
 			"SparkleLevel",
 		]);
+	});
+
+	it("gets property defs on combo menu open", (done) => {
+		let combo = wrapper.find(ComboBox);
+		combo.props().onMenuOpen();
+
+		setImmediate(() => {
+			try {
+				combo = wrapper.find(ComboBox);
+				// expect(combo.props().options[0].key).toEqual("RecordTitle");
+				// expect(combo.props().options[0].text).toEqual("title");
+				expect(combo.props().options[0].key).toEqual("AField");
+				expect(combo.props().options[0].text).toEqual("A Field");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("adds property to view pane", (done) => {
+		let combo = wrapper.find(ComboBox);
+
+		wrapper.setState({
+			propertyAndFieldDefinitions: [
+				{ Id: "RecordTitle", Caption: "Title" },
+				{ Id: "RecordNumber", Caption: "Number" },
+				{ Id: "RecordAccessControl", Caption: "Acl" },
+				{ Id: "SparkleLevel", Caption: "SparkleLevel" },
+				{ Id: "AField", Caption: "" },
+			],
+			keysToAdd: ["AField"],
+		});
+
+		const button = wrapper.find(DefaultButton);
+		button.props().onClick(null);
+
+		setImmediate(() => {
+			try {
+				expect(setUri).toEqual(5);
+				expect(setProperties).toEqual([
+					"RecordTitle",
+					"RecordNumber",
+					"RecordAccessControl",
+					"SparkleLevel",
+					"AField",
+				]);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 });

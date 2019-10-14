@@ -214,6 +214,11 @@ export interface ITrimConnector {
 		trimObject: ITrimMainObject,
 		propertyIds: string[]
 	): Promise<IPropertyOrFieldDef[]>;
+
+	getViewPanePropertyDefs(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<IPropertyOrFieldDef[]>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -452,6 +457,26 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
+	public getViewPanePropertyDefs(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<IPropertyOrFieldDef[]> {
+		const path = "PropertyDef";
+
+		const params = {
+			TrimType: trimType,
+			ForObject: uri,
+			Get: "ViewPane",
+		};
+
+		return this.makeRequest(
+			{ path, method: "get", data: params },
+			(data: any) => {
+				return data.PropertiesAndFields;
+			}
+		);
+	}
+
 	public setViewPaneProperties(
 		trimObject: ITrimMainObject,
 		propertyIds: string[]
@@ -617,6 +642,7 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_All_Related_To = "all related to";
 					data.Messages.web_Search_Content = "Content:";
 					data.Messages.web_Add_Relationship = "Add relationship";
+					data.Messages.web_Add = "Add";
 					data.Messages.web_Add_RelationshipTitle =
 						"Add relationship from the open document to the selected record.";
 					this.setCache("messages", data.Messages);

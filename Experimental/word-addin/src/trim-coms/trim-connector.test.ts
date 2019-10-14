@@ -409,6 +409,70 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("get view pane property defs", () => {
+		let postConfig: any;
+
+		// mock
+		// 	.onGet(`${SERVICEAPI_BASE_URI}/Location/me`)
+		// 	.replyOnce(function(config: any) {
+		// 		body = config.data;
+
+		// 		return [
+		// 			200,
+		// 			{
+		// 				Results: [{ LocationFullFormattedName: { Value: "david" } }],
+		// 			},
+		// 		];
+		// 	});
+
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/PropertyDef`)
+			.replyOnce(function(config: any) {
+				postConfig = config;
+
+				return [
+					200,
+					{
+						PropertiesAndFields: [
+							{
+								Id: "RecordTitle",
+								IsEMailAddress: false,
+								IsHyperlink: false,
+								DefaultColumnCharacters: 20,
+								ColumnWidth: 134,
+								IsDefaultDataGridColumn: true,
+								BestFitColumn: false,
+								IconAndOrTextMode: "IconAndText",
+								StringAlignment: "Left",
+								SortMode: "AlphaNoCase",
+								Caption: "Title",
+								ObjectType: "Unknown",
+								PFFormat: "String",
+								Property: {},
+								PropertyId: "RecordTitle",
+								IsAField: false,
+								IsAProperty: true,
+								IsMandatory: false,
+							},
+						],
+						ResponseStatus: {},
+					},
+				];
+			});
+
+		expect.assertions(2);
+
+		return trimConnector
+			.getViewPanePropertyDefs(BaseObjectTypes.Record, 5)
+			.then((data) => {
+				expect(postConfig.params).toEqual({
+					TrimType: "Record",
+					ForObject: 5,
+					Get: "ViewPane",
+				});
+				expect(postConfig.headers!["Accept"]).toEqual("application/json");
+			});
+	});
 	it("has updated view pane properties", () => {
 		let postConfig: any;
 		mock

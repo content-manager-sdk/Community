@@ -4,6 +4,12 @@ body {
 	font-family: sans-serif;
 }
 
+.details-view {
+	max-height: calc(100% - 160px);
+	overflow-y: auto;
+	margin-bottom: 10px;
+}
+
 .details-view > div {
 	border-bottom: solid 1px lightgray;
 	margin-bottom: 2px;
