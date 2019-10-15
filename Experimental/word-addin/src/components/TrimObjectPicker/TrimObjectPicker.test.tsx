@@ -13,7 +13,7 @@ import {
 	TrimConnector,
 	ITrimMainObject,
 	ISearchResults,
-	ISearchParamaters,
+	ISearchParameters,
 	ISearchOptions,
 } from "../../trim-coms/trim-connector";
 import { Provider } from "mobx-react";
@@ -31,7 +31,7 @@ describe("TrimObjectPicker", function() {
 	trimConnector.credentialsResolver = (callback) => {};
 
 	const doSearch = function<T extends ITrimMainObject>(
-		options: ISearchParamaters
+		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
 		return new Promise(function(resolve) {
 			resolve({

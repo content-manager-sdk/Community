@@ -7,7 +7,7 @@ import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import {
 	TrimConnector,
 	ITrimMainObject,
-	ISearchParamaters,
+	ISearchParameters,
 	ISearchResults,
 	ISearchClauseDef,
 	IClassification,
@@ -86,7 +86,7 @@ describe("Trim object search list", function() {
 	trimConnector.credentialsResolver = (callback) => {};
 
 	const doSearch = function<T extends IClassification>(
-		options: ISearchParamaters
+		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
 		testPurpose = options.purpose;
 		testPurposeExtra = Number(options.purposeExtra);

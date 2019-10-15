@@ -3,31 +3,48 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import { ObjectContextMenu } from "./ObjectContextMenu";
 import { IconButton } from "office-ui-fabric-react/lib/Button";
-import {
+import TrimConnector, {
 	IDriveInformation,
 	IObjectDetails,
+	ITrimMainObject,
 } from "../../trim-coms/trim-connector";
 import { CommandIds } from "../../trim-coms/trim-command-ids";
 import { ContextualMenuItemType } from "office-ui-fabric-react/lib/ContextualMenu";
 
 describe("Object Context Menu", () => {
 	let checkinUri = 0;
+	let favUri = 0;
 	let finalizeUri = 0;
 	let updatedDocumentInfo;
 	let insertedText = "";
 	let insertedUrl = "";
+	let testError = "";
+	let testUri = 0;
 	const returnedDocumentInfo = {
 		Id: "test-id",
 		Uri: 5,
 		CommandDefs: [],
 	};
 
-	const makeWrapper = (menuItemsEnabled: boolean = true) => {
+	const makeWrapper = (
+		menuItemsEnabled: boolean = true,
+		isInList: bool = false
+	) => {
 		return shallow<ObjectContextMenu>(
 			<ObjectContextMenu
+				isInList={isInList}
 				appStore={{
+					setError: function(message: any) {
+						testError = message;
+					},
+					setErrorMessage: function(message) {
+						testError = message;
+					},
 					setDocumentInfo: (documentInfo) => {
 						updatedDocumentInfo = documentInfo;
+					},
+					openInCM: function(uri: number) {
+						testUri = uri;
 					},
 					setStatus: (status: string) => {},
 					RecordUri: 7,
@@ -35,11 +52,15 @@ describe("Object Context Menu", () => {
 					messages: {
 						web_Actions: "Actions",
 						web_Paste: "Paste",
+						web_Please_Select: "Please select",
 					},
 					getWebClientUrl: (uri: number) => {
 						return "link?uri=" + uri;
 					},
 					documentInfo: {
+						Enums: {
+							RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
+						},
 						CommandDefs: [
 							{
 								CommandId: "RecCheckIn",
@@ -55,36 +76,62 @@ describe("Object Context Menu", () => {
 								StatusBarMessage: "Make Final",
 								IsEnabled: menuItemsEnabled,
 							},
+							{
+								CommandId: "Properties",
+								MenuEntryString: "Properties",
+								Tooltip: "Properties",
+								StatusBarMessage: "Properties",
+								IsEnabled: menuItemsEnabled,
+							},
 						],
 					},
 				}}
-				trimConnector={mockTrimConnector}
+				trimConnector={trimConnector}
 				wordConnector={mockWordConnector}
-				record={{ Uri: 7, ToolTip: "test title", NameString: "REC_1" }}
+				record={{
+					Uri: 7,
+					ToolTip: "test title",
+					NameString: "REC_1",
+				}}
 			/>
 		);
 	};
 
 	beforeEach(() => {
 		checkinUri = 0;
+		favUri = 0;
 		finalizeUri = 0;
 		updatedDocumentInfo = null;
 		insertedText = "";
 		insertedUrl = "";
+		testError = "";
+		testUri = 0;
 	});
 
-	const mockTrimConnector = {
-		runAction(commandId: CommandIds, uri: number): Promise<IDriveInformation> {
-			if (commandId === CommandIds.RecCheckIn) {
-				checkinUri = uri;
-			} else {
-				finalizeUri = uri;
-			}
-			return new Promise(function(resolve) {
-				resolve(returnedDocumentInfo);
-			});
-		},
-	};
+	let trimConnector = new TrimConnector();
+	trimConnector.credentialsResolver = (callback) => {};
+
+	trimConnector.getObjectDefinitions = function() {
+		return new Promise((resolve) => {
+			resolve([{ Id: "Record", Caption: "Record" }]);
+		});
+	}.bind(trimConnector);
+
+	trimConnector.runAction = function(
+		commandId: CommandIds,
+		uri: number
+	): Promise<IDriveInformation> {
+		if (commandId === CommandIds.AddToFavorites) {
+			favUri = uri;
+		} else if (commandId === CommandIds.RecCheckIn) {
+			checkinUri = uri;
+		} else {
+			finalizeUri = uri;
+		}
+		return new Promise(function(resolve) {
+			resolve(returnedDocumentInfo);
+		});
+	}.bind(trimConnector);
 
 	const mockWordConnector = {
 		saveDocument(): Promise<void> {
@@ -113,7 +160,7 @@ describe("Object Context Menu", () => {
 		expect.assertions(9);
 		const wrapper = makeWrapper();
 		expect(wrapper.find(IconButton).exists()).toBeTruthy();
-		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(4);
+		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(5);
 		expect(wrapper.find(IconButton).props().menuProps.items[2].text).toEqual(
 			"Checkin"
 		);
@@ -137,7 +184,7 @@ describe("Object Context Menu", () => {
 		});
 	});
 
-	it("contain paste and split", function(this: any) {
+	it("contains paste and split", function(this: any) {
 		expect.assertions(3);
 		const wrapper = makeWrapper();
 
@@ -150,6 +197,83 @@ describe("Object Context Menu", () => {
 		expect(
 			wrapper.find(IconButton).props().menuProps.items[1].itemType
 		).toEqual(ContextualMenuItemType.Divider);
+	});
+
+	it("contain add relationship", function(this: any) {
+		expect.assertions(1);
+		const wrapper = makeWrapper(true, true);
+
+		expect(
+			wrapper
+				.find(IconButton)
+				.props()
+				.menuProps.items.find((menuItem) => {
+					return menuItem.key === "addRelationshipto";
+				})
+		).toBeTruthy();
+	});
+
+	it("not contain add relationship", function(this: any) {
+		expect.assertions(1);
+		const wrapper = makeWrapper(true, false);
+
+		expect(
+			wrapper
+				.find(IconButton)
+				.props()
+				.menuProps.items.find((menuItem) => {
+					return menuItem.key === "addRelationshipto";
+				})
+		).toBeUndefined();
+	});
+
+	it("error when record not selected", (done) => {
+		const wrapper = makeWrapper(true, false);
+		wrapper.setProps({ record: { Uri: 0 } });
+
+		const menuItem = wrapper
+			.find(IconButton)
+			.props()
+			.menuProps.items.find((mp) => {
+				return mp.key === "paste";
+			})
+			.subMenuProps.items.find((sm) => {
+				return sm.key === "pasteTitle";
+			});
+		menuItem.onClick(null, menuItem);
+		setImmediate(() => {
+			try {
+				expect(testError).toEqual("bob_needSelectedRow");
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("error on create relationship when record not selected", (done) => {
+		const wrapper = makeWrapper(true, true);
+
+		wrapper.setProps({ record: { Uri: 0 } });
+
+		const menuItem = wrapper
+			.find(IconButton)
+			.props()
+			.menuProps.items.find((mi) => {
+				return mi.key === "addRelationshipto";
+			}).subMenuProps.items[0];
+
+		menuItem.onClick(null, menuItem);
+		setImmediate(() => {
+			try {
+				expect(testError).toEqual("bob_needSelectedRow");
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("calls insert text when paste clicked", (done) => {
@@ -224,6 +348,43 @@ describe("Object Context Menu", () => {
 			try {
 				expect(insertedText).toEqual("REC_1");
 				expect(insertedUrl).toEqual("link?uri=7");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("calls favorite when checkin button clicked (from list)", async (done) => {
+		const wrapper = makeWrapper(true, true);
+		wrapper.setProps({
+			record: {
+				Uri: 8,
+				CommandDefs: [
+					{
+						IsEnabled: true,
+						CommandId: "AddToFavorites",
+						Tooltip: "Add To Favorites",
+						MenuItemType: "MenuItemCommand",
+					},
+				],
+			},
+		});
+		expect.assertions(3);
+		const menuItem = wrapper
+			.find(IconButton)
+			.props()
+			.menuProps.items.find((mp) => {
+				return mp.key === "AddToFavorites";
+			});
+
+		menuItem.onClick(null, menuItem);
+
+		setImmediate(() => {
+			try {
+				expect(favUri).toEqual(8);
+				expect(checkinUri).toEqual(0);
+				expect(finalizeUri).toEqual(0);
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -309,6 +470,79 @@ describe("Object Context Menu", () => {
 		setImmediate(() => {
 			try {
 				expect(updatedDocumentInfo).toEqual(returnedDocumentInfo);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("opens in CM", (done) => {
+		const wrapper = makeWrapper();
+
+		setImmediate(() => {
+			try {
+				const menuItem = wrapper
+					.find(IconButton)
+					.props()
+					.menuProps.items.find((mi) => {
+						return mi.key === "Properties";
+					});
+
+				menuItem.onClick(null, menuItem);
+
+				expect(testUri).toEqual(7);
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("document related commands not shown(from list)", async (done) => {
+		const wrapper = makeWrapper(true, true);
+		wrapper.setProps({
+			record: {
+				Uri: 8,
+				CommandDefs: [
+					{
+						IsEnabled: true,
+						CommandId: "RecCheckIn",
+						Tooltip: "",
+						MenuItemType: "MenuItemCommand",
+					},
+					{
+						IsEnabled: true,
+						CommandId: "RecDocFinal",
+						Tooltip: "",
+						MenuItemType: "MenuItemCommand",
+					},
+				],
+			},
+		});
+		expect.assertions(2);
+
+		setImmediate(() => {
+			try {
+				expect(
+					wrapper
+						.find(IconButton)
+						.props()
+						.menuProps.items.find((mp) => {
+							return mp.key === "RecCheckIn";
+						})
+				).toBeFalsy();
+
+				expect(
+					wrapper
+						.find(IconButton)
+						.props()
+						.menuProps.items.find((mp) => {
+							return mp.key === "RecDocFinal";
+						})
+				).toBeFalsy();
+
 				done();
 			} catch (e) {
 				done.fail(e);

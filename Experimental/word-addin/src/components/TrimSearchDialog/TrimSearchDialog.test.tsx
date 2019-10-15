@@ -4,7 +4,7 @@ import { TrimSearchDialog } from "./TrimSearchDialog";
 import { BaseObjectTypes } from "../../../src/trim-coms/trim-baseobjecttypes";
 import {
 	TrimConnector,
-	ISearchParamaters,
+	ISearchParameters,
 	ISearchResults,
 	IClassification,
 } from "../../trim-coms/trim-connector";

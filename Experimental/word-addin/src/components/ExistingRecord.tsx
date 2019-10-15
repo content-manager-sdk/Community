@@ -64,7 +64,10 @@ export class ExistingRecord extends React.Component<
 					<PivotItem headerText="Properties" key={1}>
 						<hr />
 						<div>
-							<ObjectContextMenu record={recordDetails.results[0]} />
+							<ObjectContextMenu
+								record={recordDetails.results[0]}
+								isInList={false}
+							/>
 							{menuMessage && (
 								<MessageBar onDismiss={this._dismissMessage}>
 									{menuMessage}

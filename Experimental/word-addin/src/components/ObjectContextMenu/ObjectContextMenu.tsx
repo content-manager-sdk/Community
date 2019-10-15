@@ -6,6 +6,7 @@ import {
 	ITrimConnector,
 	ICommandDef,
 	ITrimMainObject,
+	IEnumDetails,
 } from "src/trim-coms/trim-connector";
 import {
 	IContextualMenuItem,
@@ -14,77 +15,104 @@ import {
 import { CommandIds } from "../../trim-coms/trim-command-ids";
 
 import { IWordConnector } from "../../office-coms/word-connector";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+
+interface IContextMenuProps {
+	appStore?: any;
+	trimConnector?: ITrimConnector;
+	wordConnector?: IWordConnector;
+	record: ITrimMainObject;
+	isInList: boolean;
+}
 
 export class ObjectContextMenu extends React.Component<
-	{
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
-		record: ITrimMainObject;
-	},
-	{ menuMessage: string }
+	IContextMenuProps,
+	{ menuMessage: string; commandDefs: ICommandDef[] }
 > {
-	constructor(props: {
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
-		record: ITrimMainObject;
-	}) {
+	constructor(props: IContextMenuProps) {
 		super(props);
 
-		this.state = { menuMessage: "" };
+		if (!this.props.isInList) {
+			this.state = {
+				menuMessage: "",
+				commandDefs: props.appStore!.documentInfo.CommandDefs,
+			};
+		} else {
+			this.state = { menuMessage: "", commandDefs: [] };
+		}
 	}
 
-	private _onActionclickClick = (
+	componentDidUpdate(prevProps: IContextMenuProps) {
+		const { isInList, record } = this.props;
+
+		if (isInList) {
+			if (prevProps.record.Uri != record.Uri) {
+				this.setState({ commandDefs: record.CommandDefs! });
+			}
+		}
+	}
+
+	private _onActionClick = (
 		evt: React.MouseEvent<HTMLElement>,
 		item: IContextualMenuItem
 	) => {
 		const { trimConnector, wordConnector, appStore, record } = this.props;
-		if (item.key === "pasteLink") {
-			const url = appStore.getWebClientUrl(record.Uri);
-			wordConnector!.insertLink(record.NameString!, url);
-		} else if (item.key === "pasteNumber") {
-			wordConnector!.insertText(record.NameString!);
-		} else if (item.key === "pasteTitle") {
-			wordConnector!.insertText(record.ToolTip!);
-		} else if (item.key === "Properties") {
-			appStore.openInCM(appStore.documentInfo.Uri);
+		if (record.Uri < 1) {
+			trimConnector!
+				.getObjectCaption(BaseObjectTypes.Record)
+				.then((caption) => {
+					appStore.setErrorMessage(
+						"bob_needSelectedRow",
+						caption.toLowerCase()
+					);
+				});
 		} else {
-			appStore.setStatus("STARTING");
-			const me = this;
-			wordConnector!.saveDocument().then(() => {
-				const runAction = (fileName: string) => {
-					trimConnector!
-						.runAction(
-							item.key as CommandIds,
-							record.Uri,
-							fileName,
-							appStore!.WebUrl
-						)
-						.then((data) => {
-							appStore.setDocumentInfo(data);
-							me.setState({
-								menuMessage: `Action completed successfully '${item.text}'.`,
+			if (item.key === "pasteLink") {
+				const url = appStore.getWebClientUrl(record.Uri);
+				wordConnector!.insertLink(record.NameString!, url);
+			} else if (item.key === "pasteNumber") {
+				wordConnector!.insertText(record.NameString!);
+			} else if (item.key === "pasteTitle") {
+				wordConnector!.insertText(record.ToolTip!);
+			} else if (item.key === "Properties") {
+				appStore.openInCM(record.Uri);
+			} else {
+				appStore.setStatus("STARTING");
+				const me = this;
+				wordConnector!.saveDocument().then(() => {
+					const runAction = (fileName: string) => {
+						trimConnector!
+							.runAction(
+								item.key as CommandIds,
+								record.Uri,
+								fileName,
+								appStore!.WebUrl
+							)
+							.then((data) => {
+								me.setState({
+									menuMessage: `Action completed successfully '${item.text}'.`,
+									commandDefs: data.CommandDefs,
+								});
+								setTimeout(function() {
+									me._dismissMessage();
+								}, 3000);
+								appStore.setStatus("WAITING");
 							});
-							setTimeout(function() {
-								me._dismissMessage();
-							}, 3000);
-							appStore.setStatus("WAITING");
-						});
-				};
+					};
 
-				if (item.key === CommandIds.RecCheckIn) {
-					wordConnector!
-						.getDocumentData((data: number[], fileName: string) => {
-							return trimConnector!.writeFileSlice(data, fileName);
-						})
-						.then((fileName) => {
-							runAction(fileName);
-						});
-				} else {
-					runAction("");
-				}
-			});
+					if (item.key === CommandIds.RecCheckIn) {
+						wordConnector!
+							.getDocumentData((data: number[], fileName: string) => {
+								return trimConnector!.writeFileSlice(data, fileName);
+							})
+							.then((fileName) => {
+								runAction(fileName);
+							});
+					} else {
+						runAction("");
+					}
+				});
+			}
 		}
 	};
 
@@ -92,21 +120,71 @@ export class ObjectContextMenu extends React.Component<
 		this.setState({ menuMessage: "" });
 	};
 
+	private _makeRelationshipMenu() {
+		const { trimConnector, record, appStore } = this.props;
+
+		return {
+			key: "addRelationshipto",
+			text: appStore.messages.web_Add_Relationship,
+			title: appStore.messages.web_Add_RelationshipTitle,
+			subMenuProps: {
+				items: appStore.documentInfo.Enums.RecordRelationshipType.map(
+					(rel: IEnumDetails) => {
+						return {
+							key: rel.Id,
+							text: rel.Caption,
+							onClick: () => {
+								if (record.Uri < 1) {
+									trimConnector!
+										.getObjectCaption(BaseObjectTypes.Record)
+										.then((caption) => {
+											appStore.setErrorMessage(
+												"bob_needSelectedRow",
+												caption.toLowerCase()
+											);
+										});
+								} else {
+									appStore.setStatus("STARTING");
+									trimConnector!
+										.createRelationship(appStore.RecordUri, record.Uri, rel.Id)
+										.then(() => {
+											appStore.setStatus("WAITING");
+										})
+										.catch((error) => {
+											appStore.setError(error);
+										});
+								}
+							},
+						};
+					}
+				),
+			},
+		};
+	}
+
 	public render() {
-		const { appStore } = this.props;
-		const menuItems = appStore.documentInfo.CommandDefs.map(
-			(commandDef: ICommandDef) => {
+		const { appStore, isInList } = this.props;
+		const { commandDefs } = this.state;
+
+		const menuItems = (commandDefs || [])
+			.filter((commandDef: ICommandDef) => {
+				if (!isInList) {
+					return true;
+				}
+
+				return !["RecCheckIn", "RecDocFinal"].includes(commandDef.CommandId);
+			})
+			.map<IContextualMenuItem>((commandDef: ICommandDef) => {
 				return {
 					key: commandDef.CommandId,
 					text:
 						commandDef.CommandId === "Properties"
 							? appStore.messages.web_GoToCM
 							: commandDef.Tooltip,
-					onClick: this._onActionclickClick,
+					onClick: this._onActionClick,
 					disabled: !commandDef.IsEnabled,
 				};
-			}
-		);
+			});
 
 		menuItems.unshift(
 			{
@@ -117,23 +195,27 @@ export class ObjectContextMenu extends React.Component<
 						{
 							key: "pasteTitle",
 							text: appStore.messages.web_Paste_Title,
-							onClick: this._onActionclickClick,
+							onClick: this._onActionClick,
 						},
 						{
 							key: "pasteNumber",
 							text: appStore.messages.web_Paste_Number,
-							onClick: this._onActionclickClick,
+							onClick: this._onActionClick,
 						},
 						{
 							key: "pasteLink",
 							text: appStore.messages.web_Paste_Link,
-							onClick: this._onActionclickClick,
+							onClick: this._onActionClick,
 						},
 					],
 				},
 			},
-			{ itemType: ContextualMenuItemType.Divider }
+			{ key: "divider_1", itemType: ContextualMenuItemType.Divider }
 		);
+
+		if (isInList) {
+			menuItems.push(this._makeRelationshipMenu());
+		}
 
 		return (
 			<IconButton

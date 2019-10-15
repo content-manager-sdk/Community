@@ -167,6 +167,36 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("passes properties", () => {
+		let properties: string = "";
+		let selectedIds: string = "";
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			properties = config.params.properties;
+			selectedIds = config.params.cid_SelectedIds;
+
+			return [
+				200,
+				{
+					Results: [{ NameString: "Rec_1", Uri: 1 }],
+				},
+			];
+		});
+
+		expect.assertions(2);
+		return trimConnector
+			.search<ITrimMainObject>({
+				trimType: BaseObjectTypes.Record,
+				q: "all",
+				purpose: 3,
+				properties: "EnabledCommandIds",
+				commandFilter: "MakeStopWord,RecAddToCase",
+			})
+			.then(() => {
+				expect(properties.indexOf(",EnabledCommandIds")).toBeGreaterThan(-1);
+				expect(selectedIds).toEqual("MakeStopWord,RecAddToCase");
+			});
+	});
+
 	it("returns success when no results found.", () => {
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RecordType`, {

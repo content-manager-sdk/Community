@@ -38,20 +38,23 @@ export class DetailsView extends React.Component<
 > {
 	constructor(props: IDetailsViewProps) {
 		super(props);
-
+		let defaultRecordDetails = { Uri: 0 };
+		if (props.recordDetails.results && props.recordDetails.results.length > 0) {
+			defaultRecordDetails = props.recordDetails.results[0];
+		}
 		this.state = {
-			propertiesAndFields: [],
+			propertiesAndFields: props.recordDetails.propertiesAndFields || [],
 			propertyAndFieldDefinitions: [],
 			keysToAdd: [],
-			recordProperties: { Uri: 0 },
+			recordProperties: defaultRecordDetails,
 		};
 	}
 
-	componentDidUpdate(newProps: IDetailsViewProps) {
+	componentDidUpdate(prevProps: IDetailsViewProps) {
 		const { recordDetails } = this.props;
 		const { recordProperties } = this.state;
 		if (
-			newProps.recordDetails.propertiesAndFields !==
+			prevProps.recordDetails.propertiesAndFields !==
 			recordDetails.propertiesAndFields
 		) {
 			if (recordDetails.propertiesAndFields) {
@@ -218,6 +221,7 @@ export class DetailsView extends React.Component<
 			keysToAdd,
 		} = this.state;
 		const { appStore } = this.props;
+
 		return (
 			<React.Fragment>
 				<h3>Record Properties</h3>

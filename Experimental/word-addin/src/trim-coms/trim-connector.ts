@@ -24,7 +24,7 @@ export interface ITrimString extends ITrimProperty {
 	Value: string;
 }
 
-export interface ISearchParamaters {
+export interface ISearchParameters {
 	trimType: BaseObjectTypes;
 	q: string;
 	purpose: number;
@@ -32,6 +32,8 @@ export interface ISearchParamaters {
 	start?: number;
 	sortBy?: string;
 	filter?: string;
+	properties?: string;
+	commandFilter?: string;
 }
 
 interface IOptionsInterface {
@@ -177,7 +179,7 @@ export interface ITrimConnector {
 	getSearchOptions(): Promise<ISearchOptions>;
 	getDatabaseProperties(): Promise<IDatabase>;
 	search<T>(
-		options: ISearchParamaters
+		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>>;
 	getPropertySheet(recordTypeUri: number): Promise<any>;
 	registerInTrim(
@@ -655,7 +657,7 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public search<T extends ITrimMainObject>(
-		options: ISearchParamaters
+		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
 		const {
 			q,
@@ -665,6 +667,8 @@ export class TrimConnector implements ITrimConnector {
 			purposeExtra,
 			sortBy,
 			filter,
+			properties,
+			commandFilter,
 		} = options;
 
 		const params = {
@@ -690,6 +694,14 @@ export class TrimConnector implements ITrimConnector {
 
 		if (trimType === BaseObjectTypes.Classification) {
 			params.properties += ",Name";
+		}
+
+		if (properties) {
+			params.properties += "," + properties;
+		}
+
+		if (commandFilter) {
+			params["cid_SelectedIds"] = commandFilter;
 		}
 
 		if (trimType === BaseObjectTypes.Record) {

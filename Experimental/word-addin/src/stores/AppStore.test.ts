@@ -6,7 +6,6 @@ import { AppStore } from "./AppStore";
 
 import {
 	IDriveInformation,
-	ISearchParamaters,
 	ISearchClauseDef,
 	ITrimConnector,
 	ITrimMainObject,
@@ -15,6 +14,7 @@ import {
 	ITokenCallback,
 	ISearchResults,
 	ISearchOptions,
+	ISearchParameters,
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
@@ -60,7 +60,7 @@ class MockTrimConnector implements ITrimConnector {
 		throw new Error("Method not implemented.");
 	}
 	search<T>(
-		options: ISearchParamaters
+		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>> {
 		return new Promise(function(resolve, reject) {});
 	}
