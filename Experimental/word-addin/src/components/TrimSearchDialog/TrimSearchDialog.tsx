@@ -18,6 +18,7 @@ import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { debounce } from "throttle-debounce";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 import SearchBar from "../SearchBar/SearchBar";
+import { Checkbox, Stack } from "office-ui-fabric-react";
 
 export interface ITrimSearchDialogState {
 	isObjectPickerShown?: boolean;
@@ -31,6 +32,7 @@ export interface ITrimSearchDialogState {
 	advancedSearchHelp: string;
 	isRunning: boolean;
 	navTrimType: BaseObjectTypes;
+	applyFilterSearch: boolean;
 }
 
 export class TrimSearchDialog
@@ -111,9 +113,12 @@ export class TrimSearchDialog
 			contentsInReverseDateOrder,
 			includeAlternateWhenShowingFolderContents,
 			navTrimType,
+			applyFilterSearch,
 		} = this.state;
 
 		const startSearchAt = textFieldText || searchStartPoint;
+
+		const myFilterSearch = applyFilterSearch === true ? filterSearch : "";
 
 		return (
 			<div className="dialog-top">
@@ -142,7 +147,7 @@ export class TrimSearchDialog
 									purpose={purpose}
 									purposeExtra={purposeExtra}
 									filter={filter}
-									filterSearch={filterSearch}
+									filterSearch={myFilterSearch}
 									includeAlternateWhenShowingFolderContents={
 										includeAlternateWhenShowingFolderContents
 									}
@@ -158,7 +163,19 @@ export class TrimSearchDialog
 					</React.Fragment>
 				)}
 				<div className="dialog-footer">
-					<div>
+					<Stack horizontal>
+						{filterSearch && (
+							<Checkbox
+								label={appStore!.messages.web_ApplySearchFilter}
+								defaultChecked={true}
+								onChange={(
+									ev: React.FormEvent<HTMLElement>,
+									isChecked: boolean
+								) => {
+									this._onApplyFilterChange(ev, isChecked);
+								}}
+							/>
+						)}
 						<DefaultButton
 							data-automation-id="cancel"
 							allowDisabledFocus={true}
@@ -196,7 +213,7 @@ export class TrimSearchDialog
 							}}
 							allowDisabledFocus={true}
 						/>
-					</div>
+					</Stack>
 				</div>
 			</div>
 		);
@@ -241,7 +258,16 @@ export class TrimSearchDialog
 			textSearchHelp: "",
 			advancedSearchHelp: "",
 			navTrimType: trimType,
+			applyFilterSearch: true,
 		};
+	}
+
+	private _onApplyFilterChange(
+		ev: React.FormEvent<HTMLElement>,
+		isChecked: boolean
+	): void {
+		console.log("555555555555");
+		this.setState({ applyFilterSearch: isChecked });
 	}
 }
 

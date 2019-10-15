@@ -647,6 +647,7 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Add = "Add";
 					data.Messages.web_Add_RelationshipTitle =
 						"Add relationship from the open document to the selected record.";
+					data.Messages.web_ApplySearchFilter = "Filter search results";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

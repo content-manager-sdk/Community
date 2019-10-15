@@ -46,7 +46,8 @@ export class TrimObjectSearchList extends React.Component<
 	componentDidUpdate(prevProps: ITrimObjectSearchListProps) {
 		if (
 			prevProps.q !== this.props.q ||
-			prevProps.advancedSearch !== this.props.advancedSearch
+			prevProps.advancedSearch !== this.props.advancedSearch ||
+			prevProps.filterSearch !== this.props.filterSearch
 		) {
 			this._newQuery = "";
 			this.doSearch(1, ``, true);

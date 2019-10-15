@@ -217,7 +217,17 @@ function openFromTrim(event) {
 		}
 	};
 
-	doOpen(event, "", fn);
+	const extensions = "docx,docm,odt";
+
+	doOpen(
+		event,
+		"recExtension:" +
+			extensions +
+			" OR recContains:[recExtension:" +
+			extensions +
+			"]",
+		fn
+	);
 }
 
 function doOpen(event, filter, fn, fnEv) {

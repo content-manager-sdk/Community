@@ -9,6 +9,7 @@ export class TrimMessages {
 	public web_GoToTextSearch = ""; // tslint:disable-line
 	public web_GoToAdvancedSearch = ""; // tslint:disable-line
 	public bob_needSelectedRow = ""; // tslint:disable-line
+	public web_ApplySearchFilter = "";
 }
 
 export default TrimMessages;
