@@ -215,6 +215,14 @@ export class ObjectContextMenu extends React.Component<
 
 		if (isInList) {
 			menuItems.push(this._makeRelationshipMenu());
+		} else {
+			const checkinItem = menuItems.find((mi) => mi.key === "RecCheckIn");
+			if (checkinItem) {
+				let checkinDelete = { ...checkinItem };
+				checkinDelete.key = "RecCheckInDelete";
+				checkinDelete.text = "Check in and delete on close";
+				menuItems.splice(menuItems.indexOf(checkinItem) + 1, 0, checkinDelete);
+			}
 		}
 
 		return (

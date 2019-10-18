@@ -34,7 +34,7 @@ describe("Trim search dialog", function() {
 	const mockAppStore = {
 		fetchBaseSettingFromTrim: null,
 		resetError: null,
-		messages: null,
+		messages: {},
 		status: "",
 		setError: function(message: any) {
 			thisError = message;

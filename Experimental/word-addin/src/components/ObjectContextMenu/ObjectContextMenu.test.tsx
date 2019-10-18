@@ -454,7 +454,7 @@ describe("Object Context Menu", () => {
 		).toBeTruthy();
 	});
 
-	it("sets the documentInfo on state after an action", (done) => {
+	it("sets the state after an action", (done) => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(1);
@@ -469,7 +469,9 @@ describe("Object Context Menu", () => {
 
 		setImmediate(() => {
 			try {
-				expect(updatedDocumentInfo).toEqual(returnedDocumentInfo);
+				expect(wrapper.state().commandDefs).toEqual(
+					returnedDocumentInfo.CommandDefs
+				);
 				done();
 			} catch (e) {
 				done.fail(e);

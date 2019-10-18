@@ -103,6 +103,7 @@ function insertObjectFromTrim(event) {
 			" OR recContains:[recExtension:" +
 			extensions +
 			"]",
+		true,
 		fn
 	);
 }
@@ -151,6 +152,7 @@ function insertTextFromTrim(event) {
 			" OR recContains:[recExtension:" +
 			extensions +
 			"]",
+		true,
 		fn
 	);
 }
@@ -190,6 +192,7 @@ function insertPictureFromTrim(event) {
 			" OR recContains:[recExtension:" +
 			extensions +
 			"]",
+		true,
 		fn
 	);
 }
@@ -226,14 +229,20 @@ function openFromTrim(event) {
 			" OR recContains:[recExtension:" +
 			extensions +
 			"]",
+		false,
 		fn
 	);
 }
 
-function doOpen(event, filter, fn, fnEv) {
+function doOpen(event, filter, insertText, fn, fnEv) {
 	$.when(loadProps()).then(function(status) {
 		if (status === "success") {
 			const root = getRoot();
+			let insertTextQ = "";
+			if (insertText) {
+				insertTextQ = "&insert=true";
+			}
+
 			Office.context.ui.displayDialogAsync(
 				root +
 					"?searchdialog=true&accessToken=" +
@@ -241,7 +250,8 @@ function doOpen(event, filter, fn, fnEv) {
 					"&rnd=" +
 					Math.random() +
 					"&filter=" +
-					filter,
+					filter +
+					insertTextQ,
 				{ height: 64, width: 50, displayInIframe: true },
 				function(asyncResult) {
 					dialog = asyncResult.value;

@@ -102,7 +102,6 @@ export class TrimSearchDialog
 			purpose,
 			purposeExtra,
 			filter,
-			trimConnector,
 			appStore,
 			filterSearch,
 		} = this.props;
@@ -164,7 +163,7 @@ export class TrimSearchDialog
 				)}
 				<div className="dialog-footer">
 					<Stack horizontal>
-						{filterSearch && (
+						{filterSearch && !isRunning ? (
 							<Checkbox
 								label={appStore!.messages.web_ApplySearchFilter}
 								defaultChecked={true}
@@ -175,6 +174,8 @@ export class TrimSearchDialog
 									this._onApplyFilterChange(ev, isChecked);
 								}}
 							/>
+						) : (
+							<div className="ms-Checkbox"></div>
 						)}
 						<DefaultButton
 							data-automation-id="cancel"
@@ -190,27 +191,7 @@ export class TrimSearchDialog
 							data-automation-id="ok"
 							disabled={!startSearchAt}
 							text="OK"
-							onClick={() => {
-								const { selectedItems } = this.state;
-								this.setState({ isRunning: true });
-								if (selectedItems.length > 0) {
-									const fn = filterSearch ? "getRecordAsText" : "getDriveUrl";
-
-									trimConnector!
-										[fn](selectedItems[0].Uri)
-										.then((response: string) => {
-											Office.context.ui.messageParent(response);
-										})
-										// .finally(() => {
-										// 	this.setState({ isRunning: false });
-										// })
-										.catch((error) => {
-											appStore!.setError(error);
-										});
-								} else {
-									Office.context.ui.messageParent("0");
-								}
-							}}
+							onClick={this._onOk}
 							allowDisabledFocus={true}
 						/>
 					</Stack>
@@ -219,12 +200,44 @@ export class TrimSearchDialog
 		);
 	}
 
-	private _trimObjectSelected = (trimObject: ITrimMainObject): void => {
+	private _onOk = () => {
+		const { selectedItems } = this.state;
+		const { trimConnector, insertText, appStore } = this.props;
+
+		this.setState({ isRunning: true });
+		if (selectedItems.length > 0) {
+			const fn = insertText ? "getRecordAsText" : "getDriveUrl";
+
+			trimConnector!
+				[fn](selectedItems[0].Uri)
+				.then((response: string) => {
+					Office.context.ui.messageParent(response);
+				})
+				// .finally(() => {
+				// 	this.setState({ isRunning: false });
+				// })
+				.catch((error) => {
+					appStore!.setError(error);
+					this.setState({ isRunning: false });
+				});
+		} else {
+			Office.context.ui.messageParent("0");
+		}
+	};
+
+	private _trimObjectSelected = (
+		trimObject: ITrimMainObject,
+		isDoubleClick: boolean
+	): void => {
 		//const { onTrimObjectSelected } = this.props;
 		this.setState({
 			selectedItems: [trimObject],
 			// 	textFieldText: "",
 		});
+
+		if (isDoubleClick) {
+			this._onOk();
+		}
 		// if (onTrimObjectSelected) {
 		// 	onTrimObjectSelected(trimObject);
 		// }

@@ -19,22 +19,30 @@ interface IProps {
 
 export class BootStrap extends React.Component<
 	IProps,
-	{ dialogName: string; filter: string }
+	{ dialogName: string; filter: string; insertText: boolean }
 > {
 	constructor(props: IProps) {
 		super(props);
 
 		let filter = "";
+		let insertText = false;
 		try {
 			filter = getQueryStringValue("filter") || "";
+			insertText = getQueryStringValue("insert") ? true : false;
+			console.log("ggg");
+			console.log(insertText);
 		} catch {
 			// I only have this try/catch to make the tests work
 		}
 
 		if (window.location.search.indexOf("searchdialog") > -1) {
-			this.state = { dialogName: "/searchdialog", filter: filter };
+			this.state = {
+				dialogName: "/searchdialog",
+				filter: filter,
+				insertText: insertText,
+			};
 		} else {
-			this.state = { dialogName: "", filter: filter };
+			this.state = { dialogName: "", filter: filter, insertText: false };
 		}
 	}
 
@@ -64,6 +72,7 @@ export class BootStrap extends React.Component<
 						startPoint="RecentDocs"
 						appStore={appStore}
 						filterSearch={this.state.filter}
+						insertText={this.state.insertText}
 					/>
 				) : (
 					<React.Fragment>

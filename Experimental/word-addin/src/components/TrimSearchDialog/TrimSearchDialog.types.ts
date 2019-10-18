@@ -22,6 +22,7 @@ export interface ITrimSearchDialogProps
 	filterSearch?: string;
 	value?: ITrimMainObject[];
 	startPoint?: string;
+	insertText?: boolean;
 
 	/** Callback for when a given trim object has been selected */
 	onTrimObjectSelected?: (item?: ITrimMainObject) => void;

@@ -31,7 +31,7 @@ class MockWordConnector implements IWordUrl {
 	}
 }
 
-let postedProperties: any;
+let postedFields: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
 	getRecordAsText(recordUri: number): Promise<string> {
@@ -93,9 +93,10 @@ class MockTrimConnector implements ITrimConnector {
 	}
 	registerInTrim(
 		recordTypeUri: number,
-		properties: any
+		properties: any,
+		fields: any
 	): Promise<ITrimMainObject> {
-		postedProperties = properties;
+		postedFields = fields;
 
 		return new Promise(function(resolve, reject) {
 			if (Mock_Trim_Action === "ERROR") {
@@ -266,7 +267,7 @@ describe("Test basic setup from Trim", () => {
 	});
 
 	it("sets the Drive Id in the TRIM External ID when stored in TRIM", (done) => {
-		postedProperties = null;
+		postedFields = null;
 
 		expect.assertions(1);
 
@@ -274,7 +275,7 @@ describe("Test basic setup from Trim", () => {
 			try {
 				appStore.setDocumentInfo({ Id: "abc", Uri: 0, CommandDefs: [] });
 				appStore.createRecord(2, {});
-				expect(postedProperties["RecordSpURL"]).toBe("abc");
+				expect(postedFields["DriveID"]).toBe("abc");
 				done();
 			} catch (e) {
 				done.fail(e);

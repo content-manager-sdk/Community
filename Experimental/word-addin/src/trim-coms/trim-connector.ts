@@ -184,7 +184,8 @@ export interface ITrimConnector {
 	getPropertySheet(recordTypeUri: number): Promise<any>;
 	registerInTrim(
 		recordTypeUri: number,
-		properties: any
+		properties: any,
+		fields?: any
 	): Promise<ITrimMainObject>;
 	getDriveUrl(recordUri: number): Promise<string>;
 	getRecordAsText(recordUri: number): Promise<string>;
@@ -437,6 +438,12 @@ export class TrimConnector implements ITrimConnector {
 
 		const postBodies = {
 			[CommandIds.RecCheckIn]: { uri, Action: "checkin", fileName, webUrl },
+			[CommandIds.RecCheckInDelete]: {
+				uri,
+				Action: "checkin-request-del",
+				fileName,
+				webUrl,
+			},
 			[CommandIds.RecDocFinal]: {
 				Action: "finalize",
 				uri,
@@ -579,14 +586,18 @@ export class TrimConnector implements ITrimConnector {
 
 	public registerInTrim(
 		recordTypeUri: number,
-		properties: any
+		properties: any,
+		fields: any = null
 	): Promise<ITrimMainObject> {
 		const body = {
 			...properties,
+
 			RecordRecordType: recordTypeUri,
 			properties: "CommandDefs",
 		};
-
+		if (fields) {
+			body["Fields"] = fields;
+		}
 		return this.makeRequest(
 			{ path: "Record", method: "post", data: body },
 			(data: any) => {

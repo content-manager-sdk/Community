@@ -439,6 +439,42 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("has posted a new Record with field values", () => {
+		let postConfig: any;
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			postConfig = config;
+
+			return [
+				200,
+				{
+					Results: [
+						{
+							Uri: 123,
+						},
+					],
+				},
+			];
+		});
+
+		expect.assertions(4);
+
+		return trimConnector
+			.registerInTrim(1, { RecordTypedTitle: "test" }, { DriveId: "test" })
+			.then((data) => {
+				expect(postConfig.data).toEqual(
+					JSON.stringify({
+						RecordTypedTitle: "test",
+						RecordRecordType: 1,
+						properties: "CommandDefs",
+						Fields: { DriveId: "test" },
+					})
+				);
+				expect(postConfig.headers!["Accept"]).toEqual("application/json");
+				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
+				expect(data.Uri).toEqual(123);
+			});
+	});
+
 	it("get view pane property defs", () => {
 		let postConfig: any;
 

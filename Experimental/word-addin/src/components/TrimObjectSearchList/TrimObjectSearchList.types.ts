@@ -38,7 +38,10 @@ export interface ITrimObjectSearchListProps
 	onDismiss?: () => void;
 
 	/** Callback for when a given trim object has been selected */
-	onTrimObjectSelected?: (item?: ITrimMainObject) => void;
+	onTrimObjectSelected?: (
+		item?: ITrimMainObject,
+		isDoubleClick?: boolean
+	) => void;
 
 	onTrimTypeChanged?: (newTrimType: BaseObjectTypes) => void;
 }

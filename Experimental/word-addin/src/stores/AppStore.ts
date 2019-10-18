@@ -146,10 +146,13 @@ export class AppStore implements IAppStore {
 		this.setStatus("STARTING");
 
 		return this.trimConnector
-			.registerInTrim(recordType, {
-				...properties,
-				...{ RecordSpURL: this.documentInfo.Id },
-			})
+			.registerInTrim(
+				recordType,
+				{
+					...properties,
+				},
+				{ DriveID: this.documentInfo.Id }
+			)
 			.then((newRecord: ITrimMainObject) => {
 				if (newRecord.Uri > 0) {
 					this.setDocumentInfo({

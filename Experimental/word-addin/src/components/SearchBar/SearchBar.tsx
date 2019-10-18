@@ -252,9 +252,8 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				this.callChange(this._getQuery("container"), key);
 			} else {
 				if (
-					option.data &&
-					(option.data.ParameterFormat === "Boolean" ||
-						option.data.SearchParameterFormat === "Boolean")
+					(option.data && option.data.ParameterFormat === "Boolean") ||
+					option.data.SearchParameterFormat === "Boolean"
 				) {
 					this.callChange(option.text, key);
 				} else {

@@ -193,13 +193,13 @@ export class TrimObjectSearchList extends React.Component<
 		}
 	}
 
-	private _onTrimObjectSelected(uri: number): void {
+	private _onTrimObjectSelected(uri: number, isDoubleClick: boolean): void {
 		const { onTrimObjectSelected } = this.props;
 		if (onTrimObjectSelected && uri > 0) {
 			const trimObject = this.state.items.find((i) => {
 				return i.Uri == uri;
 			});
-			onTrimObjectSelected(trimObject);
+			onTrimObjectSelected(trimObject, isDoubleClick);
 		}
 	}
 
@@ -375,7 +375,12 @@ export class TrimObjectSearchList extends React.Component<
 								items={items}
 								onRenderCell={this._onRenderCell}
 								onShouldVirtualize={this._onVirtualize}
-								onClick={this._onListClick}
+								onClick={(evt: React.MouseEvent<HTMLDivElement>) => {
+									this._onListClick(evt, false);
+								}}
+								onDoubleClick={(evt: React.MouseEvent<HTMLDivElement>) => {
+									this._onListClick(evt, true);
+								}}
 							/>
 						)}
 					</div>
@@ -395,7 +400,10 @@ export class TrimObjectSearchList extends React.Component<
 
 	private _previousSelected: HTMLElement;
 
-	private _onListClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+	private _onListClick = (
+		event: React.MouseEvent<HTMLDivElement>,
+		isDoubleClick: boolean
+	): void => {
 		event.preventDefault();
 
 		const target = event.nativeEvent.target as HTMLElement;
@@ -417,7 +425,7 @@ export class TrimObjectSearchList extends React.Component<
 					this._onShortcutClick(`unkSaved:${uri}`, false, this.props.trimType!);
 				} else {
 					this.forceUpdate();
-					this._onTrimObjectSelected(uri);
+					this._onTrimObjectSelected(uri, isDoubleClick);
 				}
 			}
 		}
