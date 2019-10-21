@@ -133,7 +133,7 @@ namespace OneDriveAuthPlugin
 			var response = new OpenFileResponse() { UserHasAccess = true };
 			var record = new Record(this.Database, request.Uri);
 
-			string driveId = record.SpURL;
+			string driveId = record.GetDriveId();
 
 			if (!string.IsNullOrWhiteSpace(driveId))
 			{
@@ -181,8 +181,15 @@ namespace OneDriveAuthPlugin
 
 					var uploadedFile = await doUpload(record.DocumentPathInClientCache, fileName, token);
 
-					record.GetDocument(null, true, null, uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id);
-					record.SpURL = uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id;// uploadedFile. fileItem.getDriveAndId();
+					bool checkout = true;
+					if (record.IsCheckedOut && record.CheckedOutTo.Uri == this.Database.CurrentUser.Uri)
+					{
+						checkout = false;
+					}
+
+
+					record.GetDocument(null, checkout, null, uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id);
+					record.SetDriveId(uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id);// uploadedFile. fileItem.getDriveAndId();
 
 					record.Save();
 
@@ -216,7 +223,7 @@ namespace OneDriveAuthPlugin
 
 			using (var document = WordprocessingDocument.Open(stream, true))
 				{
-					var webExTaskpanesPart = document.AddWebExTaskpanesPart();
+				var webExTaskpanesPart = document.WebExTaskpanesPart ?? document.AddWebExTaskpanesPart();
 					OOXMLHelper.CreateWebExTaskpanesPart(webExTaskpanesPart, addinGuid, addinVersion);
 				}				
 

@@ -22,7 +22,7 @@ namespace OneDriveAuthPlugin
 			if (request.Uri > 0)
 			{
 				var record = new Record(this.Database, request.Uri);
-				return record.SpURL;
+				return record.GetDriveId();
 			}
 
 			return null;

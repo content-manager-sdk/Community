@@ -55,13 +55,12 @@ namespace OneDriveAuthPlugin
 		internal static string GetOneDriveItemIdUrl(string id)
 		{
 			// Construct URL for the names of the folders and files.
-			return $"{BaseUrl}drives/{id}?$select=webDavUrl,webUrl,id,name,etag,parentreference";
+			return $"{BaseUrl}drives/{id}?$select=webDavUrl,webUrl,id,name,etag,parentreference,name";
 		}
 
 		internal static string GetOneDriveItemContentIdUrl(string id)
 		{
-			// Construct URL for the names of the folders and files.
-			return $"{GetOneDriveItemIdUrl(id)}/content";
+			return $"{BaseUrl}drives/{id}/content";
 		}
 
 		internal static string GetMyOneDriveUrl()

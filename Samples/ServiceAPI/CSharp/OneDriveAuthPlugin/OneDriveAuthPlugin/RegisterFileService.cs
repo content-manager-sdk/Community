@@ -104,7 +104,7 @@ namespace OneDriveAuthPlugin
 				Record record = new Record(this.Database, request.Uri);
 				record.Refresh();
 
-				string driveId = record.SpURL;
+				string driveId = record.GetDriveId();
 
 				var registeredFile = new RegisterdFileResponse() { Id = driveId };
 
@@ -121,12 +121,11 @@ namespace OneDriveAuthPlugin
 					record.RemoveFromFavorites();
 				}
 
-
-				if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1)
+					if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1)
 				{
 					string token = await getToken();
 					if (!string.IsNullOrWhiteSpace(request.FileName))
-					{
+					{						
 						//	filePath = Path.Combine(TrimApplication.WebServerWorkPath, record.SuggestedFileName);
 
 
@@ -152,7 +151,27 @@ namespace OneDriveAuthPlugin
 							record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 					
 
+					} else
+					{
+						string downloadUrl = GraphApiHelper.GetOneDriveItemContentIdUrl(driveId);
+
+						var fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
+
+						string filePath = Path.Combine(TrimApplication.WebServerWorkPath, fileResult.Name);
+
+						await ODataHelper.GetItem<string>(downloadUrl, token, filePath);
+
+						var inputDocument = new InputDocument(filePath);
+
+
+						inputDocument.CheckinAs = record.SuggestedFileName;
+						record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 					}
+				}
+
+				if (request.Action.IndexOf("request-del", StringComparison.InvariantCultureIgnoreCase) > -1)
+				{
+					record.SetFieldValue(new FieldDefinition(this.Database, "DeleteNow"), new UserFieldValue(true));
 				}
 
 				if (request.Action.IndexOf("delete", StringComparison.InvariantCultureIgnoreCase) > -1)
@@ -160,7 +179,7 @@ namespace OneDriveAuthPlugin
 					string token = await getToken();
 
 					await ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token);
-					record.SpURL = "";
+					record.SetDriveId("");
 				}
 
 				if (request.Action.IndexOf("finalize", StringComparison.InvariantCultureIgnoreCase) > -1)
@@ -260,10 +279,8 @@ namespace OneDriveAuthPlugin
 				registeredFile.DriveItem = fileResult;
 
 				TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);
-				TrimSearchClause clause = new TrimSearchClause(this.Database, BaseObjectTypes.Record, SearchClauseIds.RecordSpURL);
-				clause.SetCriteriaFromString(fileResult.getDriveAndId());
 
-				search.AddSearchClause(clause);
+				search.AddSearchClause(fileResult.getDriveAndId().GetDriveIdSearchClause(this.Database));
 
 				var uris = search.GetResultAsUriArray(2);
 

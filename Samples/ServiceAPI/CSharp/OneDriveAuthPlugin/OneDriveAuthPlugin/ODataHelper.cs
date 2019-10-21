@@ -214,9 +214,9 @@ namespace OneDriveAuthPlugin
 								{
 									contentStream.CopyTo(file);
 								}
-								return tempPath;// File(contentStream, content_type, filename);
+								jsonData = tempPath;// File(contentStream, content_type, filename);
 							} else { 
-								return await content.ReadAsStringAsync();
+								jsonData = await content.ReadAsStringAsync();
 
 							//	jsonData = JsonConvert.DeserializeObject(responseContent);
 							} 
