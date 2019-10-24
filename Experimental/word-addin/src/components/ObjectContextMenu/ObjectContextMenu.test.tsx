@@ -160,7 +160,7 @@ describe("Object Context Menu", () => {
 		expect.assertions(9);
 		const wrapper = makeWrapper();
 		expect(wrapper.find(IconButton).exists()).toBeTruthy();
-		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(5);
+		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(6);
 		expect(wrapper.find(IconButton).props().menuProps.items[2].text).toEqual(
 			"Checkin"
 		);

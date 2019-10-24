@@ -205,12 +205,14 @@ export class TrimSearchDialog
 		const { trimConnector, insertText, appStore } = this.props;
 
 		this.setState({ isRunning: true });
+
 		if (selectedItems.length > 0) {
 			const fn = insertText ? "getRecordAsText" : "getDriveUrl";
 
 			trimConnector!
 				[fn](selectedItems[0].Uri)
 				.then((response: string) => {
+					console.log(response);
 					Office.context.ui.messageParent(response);
 				})
 				// .finally(() => {

@@ -29,8 +29,6 @@ export class BootStrap extends React.Component<
 		try {
 			filter = getQueryStringValue("filter") || "";
 			insertText = getQueryStringValue("insert") ? true : false;
-			console.log("ggg");
-			console.log(insertText);
 		} catch {
 			// I only have this try/catch to make the tests work
 		}

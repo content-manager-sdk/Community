@@ -89,6 +89,8 @@ describe("Test fetch from TRIM", () => {
 					pageSize: 30,
 					start: 1,
 					ExcludeCount: true,
+					ApplyDefaults: true,
+					HideCustomRecordTypes: true,
 				},
 			})
 			.reply(function(config: any) {
@@ -208,6 +210,8 @@ describe("Test fetch from TRIM", () => {
 					start: 1,
 					purposeExtra: 123,
 					ExcludeCount: true,
+					ApplyDefaults: true,
+					HideCustomRecordTypes: true,
 				},
 			})
 			.reply(function(config: any) {

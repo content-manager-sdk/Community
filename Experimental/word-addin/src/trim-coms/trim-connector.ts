@@ -692,6 +692,11 @@ export class TrimConnector implements ITrimConnector {
 			ExcludeCount: true,
 		};
 
+		params["ApplyDefaults"] = true;
+		if (trimType === BaseObjectTypes.RecordType) {
+			params["HideCustomRecordTypes"] = true;
+		}
+
 		if (sortBy) {
 			params["sortBy"] = sortBy;
 		}

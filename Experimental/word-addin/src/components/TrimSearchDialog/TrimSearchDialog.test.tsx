@@ -94,6 +94,7 @@ describe("Trim search dialog", function() {
 				trimConnector={trimConnector}
 				appStore={mockAppStore}
 				filterSearch="recExtension:txt"
+				insertText={true}
 			/>
 		);
 

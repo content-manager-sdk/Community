@@ -366,13 +366,13 @@ describe("Search Bar", function() {
 			/>
 		);
 		setTimeout(() => {
-			wrapper
-				.find(ComboBox)
-				.first()
-				.props()
-				.onChange(null, { key: "content", text: "" }, 1, null);
-
 			try {
+				wrapper
+					.find(ComboBox)
+					.first()
+					.props()
+					.onChange(null, { key: "content", text: "" }, 1, null);
+
 				expect(testValue).toEqual("");
 				expect(wrapper.state().searchType).toEqual("content");
 
