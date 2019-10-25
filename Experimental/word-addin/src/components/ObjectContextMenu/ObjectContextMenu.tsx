@@ -116,6 +116,7 @@ export class ObjectContextMenu extends React.Component<
 								setTimeout(function() {
 									me._dismissMessage();
 								}, 3000);
+								this.callCommandComplete(item.key);
 								appStore.setStatus("WAITING");
 							});
 					};
