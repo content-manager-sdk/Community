@@ -212,7 +212,6 @@ export class TrimSearchDialog
 			trimConnector!
 				[fn](selectedItems[0].Uri)
 				.then((response: string) => {
-					console.log(response);
 					Office.context.ui.messageParent(response);
 				})
 				// .finally(() => {

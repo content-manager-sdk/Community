@@ -24,6 +24,9 @@ import {
 	Stack,
 	IComboBox,
 	IComboBoxOption,
+	Icon,
+	TooltipHost,
+	DirectionalHint,
 } from "office-ui-fabric-react";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
@@ -78,6 +81,10 @@ export class DetailsView extends React.Component<
 				"& .ms-ComboBox-container": {
 					marginRight: "6px",
 					width: "calc(100% - 60px)",
+				},
+				"& .ms-sm1": {
+					paddingLeft: "0",
+					cursor: "pointer",
 				},
 			},
 		});
@@ -136,6 +143,24 @@ export class DetailsView extends React.Component<
 					//this.setState({ propertiesAndFields: newProps });
 				});
 		}
+	};
+
+	private _onInsertRecordLink = (propertyId: string) => {
+		const { appStore, wordConnector } = this.props;
+		const { recordProperties } = this.state;
+
+		const text =
+			propertyId === "RecordContainer"
+				? recordProperties[propertyId].RecordNumber.Value
+				: this.getText(propertyId);
+
+		const link = appStore.getWebClientUrl(
+			propertyId === "RecordContainer"
+				? recordProperties[propertyId].Uri
+				: recordProperties.Uri,
+			propertyId === "RecordContainer"
+		);
+		wordConnector!.insertLink(text, link);
 	};
 
 	private _onRemoveFromViewPane = (propertyId: string) => {
@@ -226,23 +251,73 @@ export class DetailsView extends React.Component<
 			<React.Fragment>
 				<h3>Record Properties</h3>
 				<div className={"new-record-body " + this.getStyles()}>
-					<div className="details-view ms-Grid">
+					<div className="details-view ms-Grid" dir="ltr">
 						{propertiesAndFields.map((propDef) => {
+							const includePaste =
+								propDef.Id === "RecordNumber" ||
+								propDef.Id === "RecordContainer";
+
+							const pasteEl = (
+								<span className="ms-Grid-col ms-sm1 ms-md1 ms-lg1">
+									<TooltipHost
+										content={appStore.messages.web_Record_Paste_Link}
+										calloutProps={{ gapSpace: 0 }}
+										directionalHint={DirectionalHint.bottomCenter}
+										styles={{ root: { display: "inline-block" } }}
+									>
+										<Icon
+											iconName="Paste"
+											onClick={() => {
+												this._onInsertRecordLink(propDef.Id);
+											}}
+											aria-hidden={true}
+										/>
+									</TooltipHost>
+								</span>
+							);
+
+							const displayText = this.getText(propDef.Id);
+
+							const textLineWidth = 25;
 							return (
 								<div key={propDef.Id} className="details-item ms-Grid-row ">
 									<Label className="ms-Grid-col ms-sm4 ms-md4 ms-lg2">
 										{propDef.Caption}
 									</Label>
-									<span className="ms-Grid-col ms-sm7 ms-md7 ms-lg9 ms-fontWeight-semibold">
-										{this.getText(propDef.Id)}
+									<span
+										className={
+											"ms-Grid-col ms-fontWeight-semibold " +
+											(includePaste && displayText.length < textLineWidth
+												? "ms-sm6 ms-md6 ms-lg8"
+												: "ms-sm7 ms-md7 ms-lg9")
+										}
+									>
+										{displayText}
 									</span>
-									<i
-										onClick={() => {
-											this._onRemoveFromViewPane(propDef.Id);
-										}}
-										className="ms-Icon ms-Icon--Cancel ms-Grid-col ms-sm1 ms-md1 ms-lg1"
-										aria-hidden="true"
-									/>
+									{includePaste &&
+										displayText.length < textLineWidth &&
+										pasteEl}
+
+									<span className="ms-Grid-col ms-sm1 ms-md1 ms-lg1">
+										<TooltipHost
+											content={appStore.messages.web_Remove_From_View_Pane}
+											calloutProps={{ gapSpace: 0 }}
+											directionalHint={DirectionalHint.bottomCenter}
+											styles={{ root: { display: "inline-block" } }}
+										>
+											<Icon
+												iconName="Cancel"
+												onClick={() => {
+													this._onRemoveFromViewPane(propDef.Id);
+												}}
+												className="ms-Grid-col ms-sm1 ms-md1 ms-lg1"
+												aria-hidden={true}
+											/>
+										</TooltipHost>
+										{includePaste &&
+											displayText.length >= textLineWidth &&
+											pasteEl}
+									</span>
 								</div>
 							);
 						})}

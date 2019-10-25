@@ -18,6 +18,7 @@ import {
 } from "office-ui-fabric-react/lib/Breadcrumb";
 
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+import { getId } from "office-ui-fabric-react/lib/Utilities";
 
 export interface ITrimObjectSearchListState {
 	q?: string;
@@ -306,6 +307,7 @@ export class TrimObjectSearchList extends React.Component<
 								{Object.keys(searchShortCuts[trimType!]).map(
 									(key: any, index: number) => {
 										const sc = searchShortCuts[trimType!][key];
+										const hostId: string = getId("tooltipHost");
 										return (
 											<li
 												key={key}
@@ -328,7 +330,7 @@ export class TrimObjectSearchList extends React.Component<
 															);
 														},
 													}}
-													id="myID"
+													id={hostId}
 													calloutProps={{ gapSpace: 0 }}
 												>
 													<img

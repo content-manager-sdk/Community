@@ -24,7 +24,7 @@ export interface IAppStore {
 	setError(error: any, module?: string): void;
 	setErrorMessage(message: string, ...args: string[]): void;
 	openInCM(uri: number): void;
-	getWebClientUrl(uri: number): void;
+	getWebClientUrl(uri: number, containerSearch?: boolean): void;
 }
 
 export class AppStore implements IAppStore {
@@ -171,13 +171,17 @@ export class AppStore implements IAppStore {
 			});
 	};
 
-	public getWebClientUrl(uri: number): string {
+	public getWebClientUrl(uri: number, containerSearch?: boolean): string {
 		let webClientUrl =
 			(config.BASE_URL.endsWith("/")
 				? config.BASE_URL
 				: config.BASE_URL + "/") + config.WEB_CLIENT;
 
-		return `${webClientUrl}?uri=${uri}`;
+		if (containerSearch) {
+			return `${webClientUrl}?q=recContainerEx:[unkUri:${uri}]&t=Record`;
+		} else {
+			return `${webClientUrl}?uri=${uri}`;
+		}
 	}
 
 	public openInCM(uri: number): void {

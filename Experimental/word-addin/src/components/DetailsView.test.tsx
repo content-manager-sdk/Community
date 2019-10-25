@@ -3,14 +3,18 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import { DetailsView } from "./DetailsView";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
-import TrimConnector, { IObjectDetails } from "../trim-coms/trim-connector";
+import TrimConnector, {
+	IObjectDetails,
+	SERVICEAPI_BASE_URI,
+} from "../trim-coms/trim-connector";
 import { Label } from "office-ui-fabric-react/lib/Label";
 import { disconnect } from "cluster";
-import { ComboBox, DefaultButton } from "office-ui-fabric-react";
+import { ComboBox, DefaultButton, Icon } from "office-ui-fabric-react";
 
 describe("Details View", function() {
 	beforeEach(() => {
 		insertedText = "";
+		insertedUrl = "";
 		setUri = 0;
 		setProperties = [];
 		wrapper.setProps({
@@ -19,14 +23,20 @@ describe("Details View", function() {
 					{
 						Uri: 5,
 						RecordTitle: { StringValue: "my record" },
-						RecordNumber: { StringValue: "my record" },
+						RecordNumber: { StringValue: "REC_1" },
 						RecordAccessControl: { StringValue: "my record" },
+						RecordContainer: {
+							StringValue: "REC_2 - title",
+							Uri: 7,
+							RecordNumber: { Value: "REC_2" },
+						},
 						Fields: { SparkleLevel: { StringValue: "Medium" } },
 					},
 				],
 				propertiesAndFields: [
 					{ Id: "RecordTitle", Caption: "Title" },
 					{ Id: "RecordNumber", Caption: "Number" },
+					{ Id: "RecordContainer", Caption: "Container" },
 					{ Id: "RecordAccessControl", Caption: "Acl" },
 					{ Id: "SparkleLevel", Caption: "SparkleLevel" },
 				],
@@ -37,10 +47,15 @@ describe("Details View", function() {
 	let insertedText = "";
 	let setUri = 0;
 	let setProperties = [];
+	let insertedUrl = "";
 
 	const mockWordConnector = {
 		insertText(textToInsert: string): void {
 			insertedText = textToInsert;
+		},
+		insertLink(textToInsert: string, url: string): void {
+			insertedText = textToInsert;
+			insertedUrl = url;
 		},
 	};
 	let trimConnector = new TrimConnector();
@@ -84,7 +99,18 @@ describe("Details View", function() {
 
 	const wrapper = shallow<DetailsView>(
 		<DetailsView
-			appStore={{ RecordUri: 0, Id: "my id", messages: { web_Add: "Add" } }}
+			appStore={{
+				getWebClientUrl: function(uri: number, isContainer?: boolean) {
+					if (isContainer) {
+						return `recContainer:${uri}`;
+					} else {
+						return uri.toString();
+					}
+				},
+				RecordUri: 0,
+				Id: "my id",
+				messages: { web_Add: "Add" },
+			}}
 			trimConnector={trimConnector}
 			wordConnector={mockWordConnector}
 			recordDetails={{}}
@@ -135,17 +161,22 @@ describe("Details View", function() {
 		).toEqual("my record");
 	});
 
-	it("displays an icon to insert the text", function(this: any) {
+	it("displays an icon to remove the property", function(this: any) {
 		expect(
 			wrapper
 				.find("div.details-item")
-				.children("i")
+				.find(Icon)
 				.exists()
 		).toBeTruthy();
 
 		wrapper
-			.find("div.details-item")
-			.children("i")
+			.findWhere((itemWrapper) => {
+				return (
+					itemWrapper.hasClass("details-item") &&
+					itemWrapper.key() === "RecordTitle"
+				);
+			})
+			.find(Icon)
 			.first()
 			.props()
 			.onClick(null);
@@ -153,9 +184,63 @@ describe("Details View", function() {
 		expect(setUri).toEqual(5);
 		expect(setProperties).toEqual([
 			"RecordNumber",
+			"RecordContainer",
 			"RecordAccessControl",
 			"SparkleLevel",
 		]);
+	});
+
+	it("displays an icon to paste a link", function(this: any) {
+		expect(
+			wrapper
+				.find("div.details-item")
+				.find(Icon)
+				.exists()
+		).toBeTruthy();
+
+		wrapper
+			.findWhere((itemWrapper) => {
+				return (
+					itemWrapper.hasClass("details-item") &&
+					itemWrapper.key() === "RecordNumber"
+				);
+			})
+			.find(Icon)
+			.first()
+			.props()
+			.onClick(null);
+
+		expect(insertedText).toEqual("REC_1");
+		expect(insertedUrl).toEqual("5");
+	});
+
+	it("displays an icon to paste a container link", function(this: any) {
+		expect(
+			wrapper
+				.findWhere((itemWrapper) => {
+					return (
+						itemWrapper.hasClass("details-item") &&
+						itemWrapper.key() === "RecordContainer"
+					);
+				})
+				.find(Icon)
+				.exists()
+		).toBeTruthy();
+
+		wrapper
+			.findWhere((itemWrapper) => {
+				return (
+					itemWrapper.hasClass("details-item") &&
+					itemWrapper.key() === "RecordContainer"
+				);
+			})
+			.find(Icon)
+			.first()
+			.props()
+			.onClick(null);
+
+		expect(insertedText).toEqual("REC_2");
+		expect(insertedUrl).toEqual("recContainer:7");
 	});
 
 	it("gets property defs on combo menu open", (done) => {
@@ -183,6 +268,7 @@ describe("Details View", function() {
 			propertyAndFieldDefinitions: [
 				{ Id: "RecordTitle", Caption: "Title" },
 				{ Id: "RecordNumber", Caption: "Number" },
+				{ Id: "RecordContainer", Caption: "Container" },
 				{ Id: "RecordAccessControl", Caption: "Acl" },
 				{ Id: "SparkleLevel", Caption: "SparkleLevel" },
 				{ Id: "AField", Caption: "" },
@@ -199,6 +285,7 @@ describe("Details View", function() {
 				expect(setProperties).toEqual([
 					"RecordTitle",
 					"RecordNumber",
+					"RecordContainer",
 					"RecordAccessControl",
 					"SparkleLevel",
 					"AField",

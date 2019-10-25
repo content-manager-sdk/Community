@@ -539,9 +539,10 @@ export class TrimConnector implements ITrimConnector {
 		const params = {
 			includePropertyDefs: true,
 			propertySets: "Detailed",
-			propertyValue: "String",
+			propertyValue: "Both",
 			stringDisplayType: "ViewPane",
 			properties: "ToolTip,NameString",
+			descendantProperties: "RecordNumber",
 		};
 
 		return this.makeRequest(
@@ -659,6 +660,9 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Add_RelationshipTitle =
 						"Add relationship from the open document to the selected record.";
 					data.Messages.web_ApplySearchFilter = "Filter search results";
+					data.Messages.web_Record_Paste_Link = "Paste link to Record";
+					data.Messages.web_Container_Paste_Link = "Paste link to Container";
+					data.Messages.web_Remove_From_View_Pane = "Remove from view pane";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

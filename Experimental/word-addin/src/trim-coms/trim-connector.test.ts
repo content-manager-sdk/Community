@@ -717,10 +717,11 @@ describe("Test fetch from TRIM", () => {
 				.onGet(`${SERVICEAPI_BASE_URI}/Record/678`, {
 					params: {
 						propertySets: "Detailed",
-						propertyValue: "String",
+						propertyValue: "Both",
 						stringDisplayType: "ViewPane",
 						includePropertyDefs: true,
 						properties: "ToolTip,NameString",
+						descendantProperties: "RecordNumber",
 					},
 				})
 				.reply((config) => {

@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-(global as any).config = { BASE_URL: "" };
+(global as any).config = { BASE_URL: "", WEB_CLIENT: "cm" };
 import { AppStore } from "./AppStore";
 
 import {
@@ -284,6 +284,24 @@ describe("Test basic setup from Trim", () => {
 	});
 
 	describe("Test operation", () => {
+		it("get a record URL", function() {
+			appStore.errorMessage = "test";
+			appStore.status = "ERROR";
+
+			const url = appStore.getWebClientUrl(5);
+
+			expect(url).toEqual("/cm?uri=5");
+		});
+
+		it("get a container URL", function() {
+			appStore.errorMessage = "test";
+			appStore.status = "ERROR";
+
+			const url = appStore.getWebClientUrl(5, true);
+
+			expect(url).toEqual("/cm?q=recContainerEx:[unkUri:5]&t=Record");
+		});
+
 		it("clears the error when reset called", function() {
 			appStore.errorMessage = "test";
 			appStore.status = "ERROR";
