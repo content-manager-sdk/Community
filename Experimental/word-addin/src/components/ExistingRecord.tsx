@@ -55,7 +55,7 @@ export class ExistingRecord extends React.Component<
 	};
 
 	public render() {
-		const { className } = this.props;
+		const { className, appStore } = this.props;
 
 		const { menuMessage, recordDetails } = this.state;
 
@@ -65,7 +65,7 @@ export class ExistingRecord extends React.Component<
 					linkFormat={PivotLinkFormat.tabs}
 					linkSize={PivotLinkSize.normal}
 				>
-					<PivotItem headerText="Properties" key={1}>
+					<PivotItem headerText={appStore.messages.web_Properties} key={1}>
 						<hr />
 						<div>
 							<ObjectContextMenu
@@ -89,7 +89,7 @@ export class ExistingRecord extends React.Component<
 							<DetailsView recordDetails={recordDetails} />
 						</div>
 					</PivotItem>
-					<PivotItem headerText="Context" key={2}>
+					<PivotItem headerText={appStore.messages.web_Context} key={2}>
 						<hr />
 						<ContextList />
 					</PivotItem>

@@ -667,6 +667,9 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Remove_From_View_Pane = "Remove from view pane";
 					data.Messages.web_Get_Global_View_Pane =
 						"Get default properties and fields for view pane";
+
+					data.Messages.web_Properties = "Properties";
+					data.Messages.web_Context = "Context";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 
