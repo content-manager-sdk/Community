@@ -20,6 +20,8 @@ describe("Object Context Menu", () => {
 	let insertedUrl = "";
 	let testError = "";
 	let testUri = 0;
+	let setForOptionsSet = "";
+	let completedCommand = "";
 	const returnedDocumentInfo = {
 		Id: "test-id",
 		Uri: 5,
@@ -33,6 +35,9 @@ describe("Object Context Menu", () => {
 		return shallow<ObjectContextMenu>(
 			<ObjectContextMenu
 				isInList={isInList}
+				onCommandComplete={(key: string) => {
+					completedCommand = key;
+				}}
 				appStore={{
 					setError: function(message: any) {
 						testError = message;
@@ -57,6 +62,7 @@ describe("Object Context Menu", () => {
 					getWebClientUrl: (uri: number) => {
 						return "link?uri=" + uri;
 					},
+
 					documentInfo: {
 						Enums: {
 							RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
@@ -106,6 +112,8 @@ describe("Object Context Menu", () => {
 		insertedUrl = "";
 		testError = "";
 		testUri = 0;
+		setForOptionsSet = "";
+		completedCommand = "";
 	});
 
 	let trimConnector = new TrimConnector();
@@ -114,6 +122,14 @@ describe("Object Context Menu", () => {
 	trimConnector.getObjectDefinitions = function() {
 		return new Promise((resolve) => {
 			resolve([{ Id: "Record", Caption: "Record" }]);
+		});
+	}.bind(trimConnector);
+
+	trimConnector.getGlobalUserOptions = function(forOptionsSet) {
+		setForOptionsSet = forOptionsSet;
+
+		return new Promise((resolve) => {
+			resolve();
 		});
 	}.bind(trimConnector);
 
@@ -160,7 +176,7 @@ describe("Object Context Menu", () => {
 		expect.assertions(9);
 		const wrapper = makeWrapper();
 		expect(wrapper.find(IconButton).exists()).toBeTruthy();
-		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(6);
+		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(7);
 		expect(wrapper.find(IconButton).props().menuProps.items[2].text).toEqual(
 			"Checkin"
 		);
@@ -409,6 +425,30 @@ describe("Object Context Menu", () => {
 			try {
 				expect(checkinUri).toEqual(7);
 				expect(finalizeUri).toEqual(0);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("calls get global when get global button clicked", async (done) => {
+		const wrapper = makeWrapper();
+
+		expect.assertions(2);
+		const menuItem = wrapper
+			.find(IconButton)
+			.props()
+			.menuProps.items.find((mp) => {
+				return mp.key === "getGlobalProperties";
+			});
+
+		menuItem.onClick(null, menuItem);
+
+		setImmediate(() => {
+			try {
+				expect(setForOptionsSet).toEqual("ViewPane");
+				expect(completedCommand).toEqual("getGlobalProperties");
 				done();
 			} catch (e) {
 				done.fail(e);

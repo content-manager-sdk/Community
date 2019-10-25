@@ -23,6 +23,7 @@ interface IContextMenuProps {
 	wordConnector?: IWordConnector;
 	record: ITrimMainObject;
 	isInList: boolean;
+	onCommandComplete?: (commandKey: string) => void;
 }
 
 export class ObjectContextMenu extends React.Component<
@@ -52,6 +53,14 @@ export class ObjectContextMenu extends React.Component<
 		}
 	}
 
+	private callCommandComplete(key: string): void {
+		const { onCommandComplete } = this.props;
+
+		if (onCommandComplete) {
+			onCommandComplete(key);
+		}
+	}
+
 	private _onActionClick = (
 		evt: React.MouseEvent<HTMLElement>,
 		item: IContextualMenuItem
@@ -70,12 +79,23 @@ export class ObjectContextMenu extends React.Component<
 			if (item.key === "pasteLink") {
 				const url = appStore.getWebClientUrl(record.Uri);
 				wordConnector!.insertLink(record.NameString!, url);
+				this.callCommandComplete(item.key);
 			} else if (item.key === "pasteNumber") {
 				wordConnector!.insertText(record.NameString!);
+				this.callCommandComplete(item.key);
 			} else if (item.key === "pasteTitle") {
 				wordConnector!.insertText(record.ToolTip!);
+				this.callCommandComplete(item.key);
 			} else if (item.key === "Properties") {
 				appStore.openInCM(record.Uri);
+				this.callCommandComplete(item.key);
+			} else if (item.key === "getGlobalProperties") {
+				appStore.setStatus("STARTING");
+
+				trimConnector!.getGlobalUserOptions("ViewPane").then((data) => {
+					this.callCommandComplete(item.key);
+					appStore.setStatus("WAITING");
+				});
 			} else {
 				appStore.setStatus("STARTING");
 				const me = this;
@@ -223,6 +243,11 @@ export class ObjectContextMenu extends React.Component<
 				checkinDelete.text = "Check in and delete on close";
 				menuItems.splice(menuItems.indexOf(checkinItem) + 1, 0, checkinDelete);
 			}
+			menuItems.push({
+				key: "getGlobalProperties",
+				text: appStore.messages.web_Get_Global_View_Pane,
+				onClick: this._onActionClick,
+			});
 		}
 
 		return (

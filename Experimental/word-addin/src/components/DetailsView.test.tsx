@@ -46,6 +46,7 @@ describe("Details View", function() {
 
 	let insertedText = "";
 	let setUri = 0;
+	let setForOptionsSet = "";
 	let setProperties = [];
 	let insertedUrl = "";
 

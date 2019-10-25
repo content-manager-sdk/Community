@@ -222,6 +222,8 @@ export interface ITrimConnector {
 		trimType: BaseObjectTypes,
 		uri: number
 	): Promise<IPropertyOrFieldDef[]>;
+
+	getGlobalUserOptions(forUserOptionSet: string): Promise<void>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -663,6 +665,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Record_Paste_Link = "Paste link to Record";
 					data.Messages.web_Container_Paste_Link = "Paste link to Container";
 					data.Messages.web_Remove_From_View_Pane = "Remove from view pane";
+					data.Messages.web_Get_Global_View_Pane =
+						"Get default properties and fields for view pane";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 
@@ -766,6 +770,19 @@ export class TrimConnector implements ITrimConnector {
 					FullFormattedName: data.Results[0].LocationFullFormattedName,
 					Uri: data.Results[0].Uri,
 				};
+			}
+		);
+	}
+
+	public getGlobalUserOptions(forUserOptionSet: string): Promise<void> {
+		const body = {
+			LoadFromGlobalSetting: true,
+		};
+
+		return this.makeRequest(
+			{ path: `UserOptions/${forUserOptionSet}`, method: "post", data: body },
+			(data: any) => {
+				return;
 			}
 		);
 	}

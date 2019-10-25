@@ -36,7 +36,7 @@ export class ExistingRecord extends React.Component<
 		};
 	}
 
-	componentDidMount() {
+	private loadRecordDetails = (): any => {
 		const { trimConnector, appStore } = this.props;
 
 		return trimConnector!
@@ -44,6 +44,10 @@ export class ExistingRecord extends React.Component<
 			.then((response: IObjectDetails) => {
 				this.setState({ recordDetails: response });
 			});
+	};
+
+	componentDidMount() {
+		return this.loadRecordDetails();
 	}
 
 	private _dismissMessage = () => {
@@ -67,6 +71,15 @@ export class ExistingRecord extends React.Component<
 							<ObjectContextMenu
 								record={recordDetails.results[0]}
 								isInList={false}
+								onCommandComplete={(commandKey: string) => {
+									if (commandKey === "getGlobalProperties") {
+										const { appStore } = this.props;
+										appStore.setStatus("STARTING");
+										this.loadRecordDetails().then(() => {
+											appStore.setStatus("WAITING");
+										});
+									}
+								}}
 							/>
 							{menuMessage && (
 								<MessageBar onDismiss={this._dismissMessage}>

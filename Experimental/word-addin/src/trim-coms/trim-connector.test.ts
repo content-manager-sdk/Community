@@ -600,6 +600,40 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("get global user options", () => {
+		let postConfig: any;
+		mock
+			.onPost(`${SERVICEAPI_BASE_URI}/UserOptions/ViewPane`)
+			.reply(function(config: any) {
+				postConfig = config;
+
+				return [
+					200,
+					{
+						UserOptions: {
+							__type:
+								"HP.HPTRIM.ServiceModel.ViewPaneUserOptions, HP.HPTRIM.ServiceAPI.Model",
+							LoadFromGlobalSetting: false,
+							SaveAsGlobalSetting: false,
+						},
+						ResponseStatus: {},
+					},
+				];
+			});
+
+		expect.assertions(3);
+
+		return trimConnector.getGlobalUserOptions("ViewPane").then((data) => {
+			expect(postConfig.data).toEqual(
+				JSON.stringify({
+					LoadFromGlobalSetting: true,
+				})
+			);
+			expect(postConfig.headers!["Accept"]).toEqual("application/json");
+			expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
+		});
+	});
+
 	it("cancelled the request", (done) => {
 		let postConfig: any;
 		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
