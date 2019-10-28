@@ -49,15 +49,14 @@ export class ContextList extends React.Component<
 		return (
 			<div>
 				<ObjectContextMenu isInList={true} record={selectRecord} />
-				<h3>
-					<SearchBar
-						trimType={BaseObjectTypes.Record}
-						onQueryChange={(newValue) => {
-							this.setState({ searchQuery: newValue });
-						}}
-						includeShortCuts={true}
-					/>
-				</h3>
+
+				<SearchBar
+					trimType={BaseObjectTypes.Record}
+					onQueryChange={(newValue) => {
+						this.setState({ searchQuery: newValue });
+					}}
+					includeShortCuts={true}
+				/>
 
 				<FocusTrapZone
 					isClickableOutsideFocusTrap={true}

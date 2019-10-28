@@ -9,7 +9,12 @@ import TrimConnector, {
 	ITrimMainObject,
 } from "../../trim-coms/trim-connector";
 import { CommandIds } from "../../trim-coms/trim-command-ids";
-import { ContextualMenuItemType } from "office-ui-fabric-react/lib/ContextualMenu";
+import {
+	ContextualMenuItemType,
+	IContextualMenuProps,
+	IContextualMenuItem,
+} from "office-ui-fabric-react/lib/ContextualMenu";
+import { CommandBar } from "office-ui-fabric-react";
 
 describe("Object Context Menu", () => {
 	let checkinUri = 0;
@@ -172,47 +177,43 @@ describe("Object Context Menu", () => {
 		},
 	};
 
-	it("contains an action button", function(this: any) {
-		expect.assertions(9);
-		const wrapper = makeWrapper();
-		expect(wrapper.find(IconButton).exists()).toBeTruthy();
-		expect(wrapper.find(IconButton).props().menuProps.items.length).toEqual(7);
-		expect(wrapper.find(IconButton).props().menuProps.items[2].text).toEqual(
-			"Checkin"
-		);
+	const findMenuItem = (
+		wrapper: shallow<ObjectContextMenu>,
+		getFirstItem?: boolean
+	): IContextualMenuItem => {
+		return wrapper.find(CommandBar).props().farItems[getFirstItem ? 0 : 1];
+	};
 
-		const makeFinalItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mi) => {
-				return mi.key === "RecDocFinal";
-			});
+	const findMenu = (
+		wrapper: shallow<ObjectContextMenu>,
+		getFirstItem?: boolean
+	): IContextualMenuProps => {
+		return findMenuItem(wrapper, getFirstItem).subMenuProps;
+	};
+
+	it("contains an action button", function(this: any) {
+		expect.assertions(4);
+		const wrapper = makeWrapper();
+		expect(wrapper.find(CommandBar).exists()).toBeTruthy();
+		expect(wrapper.find(CommandBar).props().farItems.length).toEqual(2);
+
+		const makeFinalItem = findMenu(wrapper).items.find((mi) => {
+			return mi.key === "RecDocFinal";
+		});
 
 		expect(makeFinalItem.text).toEqual("Make Final");
-
 		expect(makeFinalItem.disabled).toBeFalsy();
-
-		expect(wrapper.find(IconButton).props().split).toBeTruthy();
-		expect(wrapper.find(IconButton).props().primary).toBeTruthy();
-		expect(wrapper.find(IconButton).props().text).toBeUndefined();
-		expect(wrapper.find(IconButton).props().iconProps).toEqual({
-			iconName: "GlobalNavButton",
-		});
 	});
 
 	it("contains paste and split", function(this: any) {
 		expect.assertions(3);
 		const wrapper = makeWrapper();
 
-		expect(wrapper.find(IconButton).props().menuProps.items[0].key).toEqual(
-			"paste"
+		expect(findMenu(wrapper).items[0].key).toEqual("paste");
+		expect(findMenu(wrapper).items[0].text).toEqual("Paste");
+		expect(findMenu(wrapper).items[1].itemType).toEqual(
+			ContextualMenuItemType.Divider
 		);
-		expect(wrapper.find(IconButton).props().menuProps.items[0].text).toEqual(
-			"Paste"
-		);
-		expect(
-			wrapper.find(IconButton).props().menuProps.items[1].itemType
-		).toEqual(ContextualMenuItemType.Divider);
 	});
 
 	it("contain add relationship", function(this: any) {
@@ -220,12 +221,9 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(true, true);
 
 		expect(
-			wrapper
-				.find(IconButton)
-				.props()
-				.menuProps.items.find((menuItem) => {
-					return menuItem.key === "addRelationshipto";
-				})
+			findMenu(wrapper, true).items.find((menuItem) => {
+				return menuItem.key === "addRelationshipto";
+			})
 		).toBeTruthy();
 	});
 
@@ -234,12 +232,9 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(true, false);
 
 		expect(
-			wrapper
-				.find(IconButton)
-				.props()
-				.menuProps.items.find((menuItem) => {
-					return menuItem.key === "addRelationshipto";
-				})
+			findMenu(wrapper).items.find((menuItem) => {
+				return menuItem.key === "addRelationshipto";
+			})
 		).toBeUndefined();
 	});
 
@@ -247,10 +242,8 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(true, false);
 		wrapper.setProps({ record: { Uri: 0 } });
 
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
+		const menuItem = findMenu(wrapper)
+			.items.find((mp) => {
 				return mp.key === "paste";
 			})
 			.subMenuProps.items.find((sm) => {
@@ -273,12 +266,9 @@ describe("Object Context Menu", () => {
 
 		wrapper.setProps({ record: { Uri: 0 } });
 
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mi) => {
-				return mi.key === "addRelationshipto";
-			}).subMenuProps.items[0];
+		const menuItem = findMenu(wrapper, true).items.find((mi) => {
+			return mi.key === "addRelationshipto";
+		}).subMenuProps.items[0];
 
 		menuItem.onClick(null, menuItem);
 		setImmediate(() => {
@@ -296,10 +286,8 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(1);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
+		const menuItem = findMenu(wrapper)
+			.items.find((mp) => {
 				return mp.key === "paste";
 			})
 			.subMenuProps.items.find((sm) => {
@@ -322,10 +310,8 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(1);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
+		const menuItem = findMenu(wrapper)
+			.items.find((mp) => {
 				return mp.key === "paste";
 			})
 			.subMenuProps.items.find((sm) => {
@@ -348,10 +334,8 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(2);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
+		const menuItem = findMenu(wrapper)
+			.items.find((mp) => {
 				return mp.key === "paste";
 			})
 			.subMenuProps.items.find((sm) => {
@@ -387,12 +371,9 @@ describe("Object Context Menu", () => {
 			},
 		});
 		expect.assertions(3);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
-				return mp.key === "AddToFavorites";
-			});
+		const menuItem = findMenu(wrapper, true).items.find((mp) => {
+			return mp.key === "AddToFavorites";
+		});
 
 		menuItem.onClick(null, menuItem);
 
@@ -412,12 +393,9 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
-				return mp.key === "RecCheckIn";
-			});
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "RecCheckIn";
+		});
 
 		menuItem.onClick(null, menuItem);
 
@@ -436,12 +414,9 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
-				return mp.key === "getGlobalProperties";
-			});
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "getGlobalProperties";
+		});
 
 		menuItem.onClick(null, menuItem);
 
@@ -460,12 +435,9 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
-				return mp.key === "RecDocFinal";
-			});
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "RecDocFinal";
+		});
 
 		menuItem.onClick(null, menuItem);
 
@@ -485,25 +457,33 @@ describe("Object Context Menu", () => {
 		expect.assertions(1);
 
 		expect(
-			wrapper
-				.find(IconButton)
-				.props()
-				.menuProps.items.find((mp) => {
-					return mp.key === "RecDocFinal";
-				}).disabled
+			findMenu(wrapper).items.find((mp) => {
+				return mp.key === "RecDocFinal";
+			}).disabled
 		).toBeTruthy();
+	});
+
+	it("save button disabled when command disabled", () => {
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(findMenuItem(wrapper, true).disabled).toBeTruthy();
+	});
+
+	it("save button not disabled when command disabled", () => {
+		const wrapper = makeWrapper();
+		expect.assertions(1);
+
+		expect(findMenuItem(wrapper, true).disabled).toBeFalsy();
 	});
 
 	it("sets the state after an action", (done) => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(1);
-		const menuItem = wrapper
-			.find(IconButton)
-			.props()
-			.menuProps.items.find((mp) => {
-				return mp.key === "RecDocFinal";
-			});
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "RecDocFinal";
+		});
 
 		menuItem.onClick(null, menuItem);
 
@@ -524,12 +504,9 @@ describe("Object Context Menu", () => {
 
 		setImmediate(() => {
 			try {
-				const menuItem = wrapper
-					.find(IconButton)
-					.props()
-					.menuProps.items.find((mi) => {
-						return mi.key === "Properties";
-					});
+				const menuItem = findMenu(wrapper).items.find((mi) => {
+					return mi.key === "Properties";
+				});
 
 				menuItem.onClick(null, menuItem);
 
@@ -568,21 +545,15 @@ describe("Object Context Menu", () => {
 		setImmediate(() => {
 			try {
 				expect(
-					wrapper
-						.find(IconButton)
-						.props()
-						.menuProps.items.find((mp) => {
-							return mp.key === "RecCheckIn";
-						})
+					findMenu(wrapper, true).items.find((mp) => {
+						return mp.key === "RecCheckIn";
+					})
 				).toBeFalsy();
 
 				expect(
-					wrapper
-						.find(IconButton)
-						.props()
-						.menuProps.items.find((mp) => {
-							return mp.key === "RecDocFinal";
-						})
+					findMenu(wrapper, true).items.find((mp) => {
+						return mp.key === "RecDocFinal";
+					})
 				).toBeFalsy();
 
 				done();

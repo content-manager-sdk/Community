@@ -170,10 +170,10 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				"& .trim-search-text": {
 					float: "left",
 					marginLeft: "4px",
-					width: `${wideDisplay ? "calc(100% - 180px)" : "170px"}`,
+					width: `${wideDisplay ? "calc(100% - 180px)" : "190px"}`,
 				},
 				"& .trim-search-query": {
-					width: `${wideDisplay ? "calc(100% - 160px)" : "170px"}`,
+					width: `${wideDisplay ? "calc(100% - 160px)" : "190px"}`,
 				},
 				"& .context-list-title": {
 					float: "left",
@@ -358,7 +358,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				: { value: searchQuery };
 
 		return (
-			<div className={this.getStyles()}>
+			<div className={"search-bar " + this.getStyles()}>
 				<ComboBox
 					className="context-list-title"
 					options={searchTypeOptions}

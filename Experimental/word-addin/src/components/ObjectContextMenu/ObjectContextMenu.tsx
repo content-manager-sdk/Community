@@ -1,7 +1,6 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 
-import { IconButton } from "office-ui-fabric-react/lib/Button";
 import {
 	ITrimConnector,
 	ICommandDef,
@@ -16,6 +15,7 @@ import { CommandIds } from "../../trim-coms/trim-command-ids";
 
 import { IWordConnector } from "../../office-coms/word-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { CommandBar } from "office-ui-fabric-react";
 
 interface IContextMenuProps {
 	appStore?: any;
@@ -183,9 +183,12 @@ export class ObjectContextMenu extends React.Component<
 		};
 	}
 
-	public render() {
+	private getFarItems = () => {
 		const { appStore, isInList } = this.props;
 		const { commandDefs } = this.state;
+
+		let checkinDisabled = false;
+		let checkinLabel = "";
 
 		const menuItems = (commandDefs || [])
 			.filter((commandDef: ICommandDef) => {
@@ -196,6 +199,10 @@ export class ObjectContextMenu extends React.Component<
 				return !["RecCheckIn", "RecDocFinal"].includes(commandDef.CommandId);
 			})
 			.map<IContextualMenuItem>((commandDef: ICommandDef) => {
+				if (commandDef.CommandId === "RecCheckIn") {
+					checkinDisabled = !commandDef.IsEnabled;
+					checkinLabel = commandDef.Tooltip;
+				}
 				return {
 					key: commandDef.CommandId,
 					text:
@@ -251,17 +258,31 @@ export class ObjectContextMenu extends React.Component<
 			});
 		}
 
-		return (
-			<IconButton
-				className="trim-action-button"
-				primary
-				split={true}
-				iconProps={{ iconName: "GlobalNavButton" }}
-				menuProps={{
-					items: menuItems,
-				}}
-			/>
-		);
+		const items = [];
+
+		if (!isInList) {
+			items.push({
+				iconProps: { iconName: "Save" },
+				key: "RecCheckIn",
+				name: checkinLabel,
+				iconOnly: true,
+				disabled: checkinDisabled,
+				onClick: this._onActionClick,
+			});
+		}
+		items.push({
+			key: "moreActions",
+			name: appStore!.messages.web_Menu,
+			iconOnly: true,
+
+			subMenuProps: { items: menuItems },
+		});
+
+		return items;
+	};
+
+	public render() {
+		return <CommandBar items={[]} farItems={this.getFarItems()} />;
 	}
 }
 

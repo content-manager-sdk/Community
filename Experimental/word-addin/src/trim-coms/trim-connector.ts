@@ -670,6 +670,7 @@ export class TrimConnector implements ITrimConnector {
 
 					data.Messages.web_Properties = "Properties";
 					data.Messages.web_Context = "Context";
+					data.Messages.web_Menu = "Menu";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

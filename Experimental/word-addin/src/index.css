@@ -20,8 +20,19 @@ body {
 	border-bottom: none;
 }
 
+hr.trim-menu-sep {
+	margin-bottom: 0;
+}
+
+.trim-action-buttons {
+	float: right;
+	border-style: groove;
+	border-width: 0 0 1px 0;
+	width: 100%;
+}
 .trim-action-button {
 	float: right;
+	margin-top: 0;
 }
 
 .trim-ObjectPicker-event--without-label {
@@ -42,14 +53,13 @@ body {
 	bottom: 0;
 	height: 80px;
 }
-.trim-main {
+/* .trim-main {
 	position: absolute;
 	top: 0px;
-	/* bottom: 90px; */
 	right: 0px;
 	left: 0px;
 	padding: 0 6px 0 6px;
-}
+} */
 
 .trim-search-shortcuts li {
 	cursor: pointer;
@@ -122,12 +132,14 @@ body {
 }
 
 .ms-Spinner {
-	margin-top: 30px;
-	align-content: center;
+	position: absolute;
+	top: 30px;
+	left: calc(50% - 14px);
+	z-index: 9999;
 }
 
 div.trim-properties {
-	max-height: calc(100% - 80px);
+	max-height: calc(100% - 110px);
 	overflow-y: auto;
 	margin-bottom: 10px;
 }

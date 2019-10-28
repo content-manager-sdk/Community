@@ -3,6 +3,9 @@
 	bottom: 20px;
 	position: fixed;
 	left: 10px;
-	top: 110px;
+	top: 150px;
 	width: calc(100% - 12px);
+}
+.trim-main .search-bar {
+	margin-top: 4px;
 }

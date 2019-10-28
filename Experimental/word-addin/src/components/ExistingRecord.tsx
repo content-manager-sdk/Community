@@ -66,7 +66,7 @@ export class ExistingRecord extends React.Component<
 					linkSize={PivotLinkSize.normal}
 				>
 					<PivotItem headerText={appStore.messages.web_Properties} key={1}>
-						<hr />
+						<hr className="trim-menu-sep" />
 						<div>
 							<ObjectContextMenu
 								record={recordDetails.results[0]}
