@@ -7,6 +7,7 @@ import {
 	ITrimMainObject,
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
+import BaseObjectTypes from "src/trim-coms/trim-baseobjecttypes";
 
 const config = (global as any).config;
 
@@ -82,6 +83,10 @@ export class AppStore implements IAppStore {
 							return tc.getDriveId(webUrl);
 						})
 						.then(function(documentInfo) {
+							// ensure search details are in cache
+							tc.getSearchClauseOrFieldDefinitions(BaseObjectTypes.Record).then(
+								() => {}
+							);
 							thisthis.setDocumentInfo(documentInfo);
 							thisthis.setStatus("WAITING");
 						})
@@ -144,31 +149,38 @@ export class AppStore implements IAppStore {
 
 	public createRecord = (recordType: number, properties: any) => {
 		this.setStatus("STARTING");
-
-		return this.trimConnector
-			.registerInTrim(
-				recordType,
-				{
-					...properties,
-				},
-				{ DriveID: this.documentInfo.Id }
-			)
-			.then((newRecord: ITrimMainObject) => {
-				if (newRecord.Uri > 0) {
-					this.setDocumentInfo({
-						Uri: newRecord.Uri,
-						CommandDefs: newRecord.CommandDefs!,
-						Id: this.documentInfo.Id,
-						RecordType: this.documentInfo.RecordType,
-						Options: this.documentInfo.Options,
-						Enums: this.documentInfo.Enums,
-					});
-				}
-				this.setStatus("WAITING");
-			})
-			.catch((error) => {
-				this.setError(error, "create record");
-			});
+		console.log("hhhhhhhhh");
+		return this.wordConnector!.getDocumentData(
+			(data: number[], fileName: string) => {
+				return this.trimConnector!.writeFileSlice(data, fileName);
+			}
+		).then((fileName) => {
+			return this.trimConnector
+				.registerInTrim(
+					recordType,
+					{
+						...properties,
+						RecordFilePath: fileName,
+					},
+					{ DriveID: this.documentInfo.Id }
+				)
+				.then((newRecord: ITrimMainObject) => {
+					if (newRecord.Uri > 0) {
+						this.setDocumentInfo({
+							Uri: newRecord.Uri,
+							CommandDefs: newRecord.CommandDefs!,
+							Id: this.documentInfo.Id,
+							RecordType: this.documentInfo.RecordType,
+							Options: this.documentInfo.Options,
+							Enums: this.documentInfo.Enums,
+						});
+					}
+					this.setStatus("WAITING");
+				})
+				.catch((error) => {
+					this.setError(error, "create record");
+				});
+		});
 	};
 
 	public getWebClientUrl(uri: number, containerSearch?: boolean): string {

@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using HP.HPTRIM.SDK;
-using HP.HPTRIM.Service;
-using Microsoft.Graph;
-using Office_OOXML_EmbedAddin;
+﻿using Microsoft.Graph;
+using Newtonsoft.Json.Linq;
+using OneDriveConnector;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
@@ -18,6 +16,7 @@ using System.Threading.Tasks;
 namespace OneDriveAuthPlugin
 {
 	[Route("/OpenFile/{Uri}", "GET")]
+	[Route("/OpenFile", "POST")]
 	public class OpenFile : ITrimRequest
 	{
 		public long Uri { get; set; }
@@ -53,7 +52,7 @@ namespace OneDriveAuthPlugin
 		{
 			var httpClientHandler = new HttpClientHandler
 			{
-				Proxy = new WebProxy("http://localhost:8888"),
+				//	Proxy = new WebProxy("http://localhost:8888"),
 				UseDefaultCredentials = true
 			};
 
@@ -69,165 +68,156 @@ namespace OneDriveAuthPlugin
 			}));
 		}
 
-		private async Task<Microsoft.Graph.DriveItem> doUpload(string filePath, string fileName, string accessToken)
+		//private async Task<Microsoft.Graph.DriveItem> doUpload(string filePath, string fileName, string accessToken)
+		//{
+		//	string token = await getToken();
+
+		//	var graphServiceClient = getClient(token);
+
+		//	using (var file = System.IO.File.OpenRead(filePath))
+		//	{
+		//		MemoryStream stream = new MemoryStream();
+		//		file.CopyTo(stream);
+
+
+		//		autoOpen(stream);
+
+		//		var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
+
+
+		//		var uploadSession = await graphServiceClient.Drives[documentFolder.ParentReference.DriveId].Items[documentFolder.Id].ItemWithPath(fileName).CreateUploadSession().Request().PostAsync();
+
+		//		string ul = uploadSession.UploadUrl += "&$select=Id,ParentReference,WebUrl,WebDavUrl";
+
+		//		var maxChunkSize = (320 * 1024) * 10; // 5000 KB - Change this to your chunk size. 5MB is the default.
+		//		var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, stream, maxChunkSize);
+
+
+		//		// Setup the chunk request necessities
+		//		var chunkRequests = provider.GetUploadChunkRequests();
+		//		var readBuffer = new byte[maxChunkSize];
+		//		var trackedExceptions = new List<Exception>();
+		//		DriveItem itemResult = null;
+
+		//		//upload the chunks
+		//		foreach (var request in chunkRequests)
+		//		{
+		//			// Do your updates here: update progress bar, etc.
+		//			// ...
+		//			// Send chunk request
+		//			var result = await provider.GetChunkRequestResponseAsync(request, readBuffer, trackedExceptions);
+
+		//			if (result.UploadSucceeded)
+		//			{
+		//				itemResult = result.ItemResponse;
+		//			}
+		//		}
+
+		//		// Check that upload succeeded
+		//		if (itemResult != null)
+		//		{
+		//			return itemResult;
+		//		}
+		//	}
+		//	throw new ApplicationException("Upload failed.");
+		//}
+
+
+		private async Task<string> doOpenFromFileHandler(string itemUrl, string token)
+		{
+
+
+			UriBuilder downloadUrlBuilder = new UriBuilder(itemUrl);
+			downloadUrlBuilder.Path += "/content";
+
+			string url = downloadUrlBuilder.ToString();
+
+			var result = await ODataHelper.DownloadFileAsync(url, token);
+			//var result = await ODataHelper.GetItem<string>(url, token, null);
+
+			return result.Content;
+		}
+
+		public async Task<object> Post(OpenFile request)
 		{
 			string token = await getToken();
+			var formData = this.Request.FormData;
+			var cultureName = this.Request.FormData["cultureName"];
+			var client = this.Request.FormData["client"];
+			var domainHint = this.Request.FormData["domainHint"];
+			var userId = this.Request.FormData["userId"];
+			var appId = this.Request.FormData["appdId"];
+			var items = this.Request.FormData["items"];
+			//string token = await getToken();
 
-			var graphServiceClient = getClient(token);
+			var itemsArray = JArray.Parse(items);
+			//var itemsArray = (string[])Newtonsoft.Json.JsonConvert.DeserializeObject(items);
 
-			using (var file = System.IO.File.OpenRead(filePath))
+
+			string response = await doOpenFromFileHandler(itemsArray.First().ToString(), token);
+
+			long uri = 0;
+			foreach (string line in response.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
 			{
-				MemoryStream stream = new MemoryStream();
-				file.CopyTo(stream);
+				int idx = line.IndexOf("Uri=");
 
-
-				autoOpen(stream);
-
-				var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
-
-
-				var uploadSession = await graphServiceClient.Drives[documentFolder.ParentReference.DriveId].Items[documentFolder.Id].ItemWithPath(fileName).CreateUploadSession().Request().PostAsync();
-
-				string ul = uploadSession.UploadUrl += "&$select=Id,ParentReference,WebUrl,WebDavUrl";
-
-				var maxChunkSize = (320 * 1024) * 10; // 5000 KB - Change this to your chunk size. 5MB is the default.
-				var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, stream, maxChunkSize);
-
-
-				// Setup the chunk request necessities
-				var chunkRequests = provider.GetUploadChunkRequests();
-				var readBuffer = new byte[maxChunkSize];
-				var trackedExceptions = new List<Exception>();
-				DriveItem itemResult = null;
-
-				//upload the chunks
-				foreach (var request in chunkRequests)
+				if (idx > -1)
 				{
-					// Do your updates here: update progress bar, etc.
-					// ...
-					// Send chunk request
-					var result = await provider.GetChunkRequestResponseAsync(request, readBuffer, trackedExceptions);
-
-					if (result.UploadSucceeded)
-					{
-						itemResult = result.ItemResponse;
-					}
-				}
-
-				// Check that upload succeeded
-				if (itemResult != null)
-				{
-					return itemResult;
+					uri = Convert.ToInt64(line.Substring(idx + 4));
+					break;
 				}
 			}
-			throw new ApplicationException("Upload failed.");
+
+
+			if (uri == 0)
+			{
+				throw new ApplicationException("Invalid request.");
+
+
+				//	return documentResponse;
+			}
+			else
+			{
+				DocumentHandler documentHandler = new DocumentHandler(this.Database, uri);
+				var oneDrivedocument = await documentHandler.GetDocument(token);
+
+				return new HttpResult(HttpStatusCode.Redirect, "open document")
+				{
+					ContentType = "text/html",
+					Headers = {
+					{ HttpHeaders.Location, oneDrivedocument.WebUrl }
+				},
+				};
+
+			}
+		}
+
+		private async Task<OpenFileResponse> getDocument(long uri, string token)
+		{
+			DocumentHandler documentHandler = new DocumentHandler(this.Database, uri);
+
+			try
+			{
+				var oneDrivedocument = await documentHandler.GetDocument(token);
+
+				return new OpenFileResponse()
+				{ UserHasAccess = oneDrivedocument.UserHasAccess, WebDavUrl = oneDrivedocument.WebDavUrl, WebUrl = oneDrivedocument.WebUrl };
+			}
+			catch (HttpListenerException httpEx)
+			{
+				throw new HttpError(httpEx.GetStatus().GetValueOrDefault(HttpStatusCode.BadRequest), httpEx.Message);
+			}
 		}
 
 		public async Task<object> Get(OpenFile request)
 		{
-			if (request.Uri < 1)
-			{
-				throw new HttpError(HttpStatusCode.BadRequest, "400", "Invalid Uri");
-			}
+			string token = await getToken();
+			var response = await getDocument(request.Uri, token);
 
-			var response = new OpenFileResponse() { UserHasAccess = true };
-			var record = new Record(this.Database, request.Uri);
-
-			string driveId = record.GetDriveId();
-
-			if (!string.IsNullOrWhiteSpace(driveId))
-			{
-				OneDriveItem fileResult = null;
-				string token = await getToken();
-
-				try
-				{
-					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
-				}
-				catch (Exception ex)
-				{
-					response.UserHasAccess = false;
-				}
-
-				if (response.UserHasAccess == false)
-				{
-					token = getApplicationToken();
-					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
-				}
-				response.WebUrl = fileResult.WebUrl;
-				response.WebDavUrl = fileResult.WebDavUrl;
-			}
-			else if (record.IsElectronic)
-			{
-
-				try
-				{
-					string token = await getToken();
-					string folderId = string.Empty;
-
-					var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
-					folderId = documentFolder.Id;
-
-					if (!record.IsDocumentInClientCache)
-					{
-						record.LoadDocumentIntoClientCache();
-					}
-
-					Regex pattern = new Regex("[\\\\/<>|?]|[\n]{2}");
-
-					string fileName = $"{Path.GetFileNameWithoutExtension(record.SuggestedFileName)} ({pattern.Replace(record.Number, "_")}){Path.GetExtension(record.SuggestedFileName)}";
-
-
-
-					var uploadedFile = await doUpload(record.DocumentPathInClientCache, fileName, token);
-
-					bool checkout = true;
-					if (record.IsCheckedOut && record.CheckedOutTo.Uri == this.Database.CurrentUser.Uri)
-					{
-						checkout = false;
-					}
-
-
-					record.GetDocument(null, checkout, null, uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id);
-					record.SetDriveId(uploadedFile.ParentReference.DriveId + "/items/" + uploadedFile.Id);// uploadedFile. fileItem.getDriveAndId();
-
-					record.Save();
-
-
-					response.WebUrl = uploadedFile.WebUrl;
-					response.WebDavUrl = uploadedFile.WebDavUrl;
-
-				}
-				catch
-				{
-					try
-					{
-						record.UndoCheckout(null);
-					}
-					catch { }
-					//	return new Error
-					throw;
-				}
-			}
-			else
-			{
-				throw new Exception("Record is not a valid document.");
-			}
 			return response;
-		}
-
-		private void autoOpen(Stream stream)
-		{
-			string addinGuid = ConfigurationManager.AppSettings["owa:Id"];
-			string addinVersion = ConfigurationManager.AppSettings["owa:Version"];
-
-			using (var document = WordprocessingDocument.Open(stream, true))
-				{
-				var webExTaskpanesPart = document.WebExTaskpanesPart ?? document.AddWebExTaskpanesPart();
-					OOXMLHelper.CreateWebExTaskpanesPart(webExTaskpanesPart, addinGuid, addinVersion);
-				}				
 
 		}
+
 
 		// I am not 100% sure but the OnEndRequest method of Disposing seems to get called before the async services, that is why I am disposing here.
 		// If I continue to get Disposal errors I will need to re-think this.

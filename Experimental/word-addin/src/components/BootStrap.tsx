@@ -45,10 +45,14 @@ export class BootStrap extends React.Component<
 	}
 
 	componentDidMount() {
-		const { appStore } = this.props;
+		const { appStore, trimConnector } = this.props;
 		const { dialogName } = this.state;
 		Office.initialize = function(reason) {
 			appStore!.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
+		};
+
+		window.onbeforeunload = () => {
+			trimConnector!.clearCache();
 		};
 	}
 	// private _onChange = (ev: React.MouseEvent<HTMLElement>, checked: boolean) => {

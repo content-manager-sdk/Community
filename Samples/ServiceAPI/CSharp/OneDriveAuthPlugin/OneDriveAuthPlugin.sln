@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDriveAuthPlugin", "OneDriveAuthPlugin\OneDriveAuthPlugin.csproj", "{A3BC4F6C-BC77-4545-83F3-28CFEEBEFDB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDriveConnector", "OneDriveConnector\OneDriveConnector.csproj", "{C2B5ADA1-E724-4AF2-BCE4-8F1328D47B4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDriveSync", "OneDriveSync\OneDriveSync.csproj", "{30DE7C32-7F2B-4527-A3C2-94EB83A85A49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{A3BC4F6C-BC77-4545-83F3-28CFEEBEFDB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3BC4F6C-BC77-4545-83F3-28CFEEBEFDB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3BC4F6C-BC77-4545-83F3-28CFEEBEFDB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B5ADA1-E724-4AF2-BCE4-8F1328D47B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B5ADA1-E724-4AF2-BCE4-8F1328D47B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B5ADA1-E724-4AF2-BCE4-8F1328D47B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B5ADA1-E724-4AF2-BCE4-8F1328D47B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30DE7C32-7F2B-4527-A3C2-94EB83A85A49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30DE7C32-7F2B-4527-A3C2-94EB83A85A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30DE7C32-7F2B-4527-A3C2-94EB83A85A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30DE7C32-7F2B-4527-A3C2-94EB83A85A49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

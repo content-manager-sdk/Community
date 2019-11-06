@@ -32,11 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.9.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.9.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetOpenAuth.Ultimate.4.3.4.13329\lib\net45-full\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="HP.HPTRIM.Framework, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.Framework.dll</HintPath>
     </Reference>
     <Reference Include="HP.HPTRIM.SDK">
       <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.SDK.dll</HintPath>
@@ -47,6 +48,9 @@
     <Reference Include="HP.HPTRIM.ServiceAPI.Model">
       <HintPath>..\..\..\..\..\..\trunk\AnyCPU\Debug\HP.HPTRIM.ServiceAPI.Model.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Graph, Version=1.17.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Graph.1.17.0\lib\net45\Microsoft.Graph.dll</HintPath>
     </Reference>
@@ -55,6 +59,9 @@
     </Reference>
     <Reference Include="Microsoft.Identity.Client, Version=2.5.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Identity.Client.2.5.0-preview\lib\net45\Microsoft.Identity.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.3\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Logging, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Logging.5.2.2\lib\net45\Microsoft.IdentityModel.Logging.dll</HintPath>
@@ -68,8 +75,11 @@
     <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.2.2\lib\net45\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.3.3\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.4.5.14\lib\net45\ServiceStack.dll</HintPath>
@@ -122,18 +132,15 @@
   <ItemGroup>
     <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
+    <Compile Include="AzureTableTokenCache.cs" />
     <Compile Include="BaseOneDriveService.cs" />
     <Compile Include="CommandDefCustomProp.cs" />
     <Compile Include="CustomRecord.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GetFileService.cs" />
-    <Compile Include="GraphApiHelper.cs" />
-    <Compile Include="models.cs" />
     <Compile Include="MyCommandDef.cs" />
     <Compile Include="MyEnumItem.cs" />
-    <Compile Include="ODataHelper.cs" />
     <Compile Include="OneDriveAuthPlugin.cs" />
-    <Compile Include="OOXMLHelper.cs" />
     <Compile Include="TrimOptions.cs" />
     <Compile Include="WriteFileService.cs" />
     <Compile Include="OpenFileService.cs" />
@@ -144,11 +151,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OneDriveConnector\OneDriveConnector.csproj">
+      <Project>{c2b5ada1-e724-4af2-bce4-8f1328d47b4f}</Project>
+      <Name>OneDriveConnector</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
@@ -173,6 +188,10 @@ copy $(TargetDir)Microsoft.Graph.Core.dll D:\trunk\trim\CSharp\HP.HPTRIM.Service
 copy $(TargetDir)Microsoft.Graph.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)DocumentFormat.OpenXml.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)OneDriveConnector.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)Microsoft.WindowsAzure.Storage.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)Microsoft.IdentityModel.Clients.ActiveDirectory.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+
 
 copy $(TargetPath) D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)DotNetOpenAuth.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
@@ -189,6 +208,10 @@ copy $(TargetDir)Microsoft.Identity.Client.dll D:\trunk\trim\Phoenix\HP.HPTRIM.W
 copy $(TargetDir)Microsoft.Graph.Core.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)Microsoft.Graph.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
 copy $(TargetDir)System.ValueTuple.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-copy $(TargetDir)DocumentFormat.OpenXml.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
+copy $(TargetDir)DocumentFormat.OpenXml.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)OneDriveConnector.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+
+copy $(TargetDir)Microsoft.WindowsAzure.Storage.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
+copy $(TargetDir)Microsoft.IdentityModel.Clients.ActiveDirectory.dll D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*</PostBuildEvent>
   </PropertyGroup>
 </Project>

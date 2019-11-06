@@ -12,7 +12,7 @@
   <Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>1.6.107.0</Version>
+  <Version>1.6.108.0</Version>
   <ProviderName>Micro Focus</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -22,15 +22,15 @@
   <Description DefaultValue="An addin to register documents in Content Manager."/>
 
   <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
-  <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png" />
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-80.png"/>
+  <IconUrl DefaultValue="https://desktop-39dgcn3:3000/assets/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://desktop-39dgcn3:3000/assets/icon-80.png"/>
 
   <!--If you plan to submit this add-in to the Office Store, uncomment the SupportUrl element below-->
   <!--<SupportUrl DefaultValue="[Insert the URL of a page that provides support information for the app]">-->
 
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
-    <AppDomain>localhost</AppDomain>
+    <AppDomain>desktop-39dgcn3</AppDomain>
     <AppDomain>cmofficedev-my.sharepoint.com</AppDomain>
     <AppDomain>AppDomain3</AppDomain>
   </AppDomains>
@@ -41,7 +41,7 @@
     <Host Name="Document" />
   </Hosts>
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://localhost:3000/" />
+    <SourceLocation DefaultValue="https://desktop-39dgcn3:3000/" />
   </DefaultSettings>
   <!-- End TaskPane Mode integration.  -->
 
@@ -251,34 +251,34 @@
     <!-- You can use resources across hosts and form factors. -->
     <Resources>
       <bt:Images>
-        <bt:Image id="Trim.tpicon_16x16" DefaultValue="https://localhost:3000/assets/trim16.png" />
-        <bt:Image id="Trim.tpicon_32x32" DefaultValue="https://localhost:3000/assets/trim32.png" />
-        <bt:Image id="Trim.tpicon_80x80" DefaultValue="https://localhost:3000/assets/trim80.png" />
-		<bt:Image id="Trim.openicon_16x16" DefaultValue="https://localhost:3000/assets/open16.png" />
-		<bt:Image id="Trim.openicon_32x32" DefaultValue="https://localhost:3000/assets/open32.png" />
-		<bt:Image id="Trim.openicon_80x80" DefaultValue="https://localhost:3000/assets/open80.png" />
-		<bt:Image id="Trim.helpicon_16x16" DefaultValue="https://localhost:3000/assets/help16.png" />
-		<bt:Image id="Trim.helpicon_32x32" DefaultValue="https://localhost:3000/assets/help32.png" />
-		<bt:Image id="Trim.helpicon_80x80" DefaultValue="https://localhost:3000/assets/help80.png" />
-		<bt:Image id="Trim.inserttexticon_16x16" DefaultValue="https://localhost:3000/assets/insert-text16.png" />
-		<bt:Image id="Trim.inserttexticon_32x32" DefaultValue="https://localhost:3000/assets/insert-text32.png" />
-		<bt:Image id="Trim.inserttexticon_80x80" DefaultValue="https://localhost:3000/assets/insert-text80.png" />
-		<bt:Image id="Trim.insertobjecticon_16x16" DefaultValue="https://localhost:3000/assets/insert-object16.png" />
-		<bt:Image id="Trim.insertobjecticon_32x32" DefaultValue="https://localhost:3000/assets/insert-object32.png" />
-		<bt:Image id="Trim.insertobjecticon_80x80" DefaultValue="https://localhost:3000/assets/insert-object80.png" />
-		<bt:Image id="Trim.insertpictureicon_16x16" DefaultValue="https://localhost:3000/assets/insert-picture16.png" />
-		<bt:Image id="Trim.insertpictureicon_32x32" DefaultValue="https://localhost:3000/assets/insert-picture32.png" />
-		<bt:Image id="Trim.insertpictureicon_80x80" DefaultValue="https://localhost:3000/assets/insert-picture80.png" />
+        <bt:Image id="Trim.tpicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/trim16.png" />
+        <bt:Image id="Trim.tpicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/trim32.png" />
+        <bt:Image id="Trim.tpicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/trim80.png" />
+		<bt:Image id="Trim.openicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/open16.png" />
+		<bt:Image id="Trim.openicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/open32.png" />
+		<bt:Image id="Trim.openicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/open80.png" />
+		<bt:Image id="Trim.helpicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/help16.png" />
+		<bt:Image id="Trim.helpicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/help32.png" />
+		<bt:Image id="Trim.helpicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/help80.png" />
+		<bt:Image id="Trim.inserttexticon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-text16.png" />
+		<bt:Image id="Trim.inserttexticon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-text32.png" />
+		<bt:Image id="Trim.inserttexticon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-text80.png" />
+		<bt:Image id="Trim.insertobjecticon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-object16.png" />
+		<bt:Image id="Trim.insertobjecticon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-object32.png" />
+		<bt:Image id="Trim.insertobjecticon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-object80.png" />
+		<bt:Image id="Trim.insertpictureicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-picture16.png" />
+		<bt:Image id="Trim.insertpictureicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-picture32.png" />
+		<bt:Image id="Trim.insertpictureicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-picture80.png" />
 
-		<bt:Image id="Trim.newobjecticon_16x16" DefaultValue="https://localhost:3000/assets/new-object16.png" />
-		<bt:Image id="Trim.newobjecticon_32x32" DefaultValue="https://localhost:3000/assets/new-object32.png" />
-		<bt:Image id="Trim.newobjecticon_80x80" DefaultValue="https://localhost:3000/assets/new-object80.png" />
+		<bt:Image id="Trim.newobjecticon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/new-object16.png" />
+		<bt:Image id="Trim.newobjecticon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/new-object32.png" />
+		<bt:Image id="Trim.newobjecticon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/new-object80.png" />
 
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Trim.Taskpane.Url" DefaultValue="https://localhost:3000/index.html" />
+        <bt:Url id="Trim.Taskpane.Url" DefaultValue="https://desktop-39dgcn3:3000/index.html" />
         <bt:Url id="Trim.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
-        <bt:Url id="Trim.DesktopFunctionFile.Url" DefaultValue="https://localhost:3000/function-file/function-file.html" />
+        <bt:Url id="Trim.DesktopFunctionFile.Url" DefaultValue="https://desktop-39dgcn3:3000/function-file/function-file.html" />
       </bt:Urls>
       <!-- ShortStrings max characters==125. -->
       <bt:ShortStrings>
@@ -309,7 +309,7 @@
     </Resources>
 	 <WebApplicationInfo>
       <Id>09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Id>
-      <Resource>api://localhost:3000/09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Resource>
+      <Resource>api://desktop-39dgcn3:3000/09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Resource>
       <Scopes>
 	  	<Scope>Sites.ReadWrite.All</Scope>
         <Scope>user.read</Scope>

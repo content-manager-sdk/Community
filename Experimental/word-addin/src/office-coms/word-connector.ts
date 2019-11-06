@@ -6,6 +6,7 @@ export interface IGetRecordUriResponse {
 
 export interface IWordUrl {
 	getWebUrl(): Promise<string>;
+	getDocumentData(writeSlice: any): Promise<string>;
 }
 
 export interface IWordConnector extends IWordUrl {

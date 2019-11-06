@@ -274,7 +274,6 @@ export class ObjectContextMenu extends React.Component<
 			key: "moreActions",
 			name: appStore!.messages.web_Menu,
 			iconOnly: true,
-
 			subMenuProps: { items: menuItems },
 		});
 

@@ -1,6 +1,7 @@
 ﻿using HP.HPTRIM.SDK;
 using HP.HPTRIM.Service;
 using Microsoft.Identity.Client;
+using OneDriveConnector;
 using ServiceStack;
 using ServiceStack.Logging;
 using System;
@@ -121,7 +122,8 @@ namespace OneDriveAuthPlugin
 					record.RemoveFromFavorites();
 				}
 
-					if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1)
+				if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1 
+					&& request.Action.IndexOf("checkin-requst-del", StringComparison.InvariantCultureIgnoreCase) < 1)
 				{
 					string token = await getToken();
 					if (!string.IsNullOrWhiteSpace(request.FileName))
@@ -153,11 +155,13 @@ namespace OneDriveAuthPlugin
 
 					} else
 					{
+
 						string downloadUrl = GraphApiHelper.GetOneDriveItemContentIdUrl(driveId);
 
 						var fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
 
 						string filePath = Path.Combine(TrimApplication.WebServerWorkPath, fileResult.Name);
+
 
 						await ODataHelper.GetItem<string>(downloadUrl, token, filePath);
 
@@ -171,14 +175,14 @@ namespace OneDriveAuthPlugin
 
 				if (request.Action.IndexOf("request-del", StringComparison.InvariantCultureIgnoreCase) > -1)
 				{
-					record.SetFieldValue(new FieldDefinition(this.Database, "DeleteNow"), new UserFieldValue(true));
+					record.SetDeleteNow();
 				}
 
 				if (request.Action.IndexOf("delete", StringComparison.InvariantCultureIgnoreCase) > -1)
 				{
 					string token = await getToken();
 
-					await ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token);
+					await ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrlForDelete(driveId), token);
 					record.SetDriveId("");
 				}
 

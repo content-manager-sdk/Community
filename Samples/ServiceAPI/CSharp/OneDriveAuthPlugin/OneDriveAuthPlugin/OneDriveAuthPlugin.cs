@@ -23,21 +23,47 @@ namespace OneDriveAuthPlugin
 			var appSettings = new ServiceStack.Configuration.AppSettings();
 
 			if (!AppHostConfig.Instance.IsInWebClient)
-			{							   
+			{
+
+				appHost.PreRequestFilters.Add((httpReq, httpResp) =>
+				{
+
+					var authSession = httpReq.GetSession(false);
+					if (httpReq.Verb == HttpMethods.Post)
+					{
+
+						if (!authSession.IsAuthenticated)
+						{
+
+							var meta = (authSession as IMeta).Meta;
+
+							if (meta != null)
+							{
+
+								if (httpReq.FormData["items"] != null)
+								{
+									meta["items"] = httpReq.FormData["items"];
+									ServiceExtensions.SaveSession(httpReq, authSession);
+								}
+
+							}
+						}
+					}
+				});
 
 				appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
 					new TokenAuthProvider(),
 					new AadAuthProvider(appSettings)
-					
+
 				}, "~/auth/aad"));
 
-				appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept", allowedOrigins: "https://localhost:3000", allowCredentials: true));
+				appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept", allowedOrigins: "https://desktop-39dgcn3:3000", allowCredentials: true));
 			}
 			else
 			{
 				appHost.Config.DefaultRedirectPath = "~/ContentManager";
 
-				
+
 
 				string oauthLogin = appSettings.GetString("oauth.login");
 
@@ -46,12 +72,12 @@ namespace OneDriveAuthPlugin
 					oauthLogin = "~/auth/aad";
 				}
 
-				
+
 				appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
-					new AadAuthProvider(appSettings) 
+					new AadAuthProvider(appSettings)
 				}, "~/auth/aad")
-				
-				
+
+
 				);
 			}
 		}

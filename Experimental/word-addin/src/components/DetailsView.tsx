@@ -86,6 +86,9 @@ export class DetailsView extends React.Component<
 					paddingLeft: "0",
 					cursor: "pointer",
 				},
+				span: {
+					wordBreak: "break-word",
+				},
 			},
 		});
 	}

@@ -2,6 +2,7 @@
 using HP.HPTRIM.Service;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
+using OneDriveConnector;
 using ServiceStack;
 using System;
 using System.Collections.Specialized;
@@ -32,37 +33,37 @@ namespace OneDriveAuthPlugin
 		private static TokenCache apiTokenCache = new TokenCache();
 
 
-		protected string getApplicationToken()
-		{
-			string token = this.Cache.Get<string>("appToken");
+		//protected string getApplicationToken()
+		//{
+		//	string token = this.Cache.Get<string>("appToken");
 
-			if (string.IsNullOrWhiteSpace(token)) {
+		//	if (string.IsNullOrWhiteSpace(token)) {
 
-				WebClient webClient = new WebClient();
-				string tenantId = ConfigurationManager.AppSettings["oauth.aad.TenantId"];
-				string tokenUrl = ConfigurationManager.AppSettings["oauth.aad.AccessTokenUrl"].Replace("common", tenantId);
-
-
-				NameValueCollection formData = new NameValueCollection();
-				formData["client_id"] = ConfigurationManager.AppSettings["oauth.aad.ClientId"];
-				formData["client_secret"] = ConfigurationManager.AppSettings["oauth.aad.ClientSecret"];
-				formData["grant_type"] = "client_credentials";
-				formData["scope"] = "https://graph.microsoft.com/.default";
+		//		WebClient webClient = new WebClient();
+		//		string tenantId = ConfigurationManager.AppSettings["oauth.aad.TenantId"];
+		//		string tokenUrl = ConfigurationManager.AppSettings["oauth.aad.AccessTokenUrl"].Replace("common", tenantId);
 
 
-				var data = webClient.UploadValues(tokenUrl, formData);
+		//		NameValueCollection formData = new NameValueCollection();
+		//		formData["client_id"] = ConfigurationManager.AppSettings["oauth.aad.ClientId"];
+		//		formData["client_secret"] = ConfigurationManager.AppSettings["oauth.aad.ClientSecret"];
+		//		formData["grant_type"] = "client_credentials";
+		//		formData["scope"] = "https://graph.microsoft.com/.default";
 
-				var str = System.Text.Encoding.Default.GetString(data);
 
-				dynamic response = JsonConvert.DeserializeObject(str);
-				token = response.access_token;
-				this.Cache.Add<string>("appToken", token, TimeSpan.FromSeconds(Convert.ToDouble(response.expires_in)));
+		//		var data = webClient.UploadValues(tokenUrl, formData);
 
-				return response.access_token;
-			}
-			return token;
+		//		var str = System.Text.Encoding.Default.GetString(data);
 
-		}
+		//		dynamic response = JsonConvert.DeserializeObject(str);
+		//		token = response.access_token;
+		//		this.Cache.Add<string>("appToken", token, TimeSpan.FromSeconds(Convert.ToDouble(response.expires_in)));
+
+		//		return response.access_token;
+		//	}
+		//	return token;
+
+		//}
 			protected async Task<string> getToken()
 		{
 			UserAssertion userAssertion;

@@ -28,12 +28,22 @@ namespace OneDriveAuthPlugin
 		{
 			var response = new WriteFileResponse() { FileName = request.FileName };
 
-			if (string.IsNullOrWhiteSpace(response.FileName))
+			string userFolder = Path.Combine("ForUser", this.Database.CurrentUser.Uri.ToString());
+
+			string fullUserFolder = Path.Combine(this.ServiceDefaults.UploadBasePath, userFolder);
+			string fileName = $"{Guid.NewGuid()}.docx";
+
+			if (!Directory.Exists(fullUserFolder))
 			{
-				response.FileName = Path.Combine(TrimApplication.WebServerWorkPath, "Uploads", $"{Guid.NewGuid()}.docx");
+				Directory.CreateDirectory(fullUserFolder);
 			}
 
-			using (var stream = new FileStream(response.FileName, FileMode.Append))
+			if (string.IsNullOrWhiteSpace(response.FileName))
+			{			
+				response.FileName = Path.Combine(userFolder, fileName);
+			}
+
+			using (var stream = new FileStream(Path.Combine(fullUserFolder, fileName), FileMode.Append))
 			{
 				stream.Write(request.Data, 0, request.Data.Length);
 			}

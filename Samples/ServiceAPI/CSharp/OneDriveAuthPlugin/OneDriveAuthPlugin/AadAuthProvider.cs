@@ -51,6 +51,12 @@ namespace OneDriveAuthPlugin
 	{
 		public const string Name = "aad";
 		public static string Realm = "https://login.microsoftonline.com/";
+			
+		
+		static AadAuthProvider()
+		{
+			LogConfigurationWarnings = true;			
+		}
 
 		public string BaseAuthUrl
 		{
@@ -109,10 +115,6 @@ namespace OneDriveAuthPlugin
 		public static bool LogConfigurationWarnings { get; set; }
 
 
-		static AadAuthProvider()
-		{
-			LogConfigurationWarnings = true;
-		}
 
 		public AadAuthProvider()
 			: this(new AppSettings())
@@ -138,9 +140,12 @@ namespace OneDriveAuthPlugin
 			: base(appSettings, Realm, Name, "ClientId", "ClientSecret")
 		{
 			AppSettings = appSettings;
+
+		
 			TenantId = AppSettings.Get<string>($"oauth.{Provider}.TenantId", null);
 			DomainHint = AppSettings.Get<string>($"oauth.{Provider}.DomainHint", null);
 			ResourceId = AppSettings.Get($"oauth.{Provider}.ResourceId", "00000002-0000-0000-c000-000000000000");
+
 			//Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "user_impersonation" });
 			//	Scopes = AppSettings.Get($"oauth.{Provider}.Scopes", new[] { "openid", "https://graph.microsoft.com/files.read.all" });
 
@@ -210,9 +215,17 @@ namespace OneDriveAuthPlugin
 			//if (code.IsNullOrEmpty())
 			//	return RequestCode(authService, session, userSession, tokens);
 
+		//	string resourceId = new Uri( httpRequest.AbsoluteUri).GetLeftPart(UriPartial.Authority);
+
+		//	Task<string> accessTokenTask = GetUserAccessTokenSilentAsync(resourceId);
+			// Wait for the task to finish.
+		//	accessTokenTask.Wait();
+
 			string code = httpRequest.FormData["access_token"];
 			if (code.IsNullOrEmpty())
+			{
 				return RequestCode(authService, session, userSession, tokens);
+			}
 
 			var state = httpRequest.FormData["state"];
 			if (state != userSession.State)
@@ -239,26 +252,66 @@ namespace OneDriveAuthPlugin
 				tokens.AccessTokenSecret = code;
 			//	tokens.RefreshToken = authInfo["refresh_token"];
 			tokens.AccessToken = code;
-			session.ReferrerUrl = AppSettings.Get<string>($"oauth.{Provider}.RedirectUrl", session.ReferrerUrl);
+			session.ReferrerUrl = session.ReferrerUrl ?? AppSettings.Get<string>($"oauth.{Provider}.RedirectUrl", session.ReferrerUrl);
 
-			if (state.Contains("?"))
+			var meta = session as IMeta;
+
+			Log.Debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			string items = null;
+
+			//var referrerUrl = session.ReferrerUrl.SetParam("s", "1");
+			if (meta != null)
 			{
-				session.ReferrerUrl = session.ReferrerUrl + state.Substring(state.IndexOf("?"));
+
+				if (meta.Meta.ContainsKey("items"))
+				{
+					Log.Info("********************************************************************************");
+					Log.Info(meta.Meta["items"]);
+					items = meta.Meta["items"];
+					//referrerUrl = referrerUrl.SetParam("items", meta.Meta["items"]);
+				}
 			}
 
 			return OnAuthenticated(authService, session, tokens, httpRequest.FormData.ToDictionary())
-				   ?? authService.Redirect(SuccessRedirectUrlFilter(this, session.ReferrerUrl.SetParam("s", "1"))); //Haz Access!
+				   ?? doRedirect( authService, SuccessRedirectUrlFilter(this, session.ReferrerUrl), items); //Haz Access!
 
+		}
+
+		private IHttpResult doRedirect( IServiceBase authService, string referrerUrl, string items)
+		{
+			if (items != null)
+			{
+				//	return authService.Redirect((referrerUrl + "?items=" + items).SetParam("s", "1"));
+				//referrerUrl = referrerUrl + $"?items={items}";
+				//return authService.Redirect(referrerUrl.SetParam("s", "1"));
+
+				var sb = new StringBuilder();
+				sb.Append("<html>");
+				sb.AppendFormat(@"<body onload='document.forms[""form""].submit()'>");				
+				sb.AppendFormat("<form name='form' action='{0}' method='post'>", referrerUrl.SetParam("s", "1"));
+				sb.AppendFormat("<input type='hidden' name='items' value='{0}'>", items);
+				sb.Append("<p>If you are not re-directed press Go.</p>");
+				sb.Append("<button>Go</button>");
+				// Other params go here
+				sb.Append("</form>");
+				sb.Append("</body>");
+				sb.Append("</html>");
+
+				return new HttpResult(sb.ToString(), "text/html");
+				//	return sb.ToString();
+			}
+			else
+			{
+
+				return authService.Redirect(referrerUrl.SetParam("s", "1"));
+			}
 		}
 
 		private object RequestCode(IServiceBase authService, IAuthSession session, AuthUserSession userSession, IAuthTokens tokens)
 		{
 			var state = Guid.NewGuid().ToString("N");
 
-			if (session.ReferrerUrl.Contains("?"))
-			{
-				state = state + session.ReferrerUrl.Substring(session.ReferrerUrl.IndexOf("?"));
-			}
+			var request = authService.Request;
 
 			userSession.State = state;
 			var codeRequest = AuthorizeUrl + "?response_type=token&client_id={0}&redirect_uri={1}&scope={2}&state={3}&nonce=678910&response_mode=form_post"
@@ -329,7 +382,9 @@ namespace OneDriveAuthPlugin
 				tokens.AccessTokenSecret = authInfo["access_token"];
 				tokens.RefreshToken = authInfo["refresh_token"];
 				tokens.AccessToken = authInfo["id_token"];
-				
+
+
+
 				return OnAuthenticated(authService, session, tokens, authInfo.ToDictionary())
 					   ?? authService.Redirect(SuccessRedirectUrlFilter(this, session.ReferrerUrl.SetParam("s", "1"))); //Haz Access!
 																														//}

@@ -84,7 +84,7 @@
 						"type": "string"
 					},
 					{ "name": "RecordTitle", "in": "formData", "type": "string" },
-					{ "in": "formData", "type": "file", "name": "file" },
+					{ "in": "formData", "type": "file", "name": "file" }
 				]
 			}
 		}
@@ -130,10 +130,6 @@
 					"type": "integer",
 					"format": "int32",
 					"description": "Count"
-				},
-				"HasMoreItems": {
-					"type": "boolean",
-					"description": "HasMoreItems"
 				},
 
 				"ResponseStatus": {

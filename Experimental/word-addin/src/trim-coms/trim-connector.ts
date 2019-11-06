@@ -163,6 +163,7 @@ export interface IDatabase {
 }
 
 export interface ITrimConnector {
+	clearCache: () => void;
 	cancel: () => void;
 	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
@@ -328,6 +329,10 @@ export class TrimConnector implements ITrimConnector {
 
 	private setCache(key: string, cacheData: any) {
 		localStorage.setItem(key, JSON.stringify(cacheData));
+	}
+
+	public clearCache(): void {
+		localStorage.clear();
 	}
 
 	public getObjectCaption(trimType: BaseObjectTypes): Promise<string> {
