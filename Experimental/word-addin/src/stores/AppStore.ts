@@ -87,6 +87,8 @@ export class AppStore implements IAppStore {
 							tc.getSearchClauseOrFieldDefinitions(BaseObjectTypes.Record).then(
 								() => {}
 							);
+
+							tc.getSearchOptions().then(() => {});
 							thisthis.setDocumentInfo(documentInfo);
 							thisthis.setStatus("WAITING");
 						})
@@ -149,7 +151,6 @@ export class AppStore implements IAppStore {
 
 	public createRecord = (recordType: number, properties: any) => {
 		this.setStatus("STARTING");
-		console.log("hhhhhhhhh");
 		return this.wordConnector!.getDocumentData(
 			(data: number[], fileName: string) => {
 				return this.trimConnector!.writeFileSlice(data, fileName);

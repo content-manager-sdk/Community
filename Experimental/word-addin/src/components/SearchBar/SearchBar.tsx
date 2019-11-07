@@ -348,6 +348,8 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			searchFormat,
 		} = this.state;
 
+		const { includeShortCuts } = this.props;
+
 		const comboOptions = this.getComboOptions();
 		const cannedSearchNumber = this._findCannedSearch(searchQuery);
 		const defaultProps =
@@ -366,7 +368,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 					onChange={this._comboChangeSearchType}
 				/>
 
-				{searchType === "goto" ? (
+				{includeShortCuts && searchType === "goto" ? (
 					<ComboBox
 						{...defaultProps}
 						options={comboOptions}
@@ -377,7 +379,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 						onPendingValueChanged={this._pendingChange}
 						className="trim-search-query"
 					/>
-				) : searchFormat === "Boolean" ? null : (
+				) : !searchFormat || searchFormat === "Boolean" ? null : (
 					<TextField
 						onBeforeChange={this._textChange}
 						className="trim-search-text"
