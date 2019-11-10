@@ -19,11 +19,13 @@ namespace OneDriveConnector
     {
 		private long _recordUri;
 		private Database _database;
+		string _uploadBasePath;
 
-		public DocumentHandler(Database database, long recordUri)
+		public DocumentHandler(Database database, string uploadBasePath, long recordUri)
 		{
 			_database = database;
 			_recordUri = recordUri;
+			_uploadBasePath = uploadBasePath;
 		}
 
 		private DocumentHandler() { }
@@ -142,17 +144,24 @@ namespace OneDriveConnector
 			}));
 		}
 
-		private void autoOpen(Stream stream)
+		private void autoOpen(string path)
 		{
 			string addinGuid = ConfigurationManager.AppSettings["owa:Id"];
 			string addinVersion = ConfigurationManager.AppSettings["owa:Version"];
 
-			using (var document = WordprocessingDocument.Open(stream, true))
+			using (var document = WordprocessingDocument.Open(path, true))
 			{
 				var webExTaskpanesPart = document.WebExTaskpanesPart ?? document.AddWebExTaskpanesPart();
+				foreach (var part in webExTaskpanesPart.Parts)
+				{
+					if (part.RelationshipId == "rId1")
+					{
+						return;
+					}
+				}
+				OOXMLHelper.CreateWebExTaskpanesPart(webExTaskpanesPart, addinGuid, addinVersion);
 
-					OOXMLHelper.CreateWebExTaskpanesPart(webExTaskpanesPart, addinGuid, addinVersion);
-
+				document.Close();
 			}
 
 		}
@@ -162,23 +171,38 @@ namespace OneDriveConnector
 
 			var graphServiceClient = getClient(token);
 
-			using (var file = System.IO.File.OpenRead(filePath))
+
+			string userFolder = Path.Combine("ForUser", _database.CurrentUser.Uri.ToString());
+
+			string fullUserFolder = Path.Combine(_uploadBasePath, userFolder);
+			//string fileName = $"{Guid.NewGuid()}.docx";
+
+			if (!System.IO.Directory.Exists(fullUserFolder))
 			{
-				MemoryStream stream = new MemoryStream();
-				file.CopyTo(stream);
+				System.IO.Directory.CreateDirectory(fullUserFolder);
+			}
+
+			string tempPath = Path.Combine(fullUserFolder, Path.GetFileName(filePath));
+			System.IO.File.Copy(filePath, tempPath, true);
+
+			FileInfo fileInfo = new FileInfo(tempPath);
+			fileInfo.IsReadOnly = false;
+
+			autoOpen(tempPath);
 
 
-				autoOpen(stream);
-
+			//	autoOpen(tempPath);
+			using (var file = System.IO.File.OpenRead(tempPath))
+			{
 				var documentFolder = await ODataHelper.PostFolder<OneDriveItem>(GraphApiHelper.GetOneDriveChildrenUrl(), token);
 
 
-				var uploadSession = await graphServiceClient.Drives[documentFolder.ParentReference.DriveId].Items[documentFolder.Id].ItemWithPath(fileName).CreateUploadSession().Request().PostAsync();		
+				var uploadSession = await graphServiceClient.Drives[documentFolder.ParentReference.DriveId].Items[documentFolder.Id].ItemWithPath(fileName).CreateUploadSession().Request().PostAsync();
 
 				string ul = uploadSession.UploadUrl += "&$select=Id,ParentReference,WebUrl,WebDavUrl";
 
 				var maxChunkSize = (320 * 1024) * 10; // 5000 KB - Change this to your chunk size. 5MB is the default.
-				var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, stream, maxChunkSize);
+				var provider = new ChunkedUploadProvider(uploadSession, graphServiceClient, file, maxChunkSize);
 
 				try
 				{
@@ -213,7 +237,10 @@ namespace OneDriveConnector
 					await provider.DeleteSession();
 					throw;
 				}
+
 			}
+
+			System.IO.File.Delete(tempPath);
 			throw new ApplicationException("Upload failed.");
 		}
 	}

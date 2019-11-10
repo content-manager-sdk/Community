@@ -178,7 +178,7 @@ namespace OneDriveAuthPlugin
 			}
 			else
 			{
-				DocumentHandler documentHandler = new DocumentHandler(this.Database, uri);
+				DocumentHandler documentHandler = new DocumentHandler(this.Database, this.ServiceDefaults.UploadBasePath, uri);
 				var oneDrivedocument = await documentHandler.GetDocument(token);
 
 				return new HttpResult(HttpStatusCode.Redirect, "open document")
@@ -194,7 +194,7 @@ namespace OneDriveAuthPlugin
 
 		private async Task<OpenFileResponse> getDocument(long uri, string token)
 		{
-			DocumentHandler documentHandler = new DocumentHandler(this.Database, uri);
+			DocumentHandler documentHandler = new DocumentHandler(this.Database, this.ServiceDefaults.UploadBasePath, uri);
 
 			try
 			{

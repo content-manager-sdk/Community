@@ -26,7 +26,7 @@ namespace OneDriveSync
 			worker.ProgressChanged += worker_ProgressChanged;
 			worker.RunWorkerCompleted += worker_RunWorkerCompleted;
 
-			Timer timer = new Timer(1000 * 60);
+			Timer timer = new Timer(1000 * 30);
 			timer.Elapsed += timer_Elapsed;
 			timer.Start();
 		}
@@ -53,41 +53,71 @@ namespace OneDriveSync
 					{
 						Console.WriteLine($"rec: {doc.Id}");
 
-						if (!string.IsNullOrWhiteSpace(doc.Id))
+						try
 						{
-
-
-							var fileResult = ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(doc.Id), token, null);
-							fileResult.Wait();
-
-							var item = fileResult.Result;
-
-							var modified = doc.DateModified.ToUniversalTime();
-							if (item.LastModifiedDateTime > modified)
+							if (!string.IsNullOrWhiteSpace(doc.Id))
 							{
-								trimHelper.CheckinFromDrive(doc, token);
+
+								
+								var fileResult = ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(doc.Id), token, null);
+								fileResult.Wait();			
+
+									var item = fileResult.Result;
+
+								var isLocked =  ODataHelper.IsLocked(GraphApiHelper.GetOneDriveItemIdUrlForDelete(doc.Id), item.Name, token);
+								isLocked.Wait();
+
+								if (isLocked.Result == true)
+								{
+									Console.WriteLine("Item is locked will try again later");
+
+								}
+								else
+								{
+									var modified = doc.DateModified.ToUniversalTime();
+									if (item.LastModifiedDateTime > modified)
+									{
+										trimHelper.CheckinFromDrive(doc, token);
+									}
+
+									StringContent content = new StringContent($"[TrimLink]{Environment.NewLine}Uri={doc.Uri}", Encoding.UTF8, "text/plain");
+									string url = GraphApiHelper.GetOneDriveFileUploadUrlFromId(item.ParentReference.DriveId, item.ParentReference.Id, doc.LinkFileName);
+
+
+									// delete original file
+									var deleteResult = ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrlForDelete(doc.Id), token);
+									deleteResult.Wait();
+
+
+									// Create link in Drive
+									var uploadResult = ODataHelper.SendRequestWithAccessToken(url, token, content, method: HttpMethod.Put);
+									uploadResult.Wait();
+
+									trimHelper.ClearDriveId(doc);
+									trimHelper.ResetDeleteNow(doc);
+
+									Console.WriteLine(fileResult.Result.ParentReference.Id);
+								}
+							} else
+							{
+								trimHelper.ResetDeleteNow(doc);
 							}
 
-							StringContent content = new StringContent($"[TrimLink]{Environment.NewLine}Uri={doc.Uri}", Encoding.UTF8, "text/plain");
-							string url = GraphApiHelper.GetOneDriveFileUploadUrlFromId(item.ParentReference.DriveId, item.ParentReference.Id, doc.LinkFileName);
-
-
-							// delete original file
-							var deleteResult = ODataHelper.DeleteWithToken(GraphApiHelper.GetOneDriveItemIdUrlForDelete(doc.Id), token);
-							deleteResult.Wait();
-
-
-							// Create link in Drive
-							var uploadResult = ODataHelper.SendRequestWithAccessToken(url, token, content, method: HttpMethod.Put);
-							uploadResult.Wait();
-
-							trimHelper.ClearDriveId(doc);
-
-
-							Console.WriteLine(fileResult.Result.ParentReference.Id);
+						
 						}
-
-						trimHelper.ResetDeleteNow(doc);
+						catch (Exception ex)
+						{
+							if (ex.InnerException != null)
+							{
+								Console.WriteLine(ex.InnerException.Message);
+								Console.WriteLine(ex.InnerException.StackTrace);
+							}
+							else
+							{
+								Console.WriteLine(ex.Message);
+								Console.WriteLine(ex.StackTrace);
+							}
+						}
 					}
 
 				}
@@ -104,18 +134,13 @@ namespace OneDriveSync
 					e.Cancel = true;
 					return;
 				}
-			} catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
-				if (ex.InnerException != null)
-				{
-					Console.WriteLine(ex.InnerException.Message);
-					Console.WriteLine(ex.InnerException.StackTrace);
-				}
-				else
-				{
-					Console.WriteLine(ex.Message);
-					Console.WriteLine(ex.StackTrace);
-				}
+
+				Console.WriteLine(ex.Message);
+				Console.WriteLine(ex.StackTrace);
+
 			}
 			//report progress; this method has an overload which can also take
 			//custom object (usually representing state) as an argument

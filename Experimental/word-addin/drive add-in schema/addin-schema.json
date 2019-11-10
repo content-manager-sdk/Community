@@ -1,0 +1,41 @@
+{
+  "odata.metadata": "https://graph.windows.net/myorganization/$metadata#Collection(Microsoft.DirectoryServices.AddIn)",
+  "value": [
+    {
+      "id": "37CF3F12-8783-43E0-AB8A-2720FA53C9A6",
+      "type": "FileHandler",
+      "properties": [
+        {
+          "key": "actionMenuDisplayName",
+          "value": "Word"
+        },
+        {
+          "key": "version",
+          "value": "2"
+        },
+        {
+          "key": "fileTypeDisplayName",
+          "value": "Content Manager (Word)"
+        },
+        {
+          "key": "fileTypeIconUrl",
+          "value": "https://desktop-39dgcn3:3000/assets/cm.png"
+        },
+        {
+          "key": "appIcon",
+          "value": "{\"png1x\":\"https://desktop-39dgcn3:3000/assets/cm.png\", \"png1.5x\":\"https://desktop-39dgcn3:3000/assets/cm.png\", \"png2x\":\"https://desktop-39dgcn3:3000/assets/cm.png\"}"
+
+        },
+        {
+      "key": "fileTypeIcon",
+      "value": "{\"png1x\":\"https://desktop-39dgcn3:3000/assets/cm.png\", \"png1.5x\":\"https://desktop-39dgcn3:3000/assets/cm.png\", \"png2x\":\"https://desktop-39dgcn3:3000/assets/cm.png\"}"
+        },
+        {
+          "key": "actions",
+          "value": "[{\"type\":\"newFile\",\"url\":\"https://desktop-39dgcn3:3000?newfile=true\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}},{\"type\":\"open\",\"url\":\"https://desktop-39dgcn3/ServiceAPI/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}},{\"type\":\"preview\",\"url\":\"https://desktop-39dgcn3/ServiceAPI/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}}]"
+        }
+      ]
+    }
+  ]
+}
+

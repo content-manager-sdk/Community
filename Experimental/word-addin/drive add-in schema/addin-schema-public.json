@@ -1,0 +1,39 @@
+{
+	"odata.metadata": "https://graph.windows.net/myorganization/$metadata#Collection(Microsoft.DirectoryServices.AddIn)",
+	"value": [
+		{
+			"id": "082E0831-14F5-4241-B519-BF909DD58E42",
+			"type": "FileHandler",
+			"properties": [
+				{
+					"key": "actionMenuDisplayName",
+					"value": "Word"
+				},
+				{
+					"key": "version",
+					"value": "2"
+				},
+				{
+					"key": "fileTypeDisplayName",
+					"value": "Content Manager (Word)"
+				},
+				{
+					"key": "fileTypeIconUrl",
+					"value": "https://mfcm.xyz/CMWord/assets/cm.png"
+				},
+				{
+					"key": "appIcon",
+					"value": "{\"png1x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png1.5x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png2x\":\"https://mfcm.xyz/CMWord/assets/cm.png\"}"
+				},
+				{
+					"key": "fileTypeIcon",
+					"value": "{\"png1x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png1.5x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png2x\":\"https://mfcm.xyz/CMWord/assets/cm.png\"}"
+				},
+				{
+					"key": "actions",
+					"value": "[{\"type\":\"newFile\",\"url\":\"https://mfcm.xyz/CMWord?newfile=true\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}},{\"type\":\"open\",\"url\":\"https://mfcm.xyz/CMWord/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}},{\"type\":\"preview\",\"url\":\"https://mfcm.xyz/CMWord/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}}]"
+				}
+			]
+		}
+	]
+}

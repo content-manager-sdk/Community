@@ -97,9 +97,10 @@ namespace OneDriveAuthPlugin
 
 		public async Task<object> Post(DriveFileOperation request)
 		{
-
+			string fileName = request.FileName;
 			try
-			{
+			{			
+
 				RegisterFileResponse response = new RegisterFileResponse();
 
 				Record record = new Record(this.Database, request.Uri);
@@ -127,28 +128,18 @@ namespace OneDriveAuthPlugin
 				{
 					string token = await getToken();
 					if (!string.IsNullOrWhiteSpace(request.FileName))
-					{						
-						//	filePath = Path.Combine(TrimApplication.WebServerWorkPath, record.SuggestedFileName);
+					{
 
 
-						//using (var stream = new FileStream(filePath, FileMode.Append))
-						//{
-						//	stream.Write(request.Data, 0, request.Data.Length);
-						//}
-
-						//if (request.LastDataSlice == true)
-						//{
-						//	record.SetDocument(new InputDocument(filePath), true, false, "checkin from Word Online");
-						//} else
-						//{
-						//	response.Results = new List<RegisterdFileResponse>() { registeredFile };
-						//	return response;
-						//}
-						//	var driveDetails = await ODataHelper.GetItem<string>(GraphApiHelper.GetOneDriveItemContentIdUrl(driveId), token, filePath);
-
-						var inputDocument = new InputDocument(request.FileName);
 
 					
+						if (!Path.IsPathRooted(request.FileName))
+						{
+							fileName = Path.Combine(this.ServiceDefaults.UploadBasePath, request.FileName);
+						}
+
+						var inputDocument = new InputDocument(fileName);
+
 						inputDocument.CheckinAs = request.WebUrl;
 							record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 					
@@ -164,6 +155,8 @@ namespace OneDriveAuthPlugin
 
 
 						await ODataHelper.GetItem<string>(downloadUrl, token, filePath);
+
+
 
 						var inputDocument = new InputDocument(filePath);
 
@@ -202,9 +195,9 @@ namespace OneDriveAuthPlugin
 			finally
 			{
 
-					if (!string.IsNullOrWhiteSpace(request.FileName))
+					if (!string.IsNullOrWhiteSpace(fileName))
 					{
-						File.Delete(request.FileName);
+						File.Delete(fileName);
 					}
 
 			}

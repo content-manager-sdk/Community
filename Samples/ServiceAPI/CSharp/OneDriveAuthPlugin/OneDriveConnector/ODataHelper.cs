@@ -158,6 +158,28 @@ namespace OneDriveAuthPlugin
 			return JsonConvert.DeserializeObject<T>(jsonData);
 		}
 
+		public static async Task<bool> IsLocked(string itemPath, string itemName, string accessToken)
+		{
+			StringContent content = new StringContent("{\"name\":\"$" + itemName + "\"}", Encoding.UTF8, "application/json");
+			try
+			{
+				
+				 await SendRequestWithAccessToken(itemPath, accessToken, requestContent:content, method: HttpMethod.Put);
+			}
+			catch (HttpListenerException ex)
+			{
+				if (ex.ErrorCode == 423)
+				{
+					return true;
+				}
+			}
+
+			content = new StringContent("{\"name\":\"" + itemName + "\"}", Encoding.UTF8, "application/json");
+			await SendRequestWithAccessToken(itemPath, accessToken, requestContent: content, method: HttpMethod.Put);
+
+			return false;
+		}
+
 
 		public static async Task<FileData> DownloadFileAsync(string requestUri, string accessToken)
 		{
@@ -290,18 +312,18 @@ namespace OneDriveAuthPlugin
 		public static async Task<dynamic> DeleteWithToken(string itemsUrl, string accessToken)
 		{
 			dynamic jsonData = null;
-
 			using (var client = new HttpClient())
 			{
 				// Create and send the HTTP Request
 				using (var request = new HttpRequestMessage(HttpMethod.Delete, itemsUrl))
 				{
-					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 					using (HttpResponseMessage response = await client.SendAsync(request))
 					{
 						if (!response.IsSuccessStatusCode)
 						{
+							Console.WriteLine(response.StatusCode);
 							throw new System.Net.HttpListenerException((int)response.StatusCode);
 						}
 					}

@@ -30,7 +30,7 @@ namespace OneDriveAuthPlugin
 		}
 
 		private static TokenCache userTokenCache = new TokenCache();
-		private static TokenCache apiTokenCache = new TokenCache();
+		private static TokenCache apiTokenCache = new TokenCache();		
 
 
 		//protected string getApplicationToken()
