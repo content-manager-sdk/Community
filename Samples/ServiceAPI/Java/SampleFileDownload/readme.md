@@ -1,6 +1,6 @@
 # ServiceAPI Java file download
 
-This sample demonstrates using the generated client classes to interact with the ServiceAPI. See the [console app sample](/Community/tree/master/Samples/ServiceAPI/Java/MyTestConsole) for more details on connecting to the ServiceAPI via Java.
+This sample demonstrates using the generated client classes to interact with the ServiceAPI. See the [console app sample](MyTestConsole) for more details on connecting to the ServiceAPI via Java.
 
 # Important - Version support
 
