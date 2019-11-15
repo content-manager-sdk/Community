@@ -184,7 +184,7 @@ export class ObjectContextMenu extends React.Component<
 	}
 
 	private getFarItems = () => {
-		const { appStore, isInList } = this.props;
+		const { appStore, isInList, record } = this.props;
 		const { commandDefs } = this.state;
 
 		let checkinDisabled = false;
@@ -245,11 +245,21 @@ export class ObjectContextMenu extends React.Component<
 			menuItems.push(this._makeRelationshipMenu());
 		} else {
 			const checkinItem = menuItems.find((mi) => mi.key === "RecCheckIn");
-			if (checkinItem) {
-				let checkinDelete = { ...checkinItem };
-				checkinDelete.key = "RecCheckInDelete";
-				checkinDelete.text = "Check in and delete on close";
-				menuItems.splice(menuItems.indexOf(checkinItem) + 1, 0, checkinDelete);
+
+			if (record) {
+				const msgText = record.DeleteNow
+					? "Disable check in and delete on close"
+					: "Enable check in and delete on close";
+				if (checkinItem) {
+					let checkinDelete = { ...checkinItem };
+					checkinDelete.key = "RecCheckInDelete";
+					checkinDelete.text = msgText;
+					menuItems.splice(
+						menuItems.indexOf(checkinItem) + 1,
+						0,
+						checkinDelete
+					);
+				}
 			}
 			menuItems.push({
 				key: "getGlobalProperties",
@@ -269,6 +279,21 @@ export class ObjectContextMenu extends React.Component<
 				disabled: checkinDisabled,
 				onClick: this._onActionClick,
 			});
+
+			if (record) {
+				items.push({
+					iconProps: {
+						iconName: record.DeleteNow ? "OpenFile" : "FileBug",
+					},
+					key: "RecCheckInDelete",
+					name: record.DeleteNow
+						? "Disable check in and delete on close"
+						: "Enable check in and delete on close",
+					iconOnly: true,
+					disabled: checkinDisabled,
+					onClick: this._onActionClick,
+				});
+			}
 		}
 		items.push({
 			key: "moreActions",
@@ -285,6 +310,8 @@ export class ObjectContextMenu extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector", "wordConnector")(
-	observer(ObjectContextMenu)
-);
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(ObjectContextMenu));

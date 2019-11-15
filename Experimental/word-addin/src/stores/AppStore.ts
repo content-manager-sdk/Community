@@ -7,7 +7,7 @@ import {
 	ITrimMainObject,
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
-import BaseObjectTypes from "src/trim-coms/trim-baseobjecttypes";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
 const config = (global as any).config;
 
@@ -84,9 +84,9 @@ export class AppStore implements IAppStore {
 						})
 						.then(function(documentInfo) {
 							// ensure search details are in cache
-							tc.getSearchClauseOrFieldDefinitions(BaseObjectTypes.Record).then(
-								() => {}
-							);
+							tc.getSearchClauseOrFieldDefinitions(
+								BaseObjectTypes.Record
+							).then(() => {});
 
 							tc.getSearchOptions().then(() => {});
 							thisthis.setDocumentInfo(documentInfo);

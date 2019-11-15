@@ -754,7 +754,7 @@ describe("Test fetch from TRIM", () => {
 						propertyValue: "Both",
 						stringDisplayType: "ViewPane",
 						includePropertyDefs: true,
-						properties: "ToolTip,NameString",
+						properties: "ToolTip,NameString,DeleteNow",
 						descendantProperties: "RecordNumber",
 					},
 				})

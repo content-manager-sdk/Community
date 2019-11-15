@@ -1,7 +1,11 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import DetailsView from "./DetailsView";
-import { ITrimConnector, IObjectDetails } from "../trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	IObjectDetails,
+	ITrimBooleanField,
+} from "../trim-coms/trim-connector";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
 import { IWordConnector } from "../office-coms/word-connector";
 import {
@@ -59,6 +63,14 @@ export class ExistingRecord extends React.Component<
 
 		const { menuMessage, recordDetails } = this.state;
 
+		if (
+			recordDetails.results.length > 0 &&
+			recordDetails.results[0].Fields!.DeleteNow
+		) {
+			recordDetails.results[0].DeleteNow = (recordDetails.results[0].Fields!
+				.DeleteNow as ITrimBooleanField).Value;
+		}
+
 		return (
 			<div className={className}>
 				<Pivot
@@ -72,7 +84,10 @@ export class ExistingRecord extends React.Component<
 								record={recordDetails.results[0]}
 								isInList={false}
 								onCommandComplete={(commandKey: string) => {
-									if (commandKey === "getGlobalProperties") {
+									if (
+										commandKey === "getGlobalProperties" ||
+										commandKey === "RecCheckInDelete"
+									) {
 										const { appStore } = this.props;
 										appStore.setStatus("STARTING");
 										this.loadRecordDetails().then(() => {

@@ -35,7 +35,7 @@ describe("Object Context Menu", () => {
 
 	const makeWrapper = (
 		menuItemsEnabled: boolean = true,
-		isInList: bool = false
+		isInList: boolean = false
 	) => {
 		return shallow<ObjectContextMenu>(
 			<ObjectContextMenu
@@ -181,7 +181,7 @@ describe("Object Context Menu", () => {
 		wrapper: shallow<ObjectContextMenu>,
 		getFirstItem?: boolean
 	): IContextualMenuItem => {
-		return wrapper.find(CommandBar).props().farItems[getFirstItem ? 0 : 1];
+		return wrapper.find(CommandBar).props().farItems[getFirstItem ? 0 : 2];
 	};
 
 	const findMenu = (
@@ -195,7 +195,7 @@ describe("Object Context Menu", () => {
 		expect.assertions(4);
 		const wrapper = makeWrapper();
 		expect(wrapper.find(CommandBar).exists()).toBeTruthy();
-		expect(wrapper.find(CommandBar).props().farItems.length).toEqual(2);
+		expect(wrapper.find(CommandBar).props().farItems.length).toEqual(3);
 
 		const makeFinalItem = findMenu(wrapper).items.find((mi) => {
 			return mi.key === "RecDocFinal";

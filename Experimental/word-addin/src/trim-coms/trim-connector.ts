@@ -90,6 +90,11 @@ export interface ITrimMainObject {
 	ToolTip?: string;
 	Selected?: boolean;
 	TrimType?: BaseObjectTypes;
+	DeleteNow?: boolean;
+}
+
+export interface ITrimBooleanField extends ITrimField {
+	Value: boolean;
 }
 
 export interface ITrimField {
@@ -548,7 +553,7 @@ export class TrimConnector implements ITrimConnector {
 			propertySets: "Detailed",
 			propertyValue: "Both",
 			stringDisplayType: "ViewPane",
-			properties: "ToolTip,NameString",
+			properties: "ToolTip,NameString,DeleteNow",
 			descendantProperties: "RecordNumber",
 		};
 

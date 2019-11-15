@@ -10,6 +10,8 @@ import TrimConnector from "./trim-coms/trim-connector";
 import { initializeIcons } from "@uifabric/icons";
 
 import { getQueryStringValue } from "../src/utils/getQueryStringValue";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import FunctionFile from "./components/FunctionFile/FunctionFile";
 
 initializeIcons();
 
@@ -32,13 +34,22 @@ trimConnector.credentialsResolver = (callback) => {
 const appStore = new AppStore(wordConnector, trimConnector);
 
 const root = (
-	<Provider
-		appStore={appStore}
-		trimConnector={trimConnector}
-		wordConnector={wordConnector}
-	>
-		<BootStrap />
-	</Provider>
+	<Router>
+		<Switch>
+			<Route path="/functions">
+				<FunctionFile />
+			</Route>
+			<Route path="/">
+				<Provider
+					appStore={appStore}
+					trimConnector={trimConnector}
+					wordConnector={wordConnector}
+				>
+					<BootStrap />
+				</Provider>
+			</Route>
+		</Switch>
+	</Router>
 );
 
 ReactDOM.render(root, document.getElementById("root") as HTMLElement);

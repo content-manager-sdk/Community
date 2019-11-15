@@ -1,3 +1,5 @@
+import { OfficeConnector } from "./office-connector";
+
 export interface IGetRecordUriResponse {
 	found: boolean;
 	uri: number;
@@ -10,7 +12,6 @@ export interface IWordUrl {
 }
 
 export interface IWordConnector extends IWordUrl {
-	getAccessToken(): Promise<string>;
 	getUri(): Promise<IGetRecordUriResponse>;
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	insertText(textToInsert: string): void;
@@ -18,10 +19,9 @@ export interface IWordConnector extends IWordUrl {
 	setAutoOpen(autoOpen: boolean): void;
 	getAutoOpen(): boolean;
 	saveDocument(): Promise<void>;
-	getDocumentData(writeSlice: any): Promise<string>;
 }
 
-export class WordConnector implements IWordConnector {
+export class WordConnector extends OfficeConnector implements IWordConnector {
 	getDocumentData(writeSlice: any): Promise<string> {
 		return new Promise((resolve, reject) => {
 			const onData = (fileName: string) => {
@@ -311,29 +311,6 @@ export class WordConnector implements IWordConnector {
 						resolve(response);
 					});
 			});
-		});
-	}
-
-	public getAccessToken(): Promise<string> {
-		return new Promise<string>((resolve, reject) => {
-			// if (Office.context.requirements.isSetSupported("IdentityAPI", 1.1)) {
-			// 	reject({ message: "Identity not supported." });
-			// } else {
-
-			if (!Office.context || !Office.context["auth"]) {
-				resolve("me");
-			}
-
-			(Office.context["auth"] as any).getAccessTokenAsync(
-				{ forceConsent: false },
-				(result: any) => {
-					if (result.status === "succeeded") {
-						resolve(result.value);
-					} else {
-						reject({ message: result.error.message });
-					}
-				}
-			);
 		});
 	}
 }

@@ -15,6 +15,7 @@ import {
 	ISearchResults,
 	ISearchOptions,
 	ISearchParameters,
+	ISearchClauseOrFieldDef,
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
@@ -24,6 +25,11 @@ import { CommandIds } from "../trim-coms/trim-command-ids";
 let Mock_Action = "";
 
 class MockWordConnector implements IWordUrl {
+	getDocumentData(writeSlice: any): Promise<string> {
+		return new Promise(function(resolve, reject) {
+			resolve("test");
+		});
+	}
 	getWebUrl(): Promise<string> {
 		return new Promise(function(resolve, reject) {
 			resolve("My.Url");
@@ -34,6 +40,35 @@ class MockWordConnector implements IWordUrl {
 let postedFields: any;
 let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
+	clearCache: () => void;
+	cancel: () => void;
+	getSearchClauseOrFieldDefinitions(trimType: BaseObjectTypes): Promise<ISearchClauseOrFieldDef[]> {
+		return new Promise(function(resolve, reject) {});
+	}
+	getObjectDefinitions(): Promise<import("../trim-coms/trim-connector").IObjectDef[]> {
+		throw new Error("Method not implemented.");
+	}
+	getObjectCaption(trimType: BaseObjectTypes): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
+	createRelationship(uri: number, relatedRecord: number, relationshipType: string): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	setLatestClause(trimType: BaseObjectTypes, queryName: string): void {
+		throw new Error("Method not implemented.");
+	}
+	getLatestClause(trimType: BaseObjectTypes): string {
+		throw new Error("Method not implemented.");
+	}
+	setViewPaneProperties(trimObject: ITrimMainObject, propertyIds: string[]): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
+		throw new Error("Method not implemented.");
+	}
+	getViewPanePropertyDefs(trimType: BaseObjectTypes, uri: number): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
+		throw new Error("Method not implemented.");
+	}
+	getGlobalUserOptions(forUserOptionSet: string): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
 	getRecordAsText(recordUri: number): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
@@ -52,12 +87,12 @@ class MockTrimConnector implements ITrimConnector {
 		throw new Error("Method not implemented.");
 	}
 	getSearchOptions(): Promise<ISearchOptions> {
-		throw new Error("Method not implemented.");
+		return new Promise(function(resolve, reject) {});
 	}
 	getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {
-		throw new Error("Method not implemented.");
+		return new Promise(function(resolve, reject) {});
 	}
 	search<T>(
 		options: ISearchParameters
@@ -135,6 +170,7 @@ beforeEach(() => {
 	appStore = new AppStore(new MockWordConnector(), new MockTrimConnector());
 	Mock_Action = "";
 	Mock_Trim_Action = "";
+	postedFields = null;
 });
 
 describe("Test basic setup from Trim", () => {
@@ -214,10 +250,15 @@ describe("Test basic setup from Trim", () => {
 		appStore.fetchBaseSettingFromTrim(false);
 
 		setTimeout(() => {
+			try {
 			expect(appStore.RecordUri).toBe(0);
 			expect(appStore.status).toBe("WAITING");
 			expect.assertions(3);
 			done();
+			}
+			catch(e) {
+				done.fail(e);
+			}
 		});
 	});
 
@@ -266,20 +307,15 @@ describe("Test basic setup from Trim", () => {
 		expect(appStore.documentInfo.Uri).toBe(567);
 	});
 
-	it("sets the Drive Id in the TRIM External ID when stored in TRIM", (done) => {
-		postedFields = null;
-
+	it("sets the Drive Id in the DriveID field when stored in TRIM", (done) => {
 		expect.assertions(1);
 
-		setTimeout(function() {
-			try {
-				appStore.setDocumentInfo({ Id: "abc", Uri: 0, CommandDefs: [] });
-				appStore.createRecord(2, {});
-				expect(postedFields["DriveID"]).toBe("abc");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		appStore.setDocumentInfo({ Id: "abc", Uri: 0, CommandDefs: [] });
+		appStore.createRecord(2, {}).then(() =>{
+			expect(postedFields["DriveID"]).toBe("abc");
+			done();
+		});
+
 		});
 	});
 
