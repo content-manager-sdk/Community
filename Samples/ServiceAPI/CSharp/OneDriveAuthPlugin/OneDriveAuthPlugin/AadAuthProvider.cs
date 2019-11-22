@@ -252,11 +252,20 @@ namespace OneDriveAuthPlugin
 				tokens.AccessTokenSecret = code;
 			//	tokens.RefreshToken = authInfo["refresh_token"];
 			tokens.AccessToken = code;
-			session.ReferrerUrl = session.ReferrerUrl ?? AppSettings.Get<string>($"oauth.{Provider}.RedirectUrl", session.ReferrerUrl);
+
+			string redirectUrl = AppSettings.Get<string>($"oauth.{Provider}.RedirectUrl", session.ReferrerUrl);
+
+			
+
+			UriBuilder builderReferrer = new UriBuilder(session.ReferrerUrl ?? redirectUrl);
+			UriBuilder builderRedirect = new UriBuilder(builderReferrer.Path.TrimEnd('/').EndsWithIgnoreCase("/serviceapi") ? redirectUrl : session.ReferrerUrl);
+			builderRedirect.Query = builderReferrer.Query.TrimStart('?');
+
+			session.ReferrerUrl = builderRedirect.ToString();
 
 			var meta = session as IMeta;
 
-			Log.Debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
 			string items = null;
 
 			//var referrerUrl = session.ReferrerUrl.SetParam("s", "1");
@@ -265,8 +274,6 @@ namespace OneDriveAuthPlugin
 
 				if (meta.Meta.ContainsKey("items"))
 				{
-					Log.Info("********************************************************************************");
-					Log.Info(meta.Meta["items"]);
 					items = meta.Meta["items"];
 					//referrerUrl = referrerUrl.SetParam("items", meta.Meta["items"]);
 				}
@@ -290,8 +297,8 @@ namespace OneDriveAuthPlugin
 				sb.AppendFormat(@"<body onload='document.forms[""form""].submit()'>");				
 				sb.AppendFormat("<form name='form' action='{0}' method='post'>", referrerUrl.SetParam("s", "1"));
 				sb.AppendFormat("<input type='hidden' name='items' value='{0}'>", items);
-				sb.Append("<p>If you are not re-directed press Go.</p>");
-				sb.Append("<button>Go</button>");
+				sb.Append("<p>Re-directing, please wait.</p>");
+//				sb.Append("<button>Go</button>");
 				// Other params go here
 				sb.Append("</form>");
 				sb.Append("</body>");

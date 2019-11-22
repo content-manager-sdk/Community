@@ -38,6 +38,11 @@ namespace OneDriveConnector
 			record.SetFieldValue(new FieldDefinition(record.Database, "DeleteNow"), new UserFieldValue(value));
 		}
 
+		public static bool GetDeleteNow(this Record record)
+		{
+		return	record.GetFieldValue(new FieldDefinition(record.Database, "DeleteNow")).AsBool();
+		}
+
 		public static string GetFileName(this Record record, string extension = null)
 		{
 			Regex pattern = new Regex("[\\\\/<>|?]|[\n]{2}");
@@ -69,9 +74,20 @@ namespace OneDriveConnector
 			inputDocument.CheckinAs = record.SuggestedFileName;
 			record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 
+			string pdfPath = Path.Combine(TrimApplication.WebServerWorkPath, Path.ChangeExtension(fileResult.Name, "pdf"));
+			string pdfUrl = GraphApiHelper.GetOneDriveItemContentIdUrl(driveId, "pdf");
+			await ODataHelper.GetItem<string>(pdfUrl, token, pdfPath);
+
+
+			var rendition = record.ChildRenditions.NewRendition(pdfPath, RenditionType.Longevity, "Preview");
+
+
 			if (saveRecord)
 			{
 				record.Save();
+
+				File.Delete(filePath);
+				File.Delete(pdfPath);
 			}
 			return;
 		}

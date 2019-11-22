@@ -51,6 +51,12 @@ namespace OneDriveAuthPlugin
 			return $"{BaseUrl}shares/{sharingId}/driveItem?$select=id,parentReference";
 		}
 
+		public static string GetEMLUrl(string mailId)
+		{
+			// Construct URL for the names of the folders and files.
+			return $"{BaseGraphUrl}messages/{mailId}/$value";
+		}
+
 		public static string GetOneDriveItemPathsUrl(string selectedPath)
 		{
 			// Construct URL for the names of the folders and files.
@@ -69,9 +75,18 @@ namespace OneDriveAuthPlugin
 			return $"{BaseUrl}drives/{id}";
 		}
 
-		public static string GetOneDriveItemContentIdUrl(string id)
+		public static string GetOneDriveItemContentIdUrl(string id, string format = null)
 		{
-			return $"{BaseUrl}drives/{id}/content";
+			string url = $"{BaseUrl}drives/{id}/content";
+
+			if (format == null)
+			{
+				return url;
+			} else
+			{
+				return url + "?format=" + format;
+			}
+
 		}
 
 		public static string GetMyOneDriveUrl()

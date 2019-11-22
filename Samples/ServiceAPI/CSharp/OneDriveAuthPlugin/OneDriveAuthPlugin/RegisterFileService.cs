@@ -28,6 +28,8 @@ namespace OneDriveAuthPlugin
 		public long Uri { get; set; }
 
 		public OperationType Operation { get; set; }
+
+		public bool IsEmail { get; set; }
 	}
 
 	[Route("/DriveFile", "POST")]
@@ -49,6 +51,8 @@ namespace OneDriveAuthPlugin
 		public TrimOptions Options { get; set; }
 
 		public Dictionary<string, IList<MyEnumItem>> Enums {get; set;}
+
+		public string EmailPath { get; set; }
 
 	}
 
@@ -168,7 +172,7 @@ namespace OneDriveAuthPlugin
 
 				if (request.Action.IndexOf("request-del", StringComparison.InvariantCultureIgnoreCase) > -1)
 				{
-					record.SetDeleteNow();
+					record.SetDeleteNow(!record.GetDeleteNow());
 				}
 
 				if (request.Action.IndexOf("delete", StringComparison.InvariantCultureIgnoreCase) > -1)
@@ -221,9 +225,27 @@ namespace OneDriveAuthPlugin
 			string driveId = getDriveIdFromTrim(request);
 			log.Debug("got Drive ID");
 			OneDriveItem fileResult = null;
+
+			RegisterdFileResponse registeredFile = new RegisterdFileResponse();
 			try
 			{
-				if (!string.IsNullOrWhiteSpace(request.WebUrl) && new string[] { "https://", "http://"}
+				if (request.IsEmail && string.IsNullOrWhiteSpace(driveId))
+				{
+					var emailUrl = GraphApiHelper.GetEMLUrl(request.WebUrl);
+
+					string userFolder = Path.Combine("ForUser", this.Database.CurrentUser.Uri.ToString());
+
+					string fullUserFolder = Path.Combine( this.ServiceDefaults.UploadBasePath, userFolder);
+
+					Directory.CreateDirectory(fullUserFolder);
+					string fileName = Path.ChangeExtension(request.WebUrl, "eml");
+					string filePath = Path.Combine(fullUserFolder, fileName);
+
+
+					 await ODataHelper.GetItem<string>(emailUrl, token, filePath);
+					registeredFile.EmailPath = Path.Combine(userFolder, fileName); ;
+
+				} else if (!string.IsNullOrWhiteSpace(request.WebUrl) && new string[] { "https://", "http://"}
 				.Any(s => request.WebUrl.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
 				{
 
@@ -232,7 +254,7 @@ namespace OneDriveAuthPlugin
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, token, null);
 					log.Debug("GotItem");
 				}
-				else if (!string.IsNullOrWhiteSpace(driveId))
+				else if (!string.IsNullOrWhiteSpace(driveId) && !request.IsEmail)
 				{
 
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
@@ -245,7 +267,7 @@ namespace OneDriveAuthPlugin
 				throw;
 			}
 
-			RegisterdFileResponse registeredFile = new RegisterdFileResponse();
+			
 
 			DroppedFilesUserOptions fileOptions = new DroppedFilesUserOptions(this.Database);
 			var options = new TrimOptions();
@@ -284,19 +306,11 @@ namespace OneDriveAuthPlugin
 				if (uris.Count == 1)
 				{
 					updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
-				}
-
-				//if (request.Uri > 0)
-				//{
-				//	Record record = new Record(this.Database, request.Uri);
-				//	response.RecordTitle = record.Title;
-				//	response.Name = this.Database.CurrentUser.FormattedName;
-				//}
-
-
-
-				
-			} 			
+				}				
+			} else if (request.IsEmail && request.Uri > 0)
+			{
+				updateFromRecord(registeredFile, new Record(this.Database, request.Uri));
+			}			
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };
 

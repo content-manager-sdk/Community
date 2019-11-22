@@ -8,12 +8,12 @@ import {
 	ITrimDetailsObject,
 } from "../trim-coms/trim-connector";
 import { Label } from "office-ui-fabric-react/lib/Label";
-import { IWordConnector } from "../office-coms/word-connector";
+import { IOfficeConnector } from "../office-coms/office-connector";
 
 interface IDetailsViewProps {
 	appStore?: any;
 	trimConnector?: ITrimConnector;
-	wordConnector?: IWordConnector;
+	wordConnector?: IOfficeConnector;
 	recordDetails: IObjectDetails;
 }
 import {
@@ -368,6 +368,8 @@ export class DetailsView extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector", "wordConnector")(
-	observer(DetailsView)
-);
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(DetailsView));

@@ -1,4 +1,4 @@
-import { OfficeConnector } from "./office-connector";
+import { OfficeConnector, IOfficeConnector } from "./office-connector";
 
 export interface IGetRecordUriResponse {
 	found: boolean;
@@ -6,22 +6,11 @@ export interface IGetRecordUriResponse {
 	message?: string;
 }
 
-export interface IWordUrl {
-	getWebUrl(): Promise<string>;
-	getDocumentData(writeSlice: any): Promise<string>;
-}
+export class WordConnector extends OfficeConnector implements IOfficeConnector {
+	getRecordUri(): number {
+		return 0;
+	}
 
-export interface IWordConnector extends IWordUrl {
-	getUri(): Promise<IGetRecordUriResponse>;
-	setUri(uri: number): Promise<IGetRecordUriResponse>;
-	insertText(textToInsert: string): void;
-	insertLink(textToInsert: string, url: string): void;
-	setAutoOpen(autoOpen: boolean): void;
-	getAutoOpen(): boolean;
-	saveDocument(): Promise<void>;
-}
-
-export class WordConnector extends OfficeConnector implements IWordConnector {
 	getDocumentData(writeSlice: any): Promise<string> {
 		return new Promise((resolve, reject) => {
 			const onData = (fileName: string) => {

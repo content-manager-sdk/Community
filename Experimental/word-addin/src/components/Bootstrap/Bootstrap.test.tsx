@@ -1,8 +1,8 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 import { BootStrap } from "./BootStrap";
-import MainApp from "./MainApp";
-import ErrorDisplay from "./ErrorDisplay";
+import MainApp from "../MainApp";
+import ErrorDisplay from "../ErrorDisplay";
 
 describe("BootStrap", function() {
 	const mockWordConnector = {
@@ -20,6 +20,7 @@ describe("BootStrap", function() {
 					fetchBaseSettingFromTrim: () => {},
 					messages: { web_HPRM: "CM" },
 				}}
+				trimConnector={{}}
 			/>
 		);
 		//   expect(wrapper).toMatchSnapshot();
@@ -39,6 +40,7 @@ describe("BootStrap", function() {
 					status: "WAITING",
 					fetchBaseSettingFromTrim: () => {},
 				}}
+				trimConnector={{}}
 			/>
 		);
 

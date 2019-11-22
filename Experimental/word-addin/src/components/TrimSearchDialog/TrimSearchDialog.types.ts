@@ -4,7 +4,7 @@ import {
 	ITrimMainObject,
 } from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
-import { IAppStore } from "../../stores/AppStore";
+import { IAppStore } from "../../stores/AppStoreBase";
 
 export interface ITrimSearchDialog {}
 

@@ -74,6 +74,7 @@ export interface IDriveInformation {
 	CommandDefs: ICommandDef[];
 	Options: ITrimOptions;
 	Enums: IEnums;
+	EmailPath: string;
 }
 
 export interface IIcon {
@@ -187,7 +188,7 @@ export interface ITrimConnector {
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>>;
-	getPropertySheet(recordTypeUri: number): Promise<any>;
+	getPropertySheet(recordTypeUri: number, withFile?: string): Promise<any>;
 	registerInTrim(
 		recordTypeUri: number,
 		properties: any,
@@ -195,7 +196,11 @@ export interface ITrimConnector {
 	): Promise<ITrimMainObject>;
 	getDriveUrl(recordUri: number): Promise<string>;
 	getRecordAsText(recordUri: number): Promise<string>;
-	getDriveId(webUrl: string): Promise<IDriveInformation>;
+	getDriveId(
+		webUrl: string,
+		isEmail: boolean,
+		recordUri: number
+	): Promise<IDriveInformation>;
 	getObjectDetails(
 		trimType: BaseObjectTypes,
 		uri: number
@@ -568,9 +573,17 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public getDriveId(webUrl: string): Promise<IDriveInformation> {
+	public getDriveId(
+		webUrl: string,
+		isEmail: boolean,
+		recordUri: number
+	): Promise<IDriveInformation> {
 		return this.makeRequest(
-			{ path: "RegisterFile", method: "get", data: { webUrl } },
+			{
+				path: "RegisterFile",
+				method: "get",
+				data: { webUrl, isEmail, uri: recordUri },
+			},
 			(data: any) => {
 				return data.Results
 					? data.Results[0]
@@ -619,12 +632,22 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public getPropertySheet(recordTypeUri: number): Promise<any> {
-		const params = {
+	public getPropertySheet(
+		recordTypeUri: number,
+		withFile?: string
+	): Promise<any> {
+		const body = {
 			properties: "dataentryformdefinition",
+			RecordRecordType: recordTypeUri,
+			ByPassSave: true,
 		};
+
+		if (withFile) {
+			body["RecordFilePath"] = withFile;
+		}
+
 		return this.makeRequest(
-			{ path: `RecordType/${recordTypeUri}`, method: "get", data: params },
+			{ path: `Record`, method: "post", data: body },
 			(data: any) => {
 				return data.Results[0].DataEntryFormDefinition;
 			}

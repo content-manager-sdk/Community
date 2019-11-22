@@ -10,13 +10,13 @@ import {
 } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
-import { IWordConnector } from "src/office-coms/word-connector";
+import { IOfficeConnector } from "src/office-coms/office-connector";
 
 export class NewRecord extends React.Component<
 	{
 		appStore?: any;
 		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
+		wordConnector?: IOfficeConnector;
 		className?: string;
 	},
 	any
@@ -34,9 +34,11 @@ export class NewRecord extends React.Component<
 
 	@action.bound
 	setPropertySheet() {
+		const { trimConnector, appStore } = this.props;
+
 		if (this.recordTypeUri > 0) {
-			this.props
-				.trimConnector!.getPropertySheet(this.recordTypeUri)
+			trimConnector!
+				.getPropertySheet(this.recordTypeUri, appStore.documentInfo.EmailPath)
 				.then((data) => {
 					runInAction(() => {
 						this.formDefinition = data;
@@ -83,9 +85,11 @@ export class NewRecord extends React.Component<
 	private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		const { appStore, wordConnector } = this.props;
 
-		appStore.createRecord(this.recordTypeUri, this.recordProps).then(() => {
-			wordConnector!.setAutoOpen(true);
-		});
+		appStore
+			.createRecord(this.recordTypeUri, this.recordProps)
+			.then((item: any) => {
+				wordConnector!.setAutoOpen(true, appStore.documentInfo.Uri);
+			});
 	};
 
 	private _onPropertySheetChange = (newProps: any) => {
@@ -120,6 +124,8 @@ export class NewRecord extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector", "wordConnector")(
-	observer(NewRecord)
-);
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(NewRecord));

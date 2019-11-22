@@ -32,6 +32,20 @@ namespace OneDriveSync
 			database.Connect();
 		}
 
+
+		private Database getDatabaseForUser(string user)
+		{
+			string dbid = System.Configuration.ConfigurationManager.AppSettings["dbid"];
+
+			database = new Database();
+			database.Id = dbid;
+			database.WorkgroupServerName = "local";
+			database.TrustedUser = "user";
+			database.Connect();
+
+			return database;
+		}
+
 		public IEnumerable<OneDriveDocument> GetDeleteableDocuments()
 		{
 			TrimMainObjectSearch search = new TrimMainObjectSearch(database, BaseObjectTypes.Record);
@@ -72,6 +86,12 @@ namespace OneDriveSync
 		internal void CheckinFromDrive(OneDriveDocument doc, string token)
 		{
 			Record record = new Record(database, doc.Uri);
+
+			if (record.IsCheckedOut)
+			{
+				Database userDatabase = getDatabaseForUser(record.CheckedOutTo.LogsInAs);
+				record = new Record(userDatabase, doc.Uri);
+			}
 
 			var result = record.CheckinFromDrive(doc.Id, token, true);
 			result.Wait();

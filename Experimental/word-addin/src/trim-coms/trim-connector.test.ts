@@ -329,33 +329,68 @@ describe("Test fetch from TRIM", () => {
 	});
 
 	it("Property sheet requested from Record Type", () => {
-		mock
-			.onGet(`${SERVICEAPI_BASE_URI}/RecordType/123`, {
-				params: { properties: "dataentryformdefinition" },
-			})
-			.reply(200, {
-				Results: [
-					{
-						TrimType: "RecordType",
-						DataEntryFormDefinition: {
-							Version: "1",
-							SupportsElectronicDocs: true,
-							TitlingMethod: "FreeText",
-							Pages: [{}],
-						},
-					},
-				],
-			});
+		let postConfig: any;
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			postConfig = config;
 
-		expect.assertions(1);
+			return [
+				200,
+				{
+					Results: [
+						{
+							TrimType: "RecordType",
+							DataEntryFormDefinition: {
+								Version: "1",
+								SupportsElectronicDocs: true,
+								TitlingMethod: "FreeText",
+								Pages: [{}],
+							},
+						},
+					],
+				},
+			];
+		});
+
+		expect.assertions(2);
 		return trimConnector.getPropertySheet(123).then((data) => {
 			expect(data.Pages.length).toBe(1);
+			expect(postConfig.RecordFilePath).toBeFalsy();
+		});
+	});
+
+	it("Property sheet with document", () => {
+		let postConfig: any;
+		mock.reset();
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			postConfig = config;
+			return [
+				200,
+				{
+					Results: [
+						{
+							TrimType: "RecordType",
+							DataEntryFormDefinition: {
+								Version: "1",
+								SupportsElectronicDocs: true,
+								TitlingMethod: "FreeText",
+								Pages: [{}],
+							},
+						},
+					],
+				},
+			];
+		});
+
+		expect.assertions(2);
+		return trimConnector.getPropertySheet(123, "myfile.eml").then((data) => {
+			expect(data.Pages.length).toBe(1);
+			expect(JSON.parse(postConfig.data).RecordFilePath).toBe("myfile.eml");
 		});
 	});
 
 	it("Error is handled", () => {
 		//mock.reset();
-		mock.onGet(`${SERVICEAPI_BASE_URI}/RecordType/567`).reply(500, {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(500, {
 			Count: 0,
 			HasMoreItems: false,
 			MinimumCount: 0,

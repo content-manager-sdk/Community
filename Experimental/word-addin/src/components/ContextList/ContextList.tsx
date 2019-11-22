@@ -2,7 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import "./ContextList.css";
 import { ITrimConnector, ITrimMainObject } from "src/trim-coms/trim-connector";
-import { IWordConnector } from "src/office-coms/word-connector";
+import { IOfficeConnector } from "src/office-coms/office-connector";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
@@ -16,7 +16,7 @@ export class ContextList extends React.Component<
 	{
 		appStore?: any;
 		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
+		wordConnector?: IOfficeConnector;
 		className?: string;
 	},
 	{
@@ -29,7 +29,7 @@ export class ContextList extends React.Component<
 	constructor(props: {
 		appStore?: any;
 		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
+		wordConnector?: IOfficeConnector;
 	}) {
 		super(props);
 
@@ -78,6 +78,8 @@ export class ContextList extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector", "wordConnector")(
-	observer(ContextList)
-);
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(ContextList));

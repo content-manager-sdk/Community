@@ -1,20 +1,22 @@
 import * as React from "react";
 //import { IAppStore } from "../stores/AppStore";
 import { inject, observer } from "mobx-react";
-import ErrorDisplay from "./ErrorDisplay";
-import MainApp from "./MainApp";
+import ErrorDisplay from "../ErrorDisplay";
+import MainApp from "../MainApp";
 //import { BrowserRouter as Router, Route } from "react-router-dom";
-import { TrimSearchDialog } from "./TrimSearchDialog/TrimSearchDialog";
-import { BaseObjectTypes } from "../../src/trim-coms/trim-baseobjecttypes";
-import { ITrimConnector } from "src/trim-coms/trim-connector";
+import { TrimSearchDialog } from "../TrimSearchDialog/TrimSearchDialog";
+import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
+import { ITrimConnector } from "../../trim-coms/trim-connector";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
-import { IAppStore } from "src/stores/AppStore";
+import { IAppStore } from "../../stores/AppStoreBase";
 
-import { getQueryStringValue } from "../utils/getQueryStringValue";
+import { getQueryStringValue } from "../../utils/getQueryStringValue";
+import { IOfficeConnector } from "src/office-coms/office-connector";
 
 interface IProps {
 	appStore?: IAppStore;
 	trimConnector?: ITrimConnector;
+	wordConnector?: IOfficeConnector;
 }
 
 export class BootStrap extends React.Component<
@@ -45,10 +47,12 @@ export class BootStrap extends React.Component<
 	}
 
 	componentDidMount() {
-		const { appStore, trimConnector } = this.props;
+		const { appStore, trimConnector, wordConnector } = this.props;
 		const { dialogName } = this.state;
 		Office.initialize = function(reason) {
 			appStore!.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
+
+			wordConnector!.initialize(trimConnector!, appStore!);
 		};
 
 		window.onbeforeunload = () => {
@@ -61,7 +65,26 @@ export class BootStrap extends React.Component<
 	// 	//console.log('toggle is ' + (checked ? 'checked' : 'not checked'));
 	// };
 	public render() {
-		const { appStore, trimConnector } = this.props;
+		const { appStore, trimConnector, wordConnector } = this.props;
+
+		let getAccessToken: Promise<string>;
+
+		trimConnector!.credentialsResolver = (callback) => {
+			const accessToken = getQueryStringValue("accessToken");
+			if (!getAccessToken) {
+				getAccessToken = wordConnector!.getAccessToken();
+			}
+
+			if (accessToken) {
+				callback(accessToken, "");
+			} else {
+				getAccessToken
+					.then((token) => callback(token, ""))
+					.catch(function(error) {
+						callback("", error.message);
+					});
+			}
+		};
 
 		return (
 			<div>
@@ -89,4 +112,8 @@ export class BootStrap extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector")(observer(BootStrap));
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(BootStrap));

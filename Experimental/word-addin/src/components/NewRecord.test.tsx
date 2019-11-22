@@ -8,7 +8,7 @@ import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { TrimConnector } from "../trim-coms/trim-connector";
 import { IRecordType, ITrimMainObject } from "../trim-coms/trim-connector";
 import { PropertySheet } from "./PropertySheet";
-import { IWordConnector } from "../office-coms/word-connector";
+import { IOfficeConnector } from "../office-coms/office-connector";
 
 describe("New Record layout", function() {
 	let resolveRecordTypes;
@@ -45,7 +45,10 @@ describe("New Record layout", function() {
 		FileName: "default title",
 	};
 
-	class MockWordConnector implements IWordConnector {
+	class MockWordConnector implements IOfficeConnector {
+		insertLink(textToInsert: string, url: string): void {
+			throw new Error("Method not implemented.");
+		}
 		saveDocument(): Promise<void> {
 			throw new Error("Method not implemented.");
 		}

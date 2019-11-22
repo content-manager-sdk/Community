@@ -10,13 +10,13 @@ import {
 } from "../../trim-coms/trim-connector";
 //import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 //import PropertySheet from "./PropertySheet";
-import { IWordConnector } from "src/office-coms/word-connector";
+import { IOfficeConnector } from "src/office-coms/office-connector";
 
 export class RecordTools extends React.Component<
 	{
 		appStore?: any;
 		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
+		wordConnector?: IOfficeConnector;
 		className?: string;
 	},
 	any
@@ -92,6 +92,8 @@ export class RecordTools extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector", "wordConnector")(
-	observer(RecordTools)
-);
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(RecordTools));

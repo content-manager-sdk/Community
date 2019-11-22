@@ -133,6 +133,7 @@
     <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
     <Compile Include="AzureTableTokenCache.cs" />
+    <Compile Include="BaseFileService.cs" />
     <Compile Include="BaseOneDriveService.cs" />
     <Compile Include="CommandDefCustomProp.cs" />
     <Compile Include="CustomRecord.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="MyCommandDef.cs" />
     <Compile Include="MyEnumItem.cs" />
     <Compile Include="OneDriveAuthPlugin.cs" />
+    <Compile Include="PreviewFileService.cs" />
     <Compile Include="TrimOptions.cs" />
     <Compile Include="WriteFileService.cs" />
     <Compile Include="OpenFileService.cs" />

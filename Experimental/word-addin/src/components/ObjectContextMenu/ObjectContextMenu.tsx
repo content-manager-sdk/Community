@@ -13,14 +13,14 @@ import {
 } from "office-ui-fabric-react/lib/ContextualMenu";
 import { CommandIds } from "../../trim-coms/trim-command-ids";
 
-import { IWordConnector } from "../../office-coms/word-connector";
+import { IOfficeConnector } from "../../office-coms/office-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { CommandBar } from "office-ui-fabric-react";
 
 interface IContextMenuProps {
 	appStore?: any;
 	trimConnector?: ITrimConnector;
-	wordConnector?: IWordConnector;
+	wordConnector?: IOfficeConnector;
 	record: ITrimMainObject;
 	isInList: boolean;
 	onCommandComplete?: (commandKey: string) => void;

@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -267,7 +268,7 @@ namespace OneDriveAuthPlugin
 						{
 							HttpContent content = response.Content;
 
-							if (itemsUrl.EndsWith("content") && method == HttpMethod.Get)
+							if ( new string[] { "/content", "/$value" }.Any(s =>  itemsUrl.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1) && method == HttpMethod.Get)
 							{
 								//string filePath = Path.ChangeExtension(Path.GetTempFileName(), "docx");
 									var contentStream = await content.ReadAsStreamAsync(); // get the actual content stream

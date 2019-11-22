@@ -7,7 +7,7 @@ import {
 	ITrimBooleanField,
 } from "../trim-coms/trim-connector";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
-import { IWordConnector } from "../office-coms/word-connector";
+import { IOfficeConnector } from "../office-coms/office-connector";
 import {
 	Pivot,
 	PivotItem,
@@ -22,7 +22,7 @@ export class ExistingRecord extends React.Component<
 	{
 		appStore?: any;
 		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
+		wordConnector?: IOfficeConnector;
 		className?: string;
 	},
 	{ menuMessage: string; recordDetails: IObjectDetails }
@@ -30,7 +30,7 @@ export class ExistingRecord extends React.Component<
 	constructor(props: {
 		appStore?: any;
 		trimConnector?: ITrimConnector;
-		wordConnector?: IWordConnector;
+		wordConnector?: IOfficeConnector;
 	}) {
 		super(props);
 
@@ -114,6 +114,8 @@ export class ExistingRecord extends React.Component<
 	}
 }
 
-export default inject("appStore", "trimConnector", "wordConnector")(
-	observer(ExistingRecord)
-);
+export default inject(
+	"appStore",
+	"trimConnector",
+	"wordConnector"
+)(observer(ExistingRecord));
