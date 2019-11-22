@@ -90,7 +90,6 @@ export class OutlookConnector extends OfficeConnector
 				// Successfully loaded custom properties,
 				// can get them from the asyncResult argument.
 				const customProps = asyncResult.value;
-				console.log(recordUri);
 				customProps.set("TRIM_URI", String(recordUri));
 				// Save all custom properties to server.
 				customProps.saveAsync(() => {});

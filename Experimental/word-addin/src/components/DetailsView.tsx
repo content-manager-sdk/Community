@@ -70,6 +70,13 @@ export class DetailsView extends React.Component<
 		if (recordProperties.Uri === 0) {
 			this.setState({ recordProperties: recordDetails.results[0] });
 		}
+		if (
+			prevProps.recordDetails.results &&
+			prevProps.recordDetails.results.length > 0 &&
+			recordProperties.Uri !== prevProps.recordDetails.results[0].Uri
+		) {
+			this.setState({ recordProperties: recordDetails.results[0] });
+		}
 	}
 
 	private getStyles(): string {

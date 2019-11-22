@@ -280,7 +280,6 @@ export class TrimSearchDialog
 		ev: React.FormEvent<HTMLElement>,
 		isChecked: boolean
 	): void {
-		console.log("555555555555");
 		this.setState({ applyFilterSearch: isChecked });
 	}
 }

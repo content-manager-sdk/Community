@@ -18,20 +18,19 @@ import ContextList from "./ContextList/ContextList";
 import ObjectContextMenu from "./ObjectContextMenu/ObjectContextMenu";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
+interface ExistingRecordProps {
+	appStore?: any;
+	trimConnector?: ITrimConnector;
+	wordConnector?: IOfficeConnector;
+	className?: string;
+	recordUri: number;
+}
+
 export class ExistingRecord extends React.Component<
-	{
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		wordConnector?: IOfficeConnector;
-		className?: string;
-	},
+	ExistingRecordProps,
 	{ menuMessage: string; recordDetails: IObjectDetails }
 > {
-	constructor(props: {
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		wordConnector?: IOfficeConnector;
-	}) {
+	constructor(props: ExistingRecordProps) {
 		super(props);
 
 		this.state = {
@@ -41,10 +40,10 @@ export class ExistingRecord extends React.Component<
 	}
 
 	private loadRecordDetails = (): any => {
-		const { trimConnector, appStore } = this.props;
+		const { trimConnector, recordUri } = this.props;
 
 		return trimConnector!
-			.getObjectDetails(BaseObjectTypes.Record, appStore.RecordUri)
+			.getObjectDetails(BaseObjectTypes.Record, recordUri)
 			.then((response: IObjectDetails) => {
 				this.setState({ recordDetails: response });
 			});
@@ -52,6 +51,13 @@ export class ExistingRecord extends React.Component<
 
 	componentDidMount() {
 		return this.loadRecordDetails();
+	}
+
+	componentDidUpdate(prevProps: ExistingRecordProps) {
+		const { recordUri } = this.props;
+		if (recordUri !== prevProps.recordUri) {
+			return this.loadRecordDetails();
+		}
 	}
 
 	private _dismissMessage = () => {
