@@ -1,6 +1,7 @@
 import { OfficeConnector, IOfficeConnector } from "./office-connector";
-import { ITrimConnector } from "src/trim-coms/trim-connector";
-import { IAppStore } from "src/stores/AppStoreBase";
+import { ITrimConnector } from "../trim-coms/trim-connector";
+import { IAppStore } from "../stores/AppStoreBase";
+import Axios from "axios";
 
 export class OutlookConnector extends OfficeConnector
 	implements IOfficeConnector {
@@ -25,6 +26,7 @@ export class OutlookConnector extends OfficeConnector
 		Office.context.mailbox.addHandlerAsync(
 			Office.EventType.ItemChanged,
 			(item) => {
+				appStore.setStatus("STARTING");
 				this.loadCustomProps().then(() => {
 					this.getWebUrl().then((webUrl) => {
 						trimConnector
@@ -83,18 +85,65 @@ export class OutlookConnector extends OfficeConnector
 		throw new Error("Method not implemented.");
 	}
 	setAutoOpen(autoOpen: boolean, recordUri?: number): void {
-		Office.context.mailbox.item.loadCustomPropertiesAsync((asyncResult) => {
-			if (asyncResult.status == Office.AsyncResultStatus.Failed) {
-				// Handle the failure.
+		const getItemId = function() {
+			if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
+				// itemId is already REST-formatted.
+				return Office.context.mailbox.item.itemId;
 			} else {
-				// Successfully loaded custom properties,
-				// can get them from the asyncResult argument.
-				const customProps = asyncResult.value;
-				customProps.set("TRIM_URI", String(recordUri));
-				// Save all custom properties to server.
-				customProps.saveAsync(() => {});
+				// Convert to an item ID for API v2.0.
+				return Office.context.mailbox.convertToRestId(
+					Office.context.mailbox.item.itemId,
+					Office.MailboxEnums.RestVersion.v2_0
+				);
+			}
+		};
+
+		Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(
+			result: any
+		) {
+			if (result.status === "succeeded") {
+				var accessToken = result.value;
+				const itemId = getItemId();
+
+				const getMessageUrl =
+					Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
+				// Use the access token.
+
+				const options = {
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${accessToken}`,
+					},
+					method: "PATCH",
+					url: getMessageUrl,
+					data: {
+						SingleValueExtendedProperties: [
+							{
+								PropertyId:
+									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_ID",
+								Value: `trim:N1/rec/${recordUri}`,
+							},
+						],
+					},
+				};
+				Axios(options);
+			} else {
+				// Handle the error.
 			}
 		});
+
+		// Office.context.mailbox.item.loadCustomPropertiesAsync((asyncResult) => {
+		// 	if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+		// 		// Handle the failure.
+		// 	} else {
+		// 		// Successfully loaded custom properties,
+		// 		// can get them from the asyncResult argument.
+		// 		const customProps = asyncResult.value;
+		// 		customProps.set("TRIM_URI", String(recordUri));
+		// 		// Save all custom properties to server.
+		// 		customProps.saveAsync(() => {});
+		// 	}
+		// });
 	}
 	getAutoOpen(): boolean {
 		return false;

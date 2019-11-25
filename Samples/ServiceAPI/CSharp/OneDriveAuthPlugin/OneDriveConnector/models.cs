@@ -33,6 +33,18 @@ namespace OneDriveAuthPlugin
 		public string MimeType { get; set; }
 	}
 
+	public class ExtendedProperty
+	{
+		public string Id { get; set; }
+		public string Value { get; set; }
+	}
+
+
+	public class MailItem
+	{
+		public ExtendedProperty[] SingleValueExtendedProperties { get; set; }
+	}
+
 	/// <summary>
 	/// A OneDriveItem can be a file or folder.
 	/// </summary>

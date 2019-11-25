@@ -123,7 +123,7 @@ export class PropertySheet extends React.Component<
 							}
 							defaultValue={
 								pageItem.Name === "RecordTypedTitle"
-									? this.props.defaultRecordTitle
+									? this.props.defaultRecordTitle || pageItem.Value
 									: pageItem.Value
 							}
 							onChange={this._onTextChange(pageItem.Name)}
