@@ -120,7 +120,7 @@ export class OutlookConnector extends OfficeConnector
 						SingleValueExtendedProperties: [
 							{
 								PropertyId:
-									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_ID",
+									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
 								Value: `trim:N1/rec/${recordUri}`,
 							},
 						],

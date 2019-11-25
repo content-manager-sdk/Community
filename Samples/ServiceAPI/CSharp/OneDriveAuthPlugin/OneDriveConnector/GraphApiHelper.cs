@@ -14,7 +14,7 @@ namespace OneDriveAuthPlugin
 
 		public const string EXT_PROP_URN_GUID = "{0708434C-2E95-41C8-992F-8EE34B796FEC}";
 
-		public const string EXT_PROP_ID = "HPRM_ID";
+		public const string EXT_PROP_RECORD_URN_NAME = "HPRM_RECORD_URN";
 
 
 		public static string GetOneDriveSessionUrl(OneDriveItem item)
@@ -101,7 +101,7 @@ namespace OneDriveAuthPlugin
 
 		public static string IDPropName()
 		{
-			return $"String {EXT_PROP_URN_GUID} Name {EXT_PROP_ID}";
+			return $"String {EXT_PROP_URN_GUID} Name {EXT_PROP_RECORD_URN_NAME}";
 		}
 
 		public static string GetMailItemURL(string mailId)
