@@ -88,7 +88,7 @@ export class NewRecord extends React.Component<
 		appStore
 			.createRecord(this.recordTypeUri, this.recordProps)
 			.then((item: any) => {
-				wordConnector!.setAutoOpen(true, appStore.documentInfo.Uri);
+				wordConnector!.setAutoOpen(true, appStore.documentInfo.URN);
 			});
 	};
 

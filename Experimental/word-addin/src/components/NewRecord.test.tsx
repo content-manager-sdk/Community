@@ -12,6 +12,11 @@ import { IOfficeConnector } from "../office-coms/office-connector";
 
 describe("New Record layout", function() {
 	let resolveRecordTypes;
+	let testRecordUrn = "";
+
+	beforeEach(() => {
+		testRecordUrn = "";
+	});
 
 	let mockTrimConnector = new TrimConnector();
 	mockTrimConnector.search = () => {
@@ -33,7 +38,7 @@ describe("New Record layout", function() {
 			web_Register: "Register",
 			web_SelectRecordType: "Select a Record Type",
 		},
-		documentInfo: { Options: {} },
+		documentInfo: { Options: {}, URN: "test_urn" },
 		createRecord: (recordUri, recordProps) => {
 			mockStore.RecordUri = recordUri;
 			mockStore.RecordProps = recordProps;
@@ -55,8 +60,9 @@ describe("New Record layout", function() {
 		getDocumentData(writeSlice: any): Promise<string> {
 			throw new Error("Method not implemented.");
 		}
-		setAutoOpen(autoOpen: boolean): void {
-			throw new Error("Method not implemented.");
+		setAutoOpen(autoOpen: boolean, recordUrn: string): void {
+			console.log(recordUrn);
+			testRecordUrn = recordUrn;
 		}
 		getAutoOpen(): boolean {
 			throw new Error("Method not implemented.");
@@ -216,6 +222,29 @@ describe("New Record layout", function() {
 			.onClick(null);
 
 		expect(mockStore.RecordProps).toEqual({ RecordTypedTitle: "test title" });
+	});
+
+	it("sends record URN to auto open", (done) => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
+
+		setTimeout(() => {
+			try {
+				expect(testRecordUrn).toEqual("test_urn");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("displays a property sheet when Record Type is set", async (done) => {
