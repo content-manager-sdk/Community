@@ -75,6 +75,7 @@ export interface IDriveInformation {
 	Options: ITrimOptions;
 	Enums: IEnums;
 	EmailPath: string;
+	URN: string;
 }
 
 export interface IIcon {
@@ -92,6 +93,7 @@ export interface ITrimMainObject {
 	Selected?: boolean;
 	TrimType?: BaseObjectTypes;
 	DeleteNow?: boolean;
+	URN?: string;
 }
 
 export interface ITrimBooleanField extends ITrimField {
@@ -619,7 +621,7 @@ export class TrimConnector implements ITrimConnector {
 			...properties,
 
 			RecordRecordType: recordTypeUri,
-			properties: "CommandDefs",
+			properties: "CommandDefs,URN",
 		};
 		if (fields) {
 			body["Fields"] = fields;

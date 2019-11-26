@@ -84,7 +84,7 @@ export class OutlookConnector extends OfficeConnector
 	insertLink(textToInsert: string, url: string): void {
 		throw new Error("Method not implemented.");
 	}
-	setAutoOpen(autoOpen: boolean, recordUri?: number): void {
+	setAutoOpen(autoOpen: boolean, recordUrn?: string): void {
 		const getItemId = function() {
 			if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
 				// itemId is already REST-formatted.
@@ -107,7 +107,6 @@ export class OutlookConnector extends OfficeConnector
 
 				const getMessageUrl =
 					Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
-				// Use the access token.
 
 				const options = {
 					headers: {
@@ -121,7 +120,7 @@ export class OutlookConnector extends OfficeConnector
 							{
 								PropertyId:
 									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: `trim:N1/rec/${recordUri}`,
+								Value: recordUrn,
 							},
 						],
 					},

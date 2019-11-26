@@ -469,7 +469,7 @@ describe("Test fetch from TRIM", () => {
 					JSON.stringify({
 						RecordTypedTitle: "test",
 						RecordRecordType: 1,
-						properties: "CommandDefs",
+						properties: "CommandDefs,URN",
 					})
 				);
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
@@ -489,13 +489,14 @@ describe("Test fetch from TRIM", () => {
 					Results: [
 						{
 							Uri: 123,
+							URN: "trim:N1/rec/123",
 						},
 					],
 				},
 			];
 		});
 
-		expect.assertions(4);
+		expect.assertions(5);
 
 		return trimConnector
 			.registerInTrim(1, { RecordTypedTitle: "test" }, { DriveId: "test" })
@@ -504,13 +505,14 @@ describe("Test fetch from TRIM", () => {
 					JSON.stringify({
 						RecordTypedTitle: "test",
 						RecordRecordType: 1,
-						properties: "CommandDefs",
+						properties: "CommandDefs,URN",
 						Fields: { DriveId: "test" },
 					})
 				);
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
 				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
 				expect(data.Uri).toEqual(123);
+				expect(data.URN).toEqual("trim:N1/rec/123");
 			});
 	});
 

@@ -41,6 +41,7 @@ export class AppStoreBase implements IAppStore {
 		Options: { DefaultDocumentRecordType: 0 },
 		Enums: { RecordRelationshipType: [] },
 		EmailPath: "",
+		URN: "",
 	};
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
@@ -182,6 +183,7 @@ export class AppStoreBase implements IAppStore {
 							Options: this.documentInfo.Options,
 							Enums: this.documentInfo.Enums,
 							EmailPath: this.documentInfo.EmailPath,
+							URN: newRecord.URN!,
 						});
 					}
 					this.setStatus("WAITING");
