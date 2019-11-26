@@ -23,9 +23,8 @@ export class OutlookConnector extends OfficeConnector
 	public initialize(trimConnector: ITrimConnector, appStore: IAppStore): void {
 		this.loadCustomProps().then();
 
-		Office.context.mailbox.addHandlerAsync(
-			Office.EventType.ItemChanged,
-			(item) => {
+		const handlerFN = () => {
+			if (Office.context.mailbox.item) {
 				appStore.setStatus("STARTING");
 				this.loadCustomProps().then(() => {
 					this.getWebUrl().then((webUrl) => {
@@ -41,6 +40,11 @@ export class OutlookConnector extends OfficeConnector
 					});
 				});
 			}
+		};
+
+		Office.context.mailbox.addHandlerAsync(
+			Office.EventType.ItemChanged,
+			handlerFN
 		);
 	}
 
