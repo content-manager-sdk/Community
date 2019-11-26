@@ -13,9 +13,11 @@ import { IOfficeConnector } from "../office-coms/office-connector";
 describe("New Record layout", function() {
 	let resolveRecordTypes;
 	let testRecordUrn = "";
+	let testSubjectPrefix = "";
 
 	beforeEach(() => {
 		testRecordUrn = "";
+		testSubjectPrefix = "";
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -28,6 +30,15 @@ describe("New Record layout", function() {
 	mockTrimConnector.getPropertySheet = () => {
 		return new Promise(function(resolve) {
 			resolve({ PageItems: [] });
+		});
+	};
+
+	mockTrimConnector.getDatabaseProperties = () => {
+		return new Promise(function(resolve) {
+			resolve({
+				EmailSubjectPrefix: "CM:",
+				CurrencySymbol: "",
+			});
 		});
 	};
 
@@ -60,9 +71,13 @@ describe("New Record layout", function() {
 		getDocumentData(writeSlice: any): Promise<string> {
 			throw new Error("Method not implemented.");
 		}
-		setAutoOpen(autoOpen: boolean, recordUrn: string): void {
-			console.log(recordUrn);
+		setAutoOpen(
+			autoOpen: boolean,
+			recordUrn: string,
+			subjectPrefix: string
+		): void {
 			testRecordUrn = recordUrn;
+			testSubjectPrefix = subjectPrefix;
 		}
 		getAutoOpen(): boolean {
 			throw new Error("Method not implemented.");
@@ -240,6 +255,29 @@ describe("New Record layout", function() {
 		setTimeout(() => {
 			try {
 				expect(testRecordUrn).toEqual("test_urn");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("sends the email prefix", (done) => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
+
+		setTimeout(() => {
+			try {
+				expect(testSubjectPrefix).toEqual("CM:");
 				done();
 			} catch (e) {
 				done.fail(e);

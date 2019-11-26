@@ -168,6 +168,7 @@ export interface ISearchOptions {
 
 export interface IDatabase {
 	CurrencySymbol: string;
+	EmailSubjectPrefix: string;
 }
 
 export interface ITrimConnector {
@@ -284,7 +285,9 @@ export class TrimConnector implements ITrimConnector {
 				{
 					path: "Database",
 					method: "get",
-					data: { properties: "DatabaseCurrencySymbol" },
+					data: {
+						properties: "DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix",
+					},
 				},
 				(data: any) => {
 					const prefix = "Database";

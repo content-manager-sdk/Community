@@ -84,7 +84,11 @@ export class OutlookConnector extends OfficeConnector
 	insertLink(textToInsert: string, url: string): void {
 		throw new Error("Method not implemented.");
 	}
-	setAutoOpen(autoOpen: boolean, recordUrn?: string): void {
+	setAutoOpen(
+		autoOpen: boolean,
+		recordUrn?: string,
+		subjectPrefix?: string
+	): void {
 		const getItemId = function() {
 			if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
 				// itemId is already REST-formatted.
@@ -108,6 +112,23 @@ export class OutlookConnector extends OfficeConnector
 				const getMessageUrl =
 					Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
 
+				let data: any = {
+					SingleValueExtendedProperties: [
+						{
+							PropertyId:
+								"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
+							Value: recordUrn,
+						},
+					],
+				};
+
+				if (subjectPrefix) {
+					data.Subject = `${Office.context.mailbox.item.subject}`;
+					if (!data.Subject.startsWith(subjectPrefix!)) {
+						data.Subject = `${subjectPrefix} ${data.Subject}`;
+					}
+				}
+
 				const options = {
 					headers: {
 						Accept: "application/json",
@@ -115,15 +136,7 @@ export class OutlookConnector extends OfficeConnector
 					},
 					method: "PATCH",
 					url: getMessageUrl,
-					data: {
-						SingleValueExtendedProperties: [
-							{
-								PropertyId:
-									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: recordUrn,
-							},
-						],
-					},
+					data,
 				};
 				Axios(options);
 			} else {

@@ -7,6 +7,7 @@ import {
 	ITrimConnector,
 	IRecordType,
 	ISearchResults,
+	IDatabase,
 } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
@@ -83,12 +84,19 @@ export class NewRecord extends React.Component<
 	};
 
 	private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
-		const { appStore, wordConnector } = this.props;
+		const { appStore, wordConnector, trimConnector } = this.props;
 
 		appStore
 			.createRecord(this.recordTypeUri, this.recordProps)
-			.then((item: any) => {
-				wordConnector!.setAutoOpen(true, appStore.documentInfo.URN);
+			.then(() => {
+				return trimConnector!.getDatabaseProperties();
+			})
+			.then((item: IDatabase) => {
+				wordConnector!.setAutoOpen(
+					true,
+					appStore.documentInfo.URN,
+					item.EmailSubjectPrefix
+				);
 			});
 	};
 

@@ -1057,7 +1057,7 @@ describe("Test fetch from TRIM", () => {
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/Database`, {
 					params: {
-						properties: "DatabaseCurrencySymbol",
+						properties: "DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix",
 					},
 				})
 				.reply(function(config: any) {
@@ -1067,6 +1067,7 @@ describe("Test fetch from TRIM", () => {
 							Results: [
 								{
 									DatabaseCurrencySymbol: { Value: "$" },
+									DatabaseEmailSubjectPrefix: { Value: "CM:" },
 									TrimType: "Database",
 									Uri: 1,
 								},
@@ -1081,10 +1082,11 @@ describe("Test fetch from TRIM", () => {
 						},
 					];
 				});
-			expect.assertions(1);
+			expect.assertions(2);
 
 			const data = await trimConnector.getDatabaseProperties();
 			expect(data.CurrencySymbol).toEqual("$");
+			expect(data.EmailSubjectPrefix).toEqual("CM:");
 		});
 	});
 
