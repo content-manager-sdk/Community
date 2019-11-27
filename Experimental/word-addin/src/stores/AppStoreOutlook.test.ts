@@ -150,7 +150,7 @@ class MockTrimConnector implements ITrimConnector {
 			if (Mock_Trim_Action === "ERROR") {
 				reject({ message: "error" });
 			} else {
-				resolve({ Uri: 567 });
+				resolve({ Uri: 567, URN: "trim:567" });
 			}
 		});
 	}
@@ -201,6 +201,23 @@ describe("Test basic setup from Trim", () => {
 		setTimeout(function() {
 			try {
 				expect(postedFields.RecordFilePath).toBe("test.eml");
+
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	test("URN sent to autoOpen", (done) => {
+		appStore.documentInfo.EmailPath = "test.eml";
+
+		appStore.createRecord(1, {});
+
+		setTimeout(function() {
+			try {
+				expect(appStore.documentInfo.URN).toBe("trim:567");
 
 				expect.assertions(1);
 				done();

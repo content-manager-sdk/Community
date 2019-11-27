@@ -226,10 +226,29 @@ namespace OneDriveAuthPlugin
 			log.Debug("got Drive ID");
 			OneDriveItem fileResult = null;
 
+			long recordUri = 0;
+
 			RegisterdFileResponse registeredFile = new RegisterdFileResponse();
 			try
 			{
-				if (request.IsEmail && string.IsNullOrWhiteSpace(driveId))
+
+				if (request.IsEmail)
+				{
+					var mailResult = await ODataHelper.GetItem<MailItem>(GraphApiHelper.GetMailItemURL(request.WebUrl), token, null);
+
+					if (mailResult != null && mailResult.SingleValueExtendedProperties != null)
+					{
+						foreach (var prop in mailResult.SingleValueExtendedProperties)
+						{
+							if (prop.Id.Equals(GraphApiHelper.IDPropName(), StringComparison.InvariantCultureIgnoreCase))
+							{
+								long.TryParse(prop.Value.Split('/').Last(), out recordUri);
+							}
+						}
+					}
+				}
+
+				if (request.IsEmail && recordUri == 0)
 				{
 					var emailUrl = GraphApiHelper.GetEMLUrl(request.WebUrl);
 
@@ -256,11 +275,8 @@ namespace OneDriveAuthPlugin
 				}
 				else if (!string.IsNullOrWhiteSpace(driveId) && !request.IsEmail)
 				{
-
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
-
-
-				}
+				} 
 			}
 			catch
 			{
@@ -307,9 +323,9 @@ namespace OneDriveAuthPlugin
 				{
 					updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
 				}				
-			} else if (request.IsEmail && request.Uri > 0)
+			} else if (request.IsEmail && recordUri > 0)
 			{
-				updateFromRecord(registeredFile, new Record(this.Database, request.Uri));
+				updateFromRecord(registeredFile, new Record(this.Database, recordUri));
 			}			
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };

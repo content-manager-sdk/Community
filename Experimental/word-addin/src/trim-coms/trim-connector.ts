@@ -75,6 +75,7 @@ export interface IDriveInformation {
 	Options: ITrimOptions;
 	Enums: IEnums;
 	EmailPath: string;
+	URN: string;
 }
 
 export interface IIcon {
@@ -92,6 +93,7 @@ export interface ITrimMainObject {
 	Selected?: boolean;
 	TrimType?: BaseObjectTypes;
 	DeleteNow?: boolean;
+	URN?: string;
 }
 
 export interface ITrimBooleanField extends ITrimField {
@@ -166,6 +168,7 @@ export interface ISearchOptions {
 
 export interface IDatabase {
 	CurrencySymbol: string;
+	EmailSubjectPrefix: string;
 }
 
 export interface ITrimConnector {
@@ -282,7 +285,9 @@ export class TrimConnector implements ITrimConnector {
 				{
 					path: "Database",
 					method: "get",
-					data: { properties: "DatabaseCurrencySymbol" },
+					data: {
+						properties: "DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix",
+					},
 				},
 				(data: any) => {
 					const prefix = "Database";
@@ -619,7 +624,7 @@ export class TrimConnector implements ITrimConnector {
 			...properties,
 
 			RecordRecordType: recordTypeUri,
-			properties: "CommandDefs",
+			properties: "CommandDefs,URN",
 		};
 		if (fields) {
 			body["Fields"] = fields;

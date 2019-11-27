@@ -4,7 +4,7 @@ import TrimConnector from "../../trim-coms/trim-connector";
 import BootStrap from "./BootStrap";
 
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
-import AppStoreOutlook from "src/stores/AppStoreOutlook";
+import AppStoreOutlook from "../../stores/AppStoreOutlook";
 
 export class BootStrapOutlook extends React.Component<{}, {}> {
 	public render() {

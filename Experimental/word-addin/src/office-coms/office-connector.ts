@@ -15,7 +15,11 @@ export interface IOfficeConnector extends IWordUrl {
 	setUri(uri: number): Promise<IGetRecordUriResponse>;
 	insertText(textToInsert: string): void;
 	insertLink(textToInsert: string, url: string): void;
-	setAutoOpen(autoOpen: boolean, recordUri?: number): void;
+	setAutoOpen(
+		autoOpen: boolean,
+		recordUrn?: string,
+		subjectPrefix?: string
+	): void;
 	getAutoOpen(): boolean;
 	saveDocument(): Promise<void>;
 	initialize(trimConnector: ITrimConnector, appStore: IAppStore): void;

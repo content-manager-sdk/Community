@@ -35,6 +35,7 @@ class MockWordConnector implements IWordUrl {
 			resolve("My.Url");
 		});
 	}
+	getRecordUri() : number{return 0;}
 }
 
 let postedFields: any;

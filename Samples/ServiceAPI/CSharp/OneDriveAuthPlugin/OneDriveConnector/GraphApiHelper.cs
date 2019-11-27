@@ -12,6 +12,10 @@ namespace OneDriveAuthPlugin
 		internal static string BaseUrl = @"https://graph.microsoft.com/v1.0/";
 		internal static string BaseGraphUrl = BaseUrl + "me/";
 
+		public const string EXT_PROP_URN_GUID = "{0708434C-2E95-41C8-992F-8EE34B796FEC}";
+
+		public const string EXT_PROP_RECORD_URN_NAME = "HPRM_RECORD_URN";
+
 
 		public static string GetOneDriveSessionUrl(OneDriveItem item)
 		{
@@ -93,6 +97,16 @@ namespace OneDriveAuthPlugin
 		{
 			// Construct URL for the names of the folders and files.
 			return BaseGraphUrl + "drive";
+		}
+
+		public static string IDPropName()
+		{
+			return $"String {EXT_PROP_URN_GUID} Name {EXT_PROP_RECORD_URN_NAME}";
+		}
+
+		public static string GetMailItemURL(string mailId)
+		{
+			return $"{BaseGraphUrl}messages/{mailId}?$expand=singleValueExtendedProperties($filter=id eq '{IDPropName()}')";
 		}
 	}
 

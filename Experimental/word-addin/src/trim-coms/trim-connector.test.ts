@@ -469,7 +469,7 @@ describe("Test fetch from TRIM", () => {
 					JSON.stringify({
 						RecordTypedTitle: "test",
 						RecordRecordType: 1,
-						properties: "CommandDefs",
+						properties: "CommandDefs,URN",
 					})
 				);
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
@@ -489,13 +489,14 @@ describe("Test fetch from TRIM", () => {
 					Results: [
 						{
 							Uri: 123,
+							URN: "trim:N1/rec/123",
 						},
 					],
 				},
 			];
 		});
 
-		expect.assertions(4);
+		expect.assertions(5);
 
 		return trimConnector
 			.registerInTrim(1, { RecordTypedTitle: "test" }, { DriveId: "test" })
@@ -504,13 +505,14 @@ describe("Test fetch from TRIM", () => {
 					JSON.stringify({
 						RecordTypedTitle: "test",
 						RecordRecordType: 1,
-						properties: "CommandDefs",
+						properties: "CommandDefs,URN",
 						Fields: { DriveId: "test" },
 					})
 				);
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
 				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
 				expect(data.Uri).toEqual(123);
+				expect(data.URN).toEqual("trim:N1/rec/123");
 			});
 	});
 
@@ -1055,7 +1057,7 @@ describe("Test fetch from TRIM", () => {
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/Database`, {
 					params: {
-						properties: "DatabaseCurrencySymbol",
+						properties: "DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix",
 					},
 				})
 				.reply(function(config: any) {
@@ -1065,6 +1067,7 @@ describe("Test fetch from TRIM", () => {
 							Results: [
 								{
 									DatabaseCurrencySymbol: { Value: "$" },
+									DatabaseEmailSubjectPrefix: { Value: "CM:" },
 									TrimType: "Database",
 									Uri: 1,
 								},
@@ -1079,10 +1082,11 @@ describe("Test fetch from TRIM", () => {
 						},
 					];
 				});
-			expect.assertions(1);
+			expect.assertions(2);
 
 			const data = await trimConnector.getDatabaseProperties();
 			expect(data.CurrencySymbol).toEqual("$");
+			expect(data.EmailSubjectPrefix).toEqual("CM:");
 		});
 	});
 
