@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Tailviewer;
 using Tailviewer.BusinessLogic.LogFiles;
 using Tailviewer.BusinessLogic.Plugins;
 using Tailviewer.Core.LogFiles;
@@ -11,12 +12,11 @@ namespace UnifiedLogViewerPlugins
     {       
         public IReadOnlyList<string> SupportedExtensions => new[] { ".log" };
 
-        public ILogFile Open(string fileName, ITaskScheduler taskScheduler)
-        {           
-            //ILogLineTranslator il = new MessageTracerTranslator();
-            //return new Tailviewer.Core.LogFiles.TextLogFile(taskScheduler,fileName,null, il, null);
-
-            return new TextLogFile(taskScheduler, fileName,new MyTimestampParser(),new MyTimestampTranslator());
+        public ILogFile Open(IServiceContainer services, string fileName)
+        {
+            services.RegisterInstance<ITimestampParser>(new MyTimestampParser());
+            services.RegisterInstance<ILogLineTranslator>(new MyTimestampTranslator());
+            return services.CreateTextLogFile(fileName);
         }
     }
 }
