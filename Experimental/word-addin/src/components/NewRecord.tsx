@@ -12,6 +12,7 @@ import {
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "src/office-coms/office-connector";
+import { ResponsiveMode } from "office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode";
 
 export class NewRecord extends React.Component<
 	{
@@ -26,6 +27,7 @@ export class NewRecord extends React.Component<
 	@observable formDefinition: any = {};
 	recordTypeUri: number = 0;
 	recordProps: any = {};
+	recordFields: any = {};
 
 	@action.bound
 	setRecordTypes(recTypes: IDropdownOption[]) {
@@ -87,7 +89,7 @@ export class NewRecord extends React.Component<
 		const { appStore, wordConnector, trimConnector } = this.props;
 
 		appStore
-			.createRecord(this.recordTypeUri, this.recordProps)
+			.createRecord(this.recordTypeUri, this.recordProps, this.recordFields)
 			.then(() => {
 				return trimConnector!.getDatabaseProperties();
 			})
@@ -100,8 +102,9 @@ export class NewRecord extends React.Component<
 			});
 	};
 
-	private _onPropertySheetChange = (newProps: any) => {
+	private _onPropertySheetChange = (newProps: any, newFields: any) => {
 		this.recordProps = { ...this.recordProps, ...newProps };
+		this.recordFields = { ...this.recordFields, ...newFields };
 	};
 
 	public render() {
@@ -113,6 +116,7 @@ export class NewRecord extends React.Component<
 					options={this.recordTypes}
 					placeholder={appStore.messages.web_SelectRecordType}
 					onChange={this._onChange}
+					responsiveMode={ResponsiveMode.large}
 					defaultSelectedKey={
 						appStore.documentInfo.Options.DefaultDocumentRecordType
 					}

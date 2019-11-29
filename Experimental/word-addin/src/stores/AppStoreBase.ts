@@ -161,9 +161,11 @@ export class AppStoreBase implements IAppStore {
 		this.documentInfo = documentInfo;
 	}
 
-	public createRecord = (recordType: number, properties: any) => {
+	public createRecord = (recordType: number, properties: any, fields?: any) => {
 		this.setStatus("STARTING");
 		return this.getFileToSave().then((fileName) => {
+			fields = fields || {};
+			fields.DriveID = this.documentInfo.Id;
 			return this.trimConnector
 				.registerInTrim(
 					recordType,
@@ -171,7 +173,7 @@ export class AppStoreBase implements IAppStore {
 						...properties,
 						RecordFilePath: fileName,
 					},
-					{ DriveID: this.documentInfo.Id }
+					fields
 				)
 				.then((newRecord: ITrimMainObject) => {
 					if (newRecord.Uri > 0) {

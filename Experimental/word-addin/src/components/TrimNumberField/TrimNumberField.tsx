@@ -10,6 +10,7 @@ interface ITrimNumberFieldProps {
 	label: string;
 	defaultValue: string;
 	trimConnector?: ITrimConnector;
+	onChange?: (newValue?: number) => void;
 }
 
 export class TrimNumberFieldHelpers {
@@ -55,6 +56,21 @@ const TrimNumberField: React.FC<ITrimNumberFieldProps> = (props) => {
 			step: 1,
 		},
 	};
+
+	const myProps = {
+		...numberProps[format],
+		onValidate: (newValue: string) => {
+			const { onChange } = props;
+			if (!Number.isNaN(Number(newValue))) {
+				if (onChange) {
+					onChange(Number(newValue));
+					return newValue;
+				}
+			}
+
+			return "0";
+		},
+	};
 	if (format === "Currency") {
 		return (
 			<div
@@ -70,7 +86,7 @@ const TrimNumberField: React.FC<ITrimNumberFieldProps> = (props) => {
 					<SpinButton
 						label={currencySymbol}
 						defaultValue={defaultValue || "0"}
-						{...numberProps[format]}
+						{...myProps}
 						labelPosition={Position.start}
 					/>
 				</div>
@@ -82,7 +98,7 @@ const TrimNumberField: React.FC<ITrimNumberFieldProps> = (props) => {
 				className="trim-number-field"
 				label={label}
 				defaultValue={defaultValue || "0"}
-				{...numberProps[format]}
+				{...myProps}
 				labelPosition={Position.top}
 			/>
 		);

@@ -16,14 +16,36 @@ import TrimNumberField, {
 	TrimNumberFieldHelpers,
 } from "./TrimNumberField/TrimNumberField";
 
+enum FieldPickerType {
+	Any = 1,
+	LookupSet,
+	Object,
+	Text,
+	Date,
+}
+
+interface IPageItem {
+	Name: string;
+	Value: any;
+	Type: string;
+	Format: string;
+	LookupSetUri: number;
+	Caption: string;
+	ObjectType: BaseObjectTypes;
+	EditPurpose: number;
+	EditPurposeExtra: number;
+	MultiLine?: Boolean;
+}
+
 export interface IPropertySheetState {
 	isTextFieldMultiline: any;
+	fieldValues: any;
 }
 
 export interface IPropertySheetProps {
 	formDefinition: any;
 	defaultRecordTitle?: string;
-	onChange?: (newValue?: any) => void;
+	onChange?: (newValue?: any, newFields?: any) => void;
 }
 
 export class PropertySheet extends React.Component<
@@ -32,11 +54,11 @@ export class PropertySheet extends React.Component<
 > {
 	constructor(props: IPropertySheetProps) {
 		super(props);
-		this.state = { isTextFieldMultiline: {} };
+		this.state = { isTextFieldMultiline: {}, fieldValues: {} };
 	}
 
 	private formValues: any = {};
-
+	private formFields: any = {};
 	setMultiLine(propName: string, multiline: boolean) {
 		const newState = this.state;
 		newState.isTextFieldMultiline[propName] = multiline;
@@ -44,76 +66,151 @@ export class PropertySheet extends React.Component<
 		this.setState(newState);
 	}
 
-	private _onSelectObject = (propName: string) => (
+	private doPropOrFieldChange = (prop: IPageItem, newValue: any) => {
+		const { onChange } = this.props;
+		if (onChange) {
+			if (prop.Type === "Field") {
+				this.formFields[prop.Name] = newValue;
+			} else {
+				this.formValues[prop.Name] = newValue;
+			}
+			onChange(this.formValues, this.formFields);
+		}
+	};
+
+	private _onSelectObject = (prop: IPageItem) => (
 		trimObject: ITrimMainObject
 	) => {
-		const { onChange } = this.props;
-		if (onChange) {
-			this.formValues[propName] = trimObject.Uri;
-			onChange(this.formValues);
-		}
+		const { fieldValues } = this.state;
+
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: trimObject } });
+		this.doPropOrFieldChange(prop, trimObject.Uri);
 	};
 
-	private _onSelectLookupItem = (propName: string) => (
+	private _onSelectLookupItem = (prop: IPageItem) => (
 		trimObject: ITrimMainObject
 	) => {
-		const { onChange } = this.props;
-		if (onChange) {
-			this.formValues[propName] = trimObject.NameString;
-			onChange(this.formValues);
-		}
+		const { fieldValues } = this.state;
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: trimObject } });
+
+		this.doPropOrFieldChange(prop, trimObject.NameString);
 	};
 
-	private _onSelectDate = (propName: string) => (date: Date) => {
-		const { onChange } = this.props;
-		if (onChange) {
-			this.formValues[propName] = date.toISOString();
-			onChange(this.formValues);
-		}
+	private _onSelectDate = (prop: IPageItem) => (date: Date) => {
+		const { fieldValues } = this.state;
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: date } });
+		this.doPropOrFieldChange(prop, date.toISOString());
 	};
 
-	private _onTextChange = (propName: string) => (
+	private _onTextChange = (prop: IPageItem) => (
 		event: any,
 		newText: string
 	) => {
+		const { fieldValues } = this.state;
+
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: newText } });
+
+		this.textChange(prop, newText);
+	};
+
+	private textChange = (prop: IPageItem, newText: string) => {
 		const newMultiline = newText.length > 40;
 		const { isTextFieldMultiline } = this.state;
-		if (newMultiline !== isTextFieldMultiline[propName]) {
-			this.setMultiLine(propName, newMultiline);
+		if (newMultiline !== isTextFieldMultiline[prop.Name]) {
+			this.setMultiLine(prop.Name, newMultiline);
 		}
-		const { onChange } = this.props;
-		if (onChange) {
-			this.formValues[propName] = newText;
-			onChange(this.formValues);
-		}
+		this.doPropOrFieldChange(prop, newText);
+	};
+
+	private _onNumberChange = (prop: IPageItem) => (newNumber: number) => {
+		const { fieldValues } = this.state;
+
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: newNumber } });
+		this.doPropOrFieldChange(prop, newNumber);
+	};
+
+	private _onBooleanChange = (prop: IPageItem) => (
+		event: any,
+		checked: boolean
+	) => {
+		const { fieldValues } = this.state;
+
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: checked } });
+		this.doPropOrFieldChange(prop, checked);
 	};
 
 	private makePageItems = (formItems: any) => {
 		const { isTextFieldMultiline } = this.state;
-		return formItems.map((pageItem: any) => {
+		return formItems.map((pageItem: IPageItem) => {
+			const getFieldValue = (
+				getValue: () => any,
+				fieldType: FieldPickerType = FieldPickerType.Any,
+				asArray: boolean = false
+			) => {
+				const { fieldValues } = this.state;
+				if (pageItem.Value) {
+					if (fieldType == FieldPickerType.Date) {
+						if (!pageItem.Value.IsClear) {
+							this.doPropOrFieldChange(
+								pageItem,
+								new Date(pageItem.Value.DateTime).toISOString()
+							);
+						}
+					} else if (fieldType === FieldPickerType.Text) {
+						this.textChange(pageItem, pageItem.Value);
+					} else {
+						let val = pageItem.Value;
+
+						if (fieldType === FieldPickerType.Object) {
+							val = pageItem.Value.Uri;
+						} else if (fieldType === FieldPickerType.LookupSet) {
+							val = pageItem.Value.NameString;
+						}
+						this.doPropOrFieldChange(pageItem, val);
+					}
+				}
+
+				if (pageItem.Name in fieldValues) {
+					if (asArray) {
+						return [this.state.fieldValues[pageItem.Name]];
+					} else {
+						return this.state.fieldValues[pageItem.Name];
+					}
+				} else {
+					return getValue();
+				}
+			};
+
 			const commonProps = { key: pageItem.Name, label: pageItem.Caption };
 
 			if (pageItem.Format === "String" || pageItem.Format === "Text") {
 				if (pageItem.LookupSetUri > 0) {
-					if (pageItem.Value) {
-						this._onSelectLookupItem(pageItem.Name)(pageItem.Value);
-					}
+					const val = getFieldValue(
+						() => {
+							return pageItem.Value
+								? [{ Uri: 0, NameString: pageItem.Value }]
+								: [];
+						},
+						FieldPickerType.LookupSet,
+						true
+					);
+
 					return (
 						<TrimObjectPicker
 							{...commonProps}
 							trimType={BaseObjectTypes.LookupItem}
 							propertyName={pageItem.Name}
 							filter={"lkiSet:" + pageItem.LookupSetUri}
-							onTrimObjectSelected={this._onSelectLookupItem(pageItem.Name)}
-							value={
-								pageItem.Value ? [{ Uri: 0, NameString: pageItem.Value }] : []
-							}
+							onTrimObjectSelected={this._onSelectLookupItem(pageItem)}
+							value={val}
 						/>
 					);
 				} else {
-					if (pageItem.Value) {
-						this._onTextChange(pageItem.Name)(null, pageItem.Value);
-					}
+					const val = getFieldValue(() => {
+						return pageItem.Name === "RecordTypedTitle"
+							? this.props.defaultRecordTitle || pageItem.Value
+							: pageItem.Value;
+					}, FieldPickerType.Text);
 
 					return (
 						<TextField
@@ -121,45 +218,62 @@ export class PropertySheet extends React.Component<
 							multiline={
 								pageItem.MultiLine || isTextFieldMultiline[pageItem.Name]
 							}
-							defaultValue={
-								pageItem.Name === "RecordTypedTitle"
-									? this.props.defaultRecordTitle || pageItem.Value
-									: pageItem.Value
-							}
-							onChange={this._onTextChange(pageItem.Name)}
+							defaultValue={val}
+							onChange={this._onTextChange(pageItem)}
 						/>
 					);
 				}
 			} else if (TrimNumberFieldHelpers.IsNumberField(pageItem.Format)) {
+				const val = getFieldValue(() => {
+					return pageItem.Value;
+				});
+
 				return (
 					<TrimNumberField
 						format={pageItem.Format}
 						{...commonProps}
-						defaultValue={pageItem.Value}
+						defaultValue={val}
+						onChange={this._onNumberChange(pageItem)}
 					/>
 				);
 			} else if (pageItem.Format === "Boolean") {
-				return <Checkbox {...commonProps} defaultChecked={pageItem.Value} />;
-			} else if (pageItem.Format === "Datetime") {
-				if (pageItem.Value && !pageItem.Value.IsClear) {
-					this._onSelectDate(pageItem.Name)(new Date(pageItem.Value.DateTime));
-				}
+				const val = getFieldValue(() => {
+					return pageItem.Value;
+				});
+
+				return (
+					<Checkbox
+						{...commonProps}
+						defaultChecked={val}
+						onChange={this._onBooleanChange(pageItem)}
+					/>
+				);
+			} else if (pageItem.Format === "Datetime" || pageItem.Format === "Date") {
+				const val = getFieldValue(() => {
+					return !pageItem.Value || pageItem.Value.IsClear
+						? undefined
+						: new Date(pageItem.Value.DateTime);
+				}, FieldPickerType.Date);
+
 				return (
 					<DatePicker
 						{...commonProps}
 						showMonthPickerAsOverlay={true}
-						value={
-							pageItem.Value.IsClear
-								? undefined
-								: new Date(pageItem.Value.DateTime)
-						}
-						onSelectDate={this._onSelectDate(pageItem.Name)}
+						value={val}
+						onSelectDate={this._onSelectDate(pageItem)}
 					/>
 				);
 			} else if (pageItem.Format === "Object") {
-				if (pageItem.Value) {
-					this._onSelectObject(pageItem.Name)(pageItem.Value);
-				}
+				const val = getFieldValue(
+					() => {
+						return pageItem.Value && (pageItem.Value as ITrimMainObject).Uri > 0
+							? [pageItem.Value as ITrimMainObject]
+							: [];
+					},
+					FieldPickerType.Object,
+					true
+				);
+
 				return (
 					<TrimObjectPicker
 						{...commonProps}
@@ -167,12 +281,8 @@ export class PropertySheet extends React.Component<
 						propertyName={pageItem.Name}
 						purpose={pageItem.EditPurpose}
 						purposeExtra={pageItem.EditPurposeExtra}
-						value={
-							pageItem.Value && (pageItem.Value as ITrimMainObject).Uri > 0
-								? [pageItem.Value as ITrimMainObject]
-								: []
-						}
-						onTrimObjectSelected={this._onSelectObject(pageItem.Name)}
+						value={val}
+						onTrimObjectSelected={this._onSelectObject(pageItem)}
 					/>
 				);
 			} else {
@@ -195,6 +305,9 @@ export class PropertySheet extends React.Component<
 					<Pivot
 						linkFormat={PivotLinkFormat.tabs}
 						linkSize={PivotLinkSize.normal}
+						onLinkClick={() => {
+							this.forceUpdate();
+						}}
 					>
 						<hr />
 						{formDefinition.Pages.map((page: any) => {

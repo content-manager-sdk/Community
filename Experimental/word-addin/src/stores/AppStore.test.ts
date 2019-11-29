@@ -319,6 +319,18 @@ describe("Test basic setup from Trim", () => {
 		});
 
 		});
+
+
+	it("sends fields to TRIM", (done) => {
+		expect.assertions(1);
+
+		
+		appStore.createRecord(2, {}, {Speed:20}).then(() =>{
+			expect(postedFields["Speed"]).toBe(20);
+			done();
+		});
+
+		});
 	});
 
 	describe("Test operation", () => {

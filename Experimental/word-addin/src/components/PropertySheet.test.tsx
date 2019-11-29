@@ -1,12 +1,22 @@
 import * as React from "react";
-import { shallow } from "enzyme";
+import { shallow, mount, ReactWrapper } from "enzyme";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
-import { PropertySheet } from "./PropertySheet";
+import {
+	PropertySheet,
+	IPropertySheetState,
+	IPropertySheetProps,
+} from "./PropertySheet";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import { Provider } from "mobx-react";
-import { PivotItem } from "office-ui-fabric-react/lib/Pivot";
+import { PivotItem, Pivot } from "office-ui-fabric-react/lib/Pivot";
+import { CommandButton } from "office-ui-fabric-react/lib/Button";
+import { ISearchOptions, IDatabase } from "../trim-coms/trim-connector";
+import { ReactNode } from "react";
+import { SpinButton } from "office-ui-fabric-react/lib/SpinButton";
+import TrimNumberField from "./TrimNumberField/TrimNumberField";
+import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
 
 describe("Property Sheet", function() {
 	it("displays nothing when form definition is null", () => {
@@ -206,6 +216,145 @@ describe("Property Sheet", function() {
 		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
 	});
 
+	it("fires the onChange event when a checkbox loads with a value", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "Boolean",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+									Value: true,
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		expect(onChangeForm).toEqual({ RecordTypedTitle: true });
+	});
+
+	it("fires the onChange event when checkbox field changes", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "Boolean",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		wrapperWithForm
+			.find(Checkbox)
+			.props()
+			.onChange(null, true);
+
+		expect(onChangeForm).toEqual({ RecordTypedTitle: true });
+	});
+
+	[
+		{
+			format: "Number",
+		},
+		{
+			format: "BigNumber",
+		},
+		{
+			format: "Currency",
+		},
+		{
+			format: "Decimal",
+		},
+	].forEach((item) => {
+		it(`fires the onChange event when a ${item.format} field loads with a value`, () => {
+			let onChangeFields;
+			const wrapperWithForm = shallow<PropertySheet>(
+				<PropertySheet
+					onChange={function(newForm, newFields) {
+						onChangeFields = newFields;
+					}}
+					formDefinition={{
+						Pages: [
+							{
+								Caption: "General",
+								Type: "Normal",
+								PageItems: [
+									{
+										Format: item.format,
+										Name: "Speed",
+										Caption: "Title (Free Text Part)",
+										Value: 345,
+										Type: "Field",
+									},
+								],
+							},
+						],
+					}}
+				/>
+			);
+
+			expect(onChangeFields).toEqual({ Speed: 345 });
+		});
+
+		it(`fires the onChange event when a ${item.format} field changes`, () => {
+			let onChangeForm;
+			const wrapperWithForm = shallow<PropertySheet>(
+				<PropertySheet
+					onChange={function(newForm) {
+						onChangeForm = newForm;
+					}}
+					formDefinition={{
+						Pages: [
+							{
+								Caption: "General",
+								Type: "Normal",
+								PageItems: [
+									{
+										Format: item.format,
+										Name: "Speed",
+										Caption: "Title (Free Text Part)",
+									},
+								],
+							},
+						],
+					}}
+				/>
+			);
+
+			wrapperWithForm
+				.find(TrimNumberField)
+				.props()
+				.onChange(89);
+
+			expect(onChangeForm).toEqual({ Speed: 89 });
+		});
+	});
 	it("fires the onChange event when a date picker changes", () => {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
@@ -459,5 +608,181 @@ describe("Property Sheet", function() {
 			.onChange(null, "abc");
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
+	});
+});
+
+describe("Property Sheet - retain values when switching in Pivot", function() {
+	const makeWrapper = (format: string, lookupSetUri: number) => {
+		return mount<PropertySheet>(
+			<Provider
+				trimConnector={{
+					getSearchOptions(): Promise<ISearchOptions> {
+						return new Promise(function(resolve, reject) {});
+					},
+					getDatabaseProperties(): Promise<IDatabase> {
+						return new Promise(function(resolve, reject) {});
+					},
+				}}
+			>
+				<PropertySheet
+					defaultRecordTitle="test title"
+					formDefinition={{
+						Pages: [
+							{
+								Caption: "General",
+								Type: "Normal",
+								PageItems: [
+									{
+										Format: format,
+										Name: "RecordTypedTitle",
+										Caption: "Title (Free Text Part)",
+										LookupSetUri: lookupSetUri,
+									},
+								],
+							},
+							{
+								Type: "Normal",
+								Caption: "Extra",
+
+								PageItems: [{}],
+							},
+						],
+					}}
+				/>
+			</Provider>
+		);
+	};
+
+	const doPivot = (
+		wrapper: ReactWrapper<
+			Readonly<IPropertySheetProps> & Readonly<{ children?: ReactNode }>,
+			Readonly<IPropertySheetState>,
+			PropertySheet
+		>
+	) => {
+		wrapper
+			.find(Pivot)
+			.find(CommandButton)
+			.last()
+			.simulate("click");
+		wrapper
+			.find(Pivot)
+			.find(CommandButton)
+			.first()
+			.simulate("click");
+	};
+
+	[
+		{
+			format: "Object",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(TrimObjectPicker)
+					.props()
+					.onTrimObjectSelected({ Uri: 7878 });
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(TrimObjectPicker).props().value).toEqual([
+					{
+						Uri: 7878,
+					},
+				]);
+			},
+		},
+		{
+			format: "String",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(TextField)
+					.props()
+					.onChange(null, "aaa");
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(".ms-TextField-field").props().value).toEqual(
+					"aaa"
+				);
+			},
+		},
+		{
+			lookupSetUri: 1,
+			format: "String",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(TrimObjectPicker)
+					.props()
+					.onTrimObjectSelected({ Uri: 0, NameString: "item1" });
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(TrimObjectPicker).props().value).toEqual([
+					{ Uri: 0, NameString: "item1" },
+				]);
+			},
+		},
+		{
+			format: "Number",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(TrimNumberField)
+					.props()
+					.onChange(34);
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(".ms-spinButton-input").props().value).toEqual(34);
+			},
+		},
+		{
+			format: "Currency",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(TrimNumberField)
+					.props()
+					.onChange(34);
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(".ms-spinButton-input").props().value).toEqual(34);
+			},
+		},
+		{
+			format: "Boolean",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(Checkbox)
+					.props()
+					.onChange(null, true);
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(Checkbox).props().defaultChecked).toEqual(true);
+			},
+		},
+		{
+			format: "Datetime",
+			selectObject: (wrapper: any) => {
+				wrapper
+					.find(DatePicker)
+					.props()
+					.onSelectDate(new Date(2010, 1, 1));
+			},
+			expect: (wrapper: any) => {
+				expect(wrapper.find(DatePicker).props().value).toEqual(
+					new Date(2010, 1, 1)
+				);
+			},
+		},
+	].forEach((item) => {
+		it(`${item.format} Field`, (done) => {
+			const wrapper = makeWrapper(item.format, item.lookupSetUri || 0);
+
+			setTimeout(() => {
+				try {
+					item.selectObject(wrapper);
+
+					doPivot(wrapper);
+					item.expect(wrapper);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			});
+		});
 	});
 });
