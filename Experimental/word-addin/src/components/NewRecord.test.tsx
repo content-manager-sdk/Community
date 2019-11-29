@@ -285,7 +285,7 @@ describe("New Record layout", function() {
 		});
 	});
 
-	it("displays a property sheet when Record Type is set", async (done) => {
+	it("displays a property sheet when Record Type is set", (done) => {
 		const shallowWrapper = shallow<NewRecord>(
 			<NewRecord
 				appStore={mockStore}
@@ -294,25 +294,27 @@ describe("New Record layout", function() {
 			/>
 		);
 
-		const instance = wrapper.instance();
+		const instance = shallowWrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "test" },
+			{ key: 2, text: "test" },
+		]);
 		// no property sheet before recordtype uri sey
-		expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+		expect(shallowWrapper.find(PropertySheet).exists()).toBeTruthy();
 
-		wrapper
-			.update()
+		shallowWrapper
 			.find(Dropdown)
 			.props()
 			.onChange(null, null, 1);
 
 		setImmediate(() => {
-			//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+			// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
 			expect(instance.formDefinition).toEqual({ PageItems: [] });
-			expect(
-				wrapper
-					.update()
-					.find(PropertySheet)
-					.props().formDefinition
-			).toEqual({ PageItems: [] });
+			expect(shallowWrapper.find(PropertySheet).props().formDefinition).toEqual(
+				{
+					PageItems: [],
+				}
+			);
 			done();
 		});
 	});
