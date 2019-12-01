@@ -169,7 +169,7 @@ namespace OneDriveAuthPlugin
 						record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 					}
 				}
-
+				
 				if (request.Action.IndexOf("request-del", StringComparison.InvariantCultureIgnoreCase) > -1)
 				{
 					record.SetDeleteNow(!record.GetDeleteNow());
@@ -300,7 +300,7 @@ namespace OneDriveAuthPlugin
 
 			foreach (var relEnum in relationshipEnum.GetItemArray(new int[] {(int)RecordRelationshipType.InSharepointSite, (int)RecordRelationshipType.IsInSeries, (int)RecordRelationshipType.IsRootPart, (int)RecordRelationshipType.IsTempCopy, (int)RecordRelationshipType.IsVersion, (int)RecordRelationshipType.RedactionOf }, true).OrderBy(ei => ei.Caption))
 			{
-				enumItems.Add(new MyEnumItem() { Id = relEnum.Name, Caption = relEnum.Caption });
+				enumItems.Add(new MyEnumItem() { Name = relEnum.Name, Caption = relEnum.Caption });
 			}
 
 			Dictionary<string, IList<MyEnumItem>> enumDetails = new Dictionary<string, IList<MyEnumItem>>();

@@ -12,11 +12,16 @@ import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import { Provider } from "mobx-react";
 import { PivotItem, Pivot } from "office-ui-fabric-react/lib/Pivot";
 import { CommandButton } from "office-ui-fabric-react/lib/Button";
-import { ISearchOptions, IDatabase } from "../trim-coms/trim-connector";
+import {
+	ISearchOptions,
+	IDatabase,
+	IEnumDetails,
+} from "../trim-coms/trim-connector";
 import { ReactNode } from "react";
 import { SpinButton } from "office-ui-fabric-react/lib/SpinButton";
 import TrimNumberField from "./TrimNumberField/TrimNumberField";
 import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
+import { ComboBox } from "office-ui-fabric-react";
 
 describe("Property Sheet", function() {
 	it("displays nothing when form definition is null", () => {
@@ -276,6 +281,68 @@ describe("Property Sheet", function() {
 			.onChange(null, true);
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: true });
+	});
+
+	let enumOnChangeForm;
+	const getEnumWrapper = () => {
+		return shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					enumOnChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "Enum",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+									Value: "Electronic",
+									EnumName: "MediaTypes",
+									EnumItems: [
+										{
+											Caption: "Unknown",
+											Name: "Unknown",
+										},
+										{
+											Caption: "Paper",
+											Name: "Paper",
+										},
+										{
+											Caption: "Electronic Document",
+											Name: "Electronic",
+										},
+									],
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+	};
+
+	it("fires the onChange event when an enum loads with a value", () => {
+		enumOnChangeForm = {};
+
+		const wrapperWithForm = getEnumWrapper();
+
+		expect(enumOnChangeForm).toEqual({ RecordTypedTitle: "Electronic" });
+	});
+
+	it("fires the onChange event when an enum field changes", () => {
+		enumOnChangeForm = {};
+		const wrapperWithForm = getEnumWrapper();
+
+		wrapperWithForm
+			.find(ComboBox)
+			.props()
+			.onChange(null, { key: "Paper", text: "Paper Caption" });
+
+		expect(enumOnChangeForm).toEqual({ RecordTypedTitle: "Paper" });
 	});
 
 	[
@@ -621,6 +688,25 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 					},
 					getDatabaseProperties(): Promise<IDatabase> {
 						return new Promise(function(resolve, reject) {});
+					},
+					getEnum(enumId: string): Promise<IEnumDetails[]> {
+						return new Promise(function(resolve, reject) {
+							resolve([
+								{
+									Caption: "Unknown",
+									Name: "Unknown",
+								},
+								{
+									Caption: "Paper",
+									Name: "Paper",
+								},
+								{
+									Caption: "Electronic Document",
+
+									Name: "Electronic",
+								},
+							]);
+						});
 					},
 				}}
 			>

@@ -9,6 +9,6 @@ namespace OneDriveAuthPlugin
 	public class MyEnumItem
 	{
 		public string Caption { get; set; }
-		public string Id { get; set; }
+		public string Name { get; set; }
 	}
 }

@@ -161,38 +161,46 @@ export class AppStoreBase implements IAppStore {
 		this.documentInfo = documentInfo;
 	}
 
-	public createRecord = (recordType: number, properties: any, fields?: any) => {
-		this.setStatus("STARTING");
-		return this.getFileToSave().then((fileName) => {
-			fields = fields || {};
-			fields.DriveID = this.documentInfo.Id;
-			return this.trimConnector
-				.registerInTrim(
-					recordType,
-					{
-						...properties,
-						RecordFilePath: fileName,
-					},
-					fields
-				)
-				.then((newRecord: ITrimMainObject) => {
-					if (newRecord.Uri > 0) {
-						this.setDocumentInfo({
-							Uri: newRecord.Uri,
-							CommandDefs: newRecord.CommandDefs!,
-							Id: this.documentInfo.Id,
-							RecordType: this.documentInfo.RecordType,
-							Options: this.documentInfo.Options,
-							Enums: this.documentInfo.Enums,
-							EmailPath: this.documentInfo.EmailPath,
-							URN: newRecord.URN!,
-						});
-					}
-					this.setStatus("WAITING");
-				})
-				.catch((error) => {
-					this.setError(error, "create record");
-				});
+	public createRecord = (
+		recordType: number,
+		properties: any,
+		fields?: any
+	): Promise<void> => {
+		return new Promise((resolve, reject) => {
+			this.setStatus("STARTING");
+			this.getFileToSave().then((fileName) => {
+				fields = fields || {};
+				fields.DriveID = this.documentInfo.Id;
+				return this.trimConnector
+					.registerInTrim(
+						recordType,
+						{
+							...properties,
+							RecordFilePath: fileName,
+						},
+						fields
+					)
+					.then((newRecord: ITrimMainObject) => {
+						if (newRecord.Uri > 0) {
+							this.setDocumentInfo({
+								Uri: newRecord.Uri,
+								CommandDefs: newRecord.CommandDefs!,
+								Id: this.documentInfo.Id,
+								RecordType: this.documentInfo.RecordType,
+								Options: this.documentInfo.Options,
+								Enums: this.documentInfo.Enums,
+								EmailPath: this.documentInfo.EmailPath,
+								URN: newRecord.URN!,
+							});
+						}
+						this.setStatus("WAITING");
+						resolve();
+					})
+					.catch((error) => {
+						this.setError(error, "create record");
+						reject();
+					});
+			});
 		});
 	};
 

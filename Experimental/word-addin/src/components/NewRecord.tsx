@@ -103,8 +103,8 @@ export class NewRecord extends React.Component<
 	};
 
 	private _onPropertySheetChange = (newProps: any, newFields: any) => {
-		this.recordProps = { ...this.recordProps, ...newProps };
-		this.recordFields = { ...this.recordFields, ...newFields };
+		this.recordProps = { ...newProps };
+		this.recordFields = { ...newFields };
 	};
 
 	public render() {

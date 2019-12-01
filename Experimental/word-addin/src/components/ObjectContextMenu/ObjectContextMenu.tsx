@@ -152,7 +152,7 @@ export class ObjectContextMenu extends React.Component<
 				items: appStore.documentInfo.Enums.RecordRelationshipType.map(
 					(rel: IEnumDetails) => {
 						return {
-							key: rel.Id,
+							key: rel.Name,
 							text: rel.Caption,
 							onClick: () => {
 								if (record.Uri < 1) {
@@ -167,7 +167,11 @@ export class ObjectContextMenu extends React.Component<
 								} else {
 									appStore.setStatus("STARTING");
 									trimConnector!
-										.createRelationship(appStore.RecordUri, record.Uri, rel.Id)
+										.createRelationship(
+											appStore.RecordUri,
+											record.Uri,
+											rel.Name
+										)
 										.then(() => {
 											appStore.setStatus("WAITING");
 										})

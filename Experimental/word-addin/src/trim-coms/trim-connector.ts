@@ -59,7 +59,7 @@ export interface ISearchResults<T extends ITrimMainObject> {
 }
 
 export interface IEnumDetails {
-	Id: string;
+	Name: string;
 	Caption: string;
 }
 
@@ -188,6 +188,7 @@ export interface ITrimConnector {
 	getObjectCaption(trimType: BaseObjectTypes): Promise<string>;
 	getSearchOptions(): Promise<ISearchOptions>;
 	getDatabaseProperties(): Promise<IDatabase>;
+	getEnum(enumId: string): Promise<IEnumDetails[]>;
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>>;
@@ -388,6 +389,31 @@ export class TrimConnector implements ITrimConnector {
 			);
 		}
 	}
+
+	public getEnum(enumId: string): Promise<IEnumDetails[]> {
+		const params = {
+			Enums: enumId,
+			ExcludeUneditedCustomValues: true,
+		};
+
+		const cachedResults = this.getFromCache("enum-details") || {};
+
+		if (cachedResults[enumId]) {
+			return new Promise((resolve) => {
+				resolve(cachedResults[enumId]);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: "EnumItem", method: "get", data: params },
+				(data: any) => {
+					cachedResults[enumId] = data.EnumItems[enumId];
+					this.setCache("enum-details", cachedResults);
+					return data.EnumItems[enumId];
+				}
+			);
+		}
+	}
+
 	public getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {
@@ -870,6 +896,7 @@ export class TrimConnector implements ITrimConnector {
 							response.data.CommandDefs ||
 							response.data.Messages ||
 							response.data.SearchClauseDefs ||
+							response.data.EnumItems ||
 							response.data.SearchClauseOrFieldDefs ||
 							response.data.ObjectDefs ||
 							response.data.UserOptions ||

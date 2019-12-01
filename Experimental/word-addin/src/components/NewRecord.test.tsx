@@ -7,7 +7,7 @@ import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { TrimConnector } from "../trim-coms/trim-connector";
 import { IRecordType, ITrimMainObject } from "../trim-coms/trim-connector";
-import { PropertySheet } from "./PropertySheet";
+import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "../office-coms/office-connector";
 
 describe("New Record layout", function() {

@@ -1,10 +1,14 @@
 import * as React from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
 import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
-import { ITrimMainObject } from "../trim-coms/trim-connector";
+import {
+	ITrimMainObject,
+	ITrimConnector,
+	IEnumDetails,
+} from "../trim-coms/trim-connector";
 import {
 	Pivot,
 	PivotItem,
@@ -15,6 +19,7 @@ import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import TrimNumberField, {
 	TrimNumberFieldHelpers,
 } from "./TrimNumberField/TrimNumberField";
+import { ComboBox, IComboBoxOption } from "office-ui-fabric-react";
 
 enum FieldPickerType {
 	Any = 1,
@@ -46,6 +51,7 @@ export interface IPropertySheetProps {
 	formDefinition: any;
 	defaultRecordTitle?: string;
 	onChange?: (newValue?: any, newFields?: any) => void;
+	trimConnector?: ITrimConnector;
 }
 
 export class PropertySheet extends React.Component<
@@ -55,6 +61,23 @@ export class PropertySheet extends React.Component<
 	constructor(props: IPropertySheetProps) {
 		super(props);
 		this.state = { isTextFieldMultiline: {}, fieldValues: {} };
+	}
+
+	componentDidUpdate(prevProps: IPropertySheetProps) {
+		const { formDefinition, onChange } = this.props;
+
+		if (
+			JSON.stringify(formDefinition) !==
+			JSON.stringify(prevProps.formDefinition)
+		) {
+			this.formValues = {};
+			this.formFields = {};
+
+			this.setState({});
+			if (onChange) {
+				onChange(this.formValues, this.formFields);
+			}
+		}
 	}
 
 	private formValues: any = {};
@@ -139,8 +162,20 @@ export class PropertySheet extends React.Component<
 		this.doPropOrFieldChange(prop, checked);
 	};
 
+	private _onComboChange = (prop: IPageItem) => (
+		event: any,
+		item: IComboBoxOption
+	) => {
+		const { fieldValues } = this.state;
+
+		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: item.key } });
+		this.doPropOrFieldChange(prop, item.key);
+	};
+
 	private makePageItems = (formItems: any) => {
 		const { isTextFieldMultiline } = this.state;
+		const { trimConnector } = this.props;
+
 		return formItems.map((pageItem: IPageItem) => {
 			const getFieldValue = (
 				getValue: () => any,
@@ -148,7 +183,7 @@ export class PropertySheet extends React.Component<
 				asArray: boolean = false
 			) => {
 				const { fieldValues } = this.state;
-				if (pageItem.Value) {
+				if (!(pageItem.Name in fieldValues) && pageItem.Value) {
 					if (fieldType == FieldPickerType.Date) {
 						if (!pageItem.Value.IsClear) {
 							this.doPropOrFieldChange(
@@ -183,7 +218,11 @@ export class PropertySheet extends React.Component<
 
 			const commonProps = { key: pageItem.Name, label: pageItem.Caption };
 
-			if (pageItem.Format === "String" || pageItem.Format === "Text") {
+			if (
+				pageItem.Format === "String" ||
+				pageItem.Format === "Text" ||
+				pageItem.Format === "Geography"
+			) {
 				if (pageItem.LookupSetUri > 0) {
 					const val = getFieldValue(
 						() => {
@@ -234,6 +273,26 @@ export class PropertySheet extends React.Component<
 						{...commonProps}
 						defaultValue={val}
 						onChange={this._onNumberChange(pageItem)}
+					/>
+				);
+			} else if (pageItem.Format === "Enum") {
+				const val = getFieldValue(() => {
+					return pageItem.Value;
+				});
+
+				return (
+					<ComboBox
+						{...commonProps}
+						onResolveOptions={() => {
+							console.log("hhhh");
+							return trimConnector!.getEnum("MediaTypes").then((items) => {
+								return items.map((item: IEnumDetails) => {
+									return { key: item.Name, text: item.Caption };
+								});
+							});
+						}}
+						onChange={this._onComboChange(pageItem)}
+						defaultSelectedKey={val}
 					/>
 				);
 			} else if (pageItem.Format === "Boolean") {
@@ -330,4 +389,4 @@ export class PropertySheet extends React.Component<
 	}
 }
 
-export default observer(PropertySheet);
+export default inject("trimConnector")(observer(PropertySheet));
