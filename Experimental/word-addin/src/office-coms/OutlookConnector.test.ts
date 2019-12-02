@@ -47,7 +47,7 @@ describe("Outlook connector tests", () => {
 				return [200, {}];
 			});
 
-		outlookConnector.setAutoOpen(true, "trim:/123", "CM:");
+		outlookConnector.setAutoOpen(true, "trim:N1/123", "CM:");
 		setTimeout(() => {
 			try {
 				expect(postConfig.data).toEqual(
@@ -56,7 +56,17 @@ describe("Outlook connector tests", () => {
 							{
 								PropertyId:
 									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: "trim:/123",
+								Value: "trim:N1/123",
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+								Value: "123",
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+								Value: "N1",
 							},
 						],
 						Subject: "CM: test_subject",
@@ -85,7 +95,7 @@ describe("Outlook connector tests", () => {
 				return [200, {}];
 			});
 
-		outlookConnector.setAutoOpen(true, "trim:/123", "CM:");
+		outlookConnector.setAutoOpen(true, "trim:N1/123", "CM:");
 		setTimeout(() => {
 			try {
 				expect(postConfig.data).toEqual(
@@ -94,7 +104,17 @@ describe("Outlook connector tests", () => {
 							{
 								PropertyId:
 									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: "trim:/123",
+								Value: "trim:N1/123",
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+								Value: "123",
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+								Value: "N1",
 							},
 						],
 						Subject: "CM: test_subject",
@@ -119,7 +139,7 @@ describe("Outlook connector tests", () => {
 				return [200, {}];
 			});
 
-		outlookConnector.setAutoOpen(true, "trim:/123", "");
+		outlookConnector.setAutoOpen(true, "trim:N1/123", "");
 		setTimeout(() => {
 			try {
 				expect(postConfig.data).toEqual(
@@ -128,7 +148,17 @@ describe("Outlook connector tests", () => {
 							{
 								PropertyId:
 									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: "trim:/123",
+								Value: "trim:N1/123",
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+								Value: "123",
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+								Value: "N1",
 							},
 						],
 					})

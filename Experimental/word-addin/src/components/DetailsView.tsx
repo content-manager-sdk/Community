@@ -19,7 +19,6 @@ interface IDetailsViewProps {
 import {
 	mergeStyles,
 	ComboBox,
-	Spinner,
 	DefaultButton,
 	Stack,
 	IComboBox,
@@ -77,6 +76,10 @@ export class DetailsView extends React.Component<
 		) {
 			this.setState({ recordProperties: recordDetails.results[0] });
 		}
+	}
+
+	componentDidMount() {
+		this.onMenuOpen();
 	}
 
 	private getStyles(): string {
@@ -241,7 +244,7 @@ export class DetailsView extends React.Component<
 	): string[] => {
 		selectedKeys = [...selectedKeys]; // modify a copy
 		const index = selectedKeys.indexOf(option.key as string);
-		if (option.selected && index < 0) {
+		if (index < 0) {
 			selectedKeys.push(option.key as string);
 		} else {
 			selectedKeys.splice(index, 1);
@@ -335,7 +338,6 @@ export class DetailsView extends React.Component<
 					<Stack horizontal={true}>
 						<ComboBox
 							useComboBoxAsMenuWidth={true}
-							multiSelect={true}
 							selectedKey={keysToAdd}
 							onChange={this._comboChangePropertyDef}
 							autoComplete="on"
@@ -356,13 +358,11 @@ export class DetailsView extends React.Component<
 								.map((pdef: IPropertyOrFieldDef) => {
 									return { key: pdef.Id, text: pdef.Caption };
 								})}
-							onMenuOpen={this.onMenuOpen}
 							onFocus={this.onMenuOpen}
-							onRenderLowerContent={() => {
-								return propertyAndFieldDefinitions.length < 1 ? (
-									<Spinner />
-								) : null;
-							}}
+							disabled={
+								!propertyAndFieldDefinitions ||
+								propertyAndFieldDefinitions.length === 0
+							}
 						/>
 						<DefaultButton
 							text={appStore.messages.web_Add}
