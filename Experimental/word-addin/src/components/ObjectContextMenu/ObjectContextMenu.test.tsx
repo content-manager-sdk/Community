@@ -27,6 +27,7 @@ describe("Object Context Menu", () => {
 	let testUri = 0;
 	let setForOptionsSet = "";
 	let completedCommand = "";
+	let isEmail = false;
 	const returnedDocumentInfo = {
 		Id: "test-id",
 		Uri: 5,
@@ -44,6 +45,9 @@ describe("Object Context Menu", () => {
 					completedCommand = key;
 				}}
 				appStore={{
+					isEmail: () => {
+						return isEmail;
+					},
 					setError: function(message: any) {
 						testError = message;
 					},
@@ -119,6 +123,7 @@ describe("Object Context Menu", () => {
 		testUri = 0;
 		setForOptionsSet = "";
 		completedCommand = "";
+		isEmail = false;
 	});
 
 	let trimConnector = new TrimConnector();
@@ -461,6 +466,68 @@ describe("Object Context Menu", () => {
 				return mp.key === "RecDocFinal";
 			}).disabled
 		).toBeTruthy();
+	});
+
+	it("save button hidden for Outlook", () => {
+		isEmail = true;
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(
+			wrapper
+				.find(CommandBar)
+				.props()
+				.farItems.find((mp) => {
+					return mp.key === "RecCheckIn";
+				})
+		).toBeFalsy();
+	});
+
+	it("save on delete button hidden for Outlook", () => {
+		isEmail = true;
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(
+			wrapper
+				.find(CommandBar)
+				.props()
+				.farItems.find((mp) => {
+					return mp.key === "RecCheckInDelete";
+				})
+		).toBeFalsy();
+	});
+
+	it("save menu item hidden for Outlook", () => {
+		isEmail = true;
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(
+			wrapper
+				.find(CommandBar)
+				.props()
+				.farItems.pop()
+				.subMenuProps.items.find((mp) => {
+					return mp.key === "RecCheckIn";
+				})
+		).toBeFalsy();
+	});
+
+	it("save on delete menu item hidden for Outlook", () => {
+		isEmail = true;
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(
+			wrapper
+				.find(CommandBar)
+				.props()
+				.farItems.pop()
+				.subMenuProps.items.find((mp) => {
+					return mp.key === "RecCheckInDelete";
+				})
+		).toBeFalsy();
 	});
 
 	it("save button disabled when command disabled", () => {

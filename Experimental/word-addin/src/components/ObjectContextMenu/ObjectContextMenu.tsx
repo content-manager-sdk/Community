@@ -197,6 +197,9 @@ export class ObjectContextMenu extends React.Component<
 		const menuItems = (commandDefs || [])
 			.filter((commandDef: ICommandDef) => {
 				if (!isInList) {
+					if (appStore.isEmail() && commandDef.CommandId === "RecCheckIn") {
+						return false;
+					}
 					return true;
 				}
 
@@ -274,7 +277,7 @@ export class ObjectContextMenu extends React.Component<
 
 		const items = [];
 
-		if (!isInList) {
+		if (!isInList && !appStore.isEmail()) {
 			items.push({
 				iconProps: { iconName: "Save" },
 				key: "RecCheckIn",
