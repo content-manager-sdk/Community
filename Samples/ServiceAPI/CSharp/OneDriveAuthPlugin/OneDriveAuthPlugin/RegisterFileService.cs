@@ -208,6 +208,50 @@ namespace OneDriveAuthPlugin
 		}
 
 
+		private async Task<long> getEmailLinkUri(string webUrl, string token)
+		{
+			long recordUri = 0;
+			string dbid = "";
+			var mailResult = await ODataHelper.GetItem<MailItem>(GraphApiHelper.GetMailItemURL(webUrl), token, null);
+
+			if (mailResult != null && mailResult.SingleValueExtendedProperties != null)
+			{
+				foreach (var prop in mailResult.SingleValueExtendedProperties)
+				{
+					if (prop.Id.Equals(GraphApiHelper.IDPropName(), StringComparison.InvariantCultureIgnoreCase))
+					{
+						string[] idTokens = prop.Value.Split('/');
+
+						dbid = idTokens.First().Split(':').Last();
+
+							long.TryParse(prop.Value.Split('/').Last(), out recordUri);
+						
+						
+							
+		
+					}
+
+					if (prop.Id.Equals(GraphApiHelper.IDPropNameForMAPIBIID(), StringComparison.InvariantCultureIgnoreCase))
+					{
+						dbid = prop.Value;
+					}
+
+					if (prop.Id.Equals(GraphApiHelper.IDPropNameForMAPIUri(), StringComparison.InvariantCultureIgnoreCase))
+					{
+						long.TryParse(prop.Value.Split(',').First().Trim(), out recordUri);
+					}
+				
+				}
+
+				if (dbid.EqualsIgnoreCase(this.Database.Id))
+				{
+					return recordUri;
+				}
+			}
+
+			return 0;
+		}
+
 
 		public async Task<object> Get(RegisterFile request)
 		{
@@ -234,18 +278,20 @@ namespace OneDriveAuthPlugin
 
 				if (request.IsEmail)
 				{
-					var mailResult = await ODataHelper.GetItem<MailItem>(GraphApiHelper.GetMailItemURL(request.WebUrl), token, null);
 
-					if (mailResult != null && mailResult.SingleValueExtendedProperties != null)
-					{
-						foreach (var prop in mailResult.SingleValueExtendedProperties)
-						{
-							if (prop.Id.Equals(GraphApiHelper.IDPropName(), StringComparison.InvariantCultureIgnoreCase))
-							{
-								long.TryParse(prop.Value.Split('/').Last(), out recordUri);
-							}
-						}
-					}
+					recordUri = await getEmailLinkUri(request.WebUrl, token);
+					//var mailResult = await ODataHelper.GetItem<MailItem>(GraphApiHelper.GetMailItemURL(request.WebUrl), token, null);
+
+					//if (mailResult != null && mailResult.SingleValueExtendedProperties != null)
+					//{
+					//	foreach (var prop in mailResult.SingleValueExtendedProperties)
+					//	{
+					//		if (prop.Id.Equals(GraphApiHelper.IDPropName(), StringComparison.InvariantCultureIgnoreCase))
+					//		{
+					//			long.TryParse(prop.Value.Split('/').Last(), out recordUri);
+					//		}
+					//	}
+					//}
 				}
 
 				if (request.IsEmail && recordUri == 0)

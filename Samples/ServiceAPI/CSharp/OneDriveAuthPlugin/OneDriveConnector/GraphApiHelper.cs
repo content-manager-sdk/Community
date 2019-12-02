@@ -13,6 +13,7 @@ namespace OneDriveAuthPlugin
 		internal static string BaseGraphUrl = BaseUrl + "me/";
 
 		public const string EXT_PROP_URN_GUID = "{0708434C-2E95-41C8-992F-8EE34B796FEC}";
+		public const string OUTLOOK_MAPI_PROP_URN_GUID = "{00020386-0000-0000-C000-000000000046}";
 
 		public const string EXT_PROP_RECORD_URN_NAME = "HPRM_RECORD_URN";
 
@@ -104,10 +105,24 @@ namespace OneDriveAuthPlugin
 			return $"String {EXT_PROP_URN_GUID} Name {EXT_PROP_RECORD_URN_NAME}";
 		}
 
+		public static string IDPropNameForMAPIUri()
+		{
+			return $"String {OUTLOOK_MAPI_PROP_URN_GUID} Name HPTrimRecordUri";
+		}
+
+		public static string IDPropNameForMAPIBIID()
+		{
+			return $"String {OUTLOOK_MAPI_PROP_URN_GUID} Name HPTrimDataset";
+		}
+
+
 		public static string GetMailItemURL(string mailId)
 		{
-			return $"{BaseGraphUrl}messages/{mailId}?$expand=singleValueExtendedProperties($filter=id eq '{IDPropName()}')";
+
+				return $"{BaseGraphUrl}messages/{mailId}?$expand=singleValueExtendedProperties($filter=id eq '{IDPropName()}' or id eq '{IDPropNameForMAPIBIID()}' or id eq '{IDPropNameForMAPIUri()}')";
+
 		}
+
 	}
 
 

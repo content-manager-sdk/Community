@@ -115,13 +115,23 @@ export class OutlookConnector extends OfficeConnector
 
 				const getMessageUrl =
 					Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
-
+				let idTokens = recordUrn!.split("/");
 				let data: any = {
 					SingleValueExtendedProperties: [
 						{
 							PropertyId:
 								"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
 							Value: recordUrn,
+						},
+						{
+							PropertyId:
+								"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+							Value: idTokens.pop(),
+						},
+						{
+							PropertyId:
+								"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+							Value: idTokens[0].split(":").pop(),
 						},
 					],
 				};
