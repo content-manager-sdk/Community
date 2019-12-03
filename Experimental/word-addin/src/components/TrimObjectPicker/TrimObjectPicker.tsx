@@ -11,7 +11,7 @@ import {
 } from "office-ui-fabric-react/lib/TextField";
 import { Callout, DirectionalHint } from "office-ui-fabric-react/lib/Callout";
 import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
-import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
+import { TrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
 import { ITrimMainObject } from "src/trim-coms/trim-connector";
@@ -298,10 +298,13 @@ export class TrimObjectPicker
 
 	private _showObjectPickerPopup(): void {
 		if (!this.state.isObjectPickerShown) {
-			this.setState({
-				isObjectPickerShown: true,
-				//	errorMessage: ''
-			});
+			try {
+				this.setState({
+					isObjectPickerShown: true,
+				});
+			} catch (e) {
+				console.log(e);
+			}
 		}
 	}
 

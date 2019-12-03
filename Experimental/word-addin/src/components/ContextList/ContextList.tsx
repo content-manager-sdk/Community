@@ -2,23 +2,26 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import "./ContextList.css";
 import { ITrimConnector, ITrimMainObject } from "src/trim-coms/trim-connector";
-import { IOfficeConnector } from "src/office-coms/office-connector";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
-import { FocusTrapZone } from "office-ui-fabric-react";
+import { FocusTrapZone, mergeStyles } from "office-ui-fabric-react";
 
 import SearchBar from "../SearchBar/SearchBar";
 import ObjectContextMenu from "../ObjectContextMenu/ObjectContextMenu";
 
+interface IContextListProps {
+	appStore?: any;
+	trimConnector?: ITrimConnector;
+	className?: string;
+	trimType?: BaseObjectTypes;
+	hideSearchBar?: boolean;
+	searchString?: string;
+}
+
 export class ContextList extends React.Component<
-	{
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		wordConnector?: IOfficeConnector;
-		className?: string;
-	},
+	IContextListProps,
 	{
 		selectRecord: ITrimMainObject;
 		searchQuery: string;
@@ -26,11 +29,7 @@ export class ContextList extends React.Component<
 > {
 	private _searchList = createRef<ITrimObjectSearchList>();
 
-	constructor(props: {
-		appStore?: any;
-		trimConnector?: ITrimConnector;
-		wordConnector?: IOfficeConnector;
-	}) {
+	constructor(props: IContextListProps) {
 		super(props);
 
 		this.state = {
@@ -43,29 +42,42 @@ export class ContextList extends React.Component<
 		this.setState({ selectRecord: trimObject });
 	};
 
+	private getStyles(): string {
+		const { hideSearchBar } = this.props;
+		return mergeStyles({
+			selectors: {
+				"& .trim-list-container": {
+					top: hideSearchBar ? "80px" : "150px",
+				},
+			},
+		});
+	}
+
 	public render() {
 		const { searchQuery, selectRecord } = this.state;
+		const { trimType, hideSearchBar, searchString } = this.props;
 
 		return (
 			<div>
 				<ObjectContextMenu isInList={true} record={selectRecord} />
-
-				<SearchBar
-					trimType={BaseObjectTypes.Record}
-					onQueryChange={(newValue) => {
-						this.setState({ searchQuery: newValue });
-					}}
-					includeShortCuts={true}
-				/>
+				{!hideSearchBar && (
+					<SearchBar
+						trimType={BaseObjectTypes.Record}
+						onQueryChange={(newValue) => {
+							this.setState({ searchQuery: newValue });
+						}}
+						includeShortCuts={true}
+					/>
+				)}
 
 				<FocusTrapZone
 					isClickableOutsideFocusTrap={true}
-					className="context-list"
+					className={"context-list " + this.getStyles()}
 				>
 					<TrimObjectSearchList
 						componentRef={this._searchList}
-						trimType={BaseObjectTypes.Record}
-						q={searchQuery}
+						trimType={trimType || BaseObjectTypes.Record}
+						q={searchString || searchQuery}
 						contentsInReverseDateOrder={true}
 						includeAlternateWhenShowingFolderContents={true}
 						excludeShortCuts={true}
@@ -78,8 +90,4 @@ export class ContextList extends React.Component<
 	}
 }
 
-export default inject(
-	"appStore",
-	"trimConnector",
-	"wordConnector"
-)(observer(ContextList));
+export default inject("appStore", "trimConnector")(observer(ContextList));

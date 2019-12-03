@@ -4,6 +4,7 @@ import {
 	ITrimMainObject,
 } from "../../trim-coms/trim-connector";
 import BaseObjectTypes from "src/trim-coms/trim-baseobjecttypes";
+import { IAppStore } from "src/stores/AppStoreBase";
 
 export interface ITrimObjectSearchList {
 	/** Reset the state of the picker to the default */
@@ -19,6 +20,7 @@ export interface ITrimObjectSearchListProps
 	q?: string;
 
 	trimType?: BaseObjectTypes;
+	appStore?: IAppStore;
 
 	purpose?: number;
 	purposeExtra?: number;

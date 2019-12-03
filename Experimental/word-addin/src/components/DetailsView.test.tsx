@@ -246,7 +246,6 @@ describe("Details View", function() {
 
 	it("gets property defs on combo menu open", (done) => {
 		let combo = wrapper.find(ComboBox);
-		//	combo.props().onMenuOpen();
 
 		setImmediate(() => {
 			try {

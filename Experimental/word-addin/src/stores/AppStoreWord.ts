@@ -1,6 +1,6 @@
 import AppStoreBase from "./AppStoreBase";
 
-export class AppStore extends AppStoreBase {
+export class AppStoreWord extends AppStoreBase {
 	protected getFileName(): Promise<string> {
 		return new Promise<string>((resolve) => {
 			const tokens = this.WebUrl.split("/");
@@ -17,4 +17,4 @@ export class AppStore extends AppStoreBase {
 	}
 }
 
-export default AppStore;
+export default AppStoreWord;

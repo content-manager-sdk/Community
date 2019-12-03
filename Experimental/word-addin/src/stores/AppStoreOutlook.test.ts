@@ -179,13 +179,13 @@ class MockTrimConnector implements ITrimConnector {
 }
 
 let appStore = new AppStoreOutlook(
-	new MockWordConnector(),
-	new MockTrimConnector()
+	new MockTrimConnector(),
+	new MockWordConnector()
 );
 beforeEach(() => {
 	appStore = new AppStoreOutlook(
-		new MockWordConnector(),
-		new MockTrimConnector()
+		new MockTrimConnector(),
+		new MockWordConnector()
 	);
 	Mock_Action = "";
 	Mock_Trim_Action = "";

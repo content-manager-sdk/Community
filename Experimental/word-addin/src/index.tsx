@@ -8,6 +8,7 @@ import { initializeIcons } from "@uifabric/icons";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import FunctionFile from "./components/FunctionFile/FunctionFile";
 import BootStrapOutlook from "./components/BootStrap/BootStrapOutlook";
+import BootStrapCheckinStyles from "./components/BootStrap/BootStrapCheckinStyles";
 
 initializeIcons();
 
@@ -21,7 +22,10 @@ const root = (
 				<BootStrapOutlook />
 			</Route>
 			<Route path="/CheckinStyles">
-				<div>Check in Styles</div>
+				<BootStrapCheckinStyles forServerProcessing={false} />
+			</Route>
+			<Route path="/LinkedFolders">
+				<BootStrapCheckinStyles forServerProcessing={true} />
 			</Route>
 			<Route path="/">
 				<BootStrapWord />

@@ -284,7 +284,6 @@ export class PropertySheet extends React.Component<
 					<ComboBox
 						{...commonProps}
 						onResolveOptions={() => {
-							console.log("hhhh");
 							return trimConnector!.getEnum("MediaTypes").then((items) => {
 								return items.map((item: IEnumDetails) => {
 									return { key: item.Name, text: item.Caption };
@@ -368,7 +367,6 @@ export class PropertySheet extends React.Component<
 							this.forceUpdate();
 						}}
 					>
-						<hr />
 						{formDefinition.Pages.map((page: any) => {
 							if (page.Type === "Normal") {
 								return (

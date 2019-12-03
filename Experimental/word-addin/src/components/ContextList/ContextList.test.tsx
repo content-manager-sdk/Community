@@ -4,6 +4,9 @@ import { ContextList } from "./ContextList";
 import { IconButton } from "office-ui-fabric-react";
 
 import { TrimConnector } from "../../trim-coms/trim-connector";
+import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import SearchBar from "../SearchBar/SearchBar";
 
 describe("Context List", function() {
 	let testUri = 0;
@@ -57,5 +60,67 @@ describe("Context List", function() {
 		);
 
 		expect(wrapper.find(IconButton)).toBeTruthy();
+	});
+
+	it("default trimType is Record", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
+		);
+
+		expect(wrapper.find(TrimObjectSearchList).props().trimType).toEqual(
+			BaseObjectTypes.Record
+		);
+	});
+
+	it("trimType is Location", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Location}
+			/>
+		);
+
+		expect(wrapper.find(TrimObjectSearchList).props().trimType).toEqual(
+			BaseObjectTypes.Location
+		);
+	});
+
+	it("show search bar", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Location}
+			/>
+		);
+
+		expect(wrapper.find(SearchBar).exists()).toBeTruthy();
+	});
+
+	it("hide search bar", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Location}
+				hideSearchBar={true}
+			/>
+		);
+
+		expect(wrapper.find(SearchBar).exists()).toBeFalsy();
+	});
+
+	it("trimType is Location", () => {
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Location}
+				searchString="test"
+			/>
+		);
+
+		expect(wrapper.find(TrimObjectSearchList).props().q).toEqual("test");
 	});
 });

@@ -50,8 +50,8 @@ export class AppStoreBase implements IAppStore {
 	@observable public FileName: string;
 
 	constructor(
-		protected wordConnector: IWordUrl,
-		protected trimConnector: ITrimConnector
+		protected trimConnector: ITrimConnector,
+		protected wordConnector?: IWordUrl
 	) {
 		configure({ enforceActions: "observed" });
 	}
@@ -75,7 +75,7 @@ export class AppStoreBase implements IAppStore {
 		const promisesToRun = [
 			tc.getMe(),
 			tc.getMessages(),
-			this.wordConnector.getWebUrl(),
+			this.wordConnector!.getWebUrl(),
 		];
 
 		Promise.all(promisesToRun)
@@ -98,7 +98,7 @@ export class AppStoreBase implements IAppStore {
 					tc.getDriveId(
 						self.WebUrl,
 						this.isEmail(),
-						this.wordConnector.getRecordUri()
+						this.wordConnector!.getRecordUri()
 					)
 						.then((driveInfo) => {
 							self.setDocumentInfo(driveInfo);

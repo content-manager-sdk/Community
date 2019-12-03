@@ -5,13 +5,13 @@ import WordConnector from "../../office-coms/word-connector";
 import BootStrap from "./BootStrap";
 
 //import { getQueryStringValue } from "../../utils/getQueryStringValue";
-import AppStore from "src/stores/AppStore";
+import AppStoreWord from "src/stores/AppStoreWord";
 
 export class BootStrapWord extends React.Component<{}, {}> {
 	public render() {
 		const wordConnector = new WordConnector();
 		const trimConnector = new TrimConnector();
-		const appStore = new AppStore(wordConnector, trimConnector);
+		const appStore = new AppStoreWord(trimConnector, wordConnector);
 
 		// let getAccessToken: Promise<string>;
 

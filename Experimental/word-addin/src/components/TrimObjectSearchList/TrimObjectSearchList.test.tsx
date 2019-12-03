@@ -59,6 +59,7 @@ describe("Trim object search list", function() {
 	): any => {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
+				appStore={{}}
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				purpose={5}
@@ -396,6 +397,7 @@ describe("Trim object search list", function() {
 	) {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
+				appStore={{}}
 				trimConnector={trimConnector}
 				trimType={spec.trimType}
 				purpose={5}
@@ -560,7 +562,10 @@ describe("Trim object search list", function() {
 		const wrapper = getWrapper();
 		wrapper.setState({
 			ancestors: [{ Uri: 2, NameString: "test" }],
-			items: [{ Uri: 1, NameString: "test" }, { Uri: 2, NameString: "test 2" }],
+			items: [
+				{ Uri: 1, NameString: "test" },
+				{ Uri: 2, NameString: "test 2" },
+			],
 		});
 
 		setTimeout(() => {
@@ -585,7 +590,10 @@ describe("Trim object search list", function() {
 				{ Uri: 1, NameString: "test" },
 				{ Uri: 2, NameString: "test 2" },
 			],
-			items: [{ Uri: 1, NameString: "test" }, { Uri: 2, NameString: "test 2" }],
+			items: [
+				{ Uri: 1, NameString: "test" },
+				{ Uri: 2, NameString: "test 2" },
+			],
 		});
 
 		setTimeout(() => {

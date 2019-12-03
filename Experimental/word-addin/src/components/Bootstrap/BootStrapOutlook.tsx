@@ -10,7 +10,7 @@ export class BootStrapOutlook extends React.Component<{}, {}> {
 	public render() {
 		const outlookConnector = new OutlookConnector();
 		const trimConnector = new TrimConnector();
-		const appStore = new AppStoreOutlook(outlookConnector, trimConnector);
+		const appStore = new AppStoreOutlook(trimConnector, outlookConnector);
 
 		return (
 			<Provider

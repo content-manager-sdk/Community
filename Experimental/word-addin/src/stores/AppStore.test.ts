@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 (global as any).config = { BASE_URL: "", WEB_CLIENT: "cm" };
-import { AppStore } from "./AppStore";
+import { AppStoreWord } from "./AppStoreWord";
 
 import {
 	IDriveInformation,
@@ -166,9 +166,9 @@ class MockTrimConnector implements ITrimConnector {
 	}
 }
 
-let appStore = new AppStore(new MockWordConnector(), new MockTrimConnector());
+let appStore = new AppStoreWord(new MockTrimConnector(), new MockWordConnector());
 beforeEach(() => {
-	appStore = new AppStore(new MockWordConnector(), new MockTrimConnector());
+	appStore = new AppStoreWord( new MockTrimConnector(), new MockWordConnector());
 	Mock_Action = "";
 	Mock_Trim_Action = "";
 	postedFields = null;

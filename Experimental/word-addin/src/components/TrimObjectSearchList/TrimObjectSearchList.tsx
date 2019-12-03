@@ -131,6 +131,7 @@ export class TrimObjectSearchList extends React.Component<
 			filter,
 			filterSearch,
 			onTrimTypeChanged,
+			appStore,
 		} = this.props;
 
 		let { trimType } = this.state;
@@ -186,8 +187,9 @@ export class TrimObjectSearchList extends React.Component<
 					}
 					//	this._searchRunning = false;
 				})
-				.catch(() => {
+				.catch((error) => {
 					this.setState({ isRunning: false });
+					appStore!.setError(error, "Search");
 				});
 		} else {
 			this.setState({ isRunning: false });
@@ -560,9 +562,12 @@ export class TrimObjectSearchList extends React.Component<
 				[BaseObjectTypes.UserLabel]: {
 					Top: { src: "navContents", q: "unkTop" },
 				},
+				[BaseObjectTypes.CheckinPlace]: {
+					All: { src: "loc_list", q: "unkAll" },
+				},
 			},
 		};
 	}
 }
 
-export default inject("trimConnector")(TrimObjectSearchList);
+export default inject("appStore", "trimConnector")(TrimObjectSearchList);
