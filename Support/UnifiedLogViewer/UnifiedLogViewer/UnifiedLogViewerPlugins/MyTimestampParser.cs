@@ -16,7 +16,7 @@ namespace UnifiedLogViewerPlugins
     ///     is able to merge two or more log files using this timestamp format.
     /// </summary>
     public class MyTimestampParser : ITimestampParser
-    {      
+    {
         public static string timestmp { get; set; }
         public static string Filename { get; set; }
 
@@ -24,21 +24,34 @@ namespace UnifiedLogViewerPlugins
 
         public bool TryParse(string content, out DateTime timestamp)
         {
-           
-            if (TryParse24CharacterTimestamp(content, out timestamp))
-                return true;
-
-            if (TryParse23CharacterTimestamp(content, out timestamp))
-                return true;
-
             if (!string.IsNullOrEmpty(Filename) && Path.GetFileName(Filename).Contains("TRIMWorkgroup"))
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
 
+            else if (TryParse24CharacterTimestamp(content, out timestamp))
+                return true;
+
+            else if (TryParse23CharacterTimestamp(content, out timestamp))
+                return true;
+
             return false;
         }
-               
+
+        private string[] SupportedFormats()
+        {
+            return new[]
+            {
+                "yyyy-MM-dd HH:mm:ss:fff",
+                "dd/MM/yyyy HH:mm:ss:fff",
+                "MM/dd/yyyy HH:mm:ss:fff",
+                "M/dd/yyyy HH:mm:ss:fff",
+                "M/d/yyyy HH:mm:ss:fff",
+                "MM/dd/yy HH:mm:ss:fff",
+                "M/d/yy HH:mm:ss:fff",
+                "dd-MMM-yy HH:mm:ss:fff"
+            };
+        }
         private bool TryParse23CharacterTimestamp(string content, out DateTime timestamp)
         {
             // Example strings:
@@ -46,15 +59,7 @@ namespace UnifiedLogViewerPlugins
             // "29/03/2019 14:09:54:177"
 
             const int timestampPartLength = 23;
-            var formats = new[]
-            {
-                "yyyy-MM-dd HH:mm:ss:fff",
-                "dd/MM/yyyy HH:mm:ss:fff",
-                "MM/dd/yyyy HH:mm:ss:fff",
-                "M/dd/yyyy HH:mm:ss:fff",
-                "M/d/yyyy HH:mm:ss:fff"
-            };
-            //content = findTimeStamp(content);
+            var formats = SupportedFormats();          ;
             return TryParseExact(content, timestampPartLength, formats, out timestamp);
         }
 
@@ -65,15 +70,8 @@ namespace UnifiedLogViewerPlugins
             // "29/03/2019  14:09:54:177"
 
             const int timestampPartLength = 24;
-            var formats = new[]
-            {
-                "yyyy-MM-dd  HH:mm:ss:fff",
-                "dd/MM/yyyy  HH:mm:ss:fff",
-                "MM/dd/yyyy HH:mm:ss:fff",
-                "M/dd/yyyy HH:mm:ss:fff",
-                "M/d/yyyy HH:mm:ss:fff"
-            };
-           
+            var formats = SupportedFormats();
+
             return TryParseExact(content, timestampPartLength, formats, out timestamp);
         }
 
@@ -84,15 +82,8 @@ namespace UnifiedLogViewerPlugins
             // "29/03/2019  14:09:54:177"
 
             const int timestampPartLength = 24;
-            var formats = new[]
-            {
-                "yyyy-MM-dd  HH:mm:ss:fff",
-                "dd/MM/yyyy  HH:mm:ss:fff",
-                "MM/dd/yyyy HH:mm:ss:fff",
-                "M/dd/yyyy HH:mm:ss:fff",
-                "M/d/yyyy HH:mm:ss:fff"
-            };
-            
+            var formats = SupportedFormats();
+
             return TryParseExactForTRIMWorkgroup(content, timestampPartLength, formats, out timestamp);
         }
 
@@ -140,10 +131,13 @@ namespace UnifiedLogViewerPlugins
             {
                  newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff}{1}{2}", DateTime.Parse(timestmp).ToShortDateString(), " ", timestampPart);
             }
-                        
-            return DateTime.TryParseExact(newTimestamp, formats, CultureInfo.InvariantCulture,
+
+            var res = DateTime.TryParseExact(newTimestamp, formats, CultureInfo.InvariantCulture,
                 DateTimeStyles.AssumeLocal,
                 out timestamp);
+            timestamp = timestamp.ToUniversalTime();
+
+            return res;
         }
 
     }
@@ -177,7 +171,7 @@ namespace UnifiedLogViewerPlugins
 
             if (line.Timestamp != null)
             {
-                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp);
+                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp.Value.ToUniversalTime());
             }
             else
             {
@@ -222,7 +216,7 @@ namespace UnifiedLogViewerPlugins
 
             if (line.Timestamp != null)
             {
-                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp);                
+                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp.Value.ToUniversalTime());                
             }
             else 
             {
