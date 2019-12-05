@@ -126,6 +126,7 @@ hr.trim-menu-sep {
 	margin-top: 8px;
 	height: 100%;
 	position: fixed;
+	width: calc(100% - 16px);
 }
 .new-record-body .ms-Pivot {
 	border-bottom: 1px groove;

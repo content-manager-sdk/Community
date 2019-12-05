@@ -2,6 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import NewRecord from "./NewRecord";
 import ExistingRecord from "./ExistingRecord";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
 export class MainApp extends React.Component<
 	{ appStore?: any; className?: string },
@@ -18,7 +19,9 @@ export class MainApp extends React.Component<
 				<ExistingRecord className={className} recordUri={appStore!.RecordUri} />
 			);
 		} else if (appStore!.DriveId !== "") {
-			return <NewRecord className={className} />;
+			return (
+				<NewRecord className={className} trimType={BaseObjectTypes.Record} />
+			);
 		} else {
 			return null;
 		}

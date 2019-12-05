@@ -23,14 +23,14 @@ namespace OneDriveAuthPlugin
 		// Make sure this method is as per formant as possible.
 		public override bool IsUsedFor(HP.HPTRIM.SDK.TrimObject tmo, string propName)
 		{
-			return tmo is HP.HPTRIM.SDK.Record;
+			return tmo is HP.HPTRIM.SDK.Record || tmo is HP.HPTRIM.SDK.CheckinPlace;
 		}
 
 
 
 		public override object GetProperty(HP.HPTRIM.SDK.TrimObject tmo, HP.HPTRIM.SDK.Database database, IMainObjectRequest request)
 		{
-			return RegisterFileService.getCommandDefs(tmo as HP.HPTRIM.SDK.Record);
+			return RegisterFileService.getCommandDefs(tmo as HP.HPTRIM.SDK.TrimMainObject);
 		}
 
 		public override PropertyOrFieldFormat? Format => PropertyOrFieldFormat.String;

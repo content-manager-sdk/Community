@@ -15,6 +15,7 @@ import {
 	IContextualMenuItem,
 } from "office-ui-fabric-react/lib/ContextualMenu";
 import { CommandBar } from "office-ui-fabric-react";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 
 describe("Object Context Menu", () => {
 	let checkinUri = 0;
@@ -28,6 +29,8 @@ describe("Object Context Menu", () => {
 	let setForOptionsSet = "";
 	let completedCommand = "";
 	let isEmail = false;
+	let saveDocumentCalled = false;
+
 	const returnedDocumentInfo = {
 		Id: "test-id",
 		Uri: 5,
@@ -36,7 +39,8 @@ describe("Object Context Menu", () => {
 
 	const makeWrapper = (
 		menuItemsEnabled: boolean = true,
-		isInList: boolean = false
+		isInList: boolean = false,
+		trimType: BaseObjectTypes = BaseObjectTypes.Record
 	) => {
 		return shallow<ObjectContextMenu>(
 			<ObjectContextMenu
@@ -83,6 +87,7 @@ describe("Object Context Menu", () => {
 								Tooltip: "Checkin",
 								StatusBarMessage: "Checkin",
 								IsEnabled: menuItemsEnabled,
+								NeedsAnObject: true,
 							},
 							{
 								CommandId: "RecDocFinal",
@@ -90,6 +95,7 @@ describe("Object Context Menu", () => {
 								Tooltip: "Make Final",
 								StatusBarMessage: "Make Final",
 								IsEnabled: menuItemsEnabled,
+								NeedsAnObject: true,
 							},
 							{
 								CommandId: "Properties",
@@ -97,6 +103,15 @@ describe("Object Context Menu", () => {
 								Tooltip: "Properties",
 								StatusBarMessage: "Properties",
 								IsEnabled: menuItemsEnabled,
+								NeedsAnObject: true,
+							},
+							{
+								CommandId: "New",
+								MenuEntryString: "new",
+								Tooltip: "new",
+								StatusBarMessage: "new",
+								IsEnabled: menuItemsEnabled,
+								NeedsAnObject: false,
 							},
 						],
 					},
@@ -107,6 +122,7 @@ describe("Object Context Menu", () => {
 					Uri: 7,
 					ToolTip: "test title",
 					NameString: "REC_1",
+					TrimType: trimType,
 				}}
 			/>
 		);
@@ -124,6 +140,7 @@ describe("Object Context Menu", () => {
 		setForOptionsSet = "";
 		completedCommand = "";
 		isEmail = false;
+		saveDocumentCalled = false;
 	});
 
 	let trimConnector = new TrimConnector();
@@ -161,6 +178,7 @@ describe("Object Context Menu", () => {
 
 	const mockWordConnector = {
 		saveDocument(): Promise<void> {
+			saveDocumentCalled = true;
 			return new Promise(function(resolve) {
 				resolve();
 			});
@@ -221,6 +239,17 @@ describe("Object Context Menu", () => {
 		);
 	});
 
+	it("not contains paste and split for non record", function(this: any) {
+		expect.assertions(1);
+		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
+
+		expect(
+			findMenu(wrapper, true).items.find((menuItem) => {
+				return menuItem.key === "paste";
+			})
+		).toBeUndefined();
+	});
+
 	it("contain add relationship", function(this: any) {
 		expect.assertions(1);
 		const wrapper = makeWrapper(true, true);
@@ -243,9 +272,20 @@ describe("Object Context Menu", () => {
 		).toBeUndefined();
 	});
 
+	it("not contain add relationship for non Record", function(this: any) {
+		expect.assertions(1);
+		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
+
+		expect(
+			findMenu(wrapper, true).items.find((menuItem) => {
+				return menuItem.key === "addRelationshipto";
+			})
+		).toBeUndefined();
+	});
+
 	it("error when record not selected", (done) => {
 		const wrapper = makeWrapper(true, false);
-		wrapper.setProps({ record: { Uri: 0 } });
+		wrapper.setProps({ record: { Uri: 0, TrimType: BaseObjectTypes.Record } });
 
 		const menuItem = findMenu(wrapper)
 			.items.find((mp) => {
@@ -269,7 +309,7 @@ describe("Object Context Menu", () => {
 	it("error on create relationship when record not selected", (done) => {
 		const wrapper = makeWrapper(true, true);
 
-		wrapper.setProps({ record: { Uri: 0 } });
+		wrapper.setProps({ record: { Uri: 0, TrimType: BaseObjectTypes.Record } });
 
 		const menuItem = findMenu(wrapper, true).items.find((mi) => {
 			return mi.key === "addRelationshipto";
@@ -304,6 +344,27 @@ describe("Object Context Menu", () => {
 		setImmediate(() => {
 			try {
 				expect(insertedText).toEqual("test title");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("fires event when New clicked", (done) => {
+		const wrapper = makeWrapper(false);
+
+		expect.assertions(2);
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "New";
+		});
+
+		menuItem.onClick(null, menuItem);
+
+		setImmediate(() => {
+			try {
+				expect(completedCommand).toEqual("New");
+				expect(saveDocumentCalled).toBeFalsy();
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -371,6 +432,7 @@ describe("Object Context Menu", () => {
 						CommandId: "AddToFavorites",
 						Tooltip: "Add To Favorites",
 						MenuItemType: "MenuItemCommand",
+						NeedsAnObject: true,
 					},
 				],
 			},

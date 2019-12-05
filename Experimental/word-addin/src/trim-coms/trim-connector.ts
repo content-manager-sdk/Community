@@ -192,9 +192,13 @@ export interface ITrimConnector {
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>>;
-	getPropertySheet(recordTypeUri: number, withFile?: string): Promise<any>;
-	registerInTrim(
+	getPropertySheet(
+		trimType: BaseObjectTypes,
 		recordTypeUri: number,
+		withFile?: string
+	): Promise<any>;
+	registerInTrim(
+		trimType: BaseObjectTypes,
 		properties: any,
 		fields?: any
 	): Promise<ITrimMainObject>;
@@ -642,21 +646,19 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public registerInTrim(
-		recordTypeUri: number,
+		trimType: BaseObjectTypes,
 		properties: any,
 		fields: any = null
 	): Promise<ITrimMainObject> {
 		const body = {
 			...properties,
-
-			RecordRecordType: recordTypeUri,
 			properties: "CommandDefs,URN",
 		};
 		if (fields) {
 			body["Fields"] = fields;
 		}
 		return this.makeRequest(
-			{ path: "Record", method: "post", data: body },
+			{ path: `${trimType}`, method: "post", data: body },
 			(data: any) => {
 				return data.Results[0];
 			}
@@ -664,12 +666,13 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public getPropertySheet(
+		trimType: BaseObjectTypes,
 		recordTypeUri: number,
 		withFile?: string
 	): Promise<any> {
 		const body = {
-			properties: "dataentryformdefinition",
-			RecordRecordType: recordTypeUri,
+			properties: "DataEntryFormDefinition",
+			[`${trimType}RecordType`]: recordTypeUri,
 			ByPassSave: true,
 		};
 
@@ -678,7 +681,7 @@ export class TrimConnector implements ITrimConnector {
 		}
 
 		return this.makeRequest(
-			{ path: `Record`, method: "post", data: body },
+			{ path: `${trimType}`, method: "post", data: body },
 			(data: any) => {
 				return data.Results[0].DataEntryFormDefinition;
 			}

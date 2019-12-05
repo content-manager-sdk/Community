@@ -16,4 +16,13 @@ namespace OneDriveAuthPlugin
 
 
 	}
+
+	[DataContract]
+	public class CustomCheckinPlace : CheckinPlace
+	{
+		[DataMember(Name = "CommandDefs")]
+		public IList<MyCommandDef> CommandDefs { get; set; }
+
+
+	}
 }

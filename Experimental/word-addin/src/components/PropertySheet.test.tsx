@@ -159,6 +159,90 @@ describe("Property Sheet", function() {
 		expect(wrapperWithForm.find(TextField).props().multiline).toBeFalsy();
 	});
 
+	it("does not display a hidden field", () => {
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				defaultRecordTitle="test title"
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+								},
+							],
+						},
+					],
+				}}
+				computedProperties={[{ Name: "RecordTypedTitle", Value: "" }]}
+			/>
+		);
+
+		expect(wrapperWithForm.find(TextField).exists()).toBeFalsy();
+	});
+
+	it("fires the onChange event for a hidden field", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				computedProperties={[
+					{
+						Name: "CheckinStyleUseForServerMailCapture",
+						Value: true,
+						Type: "Property",
+					},
+				]}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [],
+						},
+					],
+				}}
+			/>
+		);
+
+		expect(onChangeForm).toEqual({ CheckinStyleUseForServerMailCapture: true });
+	});
+
+	it("does not fire the onChange event for a hidden field without a value", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				computedProperties={[
+					{
+						Name: "CheckinStyleUseForServerMailCapture",
+						Value: undefined,
+						Type: "Property",
+					},
+				]}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [],
+						},
+					],
+				}}
+			/>
+		);
+
+		expect(onChangeForm).toBeUndefined();
+	});
+
 	it("fires the onChange event when a text field loads with a value", () => {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
@@ -281,6 +365,35 @@ describe("Property Sheet", function() {
 			.onChange(null, true);
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: true });
+	});
+
+	it("fires the onChange event when a checkbox loads with a false value", () => {
+		let onChangeForm;
+		const wrapperWithForm = shallow<PropertySheet>(
+			<PropertySheet
+				onChange={function(newForm) {
+					onChangeForm = newForm;
+				}}
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "Boolean",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+									Value: false,
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+
+		expect(onChangeForm).toEqual({ RecordTypedTitle: false });
 	});
 
 	let enumOnChangeForm;
@@ -870,5 +983,80 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 				}
 			});
 		});
+	});
+});
+
+describe("Property Sheet - call trimconnector correctly", function() {
+	let testEnumId;
+
+	beforeEach(() => {
+		testEnumId = "";
+	});
+	const makeWrapper = () => {
+		return mount<PropertySheet>(
+			<PropertySheet
+				trimConnector={{
+					getEnum(enumId: string): Promise<IEnumDetails[]> {
+						testEnumId = enumId;
+						return new Promise(function(resolve, reject) {
+							resolve([
+								{
+									Caption: "Unknown",
+									Name: "Unknown",
+								},
+								{
+									Caption: "Paper",
+									Name: "Paper",
+								},
+								{
+									Caption: "Electronic Document",
+
+									Name: "Electronic",
+								},
+							]);
+						});
+					},
+				}}
+				defaultRecordTitle="test title"
+				formDefinition={{
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "Enum",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+									Value: "Electronic",
+									EnumName: "MailFolderTypes",
+									EnumItems: [
+										{
+											Caption: "Unknown",
+											Name: "A",
+										},
+										{
+											Caption: "Paper",
+											Name: "B",
+										},
+										{
+											Caption: "Electronic Document",
+											Name: "C",
+										},
+									],
+								},
+							],
+						},
+					],
+				}}
+			/>
+		);
+	};
+
+	it("sends the correct enum name", (done) => {
+		const wrapperWithForm = makeWrapper();
+
+		expect(wrapperWithForm.find(ComboBox).props().options[0].key).toEqual("A");
+		done();
 	});
 });

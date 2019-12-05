@@ -18,6 +18,7 @@ interface IContextListProps {
 	trimType?: BaseObjectTypes;
 	hideSearchBar?: boolean;
 	searchString?: string;
+	onCommand?: (commandKey: string) => void;
 }
 
 export class ContextList extends React.Component<
@@ -55,11 +56,19 @@ export class ContextList extends React.Component<
 
 	public render() {
 		const { searchQuery, selectRecord } = this.state;
-		const { trimType, hideSearchBar, searchString } = this.props;
+		const { trimType, hideSearchBar, searchString, onCommand } = this.props;
 
 		return (
 			<div>
-				<ObjectContextMenu isInList={true} record={selectRecord} />
+				<ObjectContextMenu
+					isInList={true}
+					record={selectRecord}
+					onCommandComplete={(key: string) => {
+						if (onCommand) {
+							onCommand(key);
+						}
+					}}
+				/>
 				{!hideSearchBar && (
 					<SearchBar
 						trimType={BaseObjectTypes.Record}

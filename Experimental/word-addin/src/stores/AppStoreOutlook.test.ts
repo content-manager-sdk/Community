@@ -140,7 +140,7 @@ class MockTrimConnector implements ITrimConnector {
 		//	throw new Error("Method not implemented.");
 	}
 	registerInTrim(
-		recordTypeUri: number,
+		trimType: BaseObjectTypes,
 		properties: any,
 		fields: any
 	): Promise<ITrimMainObject> {
@@ -154,7 +154,10 @@ class MockTrimConnector implements ITrimConnector {
 			}
 		});
 	}
-	getPropertySheet(recordTypeUri: number): Promise<any> {
+	getPropertySheet(
+		trimType: BaseObjectTypes,
+		recordTypeUri: number
+	): Promise<any> {
 		throw new Error("Method not implemented.");
 	}
 	getMessages(): Promise<any> {

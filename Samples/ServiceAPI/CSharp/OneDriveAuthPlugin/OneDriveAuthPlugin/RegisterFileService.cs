@@ -66,7 +66,7 @@ namespace OneDriveAuthPlugin
 	{
 
 
-		private static MyCommandDef makeCommand(CommandIds commandId, Record fromRecord)
+		private static MyCommandDef makeCommand(CommandIds commandId, TrimMainObject fromRecord)
 		{
 
 			CommandDef commandDef = new CommandDef(commandId, fromRecord.Database);
@@ -75,15 +75,33 @@ namespace OneDriveAuthPlugin
 			myCommandDef.MenuEntryString = commandDef.GetMenuEntryString(fromRecord.TrimType);
 			myCommandDef.Tooltip = commandDef.GetTooltip(fromRecord.TrimType);
 			myCommandDef.StatusBarMessage = commandDef.GetStatusBarMessage(fromRecord.TrimType);
-			myCommandDef.IsEnabled = commandDef.IsEnabled(fromRecord);
 
+			if (fromRecord is CheckinPlace)
+			{
+				myCommandDef.IsEnabled = commandDef.IsEnabled((fromRecord as CheckinPlace).CheckinAs);
+			}
+			else
+			{
+				myCommandDef.IsEnabled = commandDef.IsEnabled(fromRecord);
+			}
+			myCommandDef.IsListCommand = commandDef.IsListCommand;
+			myCommandDef.NeedsAnObject = commandDef.NeedsAnObject;
 			return myCommandDef;
 		}
 
-		public static IList<MyCommandDef> getCommandDefs(Record fromRecord)
+		private static Dictionary<BaseObjectTypes, CommandIds[]> supportedCommandIds;
+
+		public static IList<MyCommandDef> getCommandDefs(TrimMainObject fromRecord)
 		{
+			if (supportedCommandIds == null)
+			{
+				supportedCommandIds = new Dictionary<BaseObjectTypes, CommandIds[]>();
+				supportedCommandIds[BaseObjectTypes.Record] = new CommandIds[] { CommandIds.Properties, CommandIds.RecCheckIn, CommandIds.RecDocFinal, CommandIds.AddToFavorites, CommandIds.RemoveFromFavorites };
+				supportedCommandIds[BaseObjectTypes.CheckinPlace] = new CommandIds[] { CommandIds.New, CommandIds.Remove };
+			}
+
 			var commandDefs = new List<MyCommandDef>();
-			foreach (var commandId in new CommandIds[] { CommandIds.Properties, CommandIds.RecCheckIn, CommandIds.RecDocFinal, CommandIds.AddToFavorites, CommandIds.RemoveFromFavorites })
+			foreach (var commandId in supportedCommandIds[fromRecord.TrimType])
 			{
 				commandDefs.Add(makeCommand(commandId, fromRecord));
 			}

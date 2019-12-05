@@ -8,6 +8,7 @@ export enum BaseObjectTypes {
 	SavedSearch = "SavedSearch",
 	UserLabel = "UserLabel",
 	CheckinPlace = "CheckinPlace",
+	CheckinStyle = "CheckinStyle",
 }
 
 export default BaseObjectTypes;

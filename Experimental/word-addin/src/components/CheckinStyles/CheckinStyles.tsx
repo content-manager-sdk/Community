@@ -2,42 +2,65 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 
 import ErrorDisplay from "../ErrorDisplay";
-import { IAppStore } from "src/stores/AppStoreBase";
+import { IAppStore } from "../../stores/AppStoreBase";
 import ContextList from "../ContextList/ContextList";
-import BaseObjectTypes from "src/trim-coms/trim-baseobjecttypes";
-import { ITrimConnector } from "src/trim-coms/trim-connector";
-import { IOfficeConnector } from "src/office-coms/office-connector";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { ITrimConnector } from "../../trim-coms/trim-connector";
+import NewRecord from "../NewRecord";
 
 interface ICheckinStylesProps {
 	appStore?: IAppStore;
 	trimConnector?: ITrimConnector;
-	wordConnector?: IOfficeConnector;
 	forServerProcessing: boolean;
 }
 
-export class CheckinStyles extends React.Component<ICheckinStylesProps, {}> {
+interface ICheckinStylesState {
+	view: string;
+}
+
+export class CheckinStyles extends React.Component<
+	ICheckinStylesProps,
+	ICheckinStylesState
+> {
+	constructor(props: ICheckinStylesProps) {
+		super(props);
+
+		this.state = {
+			view: "List",
+		};
+	}
+
 	public render() {
 		const { appStore, forServerProcessing } = this.props;
+		const { view } = this.state;
 
 		return (
 			<div>
 				{appStore!.status === "ERROR" && <ErrorDisplay />}
-				<ContextList
-					trimType={BaseObjectTypes.CheckinPlace}
-					hideSearchBar={true}
-					searchString={
-						forServerProcessing
-							? "cipType:MailForServerProcessing"
-							: "cipType:MailForClientProcessing "
-					}
-				/>
+				{view === "New" ? (
+					<NewRecord
+						trimType={BaseObjectTypes.CheckinStyle}
+						onTrimObjectCreated={() => {
+							this.setState({ view: "List" });
+						}}
+					/>
+				) : (
+					<ContextList
+						trimType={BaseObjectTypes.CheckinPlace}
+						hideSearchBar={true}
+						searchString={
+							forServerProcessing
+								? "cipType:MailForServerProcessing"
+								: "cipType:MailForClientProcessing"
+						}
+						onCommand={(key: string) => {
+							this.setState({ view: key });
+						}}
+					/>
+				)}
 			</div>
 		);
 	}
 }
 
-export default inject(
-	"appStore",
-	"trimConnector",
-	"wordConnector"
-)(observer(CheckinStyles));
+export default inject("appStore", "trimConnector")(observer(CheckinStyles));

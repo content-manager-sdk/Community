@@ -19,7 +19,7 @@ import {
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
-import { IWordUrl } from "../office-coms/word-connector";
+import { IWordUrl } from "../office-coms/office-connector";
 import { CommandIds } from "../trim-coms/trim-command-ids";
 
 let Mock_Action = "";
@@ -35,7 +35,9 @@ class MockWordConnector implements IWordUrl {
 			resolve("My.Url");
 		});
 	}
-	getRecordUri() : number{return 0;}
+	getRecordUri(): number {
+		return 0;
+	}
 }
 
 let postedFields: any;
@@ -43,16 +45,24 @@ let Mock_Trim_Action = "";
 class MockTrimConnector implements ITrimConnector {
 	clearCache: () => void;
 	cancel: () => void;
-	getSearchClauseOrFieldDefinitions(trimType: BaseObjectTypes): Promise<ISearchClauseOrFieldDef[]> {
+	getSearchClauseOrFieldDefinitions(
+		trimType: BaseObjectTypes
+	): Promise<ISearchClauseOrFieldDef[]> {
 		return new Promise(function(resolve, reject) {});
 	}
-	getObjectDefinitions(): Promise<import("../trim-coms/trim-connector").IObjectDef[]> {
+	getObjectDefinitions(): Promise<
+		import("../trim-coms/trim-connector").IObjectDef[]
+	> {
 		throw new Error("Method not implemented.");
 	}
 	getObjectCaption(trimType: BaseObjectTypes): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
-	createRelationship(uri: number, relatedRecord: number, relationshipType: string): Promise<void> {
+	createRelationship(
+		uri: number,
+		relatedRecord: number,
+		relationshipType: string
+	): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
 	setLatestClause(trimType: BaseObjectTypes, queryName: string): void {
@@ -61,10 +71,16 @@ class MockTrimConnector implements ITrimConnector {
 	getLatestClause(trimType: BaseObjectTypes): string {
 		throw new Error("Method not implemented.");
 	}
-	setViewPaneProperties(trimObject: ITrimMainObject, propertyIds: string[]): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
+	setViewPaneProperties(
+		trimObject: ITrimMainObject,
+		propertyIds: string[]
+	): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
 		throw new Error("Method not implemented.");
 	}
-	getViewPanePropertyDefs(trimType: BaseObjectTypes, uri: number): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
+	getViewPanePropertyDefs(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
 		throw new Error("Method not implemented.");
 	}
 	getGlobalUserOptions(forUserOptionSet: string): Promise<void> {
@@ -128,7 +144,7 @@ class MockTrimConnector implements ITrimConnector {
 		//	throw new Error("Method not implemented.");
 	}
 	registerInTrim(
-		recordTypeUri: number,
+		trimType: BaseObjectTypes,
 		properties: any,
 		fields: any
 	): Promise<ITrimMainObject> {
@@ -142,7 +158,10 @@ class MockTrimConnector implements ITrimConnector {
 			}
 		});
 	}
-	getPropertySheet(recordTypeUri: number): Promise<any> {
+	getPropertySheet(
+		trimType: BaseObjectTypes,
+		recordTypeUri: number
+	): Promise<any> {
 		throw new Error("Method not implemented.");
 	}
 	getMessages(): Promise<any> {
@@ -166,9 +185,12 @@ class MockTrimConnector implements ITrimConnector {
 	}
 }
 
-let appStore = new AppStoreWord(new MockTrimConnector(), new MockWordConnector());
+let appStore = new AppStoreWord(
+	new MockTrimConnector(),
+	new MockWordConnector()
+);
 beforeEach(() => {
-	appStore = new AppStoreWord( new MockTrimConnector(), new MockWordConnector());
+	appStore = new AppStoreWord(new MockTrimConnector(), new MockWordConnector());
 	Mock_Action = "";
 	Mock_Trim_Action = "";
 	postedFields = null;
@@ -252,12 +274,11 @@ describe("Test basic setup from Trim", () => {
 
 		setTimeout(() => {
 			try {
-			expect(appStore.RecordUri).toBe(0);
-			expect(appStore.status).toBe("WAITING");
-			expect.assertions(3);
-			done();
-			}
-			catch(e) {
+				expect(appStore.RecordUri).toBe(0);
+				expect(appStore.status).toBe("WAITING");
+				expect.assertions(3);
+				done();
+			} catch (e) {
 				done.fail(e);
 			}
 		});
@@ -281,7 +302,6 @@ describe("Test basic setup from Trim", () => {
 			}
 		});
 	});
-
 
 	test("Error handled on createRecord", (done) => {
 		Mock_Trim_Action = "ERROR";
@@ -313,95 +333,94 @@ describe("Test basic setup from Trim", () => {
 		expect.assertions(1);
 
 		appStore.setDocumentInfo({ Id: "abc", Uri: 0, CommandDefs: [] });
-		appStore.createRecord(2, {}).then(() =>{
+		appStore.createRecord(2, {}).then(() => {
 			expect(postedFields["DriveID"]).toBe("abc");
 			done();
 		});
-
-		});
-
+	});
 
 	it("sends fields to TRIM", (done) => {
 		expect.assertions(1);
 
-		
-		appStore.createRecord(2, {}, {Speed:20}).then(() =>{
-			expect(postedFields["Speed"]).toBe(20);
-			done();
-		});
-
+		appStore.createRecord(2, {}, { Speed: 20 }).then(() => {
+			try {
+				expect(postedFields["Speed"]).toBe(20);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
+});
 
-	describe("Test operation", () => {
-		it("get a record URL", function() {
-			appStore.errorMessage = "test";
-			appStore.status = "ERROR";
+describe("Test operation", () => {
+	it("get a record URL", function() {
+		appStore.errorMessage = "test";
+		appStore.status = "ERROR";
 
-			const url = appStore.getWebClientUrl(5);
+		const url = appStore.getWebClientUrl(5);
 
-			expect(url).toEqual("/cm?uri=5");
-		});
+		expect(url).toEqual("/cm?uri=5");
+	});
 
-		it("get a container URL", function() {
-			appStore.errorMessage = "test";
-			appStore.status = "ERROR";
+	it("get a container URL", function() {
+		appStore.errorMessage = "test";
+		appStore.status = "ERROR";
 
-			const url = appStore.getWebClientUrl(5, true);
+		const url = appStore.getWebClientUrl(5, true);
 
-			expect(url).toEqual("/cm?q=recContainerEx:[unkUri:5]&t=Record");
-		});
+		expect(url).toEqual("/cm?q=recContainerEx:[unkUri:5]&t=Record");
+	});
 
-		it("clears the error when reset called", function() {
-			appStore.errorMessage = "test";
-			appStore.status = "ERROR";
+	it("clears the error when reset called", function() {
+		appStore.errorMessage = "test";
+		appStore.status = "ERROR";
 
-			appStore.resetError();
+		appStore.resetError();
 
-			expect(appStore.errorMessage).toBeFalsy();
-			expect(appStore.status).toEqual("WAITING");
-		});
+		expect(appStore.errorMessage).toBeFalsy();
+		expect(appStore.status).toEqual("WAITING");
+	});
 
-		it("sets the error", function() {
+	it("sets the error", function() {
+		appStore.errorMessage = "";
+		appStore.status = "WAITING";
+
+		appStore.setError("an error");
+
+		expect(appStore.errorMessage).toEqual("an error");
+		expect(appStore.status).toEqual("ERROR");
+	});
+
+	[
+		{
+			msg: "bob_needSelectedRow",
+			replacements: ["record"],
+			expected: "Please select the record you wish to perform the task on.",
+		},
+		{ msg: "web_HPRM", expected: "Content Manager" },
+		{
+			msg: "web_Test_two",
+			replacements: ["one", "two"],
+			expected: "message one and two",
+		},
+	].forEach((testData) => {
+		it("sets the error message", (done) => {
 			appStore.errorMessage = "";
 			appStore.status = "WAITING";
 
-			appStore.setError("an error");
+			appStore.fetchBaseSettingFromTrim(false);
 
-			expect(appStore.errorMessage).toEqual("an error");
-			expect(appStore.status).toEqual("ERROR");
-		});
+			setImmediate(() => {
+				try {
+					appStore.setErrorMessage(testData.msg, ...testData.replacements);
 
-		[
-			{
-				msg: "bob_needSelectedRow",
-				replacements: ["record"],
-				expected: "Please select the record you wish to perform the task on.",
-			},
-			{ msg: "web_HPRM", expected: "Content Manager" },
-			{
-				msg: "web_Test_two",
-				replacements: ["one", "two"],
-				expected: "message one and two",
-			},
-		].forEach((testData) => {
-			it("sets the error message", (done) => {
-				appStore.errorMessage = "";
-				appStore.status = "WAITING";
-
-				appStore.fetchBaseSettingFromTrim(false);
-
-				setImmediate(() => {
-					try {
-						appStore.setErrorMessage(testData.msg, ...testData.replacements);
-
-						expect(appStore.errorMessage).toEqual(testData.expected);
-						expect(appStore.status).toEqual("ERROR");
-						done();
-					} catch (e) {
-						done.fail(e);
-					}
-				});
+					expect(appStore.errorMessage).toEqual(testData.expected);
+					expect(appStore.status).toEqual("ERROR");
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
 			});
 		});
 	});

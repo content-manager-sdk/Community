@@ -134,7 +134,7 @@ export class TrimObjectSearchList extends React.Component<
 			appStore,
 		} = this.props;
 
-		let { trimType } = this.state;
+		let { trimType, selectedUri } = this.state;
 
 		if (navTrimType && trimType !== navTrimType) {
 			this.setState({ trimType: navTrimType });
@@ -185,7 +185,9 @@ export class TrimObjectSearchList extends React.Component<
 					} else {
 						this.setState({ items: response.results, isRunning: false });
 					}
-					//	this._searchRunning = false;
+					if (selectedUri < 1 && response.results.length > 0) {
+						this._onTrimObjectSelected(response.results[0].Uri, false);
+					}
 				})
 				.catch((error) => {
 					this.setState({ isRunning: false });
@@ -202,6 +204,7 @@ export class TrimObjectSearchList extends React.Component<
 			const trimObject = this.state.items.find((i) => {
 				return i.Uri == uri;
 			});
+			this.setState({ selectedUri: uri });
 			onTrimObjectSelected(trimObject, isDoubleClick);
 		}
 	}
@@ -477,9 +480,7 @@ export class TrimObjectSearchList extends React.Component<
 		return (
 			<div
 				data-is-focusable={true}
-				className={`trim-list-row${
-					item.Selected === true ? " trim-is-selected" : ""
-				}`}
+				className={`trim-list-row${index === 0 ? " trim-is-selected" : ""}`}
 				data-trim-uri={item.Uri}
 			>
 				<div className="trim-list-row-label">

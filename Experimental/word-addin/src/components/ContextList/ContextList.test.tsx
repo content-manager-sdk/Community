@@ -7,6 +7,7 @@ import { TrimConnector } from "../../trim-coms/trim-connector";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import SearchBar from "../SearchBar/SearchBar";
+import ObjectContextMenu from "../ObjectContextMenu/ObjectContextMenu";
 
 describe("Context List", function() {
 	let testUri = 0;
@@ -122,5 +123,25 @@ describe("Context List", function() {
 		);
 
 		expect(wrapper.find(TrimObjectSearchList).props().q).toEqual("test");
+	});
+
+	it("fire command", () => {
+		let firedCommand;
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Location}
+				searchString="test"
+				onCommand={(key: string) => {
+					firedCommand = key;
+				}}
+			/>
+		);
+		wrapper
+			.find(ObjectContextMenu)
+			.props()
+			.onCommandComplete("New");
+		expect(firedCommand).toEqual("New");
 	});
 });
