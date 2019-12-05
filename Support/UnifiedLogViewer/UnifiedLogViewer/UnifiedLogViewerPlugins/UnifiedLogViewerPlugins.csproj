@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyFileFormatPlugin.cs" />
-    <Compile Include="MessageTracerTranslator.cs" />
     <Compile Include="MyTimestampParser.cs" />
     <Compile Include="Plugins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
