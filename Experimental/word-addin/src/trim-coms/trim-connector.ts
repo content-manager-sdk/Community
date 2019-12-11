@@ -738,6 +738,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Properties = "Properties";
 					data.Messages.web_Context = "Context";
 					data.Messages.web_Menu = "Menu";
+					data.Messages.web_Auto_Generate_Folder = "<Auto Create New Folder>";
+					data.Messages.web_Select_Folder = "-- Select a Folder --";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

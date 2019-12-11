@@ -10,6 +10,8 @@ export class TrimMessages {
 	public web_GoToAdvancedSearch = ""; // tslint:disable-line
 	public bob_needSelectedRow = ""; // tslint:disable-line
 	public web_ApplySearchFilter = "";
+	public web_Auto_Generate_Folder = "";
+	public web_Select_Folder = "";
 }
 
 export default TrimMessages;

@@ -7,6 +7,8 @@ import ContextList from "../ContextList/ContextList";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { ITrimConnector } from "../../trim-coms/trim-connector";
 import NewRecord from "../NewRecord";
+import OutlookFolderPicker from "../OutlookFolderPicker/OutlookFolderPicker";
+import { mergeStyles } from "@uifabric/styling";
 
 interface ICheckinStylesProps {
 	appStore?: IAppStore;
@@ -30,6 +32,16 @@ export class CheckinStyles extends React.Component<
 		};
 	}
 
+	private getStyles(): string {
+		return mergeStyles({
+			selectors: {
+				"& .ms-ComboBox": {
+					marginBottom: "8px",
+				},
+			},
+		});
+	}
+
 	public render() {
 		const { appStore, forServerProcessing } = this.props;
 		const { view } = this.state;
@@ -38,12 +50,17 @@ export class CheckinStyles extends React.Component<
 			<div>
 				{appStore!.status === "ERROR" && <ErrorDisplay />}
 				{view === "New" ? (
-					<NewRecord
-						trimType={BaseObjectTypes.CheckinStyle}
-						onTrimObjectCreated={() => {
-							this.setState({ view: "List" });
-						}}
-					/>
+					<React.Fragment>
+						{forServerProcessing && (
+							<OutlookFolderPicker className={this.getStyles()} />
+						)}
+						<NewRecord
+							trimType={BaseObjectTypes.CheckinStyle}
+							onTrimObjectCreated={() => {
+								this.setState({ view: "List" });
+							}}
+						/>
+					</React.Fragment>
 				) : (
 					<ContextList
 						trimType={BaseObjectTypes.CheckinPlace}

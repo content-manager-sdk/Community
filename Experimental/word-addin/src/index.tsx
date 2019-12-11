@@ -18,6 +18,9 @@ const root = (
 			<Route path="/functions">
 				<FunctionFile />
 			</Route>
+			<Route path="/OutlookLinks">
+				<BootStrapOutlook />
+			</Route>
 			<Route path="/Outlook">
 				<BootStrapOutlook />
 			</Route>

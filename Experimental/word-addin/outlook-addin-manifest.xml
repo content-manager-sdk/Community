@@ -7,7 +7,7 @@
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
   <Id>BBF8F785-AC58-4FA1-A679-1D2A00BEC93C</Id>
-  <Version>1.0.0.4</Version>
+  <Version>1.0.0.8</Version>
   <ProviderName>Microsoft Outlook Dev Center</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Content Manager" />
@@ -51,6 +51,45 @@
 
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
 
+ <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox" />
+      </bt:Sets>
+    </Requirements>
+	<Hosts>
+	 <Host xsi:type="MailHost">
+
+        <DesktopFormFactor>
+		<FunctionFile resid="functionFile" />
+		<ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgComposeDemoGroup">
+                <Label resid="groupLabel" />
+                <!-- Function (UI-less) button -->
+                <Control xsi:type="Button" id="msgComposeFunctionButton">
+                  <Label resid="funcComposeButtonLabel" />
+                  <Supertip>
+                    <Title resid="funcComposeSuperTipTitle" />
+                    <Description resid="funcComposeSuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="blue-icon-16" />
+                    <bt:Image size="32" resid="blue-icon-32" />
+                    <bt:Image size="80" resid="blue-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>addDefaultMsgToBody</FunctionName>
+                  </Action>
+                </Control>
+
+
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+		</DesktopFormFactor>
+		</Host>
+	</Hosts>
+
     <!-- VersionOverrides for the v1.1 schema -->
     <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
 
@@ -64,6 +103,8 @@
 
           <DesktopFormFactor>
             <FunctionFile resid="functionFile" />
+
+
 
             <!-- Message read form -->
             <ExtensionPoint xsi:type="MessageReadCommandSurface">
@@ -223,7 +264,15 @@
 
       <Resources>
         <bt:Images>
-          <!-- Blue icon -->
+
+		        <bt:Image id="blue-icon-16" DefaultValue="https://localhost:8443/Assets/Images/blue-16.png"/>
+        <bt:Image id="blue-icon-32" DefaultValue="https://localhost:8443/Assets/Images/blue-32.png"/>
+        <bt:Image id="blue-icon-80" DefaultValue="https://localhost:8443/Assets/Images/blue-80.png"/>
+
+          <bt:Image id="cm-icon-16" DefaultValue="https://desktop-39dgcn3:3000/Assets/icon-16.png"/>
+          <bt:Image id="cm-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/icon-32.png"/>
+          <bt:Image id="cm-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/icon-80.png"/>
+
           <bt:Image id="file-icon-16" DefaultValue="https://desktop-39dgcn3:3000/Assets/filesave_x16.png"/>
           <bt:Image id="file-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/filesave_x32.png"/>
           <bt:Image id="file-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/filesave_x80.png"/>
@@ -250,6 +299,7 @@
           <bt:Url id="readTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/AllPropsView/AllProps.html"/>
           <bt:Url id="composeTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/InsertTextPane/InsertText.html"/>
           <bt:Url id="checkinTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/Outlook"/>
+		  <bt:Url id="linksTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/OutlookLinks"/>
 		  <bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/CheckinStyles"/>
 		   <bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/LinkedFolders"/>
 		  <bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/CheckinStyles"/>
@@ -260,11 +310,11 @@
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue="Content Manager"/>
           <!-- Compose mode -->
-          <bt:String id="funcComposeButtonLabel" DefaultValue="Insert default message"/>
+          <bt:String id="funcComposeButtonLabel" DefaultValue="Insert links"/>
           <bt:String id="menuComposeButtonLabel" DefaultValue="Insert message"/>
           <bt:String id="paneComposeButtonLabel" DefaultValue="Insert custom message"/>
 
-          <bt:String id="funcComposeSuperTipTitle" DefaultValue="Inserts the default message"/>
+          <bt:String id="funcComposeSuperTipTitle" DefaultValue="Shows a Record list to allow for the insertion of links."/>
           <bt:String id="menuComposeSuperTipTitle" DefaultValue="Choose a message to insert"/>
           <bt:String id="paneComposeSuperTipTitle" DefaultValue="Enter your own text to insert"/>
 
@@ -275,7 +325,7 @@
           <!-- Read mode -->
           <bt:String id="funcReadButtonLabel" DefaultValue="Record"/>
 		  <bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles"/>
-		    <bt:String id="linkedFoldersButtonLabel" DefaultValue="Linked Folders"/>
+		    <bt:String id="linkedFoldersButtonLabel" DefaultValue="Linked Folders XX"/>
 <bt:String id="residExtensionPointLabel" DefaultValue="Content Manager"/>
 <bt:String id="residGroupLabel" DefaultValue="Support"/>
  <bt:String id="residChangeToAssociateLabel" DefaultValue="Checkin Styles"/>

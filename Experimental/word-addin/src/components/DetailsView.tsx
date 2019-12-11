@@ -66,16 +66,18 @@ export class DetailsView extends React.Component<
 			}
 		}
 
-		const uri = recordProperties ? recordProperties.Uri : 0;
-		if (uri === 0) {
-			this.setState({ recordProperties: recordDetails.results[0] });
-		}
-		if (
-			prevProps.recordDetails.results &&
-			prevProps.recordDetails.results.length > 0 &&
-			uri !== prevProps.recordDetails.results[0].Uri
-		) {
-			this.setState({ recordProperties: recordDetails.results[0] });
+		if (recordProperties) {
+			const uri = recordProperties.Uri;
+			if (uri === 0) {
+				this.setState({ recordProperties: recordDetails.results[0] });
+			}
+			if (
+				prevProps.recordDetails.results &&
+				prevProps.recordDetails.results.length > 0 &&
+				uri !== prevProps.recordDetails.results[0].Uri
+			) {
+				this.setState({ recordProperties: recordDetails.results[0] });
+			}
 		}
 	}
 
@@ -106,14 +108,19 @@ export class DetailsView extends React.Component<
 
 	private getText(propId: string): any {
 		const { recordProperties } = this.state;
-		if (recordProperties.Uri > 0) {
-			const prop = recordProperties[propId];
-			if (prop) {
-				return prop.StringValue;
-			} else {
-				const fld = recordProperties.Fields![propId];
-				if (fld) {
-					return fld.StringValue;
+		if (recordProperties) {
+			if (recordProperties.Uri > 0) {
+				const prop = recordProperties[propId];
+				if (prop) {
+					if (prop.hasOwnProperty("StringValue")) {
+						return prop.StringValue;
+					}
+					return `${prop}`;
+				} else {
+					const fld = recordProperties.Fields![propId];
+					if (fld) {
+						return fld.StringValue;
+					}
 				}
 			}
 		}

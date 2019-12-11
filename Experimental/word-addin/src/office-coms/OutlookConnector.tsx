@@ -3,6 +3,18 @@ import { ITrimConnector } from "../trim-coms/trim-connector";
 import { IAppStore } from "../stores/AppStoreBase";
 import Axios from "axios";
 
+// interface IOutlookFolderItem {
+// 	Id: string;
+// 	DisplayName: any;
+// 	SingleValueExtendedProperties: any;
+// 	WellKnownName: string;
+// }
+
+export interface IOutlookFolder {
+	id: string;
+	displayName: string;
+}
+const T_NS = "http://schemas.microsoft.com/exchange/services/2006/types";
 export class OutlookConnector extends OfficeConnector
 	implements IOfficeConnector {
 	_customProps: Office.CustomProperties;
@@ -87,6 +99,204 @@ export class OutlookConnector extends OfficeConnector
 	}
 	insertLink(textToInsert: string, url: string): void {
 		throw new Error("Method not implemented.");
+	}
+
+	makeEwsXml(): string {
+		let result =
+			'<?xml version="1.0" encoding="utf-8"?>' +
+			'<soap:Envelope xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"' +
+			'               xmlns:xsd="https://www.w3.org/2001/XMLSchema"' +
+			'               xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"' +
+			'               xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+			"  <soap:Header>" +
+			'    <RequestServerVersion Version="Exchange2013" xmlns="http://schemas.microsoft.com/exchange/services/2006/types" soap:mustUnderstand="0" />' +
+			"  </soap:Header>" +
+			"  <soap:Body>" +
+			'    <FindFolder Traversal="Deep" xmlns="http://schemas.microsoft.com/exchange/services/2006/messages">' +
+			"      <FolderShape>" +
+			"        <t:BaseShape>Default</t:BaseShape>" +
+			"        <t:AdditionalProperties>" +
+			'         <t:FieldURI FieldURI="folder:DistinguishedFolderId" />' +
+			'         <t:FieldURI FieldURI="folder:ParentFolderId" />' +
+			'         <t:FieldURI FieldURI="folder:FolderClass" />' +
+			'         <t:FieldURI FieldURI="folder:PolicyTag" />' +
+			"        </t:AdditionalProperties>" +
+			"    </FolderShape>" +
+			"    <ParentFolderIds>" +
+			'      <t:DistinguishedFolderId Id="msgfolderroot"/>' +
+			"    </ParentFolderIds>" +
+			"    </FindFolder>" +
+			"  </soap:Body>" +
+			"</soap:Envelope>";
+
+		return result;
+	}
+
+	getParentFolders(
+		folderElements: HTMLCollectionOf<Element>,
+		parentIdEl: HTMLCollectionOf<Element>
+	): Element[] {
+		let parentEl = null;
+		let parentIdElement = parentIdEl;
+		const parents: Element[] = [];
+		do {
+			if (parentIdEl.length > 0) {
+				parentEl = this.getParentFolder(folderElements, parentIdElement);
+
+				if (parentEl !== null) {
+					parentIdElement = parentEl.getElementsByTagNameNS(
+						T_NS,
+						"ParentFolderId"
+					);
+					parents.splice(0, 0, parentEl);
+				}
+			}
+		} while (parentEl !== null);
+		return parents;
+	}
+
+	getParentFolder(
+		folderElements: HTMLCollectionOf<Element>,
+		parentIdEl: HTMLCollectionOf<Element>
+	): Element | null {
+		if (parentIdEl.length > 0) {
+			const parentId = parentIdEl[0].getAttribute("Id");
+
+			for (let i = 0; i < folderElements.length; i++) {
+				if (
+					parentId ===
+					folderElements[i]
+						.getElementsByTagNameNS(T_NS, "FolderId")[0]
+						.getAttribute("Id")
+				) {
+					return folderElements[i];
+				}
+			}
+		}
+
+		return null;
+	}
+
+	getParentFolderPrefix(
+		folderElements: HTMLCollectionOf<Element>,
+		parentIdEl: HTMLCollectionOf<Element>
+	): string {
+		let prefix = "";
+
+		this.getParentFolders(folderElements, parentIdEl).forEach(
+			(parentFolder) => {
+				prefix += `${
+					parentFolder.getElementsByTagNameNS(T_NS, "DisplayName")[0]
+						.childNodes[0].nodeValue
+				}\\`;
+			}
+		);
+		return prefix;
+		// const parentEl = this.getParentFolder(folderElements, parentIdEl);
+
+		// if (parentEl) {
+		// 	const parentId = parentIdEl[0].getAttribute("Id");
+		// 	if (
+		// 		parentId ===
+		// 		parentEl.getElementsByTagNameNS(T_NS, "FolderId")[0].getAttribute("Id")
+		// 	) {
+		// 		return `${
+		// 			parentEl.getElementsByTagNameNS(T_NS, "DisplayName")[0].childNodes[0]
+		// 				.nodeValue
+		// 		}\\`;
+		// 	}
+		// }
+		// return "";
+	}
+
+	getFolders(autoCreateCaption: string): Promise<IOutlookFolder[]> {
+		return new Promise<IOutlookFolder[]>((resolve, reject) => {
+			const mailbox = Office.context.mailbox;
+
+			try {
+				mailbox.makeEwsRequestAsync(this.makeEwsXml(), (result: any) => {
+					if (result.status === "succeeded") {
+						const parser = new DOMParser();
+						const xml = parser.parseFromString(result.value, "text/xml");
+
+						const folderElements = xml.getElementsByTagNameNS(T_NS, "Folder");
+
+						const folders: IOutlookFolder[] = [
+							{ id: "cm_auto", displayName: autoCreateCaption },
+						];
+
+						for (let i = 0; i < folderElements.length; i++) {
+							const folderEl = folderElements[i];
+							const parentFolders = this.getParentFolders(
+								folderElements,
+								folderEl.getElementsByTagNameNS(T_NS, "ParentFolderId")
+							);
+							let isWellKnown = false;
+							let distinguishedFolder = folderEl.getElementsByTagNameNS(
+								T_NS,
+								"DistinguishedFolderId"
+							);
+
+							if (distinguishedFolder.length > 0) {
+								isWellKnown = true;
+							} else if (parentFolders.length > 0) {
+								distinguishedFolder = parentFolders[0].getElementsByTagNameNS(
+									T_NS,
+									"DistinguishedFolderId"
+								);
+								if (distinguishedFolder.length > 0) {
+									isWellKnown =
+										distinguishedFolder[0].childNodes[0].nodeValue! !== "inbox";
+								}
+							}
+
+							const hasPolicy =
+								folderEl.getElementsByTagNameNS(T_NS, "PolicyTag").length > 0;
+
+							const isNoteEl = folderEl.getElementsByTagNameNS(
+								T_NS,
+								"FolderClass"
+							);
+
+							const isNote =
+								isNoteEl.length > 0 &&
+								isNoteEl[0].childNodes[0].nodeValue! === "IPF.Note";
+
+							const folderIdEl = folderEl.getElementsByTagNameNS(
+								T_NS,
+								"FolderId"
+							);
+
+							if (
+								folderIdEl.length > 0 &&
+								!isWellKnown &&
+								isNote &&
+								!hasPolicy
+							) {
+								folders.push({
+									id: folderIdEl[0].getAttribute("Id")!,
+									displayName:
+										this.getParentFolderPrefix(
+											folderElements,
+											folderEl.getElementsByTagNameNS(T_NS, "ParentFolderId")
+										) +
+										folderEl.getElementsByTagNameNS(T_NS, "DisplayName")[0]
+											.childNodes[0].nodeValue!,
+								});
+							}
+						}
+
+						resolve(folders);
+					} else {
+						reject("Error fetching folders.");
+					}
+
+					resolve([]);
+				});
+			} catch (e) {
+				reject(e);
+			}
+		});
 	}
 	setAutoOpen(
 		autoOpen: boolean,
