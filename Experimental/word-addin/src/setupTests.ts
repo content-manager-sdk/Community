@@ -1,5 +1,9 @@
 (global as any).config = { BASE_URL: "" };
-(global as any).Office = { context: { ui: { messageParent: function() {} } } };
+(global as any).Office = {
+	context: {
+		ui: { messageParent: function() {} },
+	},
+};
 
 import * as enzyme from "enzyme";
 import * as Adapter from "enzyme-adapter-react-16";

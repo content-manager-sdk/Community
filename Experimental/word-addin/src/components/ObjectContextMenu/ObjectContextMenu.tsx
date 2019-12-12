@@ -45,7 +45,6 @@ export class ObjectContextMenu extends React.Component<
 
 	componentDidUpdate(prevProps: IContextMenuProps) {
 		const { isInList, record } = this.props;
-
 		if (isInList) {
 			if (prevProps.record.Uri != record.Uri) {
 				this.setState({ commandDefs: record.CommandDefs! });
@@ -96,7 +95,7 @@ export class ObjectContextMenu extends React.Component<
 					this.callCommandComplete(item.key);
 					appStore.setStatus("WAITING");
 				});
-			} else {
+			} else if (item.data.NeedsAnObject) {
 				appStore.setStatus("STARTING");
 				const me = this;
 				wordConnector!.saveDocument().then(() => {
@@ -133,6 +132,8 @@ export class ObjectContextMenu extends React.Component<
 						runAction("");
 					}
 				});
+			} else {
+				this.callCommandComplete(item.key);
 			}
 		}
 	};
@@ -187,12 +188,20 @@ export class ObjectContextMenu extends React.Component<
 		};
 	}
 
+	private isSaveCommand(key: string): boolean {
+		return ["RecCheckIn", "RecDocFinal"].includes(key);
+	}
+
 	private getFarItems = () => {
 		const { appStore, isInList, record } = this.props;
 		const { commandDefs } = this.state;
 
 		let checkinDisabled = false;
 		let checkinLabel = "";
+
+		if (!record) {
+			return [];
+		}
 
 		const menuItems = (commandDefs || [])
 			.filter((commandDef: ICommandDef) => {
@@ -203,7 +212,7 @@ export class ObjectContextMenu extends React.Component<
 					return true;
 				}
 
-				return !["RecCheckIn", "RecDocFinal"].includes(commandDef.CommandId);
+				return !this.isSaveCommand(commandDef.CommandId);
 			})
 			.map<IContextualMenuItem>((commandDef: ICommandDef) => {
 				if (commandDef.CommandId === "RecCheckIn") {
@@ -218,56 +227,56 @@ export class ObjectContextMenu extends React.Component<
 							: commandDef.Tooltip,
 					onClick: this._onActionClick,
 					disabled: !commandDef.IsEnabled,
+					data: commandDef,
 				};
 			});
 
-		menuItems.unshift(
-			{
-				key: "paste",
-				text: appStore.messages.web_Paste,
-				subMenuProps: {
-					items: [
-						{
-							key: "pasteTitle",
-							text: appStore.messages.web_Paste_Title,
-							onClick: this._onActionClick,
-						},
-						{
-							key: "pasteNumber",
-							text: appStore.messages.web_Paste_Number,
-							onClick: this._onActionClick,
-						},
-						{
-							key: "pasteLink",
-							text: appStore.messages.web_Paste_Link,
-							onClick: this._onActionClick,
-						},
-					],
+		if (record.TrimType === BaseObjectTypes.Record) {
+			menuItems.unshift(
+				{
+					key: "paste",
+					text: appStore.messages.web_Paste,
+					subMenuProps: {
+						items: [
+							{
+								key: "pasteTitle",
+								text: appStore.messages.web_Paste_Title,
+								onClick: this._onActionClick,
+							},
+							{
+								key: "pasteNumber",
+								text: appStore.messages.web_Paste_Number,
+								onClick: this._onActionClick,
+							},
+							{
+								key: "pasteLink",
+								text: appStore.messages.web_Paste_Link,
+								onClick: this._onActionClick,
+							},
+						],
+					},
 				},
-			},
-			{ key: "divider_1", itemType: ContextualMenuItemType.Divider }
-		);
+				{ key: "divider_1", itemType: ContextualMenuItemType.Divider }
+			);
+		}
 
 		if (isInList) {
-			menuItems.push(this._makeRelationshipMenu());
+			if (record.TrimType === BaseObjectTypes.Record) {
+				menuItems.push(this._makeRelationshipMenu());
+			}
 		} else {
 			const checkinItem = menuItems.find((mi) => mi.key === "RecCheckIn");
 
-			if (record) {
-				const msgText = record.DeleteNow
-					? "Disable check in and delete on close"
-					: "Enable check in and delete on close";
-				if (checkinItem) {
-					let checkinDelete = { ...checkinItem };
-					checkinDelete.key = "RecCheckInDelete";
-					checkinDelete.text = msgText;
-					menuItems.splice(
-						menuItems.indexOf(checkinItem) + 1,
-						0,
-						checkinDelete
-					);
-				}
+			const msgText = record.DeleteNow
+				? "Disable check in and delete on close"
+				: "Enable check in and delete on close";
+			if (checkinItem) {
+				let checkinDelete = { ...checkinItem };
+				checkinDelete.key = "RecCheckInDelete";
+				checkinDelete.text = msgText;
+				menuItems.splice(menuItems.indexOf(checkinItem) + 1, 0, checkinDelete);
 			}
+
 			menuItems.push({
 				key: "getGlobalProperties",
 				text: appStore.messages.web_Get_Global_View_Pane,
@@ -287,20 +296,18 @@ export class ObjectContextMenu extends React.Component<
 				onClick: this._onActionClick,
 			});
 
-			if (record) {
-				items.push({
-					iconProps: {
-						iconName: record.DeleteNow ? "OpenFile" : "FileBug",
-					},
-					key: "RecCheckInDelete",
-					name: record.DeleteNow
-						? "Disable check in and delete on close"
-						: "Enable check in and delete on close",
-					iconOnly: true,
-					disabled: checkinDisabled,
-					onClick: this._onActionClick,
-				});
-			}
+			items.push({
+				iconProps: {
+					iconName: record.DeleteNow ? "OpenFile" : "FileBug",
+				},
+				key: "RecCheckInDelete",
+				name: record.DeleteNow
+					? "Disable check in and delete on close"
+					: "Enable check in and delete on close",
+				iconOnly: true,
+				disabled: checkinDisabled,
+				onClick: this._onActionClick,
+			});
 		}
 		items.push({
 			key: "moreActions",

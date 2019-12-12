@@ -1,47 +1,27 @@
-import * as React from "react";
-import { Provider /* inject, observer  */ } from "mobx-react";
-import TrimConnector from "../../trim-coms/trim-connector";
-import WordConnector from "../../office-coms/word-connector";
 import BootStrap from "./BootStrap";
+import { IAppStore } from "../../stores/AppStoreBase";
+import { IOfficeConnector } from "../../office-coms/office-connector";
+import WordConnector from "../../office-coms/word-connector";
+import AppStoreWord from "../../stores/AppStoreWord";
 
-//import { getQueryStringValue } from "../../utils/getQueryStringValue";
-import AppStoreWord from "src/stores/AppStoreWord";
+export class BootStrapWord extends BootStrap {
+	private appStore: IAppStore;
+	protected getAppStore(): IAppStore {
+		if (!this.appStore) {
+			this.appStore = new AppStoreWord(
+				this.getTrimConnector(),
+				this.getOfficeConnector()
+			);
+		}
+		return this.appStore;
+	}
 
-export class BootStrapWord extends React.Component<{}, {}> {
-	public render() {
-		const wordConnector = new WordConnector();
-		const trimConnector = new TrimConnector();
-		const appStore = new AppStoreWord(trimConnector, wordConnector);
-
-		// let getAccessToken: Promise<string>;
-
-		// trimConnector.credentialsResolver = (callback) => {
-		// 	const accessToken = getQueryStringValue("accessToken");
-
-		// 	if (!getAccessToken) {
-		// 		getAccessToken = wordConnector.getAccessToken();
-		// 	}
-
-		// 	if (accessToken) {
-		// 		callback(accessToken, "");
-		// 	} else {
-		// 		getAccessToken
-		// 			.then((token) => callback(token, ""))
-		// 			.catch(function(error) {
-		// 				callback("", error.message);
-		// 			});
-		// 	}
-		// };
-
-		return (
-			<Provider
-				appStore={appStore}
-				trimConnector={trimConnector}
-				wordConnector={wordConnector}
-			>
-				<BootStrap />
-			</Provider>
-		);
+	private officeConnector: IOfficeConnector;
+	protected getOfficeConnector(): IOfficeConnector {
+		if (!this.officeConnector) {
+			this.officeConnector = new WordConnector();
+		}
+		return this.officeConnector;
 	}
 }
 

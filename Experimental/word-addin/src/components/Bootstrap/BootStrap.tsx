@@ -1,23 +1,19 @@
 import * as React from "react";
 //import { IAppStore } from "../stores/AppStore";
-import { inject, observer } from "mobx-react";
+import { observer, Provider } from "mobx-react";
 import ErrorDisplay from "../ErrorDisplay";
 import MainApp from "../MainApp";
 //import { BrowserRouter as Router, Route } from "react-router-dom";
 import { TrimSearchDialog } from "../TrimSearchDialog/TrimSearchDialog";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
-import { ITrimConnector } from "../../trim-coms/trim-connector";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 import { IAppStore } from "../../stores/AppStoreBase";
 
 import { getQueryStringValue } from "../../utils/getQueryStringValue";
-import { IOfficeConnector } from "src/office-coms/office-connector";
+import { IOfficeConnector } from "../../office-coms/office-connector";
+import TrimConnector, { ITrimConnector } from "../../trim-coms/trim-connector";
 
-interface IProps {
-	appStore?: IAppStore;
-	trimConnector?: ITrimConnector;
-	wordConnector?: IOfficeConnector;
-}
+interface IProps {}
 
 export class BootStrap extends React.Component<
 	IProps,
@@ -46,33 +42,19 @@ export class BootStrap extends React.Component<
 		}
 	}
 
-	componentDidMount() {
-		const { appStore, trimConnector, wordConnector } = this.props;
-		const { dialogName } = this.state;
-		Office.initialize = function(reason) {
-			appStore!.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
+	private trimConnector = this.getTrimConnector();
 
-			wordConnector!.initialize(trimConnector!, appStore!);
-		};
-
-		window.onbeforeunload = () => {
-			trimConnector!.clearCache();
-		};
-	}
-	// private _onChange = (ev: React.MouseEvent<HTMLElement>, checked: boolean) => {
-	// 	const { wordConnector } = this.props;
-	// 	wordConnector!.setAutoOpen(checked);
-	// 	//console.log('toggle is ' + (checked ? 'checked' : 'not checked'));
-	// };
-	public render() {
-		const { appStore, trimConnector, wordConnector } = this.props;
+	protected getTrimConnector(): ITrimConnector {
+		if (!this.trimConnector) {
+			this.trimConnector = new TrimConnector();
+		}
 
 		let getAccessToken: Promise<string>;
 
-		trimConnector!.credentialsResolver = (callback) => {
+		this.trimConnector.credentialsResolver = (callback) => {
 			const accessToken = getQueryStringValue("accessToken");
 			if (!getAccessToken) {
-				getAccessToken = wordConnector!.getAccessToken();
+				getAccessToken = this.getOfficeConnector()!.getAccessToken();
 			}
 
 			if (accessToken) {
@@ -86,34 +68,69 @@ export class BootStrap extends React.Component<
 			}
 		};
 
-		return (
-			<div>
-				{appStore!.status === "ERROR" && <ErrorDisplay />}
+		return this.trimConnector;
+	}
 
-				{this.state.dialogName === "/searchdialog" ? (
-					<TrimSearchDialog
-						trimType={BaseObjectTypes.Record}
-						trimConnector={trimConnector}
-						startPoint="RecentDocs"
-						appStore={appStore}
-						filterSearch={this.state.filter}
-						insertText={this.state.insertText}
-					/>
-				) : (
-					<React.Fragment>
-						{appStore!.status === "STARTING" && (
-							<Spinner size={SpinnerSize.large} />
-						)}
-						<MainApp className="trim-main" />
-					</React.Fragment>
-				)}
-			</div>
+	protected getAppStore(): IAppStore {
+		throw new Error("Method not implemented.");
+	}
+
+	protected getOfficeConnector(): IOfficeConnector {
+		throw new Error("Method not implemented.");
+	}
+
+	componentDidMount() {
+		const appStore = this.getAppStore();
+		const wordConnector = this.getOfficeConnector();
+		const trimConnector = this.getTrimConnector();
+
+		const { dialogName } = this.state;
+		Office.initialize = (reason) => {
+			appStore.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
+
+			wordConnector.initialize(trimConnector, appStore);
+		};
+
+		window.onbeforeunload = () => {
+			trimConnector.clearCache();
+		};
+	}
+
+	public render() {
+		const appStore = this.getAppStore();
+		const wordConnector = this.getOfficeConnector();
+		const trimConnector = this.getTrimConnector();
+
+		return (
+			<Provider
+				appStore={appStore}
+				trimConnector={trimConnector}
+				wordConnector={wordConnector}
+			>
+				<div>
+					{appStore.status === "ERROR" && <ErrorDisplay />}
+
+					{this.state.dialogName === "/searchdialog" ? (
+						<TrimSearchDialog
+							trimType={BaseObjectTypes.Record}
+							trimConnector={this.trimConnector}
+							startPoint="RecentDocs"
+							appStore={appStore}
+							filterSearch={this.state.filter}
+							insertText={this.state.insertText}
+						/>
+					) : (
+						<React.Fragment>
+							{appStore!.status === "STARTING" && (
+								<Spinner size={SpinnerSize.large} />
+							)}
+							<MainApp className="trim-main" />
+						</React.Fragment>
+					)}
+				</div>
+			</Provider>
 		);
 	}
 }
 
-export default inject(
-	"appStore",
-	"trimConnector",
-	"wordConnector"
-)(observer(BootStrap));
+export default observer(BootStrap);

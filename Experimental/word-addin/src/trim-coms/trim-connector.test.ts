@@ -352,10 +352,12 @@ describe("Test fetch from TRIM", () => {
 		});
 
 		expect.assertions(2);
-		return trimConnector.getPropertySheet(123).then((data) => {
-			expect(data.Pages.length).toBe(1);
-			expect(postConfig.RecordFilePath).toBeFalsy();
-		});
+		return trimConnector
+			.getPropertySheet(BaseObjectTypes.Record, 123)
+			.then((data) => {
+				expect(data.Pages.length).toBe(1);
+				expect(postConfig.RecordFilePath).toBeFalsy();
+			});
 	});
 
 	it("Property sheet with document", () => {
@@ -382,10 +384,50 @@ describe("Test fetch from TRIM", () => {
 		});
 
 		expect.assertions(2);
-		return trimConnector.getPropertySheet(123, "myfile.eml").then((data) => {
-			expect(data.Pages.length).toBe(1);
-			expect(JSON.parse(postConfig.data).RecordFilePath).toBe("myfile.eml");
-		});
+		return trimConnector
+			.getPropertySheet(BaseObjectTypes.Record, 123, "myfile.eml")
+			.then((data) => {
+				expect(data.Pages.length).toBe(1);
+				expect(JSON.parse(postConfig.data).RecordFilePath).toBe("myfile.eml");
+			});
+	});
+
+	it("Property sheet requested for Checkin Style", () => {
+		let postConfig: any;
+		mock
+			.onPost(`${SERVICEAPI_BASE_URI}/CheckinStyle`)
+			.reply(function(config: any) {
+				postConfig = config;
+
+				return [
+					200,
+					{
+						Results: [
+							{
+								TrimType: "CheckinStyle",
+								DataEntryFormDefinition: {
+									Version: "1",
+									SupportsElectronicDocs: true,
+									TitlingMethod: "FreeText",
+									Pages: [{}],
+								},
+							},
+						],
+					},
+				];
+			});
+
+		expect.assertions(4);
+		return trimConnector
+			.getPropertySheet(BaseObjectTypes.CheckinStyle, 123)
+			.then((data) => {
+				expect(data.Pages.length).toBe(1);
+				expect(JSON.parse(postConfig.data).CheckinStyleRecordType).toBe(123);
+				expect(JSON.parse(postConfig.data).ByPassSave).toBeTruthy();
+				expect(JSON.parse(postConfig.data).properties).toBe(
+					"DataEntryFormDefinition"
+				);
+			});
 	});
 
 	it("Error is handled", () => {
@@ -408,7 +450,7 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(1);
 
 		return trimConnector
-			.getPropertySheet(567)
+			.getPropertySheet(BaseObjectTypes.Record, 567)
 			.then(() => {})
 			.catch((data) => {
 				expect(data.message).toBe("Unable to find object test");
@@ -463,12 +505,53 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(4);
 
 		return trimConnector
-			.registerInTrim(1, { RecordTypedTitle: "test" })
+			.registerInTrim(BaseObjectTypes.Record, {
+				RecordTypedTitle: "test",
+				RecordRecordType: 1,
+			})
 			.then((data) => {
 				expect(postConfig.data).toEqual(
 					JSON.stringify({
 						RecordTypedTitle: "test",
 						RecordRecordType: 1,
+						properties: "CommandDefs,URN",
+					})
+				);
+				expect(postConfig.headers!["Accept"]).toEqual("application/json");
+				expect(postConfig.headers!["Content-Type"]).toEqual("application/json");
+				expect(data.Uri).toEqual(123);
+			});
+	});
+
+	it("has posted a new Checkin Style", () => {
+		let postConfig: any;
+		mock
+			.onPost(`${SERVICEAPI_BASE_URI}/CheckinStyle`)
+			.reply(function(config: any) {
+				postConfig = config;
+
+				return [
+					200,
+					{
+						Results: [
+							{
+								Uri: 123,
+							},
+						],
+					},
+				];
+			});
+
+		expect.assertions(4);
+
+		return trimConnector
+			.registerInTrim(BaseObjectTypes.CheckinStyle, {
+				CheckinStyleName: "test",
+			})
+			.then((data) => {
+				expect(postConfig.data).toEqual(
+					JSON.stringify({
+						CheckinStyleName: "test",
 						properties: "CommandDefs,URN",
 					})
 				);
@@ -499,7 +582,11 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(5);
 
 		return trimConnector
-			.registerInTrim(1, { RecordTypedTitle: "test" }, { DriveId: "test" })
+			.registerInTrim(
+				BaseObjectTypes.Record,
+				{ RecordTypedTitle: "test", RecordRecordType: 1 },
+				{ DriveId: "test" }
+			)
 			.then((data) => {
 				expect(postConfig.data).toEqual(
 					JSON.stringify({
@@ -691,7 +778,7 @@ describe("Test fetch from TRIM", () => {
 		let completed = false;
 
 		trimConnector
-			.registerInTrim(1, { RecordTypedTitle: "test" })
+			.registerInTrim(BaseObjectTypes.Record, { RecordTypedTitle: "test" })
 
 			.then((data) => {
 				completed = true;

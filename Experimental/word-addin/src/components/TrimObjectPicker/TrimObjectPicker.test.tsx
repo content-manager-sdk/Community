@@ -7,7 +7,7 @@ import { TrimObjectPicker } from "./TrimObjectPicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
 
-import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
+import { TrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import {
 	TrimConnector,
@@ -91,7 +91,7 @@ describe("TrimObjectPicker", function() {
 		expect(wrapper.state("isObjectPickerShown")).toBe(false);
 	});
 
-	it("should set defaut value", () => {
+	it("should set default value", () => {
 		const wrapper = shallow(
 			<TrimObjectPicker
 				disabled
@@ -307,14 +307,18 @@ describe("TrimObjectPicker", function() {
 			expect.assertions(1);
 
 			setTimeout(() => {
-				const list = wrapper.find(TrimObjectSearchList);
+				try {
+					const list = wrapper.find(TrimObjectSearchList);
 
-				list.props().onTrimObjectSelected!({
-					Uri: 1,
-				});
+					list.props().onTrimObjectSelected!({
+						Uri: 1,
+					});
 
-				expect(wrapper.state("selectedItems")).toEqual([{ Uri: 1 }]);
-				done();
+					expect(wrapper.state("selectedItems")).toEqual([{ Uri: 1 }]);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
 			});
 		});
 
@@ -524,10 +528,14 @@ describe("TrimObjectPicker", function() {
 				);
 
 				setTimeout(() => {
-					const list = wrapper2.find(TrimObjectSearchList);
+					try {
+						const list = wrapper2.find(TrimObjectSearchList);
 
-					expect(list.props().q).toEqual(Expected);
-					done();
+						expect(list.props().q).toEqual(Expected);
+						done();
+					} catch (e) {
+						done.fail(e);
+					}
 				});
 			});
 		});
@@ -545,10 +553,14 @@ describe("TrimObjectPicker", function() {
 			);
 
 			setTimeout(() => {
-				const list = wrapper2.find(TrimObjectSearchList);
+				try {
+					const list = wrapper2.find(TrimObjectSearchList);
 
-				expect(list.props().contentsInReverseDateOrder).toBeTruthy();
-				done();
+					expect(list.props().contentsInReverseDateOrder).toBeTruthy();
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
 			});
 		});
 	});

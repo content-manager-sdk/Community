@@ -171,10 +171,12 @@ export class AppStoreBase implements IAppStore {
 			this.getFileToSave().then((fileName) => {
 				fields = fields || {};
 				fields.DriveID = this.documentInfo.Id;
+
 				return this.trimConnector
 					.registerInTrim(
-						recordType,
+						BaseObjectTypes.Record,
 						{
+							RecordRecordType: recordType,
 							...properties,
 							RecordFilePath: fileName,
 						},

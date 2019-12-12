@@ -29,10 +29,12 @@ enum FieldPickerType {
 	Date,
 }
 
-interface IPageItem {
+interface IPageItemValue {
 	Name: string;
 	Value: any;
 	Type: string;
+}
+interface IPageItem extends IPageItemValue {
 	Format: string;
 	LookupSetUri: number;
 	Caption: string;
@@ -40,6 +42,8 @@ interface IPageItem {
 	EditPurpose: number;
 	EditPurposeExtra: number;
 	MultiLine?: Boolean;
+	EnumName: string;
+	EnumItems: IEnumDetails[];
 }
 
 export interface IPropertySheetState {
@@ -52,6 +56,7 @@ export interface IPropertySheetProps {
 	defaultRecordTitle?: string;
 	onChange?: (newValue?: any, newFields?: any) => void;
 	trimConnector?: ITrimConnector;
+	computedProperties?: IPageItemValue[];
 }
 
 export class PropertySheet extends React.Component<
@@ -89,7 +94,7 @@ export class PropertySheet extends React.Component<
 		this.setState(newState);
 	}
 
-	private doPropOrFieldChange = (prop: IPageItem, newValue: any) => {
+	private doPropOrFieldChange = (prop: IPageItemValue, newValue: any) => {
 		const { onChange } = this.props;
 		if (onChange) {
 			if (prop.Type === "Field") {
@@ -136,7 +141,7 @@ export class PropertySheet extends React.Component<
 		this.textChange(prop, newText);
 	};
 
-	private textChange = (prop: IPageItem, newText: string) => {
+	private textChange = (prop: IPageItemValue, newText: string) => {
 		const newMultiline = newText.length > 40;
 		const { isTextFieldMultiline } = this.state;
 		if (newMultiline !== isTextFieldMultiline[prop.Name]) {
@@ -172,181 +177,215 @@ export class PropertySheet extends React.Component<
 		this.doPropOrFieldChange(prop, item.key);
 	};
 
+	private getFieldValue = (
+		pageItem: IPageItemValue,
+		getValue: () => any,
+		fieldType: FieldPickerType = FieldPickerType.Any,
+		asArray: boolean = false
+	) => {
+		const { fieldValues } = this.state;
+
+		if (!(pageItem.Name in fieldValues) && pageItem.Value !== undefined) {
+			if (fieldType == FieldPickerType.Date) {
+				if (!pageItem.Value.IsClear) {
+					this.doPropOrFieldChange(
+						pageItem,
+						new Date(pageItem.Value.DateTime).toISOString()
+					);
+				}
+			} else if (fieldType === FieldPickerType.Text) {
+				this.textChange(pageItem, pageItem.Value);
+			} else {
+				let val = pageItem.Value;
+
+				if (fieldType === FieldPickerType.Object) {
+					val = pageItem.Value.Uri;
+				} else if (fieldType === FieldPickerType.LookupSet) {
+					val = pageItem.Value.NameString;
+				}
+				this.doPropOrFieldChange(pageItem, val);
+			}
+		}
+
+		if (pageItem.Name in fieldValues) {
+			if (asArray) {
+				return [this.state.fieldValues[pageItem.Name]];
+			} else {
+				return this.state.fieldValues[pageItem.Name];
+			}
+		} else {
+			return getValue();
+		}
+	};
+
 	private makePageItems = (formItems: any) => {
 		const { isTextFieldMultiline } = this.state;
-		const { trimConnector } = this.props;
+		const { computedProperties } = this.props;
 
-		return formItems.map((pageItem: IPageItem) => {
-			const getFieldValue = (
-				getValue: () => any,
-				fieldType: FieldPickerType = FieldPickerType.Any,
-				asArray: boolean = false
-			) => {
-				const { fieldValues } = this.state;
-				if (!(pageItem.Name in fieldValues) && pageItem.Value) {
-					if (fieldType == FieldPickerType.Date) {
-						if (!pageItem.Value.IsClear) {
-							this.doPropOrFieldChange(
-								pageItem,
-								new Date(pageItem.Value.DateTime).toISOString()
-							);
-						}
-					} else if (fieldType === FieldPickerType.Text) {
-						this.textChange(pageItem, pageItem.Value);
-					} else {
-						let val = pageItem.Value;
+		(computedProperties || []).forEach((pageItem: IPageItemValue) => {
+			this.getFieldValue(pageItem, () => {
+				return null;
+			});
+		});
 
-						if (fieldType === FieldPickerType.Object) {
-							val = pageItem.Value.Uri;
-						} else if (fieldType === FieldPickerType.LookupSet) {
-							val = pageItem.Value.NameString;
-						}
-						this.doPropOrFieldChange(pageItem, val);
-					}
+		return formItems
+			.filter((pageItem: IPageItemValue) => {
+				return (
+					(computedProperties || []).find((item) => {
+						return item.Name === pageItem.Name;
+					}) === undefined
+				);
+			})
+			.map((pageItem: IPageItem) => {
+				const commonProps = { key: pageItem.Name, label: pageItem.Caption };
+
+				if (
+					(computedProperties || []).find((item) => {
+						return item.Name === pageItem.Name;
+					}) !== undefined
+				) {
+					return null;
 				}
 
-				if (pageItem.Name in fieldValues) {
-					if (asArray) {
-						return [this.state.fieldValues[pageItem.Name]];
+				if (
+					pageItem.Format === "String" ||
+					pageItem.Format === "Text" ||
+					pageItem.Format === "Geography"
+				) {
+					if (pageItem.LookupSetUri > 0) {
+						const val = this.getFieldValue(
+							pageItem,
+							() => {
+								return pageItem.Value
+									? [{ Uri: 0, NameString: pageItem.Value }]
+									: [];
+							},
+							FieldPickerType.LookupSet,
+							true
+						);
+
+						return (
+							<TrimObjectPicker
+								{...commonProps}
+								trimType={BaseObjectTypes.LookupItem}
+								propertyName={pageItem.Name}
+								filter={"lkiSet:" + pageItem.LookupSetUri}
+								onTrimObjectSelected={this._onSelectLookupItem(pageItem)}
+								value={val}
+							/>
+						);
 					} else {
-						return this.state.fieldValues[pageItem.Name];
+						const val = this.getFieldValue(
+							pageItem,
+							() => {
+								return pageItem.Name === "RecordTypedTitle"
+									? this.props.defaultRecordTitle || pageItem.Value
+									: pageItem.Value;
+							},
+							FieldPickerType.Text
+						);
+
+						return (
+							<TextField
+								{...commonProps}
+								multiline={
+									pageItem.MultiLine || isTextFieldMultiline[pageItem.Name]
+								}
+								defaultValue={val}
+								onChange={this._onTextChange(pageItem)}
+							/>
+						);
 					}
-				} else {
-					return getValue();
-				}
-			};
+				} else if (TrimNumberFieldHelpers.IsNumberField(pageItem.Format)) {
+					const val = this.getFieldValue(pageItem, () => {
+						return pageItem.Value;
+					});
 
-			const commonProps = { key: pageItem.Name, label: pageItem.Caption };
+					return (
+						<TrimNumberField
+							format={pageItem.Format}
+							{...commonProps}
+							defaultValue={val}
+							onChange={this._onNumberChange(pageItem)}
+						/>
+					);
+				} else if (pageItem.Format === "Enum") {
+					const val = this.getFieldValue(pageItem, () => {
+						return pageItem.Value;
+					});
 
-			if (
-				pageItem.Format === "String" ||
-				pageItem.Format === "Text" ||
-				pageItem.Format === "Geography"
-			) {
-				if (pageItem.LookupSetUri > 0) {
-					const val = getFieldValue(
+					return (
+						<ComboBox
+							{...commonProps}
+							options={pageItem.EnumItems.map((item) => {
+								return { key: item.Name, text: item.Caption };
+							})}
+							onChange={this._onComboChange(pageItem)}
+							selectedKey={val}
+						/>
+					);
+				} else if (pageItem.Format === "Boolean") {
+					const val = this.getFieldValue(pageItem, () => {
+						return pageItem.Value;
+					});
+
+					return (
+						<Checkbox
+							{...commonProps}
+							defaultChecked={val}
+							onChange={this._onBooleanChange(pageItem)}
+						/>
+					);
+				} else if (
+					pageItem.Format === "Datetime" ||
+					pageItem.Format === "Date"
+				) {
+					const val = this.getFieldValue(
+						pageItem,
 						() => {
-							return pageItem.Value
-								? [{ Uri: 0, NameString: pageItem.Value }]
+							return !pageItem.Value || pageItem.Value.IsClear
+								? undefined
+								: new Date(pageItem.Value.DateTime);
+						},
+						FieldPickerType.Date
+					);
+
+					return (
+						<DatePicker
+							{...commonProps}
+							showMonthPickerAsOverlay={true}
+							value={val}
+							onSelectDate={this._onSelectDate(pageItem)}
+						/>
+					);
+				} else if (pageItem.Format === "Object") {
+					const val = this.getFieldValue(
+						pageItem,
+						() => {
+							return pageItem.Value &&
+								(pageItem.Value as ITrimMainObject).Uri > 0
+								? [pageItem.Value as ITrimMainObject]
 								: [];
 						},
-						FieldPickerType.LookupSet,
+						FieldPickerType.Object,
 						true
 					);
 
 					return (
 						<TrimObjectPicker
 							{...commonProps}
-							trimType={BaseObjectTypes.LookupItem}
+							trimType={pageItem.ObjectType}
 							propertyName={pageItem.Name}
-							filter={"lkiSet:" + pageItem.LookupSetUri}
-							onTrimObjectSelected={this._onSelectLookupItem(pageItem)}
+							purpose={pageItem.EditPurpose}
+							purposeExtra={pageItem.EditPurposeExtra}
 							value={val}
+							onTrimObjectSelected={this._onSelectObject(pageItem)}
 						/>
 					);
 				} else {
-					const val = getFieldValue(() => {
-						return pageItem.Name === "RecordTypedTitle"
-							? this.props.defaultRecordTitle || pageItem.Value
-							: pageItem.Value;
-					}, FieldPickerType.Text);
-
-					return (
-						<TextField
-							{...commonProps}
-							multiline={
-								pageItem.MultiLine || isTextFieldMultiline[pageItem.Name]
-							}
-							defaultValue={val}
-							onChange={this._onTextChange(pageItem)}
-						/>
-					);
+					return null;
 				}
-			} else if (TrimNumberFieldHelpers.IsNumberField(pageItem.Format)) {
-				const val = getFieldValue(() => {
-					return pageItem.Value;
-				});
-
-				return (
-					<TrimNumberField
-						format={pageItem.Format}
-						{...commonProps}
-						defaultValue={val}
-						onChange={this._onNumberChange(pageItem)}
-					/>
-				);
-			} else if (pageItem.Format === "Enum") {
-				const val = getFieldValue(() => {
-					return pageItem.Value;
-				});
-
-				return (
-					<ComboBox
-						{...commonProps}
-						onResolveOptions={() => {
-							return trimConnector!.getEnum("MediaTypes").then((items) => {
-								return items.map((item: IEnumDetails) => {
-									return { key: item.Name, text: item.Caption };
-								});
-							});
-						}}
-						onChange={this._onComboChange(pageItem)}
-						defaultSelectedKey={val}
-					/>
-				);
-			} else if (pageItem.Format === "Boolean") {
-				const val = getFieldValue(() => {
-					return pageItem.Value;
-				});
-
-				return (
-					<Checkbox
-						{...commonProps}
-						defaultChecked={val}
-						onChange={this._onBooleanChange(pageItem)}
-					/>
-				);
-			} else if (pageItem.Format === "Datetime" || pageItem.Format === "Date") {
-				const val = getFieldValue(() => {
-					return !pageItem.Value || pageItem.Value.IsClear
-						? undefined
-						: new Date(pageItem.Value.DateTime);
-				}, FieldPickerType.Date);
-
-				return (
-					<DatePicker
-						{...commonProps}
-						showMonthPickerAsOverlay={true}
-						value={val}
-						onSelectDate={this._onSelectDate(pageItem)}
-					/>
-				);
-			} else if (pageItem.Format === "Object") {
-				const val = getFieldValue(
-					() => {
-						return pageItem.Value && (pageItem.Value as ITrimMainObject).Uri > 0
-							? [pageItem.Value as ITrimMainObject]
-							: [];
-					},
-					FieldPickerType.Object,
-					true
-				);
-
-				return (
-					<TrimObjectPicker
-						{...commonProps}
-						trimType={pageItem.ObjectType}
-						propertyName={pageItem.Name}
-						purpose={pageItem.EditPurpose}
-						purposeExtra={pageItem.EditPurposeExtra}
-						value={val}
-						onTrimObjectSelected={this._onSelectObject(pageItem)}
-					/>
-				);
-			} else {
-				return null;
-			}
-		});
+			});
 	};
 
 	public render() {
@@ -359,7 +398,7 @@ export class PropertySheet extends React.Component<
 		) {
 			let pageID = 1;
 			return (
-				<div className="trim-properties">
+				<div className={"trim-properties"}>
 					<Pivot
 						linkFormat={PivotLinkFormat.tabs}
 						linkSize={PivotLinkSize.normal}

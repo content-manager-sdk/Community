@@ -1,11 +1,12 @@
 import BootStrap from "./BootStrap";
-
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import AppStoreOutlook from "../../stores/AppStoreOutlook";
-import { IOfficeConnector } from "../../office-coms/office-connector";
-import { IAppStore } from "../../stores/AppStoreBase";
+import { IOfficeConnector } from "src/office-coms/office-connector";
+import { IAppStore } from "src/stores/AppStoreBase";
+import * as React from "react";
+import { Provider } from "mobx-react";
 
-export class BootStrapOutlook extends BootStrap {
+export class BootStrapOutlookLinks extends BootStrap {
 	private appStore: IAppStore;
 	protected getAppStore(): IAppStore {
 		if (!this.appStore) {
@@ -24,6 +25,20 @@ export class BootStrapOutlook extends BootStrap {
 		}
 		return this.officeConnector;
 	}
+	public render() {
+		const appStore = this.getAppStore();
+		const wordConnector = this.getOfficeConnector();
+		const trimConnector = this.getTrimConnector();
+		return (
+			<Provider
+				appStore={appStore}
+				trimConnector={trimConnector}
+				wordConnector={wordConnector}
+			>
+				<div>test</div>
+			</Provider>
+		);
+	}
 }
 
-export default BootStrapOutlook;
+export default BootStrapOutlookLinks;

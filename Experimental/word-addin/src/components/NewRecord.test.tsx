@@ -9,25 +9,80 @@ import { TrimConnector } from "../trim-coms/trim-connector";
 import { IRecordType, ITrimMainObject } from "../trim-coms/trim-connector";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "../office-coms/office-connector";
+import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 
 describe("New Record layout", function() {
 	let resolveRecordTypes;
 	let testRecordUrn = "";
 	let testSubjectPrefix = "";
+	let propertySheetTrimType = BaseObjectTypes.Location;
+	let wrapper;
+	let registerProps = [];
+	//let registerPropsForPlace = undefined;
+	let registerType = undefined;
+	let registerTypePlace = undefined;
+
+	const makeWrapper = (
+		trimType: BaseObjectTypes,
+		onCreated?: any,
+		folderId?: string
+	) => {
+		const innerWrapper = shallow<NewRecord>(
+			<NewRecord
+				appStore={mockStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={new MockWordConnector()}
+				trimType={trimType}
+				onTrimObjectCreated={onCreated}
+				folderId={folderId}
+			/>
+		);
+		innerWrapper.setState({ formDefinition: { Pages: [] } });
+
+		return innerWrapper;
+	};
 
 	beforeEach(() => {
+		wrapper = makeWrapper(BaseObjectTypes.Record);
+	});
+
+	afterEach(() => {
 		testRecordUrn = "";
 		testSubjectPrefix = "";
+		propertySheetTrimType = BaseObjectTypes.Location;
+		registerProps = [];
+		//registerPropsForPlace = undefined;
+		registerType = undefined;
+		//	registerTypePlace = undefined;
 	});
 
 	let mockTrimConnector = new TrimConnector();
+
+	mockTrimConnector.registerInTrim = (
+		trimType: BaseObjectTypes,
+		properties: any,
+		fields: any
+	) => {
+		registerProps.push(properties);
+
+		if (registerType) {
+			registerTypePlace = trimType;
+		} else {
+			registerType = trimType;
+		}
+		return new Promise<ITrimMainObject>(function(resolve) {
+			resolve({ Uri: 456 });
+		});
+	};
+
 	mockTrimConnector.search = () => {
 		return new Promise(function(resolve) {
 			resolveRecordTypes = resolve;
 		});
 	};
 
-	mockTrimConnector.getPropertySheet = () => {
+	mockTrimConnector.getPropertySheet = (trimType: BaseObjectTypes) => {
+		propertySheetTrimType = trimType;
 		return new Promise(function(resolve) {
 			resolve({ PageItems: [] });
 		});
@@ -102,14 +157,6 @@ describe("New Record layout", function() {
 			throw new Error("Method not implemented.");
 		}
 	}
-
-	const wrapper = shallow<NewRecord>(
-		<NewRecord
-			appStore={mockStore}
-			trimConnector={mockTrimConnector}
-			wordConnector={new MockWordConnector()}
-		/>
-	);
 
 	it("contains a Record Type dropdown", async (done) => {
 		resolveRecordTypes({
@@ -193,6 +240,135 @@ describe("New Record layout", function() {
 		expect(mockStore.RecordUri).toEqual(1);
 	});
 
+	it("calls register in TRIM for non Record object", () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
+
+		expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
+		expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+	});
+
+	it("create a checkin place for a Check in Style", (done) => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle, () => {}, "123");
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
+		setTimeout(() => {
+			try {
+				expect(registerProps[1]).toEqual({
+					CheckinPlacePlaceId: "123",
+					CheckinPlaceCheckinAs: 456,
+					CheckinPlacePlaceType: "MailForServerProcessing",
+				});
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("calls on created event", (done) => {
+		let eventCalled = false;
+
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle, () => {
+			eventCalled = true;
+		});
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
+
+		setTimeout(() => {
+			try {
+				expect(eventCalled).toBeTruthy();
+			} catch (e) {
+				done.fail(e);
+			}
+			done();
+		});
+	});
+
+	[
+		{ folderId: "123", createPlace: false },
+		{ folderId: undefined, createPlace: true },
+	].forEach((testData) => {
+		it("sends computed fields to Checkin Style", () => {
+			const wrapper = makeWrapper(
+				BaseObjectTypes.CheckinStyle,
+				null,
+				testData.folderId
+			);
+			const instance = wrapper.instance();
+			instance.setRecordTypes([
+				{ key: 1, text: "Document" },
+				{ key: 5, text: "Document 5" },
+			]);
+
+			wrapper
+				.update()
+				.find(Dropdown)
+				.props()
+				.onChange(null, null, 0);
+
+			const propertySheet = wrapper.find(PropertySheet);
+			expect(propertySheet.props().computedProperties).toEqual([
+				{
+					Name: "CheckinStyleUseForServerMailCapture",
+					Value: testData.createPlace,
+					Type: "Property",
+				},
+				{
+					Name: "CheckinStyleUseForServerMailFolderType",
+					Value: "NormalFolder",
+					Type: "Property",
+				},
+				{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" },
+			]);
+		});
+	});
 	it("sends the default on click even if no fields on the form have been modified", () => {
 		const instance = wrapper.instance();
 		instance.setRecordTypes([
@@ -264,6 +440,7 @@ describe("New Record layout", function() {
 
 	it("sends the email prefix", (done) => {
 		const instance = wrapper.instance();
+
 		instance.setRecordTypes([
 			{ key: 1, text: "Document" },
 			{ key: 5, text: "Document 5" },
@@ -291,6 +468,7 @@ describe("New Record layout", function() {
 				appStore={mockStore}
 				trimConnector={mockTrimConnector}
 				wordConnector={new MockWordConnector()}
+				trimType={BaseObjectTypes.Record}
 			/>
 		);
 
@@ -308,14 +486,64 @@ describe("New Record layout", function() {
 			.onChange(null, null, 1);
 
 		setImmediate(() => {
-			// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
-			expect(instance.formDefinition).toEqual({ PageItems: [] });
-			expect(shallowWrapper.find(PropertySheet).props().formDefinition).toEqual(
-				{
+			try {
+				// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+				expect(shallowWrapper.state().formDefinition).toEqual({
 					PageItems: [],
-				}
-			);
-			done();
+				});
+				expect(
+					shallowWrapper.find(PropertySheet).props().formDefinition
+				).toEqual({
+					PageItems: [],
+				});
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
+	});
+	it("sends the correct trimType to getPropertysheet", (done) => {
+		const shallowWrapper = shallow<NewRecord>(
+			<NewRecord
+				appStore={mockStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={new MockWordConnector()}
+				trimType={BaseObjectTypes.CheckinStyle}
+			/>
+		);
+
+		const instance = shallowWrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "test" },
+			{ key: 2, text: "test" },
+		]);
+
+		shallowWrapper
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		setImmediate(() => {
+			try {
+				expect(propertySheetTrimType).toEqual(BaseObjectTypes.CheckinStyle);
+
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("disables form when no folder Id set", () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+
+		expect(wrapper.find(Dropdown).props().disabled).toBeTruthy();
+	});
+
+	it("enables form when  folder Id set", () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+
+		wrapper.setProps({ folderId: "fff" });
+		expect(wrapper.find(Dropdown).props().disabled).toBeFalsy();
 	});
 });
