@@ -28,6 +28,10 @@ namespace UnifiedLogViewerPlugins
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
+            if (!string.IsNullOrEmpty(Filename) && Path.GetFileName(Filename).Contains("TRIMEvent"))
+            {
+                return TryParse12CharacterTimestamp(content, out timestamp);
+            }
 
             else if (TryParse24CharacterTimestamp(content, out timestamp))
                 return true;
@@ -125,17 +129,16 @@ namespace UnifiedLogViewerPlugins
 
             if (timestampPart.Contains("TRIMWorkgrou"))
             {
-                 newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff}", DateTime.Parse(timestmp));
+                 newTimestamp = String.Format("{0:yyyy-MM-dd HH:mm:ss:fff}", DateTime.Parse(timestmp));
             }
             else
             {
-                 newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff}{1}{2}", DateTime.Parse(timestmp).ToShortDateString(), " ", timestampPart);
+                 newTimestamp = String.Format("{0:yyyy-MM-dd HH:mm:ss:fff}{1}{2}", DateTime.Parse(timestmp).ToShortDateString(), " ", timestampPart);
             }
 
             var res = DateTime.TryParseExact(newTimestamp, formats, CultureInfo.InvariantCulture,
                 DateTimeStyles.AssumeLocal,
-                out timestamp);
-            timestamp = timestamp.ToUniversalTime();
+                out timestamp);           
 
             return res;
         }
@@ -162,7 +165,11 @@ namespace UnifiedLogViewerPlugins
             {
                 return OfficeIntegrationLog(line);
             }
-           
+            else if (Path.GetFileName(logFile.ToString()).Contains("TRIMEvent"))
+            {
+                return TRIMEventLog(logFile, line);
+            }
+
             indexOfSecondSpace = FindIndexOfOldTimeStamp(line.Message);
             if (indexOfSecondSpace == -1)
                 return line;
@@ -171,7 +178,7 @@ namespace UnifiedLogViewerPlugins
 
             if (line.Timestamp != null)
             {
-                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp.Value.ToUniversalTime());
+                newTimestamp = String.Format("{0:yyyy-MM-dd HH:mm:ss:fff }", line.Timestamp);
             }
             else
             {
@@ -216,7 +223,7 @@ namespace UnifiedLogViewerPlugins
 
             if (line.Timestamp != null)
             {
-                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp.Value.ToUniversalTime());                
+                newTimestamp = String.Format("{0:yyyy-MM-dd HH:mm:ss:fff }", line.Timestamp);                
             }
             else 
             {
@@ -231,7 +238,7 @@ namespace UnifiedLogViewerPlugins
         }
 
         /// <summary>
-        /// Format Office INtegration Log
+        /// Format Office Integration Log
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -247,7 +254,7 @@ namespace UnifiedLogViewerPlugins
 
             if (line.Timestamp != null)
             {
-                newTimestamp = String.Format("{0:MM/dd/yyyy HH:mm:ss:fff }", line.Timestamp);
+                newTimestamp = String.Format("{0:yyyy-MM-dd HH:mm:ss:fff }", line.Timestamp);
             }
             else
             {
@@ -268,6 +275,52 @@ namespace UnifiedLogViewerPlugins
             }            
             return new LogLine(line.LineIndex, line.LogEntryIndex, message.ToString(), line.Level, line.Timestamp);;
            
+        }
+
+        /// <summary>
+        /// Format Trim Event Log
+        /// </summary>
+        /// <param name="logFile"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        private LogLine TRIMEventLog(ILogFile logFile, LogLine line)
+        {
+            if (string.IsNullOrEmpty(todayDate))
+            {
+                string fileName = (Path.GetFileName(logFile.ToString()));
+                todayDate = fileName.Replace("TRIMEvent", "").Substring(4, 13).Replace("_", "-").Replace(".log", "").Trim();
+                MyTimestampParser.timestmp = todayDate;
+            }
+
+            if (line.LineIndex == 1)
+            {
+                var mes = string.Format("{0}{1}", " ", line.Message);
+                indexOfSecondSpace = FindIndexOfFirstSpace(mes);
+            }
+
+            else
+                indexOfSecondSpace = FindIndexOfFirstSpace(line.Message);
+
+
+            if (indexOfSecondSpace == -1)
+                return line;
+
+            var message = new StringBuilder(line.Message);
+
+            if (line.Timestamp != null)
+            {
+                newTimestamp = String.Format("{0:yyyy-MM-dd HH:mm:ss:fff }", line.Timestamp);
+            }
+            else
+            {
+                var test = "";
+                return new LogLine(line.LineIndex, line.Message.Insert(0, test.PadLeft(30)), line.Level);
+            }
+
+            message.Remove(0, indexOfSecondSpace);
+            message.Insert(0, newTimestamp);
+
+            return new LogLine(line.LineIndex, line.LogEntryIndex, message.ToString(), line.Level, line.Timestamp);
         }
 
         private static int FindIndexOfSecondSpace(string message)
