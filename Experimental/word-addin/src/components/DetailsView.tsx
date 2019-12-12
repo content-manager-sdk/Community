@@ -66,18 +66,16 @@ export class DetailsView extends React.Component<
 			}
 		}
 
-		if (recordProperties) {
-			const uri = recordProperties.Uri;
-			if (uri === 0) {
-				this.setState({ recordProperties: recordDetails.results[0] });
-			}
-			if (
-				prevProps.recordDetails.results &&
-				prevProps.recordDetails.results.length > 0 &&
-				uri !== prevProps.recordDetails.results[0].Uri
-			) {
-				this.setState({ recordProperties: recordDetails.results[0] });
-			}
+		const uri = recordProperties ? recordProperties.Uri : 0;
+		// if (uri === 0) {
+		// 	this.setState({ recordProperties: recordDetails.results[0] });
+		// }
+		if (
+			prevProps.recordDetails.results &&
+			prevProps.recordDetails.results.length > 0 &&
+			uri !== prevProps.recordDetails.results[0].Uri
+		) {
+			this.setState({ recordProperties: recordDetails.results[0] });
 		}
 	}
 
