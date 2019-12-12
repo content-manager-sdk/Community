@@ -224,6 +224,10 @@ export class OutlookConnector extends OfficeConnector
 								"DistinguishedFolderId"
 							);
 
+							const hasExtendedProp =
+								folderEl.getElementsByTagNameNS(T_NS, "ExtendedProperty")
+									.length > 0;
+
 							if (distinguishedFolder.length > 0) {
 								isWellKnown = true;
 							} else if (parentFolders.length > 0) {
@@ -258,7 +262,8 @@ export class OutlookConnector extends OfficeConnector
 								folderIdEl.length > 0 &&
 								!isWellKnown &&
 								isNote &&
-								!hasPolicy
+								!hasPolicy &&
+								!hasExtendedProp
 							) {
 								folders.push({
 									id: folderIdEl[0].getAttribute("Id")!,
@@ -349,10 +354,13 @@ export class OutlookConnector extends OfficeConnector
 			`          <t:FolderId Id="${folderId}" ChangeKey="${changeKey}"/>` +
 			"          <t:Updates>" +
 			"            <t:SetFolderField>" +
-			'              <t:FieldURI FieldURI="folder:DisplayName"/>' +
-			"              <t:Folder>" +
-			"                <t:DisplayName>NewFolderName</t:DisplayName>" +
-			"              </t:Folder>" +
+			'				<t:ExtendedFieldURI PropertySetId="0708434C-2E95-41C8-992F-8EE34B796FEC" PropertyName="HPRM URN" PropertyType="String" />' +
+			"					<t:Folder>" +
+			"					<t:ExtendedProperty>" +
+			'					<t:ExtendedFieldURI PropertySetId="0708434C-2E95-41C8-992F-8EE34B796FEC" PropertyName="HPRM URN" PropertyType="String" />' +
+			`						<t:Value>${urn}</t:Value>` +
+			"					</t:ExtendedProperty>" +
+			"					</t:Folder>" +
 			"            </t:SetFolderField>" +
 			"          </t:Updates>" +
 			"        </t:FolderChange>" +
@@ -434,19 +442,6 @@ export class OutlookConnector extends OfficeConnector
 				// Handle the error.
 			}
 		});
-
-		// Office.context.mailbox.item.loadCustomPropertiesAsync((asyncResult) => {
-		// 	if (asyncResult.status == Office.AsyncResultStatus.Failed) {
-		// 		// Handle the failure.
-		// 	} else {
-		// 		// Successfully loaded custom properties,
-		// 		// can get them from the asyncResult argument.
-		// 		const customProps = asyncResult.value;
-		// 		customProps.set("TRIM_URI", String(recordUri));
-		// 		// Save all custom properties to server.
-		// 		customProps.saveAsync(() => {});
-		// 	}
-		// });
 	}
 	getAutoOpen(): boolean {
 		return false;
