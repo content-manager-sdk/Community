@@ -17,10 +17,16 @@ describe("New Record layout", function() {
 	let testSubjectPrefix = "";
 	let propertySheetTrimType = BaseObjectTypes.Location;
 	let wrapper;
-	let registerProps = {};
-	let registerType = BaseObjectTypes.CheckinPlace;
+	let registerProps = [];
+	//let registerPropsForPlace = undefined;
+	let registerType = undefined;
+	let registerTypePlace = undefined;
 
-	const makeWrapper = (trimType: BaseObjectTypes, onCreated?: any) => {
+	const makeWrapper = (
+		trimType: BaseObjectTypes,
+		onCreated?: any,
+		folderId?: string
+	) => {
 		const innerWrapper = shallow<NewRecord>(
 			<NewRecord
 				appStore={mockStore}
@@ -28,6 +34,7 @@ describe("New Record layout", function() {
 				wordConnector={new MockWordConnector()}
 				trimType={trimType}
 				onTrimObjectCreated={onCreated}
+				folderId={folderId}
 			/>
 		);
 		innerWrapper.setState({ formDefinition: { Pages: [] } });
@@ -36,13 +43,17 @@ describe("New Record layout", function() {
 	};
 
 	beforeEach(() => {
+		wrapper = makeWrapper(BaseObjectTypes.Record);
+	});
+
+	afterEach(() => {
 		testRecordUrn = "";
 		testSubjectPrefix = "";
 		propertySheetTrimType = BaseObjectTypes.Location;
-		registerProps = {};
-		registerType = BaseObjectTypes.CheckinPlace;
-
-		wrapper = makeWrapper(BaseObjectTypes.Record);
+		registerProps = [];
+		//registerPropsForPlace = undefined;
+		registerType = undefined;
+		//	registerTypePlace = undefined;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -52,8 +63,13 @@ describe("New Record layout", function() {
 		properties: any,
 		fields: any
 	) => {
-		registerProps = properties;
-		registerType = trimType;
+		registerProps.push(properties);
+
+		if (registerType) {
+			registerTypePlace = trimType;
+		} else {
+			registerType = trimType;
+		}
 		return new Promise<ITrimMainObject>(function(resolve) {
 			resolve({ Uri: 456 });
 		});
@@ -245,7 +261,40 @@ describe("New Record layout", function() {
 			.onClick(null);
 
 		expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
-		expect(registerProps).toEqual({ CheckinStyleRecordType: 5 });
+		expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+	});
+
+	it("create a checkin place for a Check in Style", (done) => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle, () => {}, "123");
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		wrapper
+			.update()
+			.find(PrimaryButton)
+			.props()
+			.onClick(null);
+		setTimeout(() => {
+			try {
+				expect(registerProps[1]).toEqual({
+					CheckinPlacePlaceId: "123",
+					CheckinPlaceCheckinAs: 456,
+					CheckinPlacePlaceType: "MailForServerProcessing",
+				});
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("calls on created event", (done) => {
@@ -282,36 +331,44 @@ describe("New Record layout", function() {
 		});
 	});
 
-	it("sends computed fields to Checkin Style", () => {
-		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
-		const instance = wrapper.instance();
-		instance.setRecordTypes([
-			{ key: 1, text: "Document" },
-			{ key: 5, text: "Document 5" },
-		]);
+	[
+		{ folderId: "123", createPlace: false },
+		{ folderId: undefined, createPlace: true },
+	].forEach((testData) => {
+		it("sends computed fields to Checkin Style", () => {
+			const wrapper = makeWrapper(
+				BaseObjectTypes.CheckinStyle,
+				null,
+				testData.folderId
+			);
+			const instance = wrapper.instance();
+			instance.setRecordTypes([
+				{ key: 1, text: "Document" },
+				{ key: 5, text: "Document 5" },
+			]);
 
-		wrapper
-			.update()
-			.find(Dropdown)
-			.props()
-			.onChange(null, null, 0);
+			wrapper
+				.update()
+				.find(Dropdown)
+				.props()
+				.onChange(null, null, 0);
 
-		const propertySheet = wrapper.find(PropertySheet);
-		expect(propertySheet.props().computedProperties).toEqual([
-			{
-				Name: "CheckinStyleUseForServerMailCapture",
-				Value: true,
-				Type: "Property",
-			},
-			{
-				Name: "CheckinStyleUseForServerMailFolderType",
-				Value: "NormalFolder",
-				Type: "Property",
-			},
-			{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" },
-		]);
+			const propertySheet = wrapper.find(PropertySheet);
+			expect(propertySheet.props().computedProperties).toEqual([
+				{
+					Name: "CheckinStyleUseForServerMailCapture",
+					Value: testData.createPlace,
+					Type: "Property",
+				},
+				{
+					Name: "CheckinStyleUseForServerMailFolderType",
+					Value: "NormalFolder",
+					Type: "Property",
+				},
+				{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" },
+			]);
+		});
 	});
-
 	it("sends the default on click even if no fields on the form have been modified", () => {
 		const instance = wrapper.instance();
 		instance.setRecordTypes([
@@ -475,5 +532,18 @@ describe("New Record layout", function() {
 				done.fail(e);
 			}
 		});
+	});
+
+	it("disables form when no folder Id set", () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+
+		expect(wrapper.find(Dropdown).props().disabled).toBeTruthy();
+	});
+
+	it("enables form when  folder Id set", () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+
+		wrapper.setProps({ folderId: "fff" });
+		expect(wrapper.find(Dropdown).props().disabled).toBeFalsy();
 	});
 });

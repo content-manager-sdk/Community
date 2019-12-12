@@ -5,7 +5,8 @@ import { TrimConnector } from "../../trim-coms/trim-connector";
 import ContextList from "../ContextList/ContextList";
 import NewRecord from "../NewRecord";
 import OutlookFolderPicker from "../OutlookFolderPicker/OutlookFolderPicker";
-import { Provider } from "mobx-react";
+
+jest.mock("../../office-coms/OutlookConnector");
 
 describe("Check in Styles", function() {
 	let testUri = 0;
@@ -89,7 +90,7 @@ describe("Check in Styles", function() {
 		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
 	});
 
-	it("state re-set after record created", () => {
+	it("state re-set after record created", (done) => {
 		let firedCommand;
 		const wrapper = shallow<CheckinStyles>(
 			<CheckinStyles
@@ -107,9 +108,15 @@ describe("Check in Styles", function() {
 		wrapper
 			.find(NewRecord)
 			.props()
-			.onTrimObjectCreated();
-
-		expect(wrapper.state().view).toEqual("List");
+			.onTrimObjectCreated({ Uri: 0 });
+		setTimeout(() => {
+			try {
+				expect(wrapper.state().view).toEqual("List");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("Create Linked folder contains OutlookFolderPicker", () => {
@@ -144,5 +151,27 @@ describe("Check in Styles", function() {
 			.onCommand("New");
 
 		expect(wrapper.find(OutlookFolderPicker).exists()).toBeFalsy();
+	});
+
+	it("folder id set enables New Record", () => {
+		const wrapper = shallow<CheckinStyles>(
+			<CheckinStyles
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				forServerProcessing={true}
+			/>
+		);
+
+		wrapper
+			.find(ContextList)
+			.props()
+			.onCommand("New");
+
+		wrapper
+			.find(OutlookFolderPicker)
+			.props()
+			.onChange("abc");
+
+		expect(wrapper.find(NewRecord).props().folderId).toEqual("abc");
 	});
 });

@@ -102,7 +102,7 @@ export class OutlookConnector extends OfficeConnector
 	}
 
 	makeEwsXml(): string {
-		let result =
+		const result =
 			'<?xml version="1.0" encoding="utf-8"?>' +
 			'<soap:Envelope xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"' +
 			'               xmlns:xsd="https://www.w3.org/2001/XMLSchema"' +
@@ -114,12 +114,14 @@ export class OutlookConnector extends OfficeConnector
 			"  <soap:Body>" +
 			'    <FindFolder Traversal="Deep" xmlns="http://schemas.microsoft.com/exchange/services/2006/messages">' +
 			"      <FolderShape>" +
-			"        <t:BaseShape>Default</t:BaseShape>" +
+			"        <t:BaseShape>IdOnly</t:BaseShape>" +
 			"        <t:AdditionalProperties>" +
 			'         <t:FieldURI FieldURI="folder:DistinguishedFolderId" />' +
 			'         <t:FieldURI FieldURI="folder:ParentFolderId" />' +
 			'         <t:FieldURI FieldURI="folder:FolderClass" />' +
 			'         <t:FieldURI FieldURI="folder:PolicyTag" />' +
+			'         <t:FieldURI FieldURI="folder:DisplayName" />' +
+			'<t:ExtendedFieldURI PropertySetId="0708434C-2E95-41C8-992F-8EE34B796FEC" PropertyName="HPRM URN" PropertyType="String"/>' +
 			"        </t:AdditionalProperties>" +
 			"    </FolderShape>" +
 			"    <ParentFolderIds>" +
@@ -192,21 +194,6 @@ export class OutlookConnector extends OfficeConnector
 			}
 		);
 		return prefix;
-		// const parentEl = this.getParentFolder(folderElements, parentIdEl);
-
-		// if (parentEl) {
-		// 	const parentId = parentIdEl[0].getAttribute("Id");
-		// 	if (
-		// 		parentId ===
-		// 		parentEl.getElementsByTagNameNS(T_NS, "FolderId")[0].getAttribute("Id")
-		// 	) {
-		// 		return `${
-		// 			parentEl.getElementsByTagNameNS(T_NS, "DisplayName")[0].childNodes[0]
-		// 				.nodeValue
-		// 		}\\`;
-		// 	}
-		// }
-		// return "";
 	}
 
 	getFolders(autoCreateCaption: string): Promise<IOutlookFolder[]> {
@@ -298,6 +285,86 @@ export class OutlookConnector extends OfficeConnector
 			}
 		});
 	}
+
+	getFolderChangeKey(folderId: string): Promise<string> {
+		const xml =
+			'<?xml version="1.0" encoding="utf-8"?>' +
+			'<soap:Envelope xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"' +
+			'               xmlns:xsd="https://www.w3.org/2001/XMLSchema"' +
+			'               xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"' +
+			'               xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+			"  <soap:Header>" +
+			'    <RequestServerVersion Version="Exchange2013" xmlns="http://schemas.microsoft.com/exchange/services/2006/types" soap:mustUnderstand="0" />' +
+			"  </soap:Header>" +
+			"    <soap:Body>" +
+			'<GetFolder xmlns="http://schemas.microsoft.com/exchange/services/2006/messages"' +
+			' xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+			"<FolderShape>" +
+			"<t:BaseShape>Default</t:BaseShape>" +
+			"</FolderShape>" +
+			"<FolderIds>" +
+			`<t:FolderId Id="${folderId}"/>` +
+			"</FolderIds>" +
+			"</GetFolder>" +
+			"</soap:Body>" +
+			"</soap:Envelope>";
+
+		const mailbox = Office.context.mailbox;
+
+		return new Promise<string>((resolve, reject) => {
+			try {
+				mailbox.makeEwsRequestAsync(xml, (result: any) => {
+					if (result.status === "succeeded") {
+						const parser = new DOMParser();
+						const xml = parser.parseFromString(result.value, "text/xml");
+
+						const folderElements = xml.getElementsByTagNameNS(T_NS, "FolderId");
+
+						resolve(folderElements[0].getAttribute("ChangeKey")!);
+					} else {
+						reject("Error fetching folders.");
+					}
+				});
+			} catch (e) {
+				reject(e);
+			}
+		});
+	}
+
+	setUrnOnFolder(folderId: string, changeKey: string, urn: string): void {
+		const xml =
+			'<?xml version="1.0" encoding="utf-8"?>' +
+			'<soap:Envelope xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"' +
+			'               xmlns:xsd="https://www.w3.org/2001/XMLSchema"' +
+			'               xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"' +
+			'               xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+			"  <soap:Header>" +
+			'    <RequestServerVersion Version="Exchange2013" xmlns="http://schemas.microsoft.com/exchange/services/2006/types" soap:mustUnderstand="0" />' +
+			"  </soap:Header>" +
+			"    <soap:Body>" +
+			'    <UpdateFolder xmlns="http://schemas.microsoft.com/exchange/services/2006/messages"' +
+			'                  xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+			"      <FolderChanges>" +
+			"        <t:FolderChange>" +
+			`          <t:FolderId Id="${folderId}" ChangeKey="${changeKey}"/>` +
+			"          <t:Updates>" +
+			"            <t:SetFolderField>" +
+			'              <t:FieldURI FieldURI="folder:DisplayName"/>' +
+			"              <t:Folder>" +
+			"                <t:DisplayName>NewFolderName</t:DisplayName>" +
+			"              </t:Folder>" +
+			"            </t:SetFolderField>" +
+			"          </t:Updates>" +
+			"        </t:FolderChange>" +
+			"      </FolderChanges>" +
+			"    </UpdateFolder>" +
+			"    </soap:Body>" +
+			"    </soap:Envelope>";
+
+		const mailbox = Office.context.mailbox;
+		mailbox.makeEwsRequestAsync(xml, (result: any) => {});
+	}
+
 	setAutoOpen(
 		autoOpen: boolean,
 		recordUrn?: string,

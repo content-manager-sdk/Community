@@ -398,7 +398,7 @@ export class PropertySheet extends React.Component<
 		) {
 			let pageID = 1;
 			return (
-				<div className="trim-properties">
+				<div className={"trim-properties"}>
 					<Pivot
 						linkFormat={PivotLinkFormat.tabs}
 						linkSize={PivotLinkSize.normal}

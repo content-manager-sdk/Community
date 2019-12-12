@@ -25,7 +25,8 @@ interface INewRecordProps {
 	wordConnector?: IOfficeConnector;
 	className?: string;
 	trimType: BaseObjectTypes;
-	onTrimObjectCreated?: () => void;
+	onTrimObjectCreated?: (newObject?: ITrimMainObject) => void;
+	folderId?: string;
 }
 
 export class NewRecord extends React.Component<
@@ -112,6 +113,7 @@ export class NewRecord extends React.Component<
 			trimConnector,
 			trimType,
 			onTrimObjectCreated,
+			folderId,
 		} = this.props;
 
 		if (trimType === BaseObjectTypes.Record) {
@@ -138,8 +140,27 @@ export class NewRecord extends React.Component<
 			trimConnector!
 				.registerInTrim(trimType, props, this.recordFields)
 				.then((trimObject: ITrimMainObject) => {
-					if (onTrimObjectCreated) {
-						onTrimObjectCreated();
+					if (folderId) {
+						trimConnector!
+							.registerInTrim(
+								BaseObjectTypes.CheckinPlace,
+								{
+									CheckinPlacePlaceId: folderId,
+									CheckinPlaceCheckinAs: trimObject.Uri,
+									CheckinPlacePlaceType: "MailForServerProcessing",
+								},
+								{}
+							)
+							.then((trimObject) => {
+								// 		console.log("3333333333");
+								if (onTrimObjectCreated) {
+									onTrimObjectCreated(trimObject);
+								}
+							});
+					} else {
+						if (onTrimObjectCreated) {
+							onTrimObjectCreated(trimObject);
+						}
 					}
 				});
 		}
@@ -151,7 +172,7 @@ export class NewRecord extends React.Component<
 	};
 
 	public render() {
-		const { appStore, className, trimType } = this.props;
+		const { appStore, className, trimType, folderId } = this.props;
 		const { formDefinition } = this.state;
 
 		const computedProps = [];
@@ -159,7 +180,7 @@ export class NewRecord extends React.Component<
 			computedProps.push(
 				{
 					Name: "CheckinStyleUseForServerMailCapture",
-					Value: true,
+					Value: !folderId,
 					Type: "Property",
 				},
 				{
@@ -174,6 +195,7 @@ export class NewRecord extends React.Component<
 		return (
 			<div className={className}>
 				<Dropdown
+					disabled={trimType === BaseObjectTypes.CheckinStyle && !folderId}
 					options={this.recordTypes}
 					placeholder={appStore.messages.web_SelectRecordType}
 					onChange={this._onChange}
@@ -182,7 +204,7 @@ export class NewRecord extends React.Component<
 						appStore.documentInfo.Options.DefaultDocumentRecordType
 					}
 				/>
-				<div className="new-record-body">
+				<div className={`new-record-body new-record-body-${trimType}`}>
 					<PropertySheet
 						formDefinition={formDefinition}
 						defaultRecordTitle={this.recordProps["RecordTypedTitle"]}

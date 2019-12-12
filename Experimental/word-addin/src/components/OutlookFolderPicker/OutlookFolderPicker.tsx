@@ -1,8 +1,8 @@
 import * as React from "react";
-import { ComboBox } from "office-ui-fabric-react";
+import { ComboBox, IComboBoxOption } from "office-ui-fabric-react";
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import { inject } from "mobx-react";
-import { IAppStore } from "src/stores/AppStoreBase";
+import { IAppStore } from "../../stores/AppStoreBase";
 
 export interface IOutlookFolderPickerState {}
 
@@ -12,6 +12,7 @@ interface IOutlookFolderPickerProps {
 	wordConnector?: OutlookConnector;
 	appStore?: IAppStore;
 	className?: string;
+	onChange?: (folderId: string) => void;
 }
 
 export class OutlookFolderPicker extends React.Component<
@@ -19,19 +20,24 @@ export class OutlookFolderPicker extends React.Component<
 	IOutlookFolderPickerState
 > {
 	public render(): JSX.Element {
-		const { wordConnector, appStore, className } = this.props;
+		const { appStore, className, onChange } = this.props;
 		let loading = false;
 		return (
 			<ComboBox
 				className={className}
+				onChange={(evt, option: IComboBoxOption) => {
+					if (onChange && option) {
+						onChange(`${option.key}`);
+					}
+				}}
 				placeholder={appStore!.messages.web_Select_Folder}
 				useComboBoxAsMenuWidth={true}
 				onResolveOptions={() => {
 					if (!loading) {
 						loading = true;
 
-						//const connector = new OutlookConnector();
-						return wordConnector!
+						const connector = new OutlookConnector();
+						return connector
 							.getFolders(appStore!.messages.web_Auto_Generate_Folder)
 							.then(function(folders) {
 								loading = false;
@@ -48,4 +54,4 @@ export class OutlookFolderPicker extends React.Component<
 	}
 }
 
-export default inject("appStore", "wordConnector")(OutlookFolderPicker);
+export default inject("appStore")(OutlookFolderPicker);

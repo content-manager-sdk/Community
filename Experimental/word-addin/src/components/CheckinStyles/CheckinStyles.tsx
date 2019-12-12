@@ -9,6 +9,7 @@ import { ITrimConnector } from "../../trim-coms/trim-connector";
 import NewRecord from "../NewRecord";
 import OutlookFolderPicker from "../OutlookFolderPicker/OutlookFolderPicker";
 import { mergeStyles } from "@uifabric/styling";
+import { OutlookConnector } from "../../office-coms/OutlookConnector";
 
 interface ICheckinStylesProps {
 	appStore?: IAppStore;
@@ -18,6 +19,7 @@ interface ICheckinStylesProps {
 
 interface ICheckinStylesState {
 	view: string;
+	folderId: string;
 }
 
 export class CheckinStyles extends React.Component<
@@ -29,6 +31,7 @@ export class CheckinStyles extends React.Component<
 
 		this.state = {
 			view: "List",
+			folderId: "",
 		};
 	}
 
@@ -44,7 +47,7 @@ export class CheckinStyles extends React.Component<
 
 	public render() {
 		const { appStore, forServerProcessing } = this.props;
-		const { view } = this.state;
+		const { view, folderId } = this.state;
 
 		return (
 			<div>
@@ -52,12 +55,26 @@ export class CheckinStyles extends React.Component<
 				{view === "New" ? (
 					<React.Fragment>
 						{forServerProcessing && (
-							<OutlookFolderPicker className={this.getStyles()} />
+							<OutlookFolderPicker
+								className={this.getStyles()}
+								onChange={(folderId) => {
+									this.setState({ folderId: folderId });
+								}}
+							/>
 						)}
 						<NewRecord
 							trimType={BaseObjectTypes.CheckinStyle}
-							onTrimObjectCreated={() => {
-								this.setState({ view: "List" });
+							folderId={folderId}
+							onTrimObjectCreated={(trimObject) => {
+								const connector = new OutlookConnector();
+								connector.getFolderChangeKey(folderId).then((changeKey) => {
+									connector.setUrnOnFolder(
+										folderId,
+										changeKey,
+										trimObject!.URN!
+									);
+									this.setState({ view: "List" });
+								});
 							}}
 						/>
 					</React.Fragment>
