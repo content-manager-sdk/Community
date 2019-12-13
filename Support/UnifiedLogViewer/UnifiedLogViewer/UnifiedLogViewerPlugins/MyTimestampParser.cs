@@ -137,7 +137,7 @@ namespace UnifiedLogViewerPlugins
             }
 
             var res = DateTime.TryParseExact(newTimestamp, formats, CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeLocal,
+                DateTimeStyles.AssumeUniversal,
                 out timestamp);           
 
             return res;
