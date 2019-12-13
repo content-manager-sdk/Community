@@ -67,9 +67,7 @@ export class DetailsView extends React.Component<
 		}
 
 		const uri = recordProperties ? recordProperties.Uri : 0;
-		// if (uri === 0) {
-		// 	this.setState({ recordProperties: recordDetails.results[0] });
-		// }
+
 		if (
 			prevProps.recordDetails.results &&
 			prevProps.recordDetails.results.length > 0 &&
