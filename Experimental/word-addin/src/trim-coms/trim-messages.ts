@@ -12,6 +12,7 @@ export class TrimMessages {
 	public web_ApplySearchFilter = "";
 	public web_Auto_Generate_Folder = "";
 	public web_Select_Folder = "";
+	public web_RecordTypeRequiresForm = "";
 }
 
 export default TrimMessages;

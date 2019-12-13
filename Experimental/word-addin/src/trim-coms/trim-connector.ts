@@ -243,6 +243,7 @@ export interface ITrimConnector {
 	): Promise<IPropertyOrFieldDef[]>;
 
 	getGlobalUserOptions(forUserOptionSet: string): Promise<void>;
+	isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -268,6 +269,23 @@ export class TrimConnector implements ITrimConnector {
 			default:
 				return `${query}*`;
 		}
+	}
+
+	public isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean> {
+		const data = {
+			RecordRecordType: recordTypeUri,
+			properties: "RecordNeedsDataEntryForm",
+			ByPassSave: true,
+			RecordTitle: "test",
+		};
+
+		return this.makeRequest(
+			{ path: `${BaseObjectTypes.Record}`, method: "post", data },
+			(data: any) => {
+				console.log(data.Results[0].RecordNeedsDataEntryForm.Value);
+				return data.Results[0].RecordNeedsDataEntryForm.Value;
+			}
+		);
 	}
 
 	public setLatestClause(trimType: BaseObjectTypes, queryName: string): void {
@@ -740,6 +758,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Menu = "Menu";
 					data.Messages.web_Auto_Generate_Folder = "<Auto Create New Folder>";
 					data.Messages.web_Select_Folder = "-- Select a Folder --";
+					data.Messages.web_RecordTypeRequiresForm =
+						"The data entry form for this Record Type requires user interaction which is not supported by linked folders.";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

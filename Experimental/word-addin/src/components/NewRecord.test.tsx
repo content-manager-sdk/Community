@@ -20,7 +20,7 @@ describe("New Record layout", function() {
 	let registerProps = [];
 	//let registerPropsForPlace = undefined;
 	let registerType = undefined;
-	let registerTypePlace = undefined;
+	let errorMessage: string = undefined;
 
 	const makeWrapper = (
 		trimType: BaseObjectTypes,
@@ -51,9 +51,8 @@ describe("New Record layout", function() {
 		testSubjectPrefix = "";
 		propertySheetTrimType = BaseObjectTypes.Location;
 		registerProps = [];
-		//registerPropsForPlace = undefined;
 		registerType = undefined;
-		//	registerTypePlace = undefined;
+		errorMessage = undefined;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -103,6 +102,7 @@ describe("New Record layout", function() {
 		messages: {
 			web_Register: "Register",
 			web_SelectRecordType: "Select a Record Type",
+			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 		},
 		documentInfo: { Options: {}, URN: "test_urn" },
 		createRecord: (recordUri, recordProps) => {
@@ -114,6 +114,11 @@ describe("New Record layout", function() {
 			});
 		},
 		FileName: "default title",
+		setError: (message: string) => {
+			console.log("55555555555555");
+			console.log(message);
+			errorMessage = message;
+		},
 	};
 
 	class MockWordConnector implements IOfficeConnector {
@@ -545,5 +550,41 @@ describe("New Record layout", function() {
 
 		wrapper.setProps({ folderId: "fff" });
 		expect(wrapper.find(Dropdown).props().disabled).toBeFalsy();
+	});
+
+	[
+		{ valid: true, message: undefined },
+		{ valid: false, message: "NeedsDataEntryForm" },
+	].forEach((testData) => {
+		it(`Sets an error if the Record Type requires a data entry form - ${testData.valid} `, (done) => {
+			const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+
+			wrapper.setProps({
+				validateRecordType: () => {
+					return new Promise<Boolean>(function(resolve) {
+						resolve(testData.valid);
+					});
+				},
+			});
+
+			// should be zero after the record types list has been changed
+			wrapper.instance().setRecordTypes([
+				{ key: 1, text: "Document" },
+				{ key: 5, text: "Document 5" },
+			]);
+			wrapper
+				.update()
+				.find(Dropdown)
+				.props()
+				.onChange(null, null, 1);
+			setTimeout(() => {
+				try {
+					expect(errorMessage).toEqual(testData.message);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			});
+		});
 	});
 });

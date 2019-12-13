@@ -27,6 +27,7 @@ interface INewRecordProps {
 	trimType: BaseObjectTypes;
 	onTrimObjectCreated?: (newObject?: ITrimMainObject) => void;
 	folderId?: string;
+	validateRecordType?: (recordTypeUri: number) => Promise<Boolean>;
 }
 
 export class NewRecord extends React.Component<
@@ -79,7 +80,8 @@ export class NewRecord extends React.Component<
 		return trimConnector!
 			.search<IRecordType>({
 				trimType: BaseObjectTypes.RecordType,
-				q: "all",
+				q: "unkAll",
+				filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
 				purpose: 3,
 			})
 			.then(function(response: ISearchResults<IRecordType>) {
@@ -102,8 +104,25 @@ export class NewRecord extends React.Component<
 		option: IDropdownOption,
 		index: number
 	) => {
-		this.recordTypeUri = Number(this.recordTypes[index].key);
-		this.setPropertySheet();
+		const { validateRecordType, appStore } = this.props;
+		const recordTypeUri = Number(this.recordTypes[index].key);
+
+		if (validateRecordType) {
+			validateRecordType(recordTypeUri).then((isValid) => {
+				console.log("11111111111111111111");
+				if (isValid) {
+					this.recordTypeUri = recordTypeUri;
+					this.setPropertySheet();
+				} else {
+					console.log("222222222222");
+					console.log(appStore.messages.web_RecordTypeRequiresForm);
+					appStore.setError(appStore.messages.web_RecordTypeRequiresForm);
+				}
+			});
+		} else {
+			this.recordTypeUri = recordTypeUri;
+			this.setPropertySheet();
+		}
 	};
 
 	private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {

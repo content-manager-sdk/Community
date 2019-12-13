@@ -1228,4 +1228,44 @@ describe("Test fetch from TRIM", () => {
 			expect(data.ContentsInReverseDateOrder).toBe(true);
 		});
 	});
+
+	it("sends request for NeedsDataEntryForm", (done) => {
+		let postConfig: any;
+		mock
+			.onPost(`${SERVICEAPI_BASE_URI}/${BaseObjectTypes.Record}`)
+			.reply(function(config: any) {
+				postConfig = config;
+
+				return [
+					200,
+					{
+						Results: [
+							{
+								Uri: 123,
+								NeedsDataEntryForm: { Value: true },
+							},
+						],
+					},
+				];
+			});
+		setTimeout(() => {
+			try {
+				trimConnector.isDataEntryFormNeeded(: 1 ).then((isNeeded) => {
+					expect(isNeeded).toBeTruthy();
+					expect(postConfig.data).toEqual(
+						JSON.stringify({
+							RecordRecordType: 1,
+							properties: "RecordNeedsDataEntryForm",
+							ByPassSave: true,
+							RecordTitle: "test",
+						})
+					);
+
+					done();
+				});
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
 });

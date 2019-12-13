@@ -76,6 +76,16 @@ export class CheckinStyles extends React.Component<
 									this.setState({ view: "List" });
 								});
 							}}
+							validateRecordType={(recordTypeUri) => {
+								const { trimConnector } = this.props;
+								return new Promise<Boolean>(function(resolve) {
+									trimConnector!
+										.isDataEntryFormNeeded(recordTypeUri)
+										.then(function(isValid) {
+											resolve(!isValid);
+										});
+								});
+							}}
 						/>
 					</React.Fragment>
 				) : (
