@@ -109,13 +109,10 @@ export class NewRecord extends React.Component<
 
 		if (validateRecordType) {
 			validateRecordType(recordTypeUri).then((isValid) => {
-				console.log("11111111111111111111");
 				if (isValid) {
 					this.recordTypeUri = recordTypeUri;
 					this.setPropertySheet();
 				} else {
-					console.log("222222222222");
-					console.log(appStore.messages.web_RecordTypeRequiresForm);
 					appStore.setError(appStore.messages.web_RecordTypeRequiresForm);
 				}
 			});
