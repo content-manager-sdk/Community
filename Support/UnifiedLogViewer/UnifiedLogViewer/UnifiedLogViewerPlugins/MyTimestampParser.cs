@@ -28,7 +28,7 @@ namespace UnifiedLogViewerPlugins
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
-            if (!string.IsNullOrEmpty(Filename) && Path.GetFileName(Filename).Contains("TRIMEvent"))
+            if (!string.IsNullOrEmpty(Filename) && (Path.GetFileName(Filename).Contains("TRIMEvent") || Path.GetFileName(Filename).Contains("DCI")))
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
@@ -37,6 +37,8 @@ namespace UnifiedLogViewerPlugins
                 return true;
 
             else if (TryParse23CharacterTimestamp(content, out timestamp))
+                return true;
+            else if (TryParse19CharacterTimestamp(content, out timestamp))
                 return true;
 
             return false;
@@ -53,7 +55,8 @@ namespace UnifiedLogViewerPlugins
                 "M/d/yyyy HH:mm:ss:fff",
                 "MM/dd/yy HH:mm:ss:fff",
                 "M/d/yy HH:mm:ss:fff",
-                "dd-MMM-yy HH:mm:ss:fff"
+                "dd-MMM-yy HH:mm:ss:fff",
+                "dd/MM/yyyy HH:mm:ss"
             };
         }
         private bool TryParse23CharacterTimestamp(string content, out DateTime timestamp)
@@ -85,10 +88,33 @@ namespace UnifiedLogViewerPlugins
             // "2019-03-18  14:09:54:177"
             // "29/03/2019  14:09:54:177"
 
-            const int timestampPartLength = 24;
+            const int timestampPartLength = 12;
             var formats = SupportedFormats();
 
             return TryParseExactForTRIMWorkgroup(content, timestampPartLength, formats, out timestamp);
+        }
+
+        private bool TryParse19CharacterTimestamp(string content, out DateTime timestamp)
+        {
+            // Example strings:
+            // "2019-03-18  14:09:54:177"
+            // "29/03/2019  14:09:54:177"
+
+            const int timestampPartLength = 19;
+            var formats = new[]
+            {
+                "yyyy-MM-dd  HH:mm:ss:fff",
+                "dd/MM/yyyy  HH:mm:ss:fff",
+                "MM/dd/yyyy HH:mm:ss:fff",
+                "M/dd/yyyy HH:mm:ss:fff",
+                "M/d/yyyy HH:mm:ss:fff",
+                "MM/dd/yy HH:mm:ss:fff",
+                "M/d/yy HH:mm:ss:fff",
+                "dd-MMM-yy HH:mm:ss:fff",
+                 "dd/MM/yyyy HH:mm:ss"
+            };
+
+            return TryParseExact(content, timestampPartLength, formats, out timestamp);
         }
 
         private static bool TryParseExact(string content, int timestampPartLength, string[] formats,
@@ -120,7 +146,7 @@ namespace UnifiedLogViewerPlugins
                 return false;
             }
 
-            var timestampPart = content.Substring(0, 12);          
+            var timestampPart = content.Substring(0, timestampPartLength);          
 
             if (timestampPart.Contains("\t"))
             {
@@ -165,14 +191,14 @@ namespace UnifiedLogViewerPlugins
             {
                 return OfficeIntegrationLog(line);
             }
-            else if (Path.GetFileName(logFile.ToString()).Contains("TRIMEvent"))
+            else if (Path.GetFileName(logFile.ToString()).Contains("TRIMEvent") || Path.GetFileName(logFile.ToString()).Contains("DCI"))
             {
-                return TRIMEventLog(logFile, line);
+                return TRIMLog(logFile, line);
             }
 
-            indexOfSecondSpace = FindIndexOfOldTimeStamp(line.Message);
-            if (indexOfSecondSpace == -1)
-                return line;
+            //indexOfSecondSpace = FindIndexOfOldTimeStamp(line.Message);
+            //if (indexOfSecondSpace == -1)
+            //    return line;
 
             var message = new StringBuilder(line.Message);
 
@@ -283,12 +309,16 @@ namespace UnifiedLogViewerPlugins
         /// <param name="logFile"></param>
         /// <param name="line"></param>
         /// <returns></returns>
-        private LogLine TRIMEventLog(ILogFile logFile, LogLine line)
+        private LogLine TRIMLog(ILogFile logFile, LogLine line)
         {
             if (string.IsNullOrEmpty(todayDate))
             {
-                string fileName = (Path.GetFileName(logFile.ToString()));
-                todayDate = fileName.Replace("TRIMEvent", "").Substring(4, 13).Replace("_", "-").Replace(".log", "").Trim();
+                string fileName = (Path.GetFileName(logFile.ToString())).Replace(".log", "").Trim();
+                todayDate = fileName.Substring(fileName.Length - 10).Replace("_", "-");
+                if (todayDate.Substring(0).Contains("-") || todayDate.Substring(1).Contains("-"))
+                {                    
+                    todayDate = todayDate.Substring(todayDate.IndexOf("-") + 1);
+                }
                 MyTimestampParser.timestmp = todayDate;
             }
 
