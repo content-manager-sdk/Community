@@ -1273,4 +1273,77 @@ describe("Test fetch from TRIM", () => {
 			}
 		});
 	});
+
+	[
+		{
+			trimType: BaseObjectTypes.CheckinPlace,
+			expected: [
+				{
+					CommandId: "New",
+					MenuEntryString: "New Check In Style",
+					Tooltip: "New Check In Style",
+					StatusBarMessage: "New Check In Style",
+					IsEnabled: true,
+					NeedsAnObject: false,
+				},
+			],
+		},
+		{ trimType: BaseObjectTypes.Record, expected: [] },
+	].forEach((testData) => {
+		it("gets the commands for the Check in Style list", (done) => {
+			let postConfig: any;
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/CommandDef`)
+				.reply(function(config: any) {
+					postConfig = config;
+					return [
+						200,
+						{
+							CommandDefs: [
+								{
+									RefreshStyle: "Add",
+									IsListCommand: true,
+									IsNavigationCommand: false,
+									NeedsAnObject: false,
+									CommandId: "New",
+									MenuEntryString: "New Check In Style",
+									Tooltip: "New Check In Style",
+									StatusBarMessage: "New Check In Style",
+									Icon: "Unknown",
+									MenuItemType: "MenuItemCommand",
+								},
+							],
+						},
+					];
+				});
+			setTimeout(() => {
+				try {
+					trimConnector
+						.getMenuItemsForList(testData.trimType)
+						.then((commandDefs) => {
+							expect(commandDefs.length).toEqual(testData.expected.length);
+							expect(commandDefs).toEqual(
+								expect.arrayContaining(testData.expected)
+							);
+
+							if (testData.trimType === BaseObjectTypes.CheckinStyle) {
+								expect(postConfig.params).toEqual(
+									expect.objectContaining({
+										TrimType: testData.trimType,
+										CommandIds: "New",
+									})
+								);
+							}
+
+							done();
+						})
+						.catch((e) => {
+							done.fail(e);
+						});
+				} catch (e) {
+					done.fail(e);
+				}
+			});
+		});
+	});
 });

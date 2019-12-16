@@ -114,8 +114,6 @@ describe("New Record layout", function() {
 		},
 		FileName: "default title",
 		setError: (message: string) => {
-			console.log("55555555555555");
-			console.log(message);
 			errorMessage = message;
 		},
 	};

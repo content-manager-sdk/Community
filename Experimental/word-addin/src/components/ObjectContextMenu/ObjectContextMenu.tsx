@@ -24,6 +24,7 @@ interface IContextMenuProps {
 	record: ITrimMainObject;
 	isInList: boolean;
 	onCommandComplete?: (commandKey: string) => void;
+	trimType: BaseObjectTypes;
 }
 
 export class ObjectContextMenu extends React.Component<
@@ -65,7 +66,7 @@ export class ObjectContextMenu extends React.Component<
 		item: IContextualMenuItem
 	) => {
 		const { trimConnector, wordConnector, appStore, record } = this.props;
-		if (record.Uri < 1) {
+		if (record.Uri < 1 && item.key !== "New") {
 			trimConnector!
 				.getObjectCaption(BaseObjectTypes.Record)
 				.then((caption) => {
@@ -192,12 +193,21 @@ export class ObjectContextMenu extends React.Component<
 		return ["RecCheckIn", "RecDocFinal"].includes(key);
 	}
 
+	getMenuItemLabel(commandDef: ICommandDef): string {
+		const { appStore, trimType } = this.props;
+		const lbl = {
+			"Record-Properties": appStore.messages.web_GoToCM,
+			"CheckinPlace-New": appStore.messages.web_NewLinkedFolder,
+		}[`${trimType}-${commandDef.CommandId}`];
+
+		return lbl || commandDef.Tooltip;
+	}
+
 	private getFarItems = () => {
-		const { appStore, isInList, record } = this.props;
+		const { appStore, isInList, record, trimType } = this.props;
 		const { commandDefs } = this.state;
 
-		let checkinDisabled = false;
-		let checkinLabel = "";
+		let checkinMenuItem: IContextualMenuItem | undefined;
 
 		if (!record) {
 			return [];
@@ -215,20 +225,18 @@ export class ObjectContextMenu extends React.Component<
 				return !this.isSaveCommand(commandDef.CommandId);
 			})
 			.map<IContextualMenuItem>((commandDef: ICommandDef) => {
-				if (commandDef.CommandId === "RecCheckIn") {
-					checkinDisabled = !commandDef.IsEnabled;
-					checkinLabel = commandDef.Tooltip;
-				}
-				return {
+				const menuItem = {
 					key: commandDef.CommandId,
-					text:
-						commandDef.CommandId === "Properties"
-							? appStore.messages.web_GoToCM
-							: commandDef.Tooltip,
+					text: this.getMenuItemLabel(commandDef),
 					onClick: this._onActionClick,
 					disabled: !commandDef.IsEnabled,
 					data: commandDef,
 				};
+
+				if (commandDef.CommandId === "RecCheckIn") {
+					checkinMenuItem = menuItem;
+				}
+				return menuItem;
 			});
 
 		if (record.TrimType === BaseObjectTypes.Record) {
@@ -287,26 +295,36 @@ export class ObjectContextMenu extends React.Component<
 		const items = [];
 
 		if (!isInList && !appStore.isEmail()) {
-			items.push({
-				iconProps: { iconName: "Save" },
-				key: "RecCheckIn",
-				name: checkinLabel,
-				iconOnly: true,
-				disabled: checkinDisabled,
-				onClick: this._onActionClick,
-			});
+			if (checkinMenuItem) {
+				checkinMenuItem.iconProps = { iconName: "Save" };
+				checkinMenuItem.iconOnly = true;
+				items.push(checkinMenuItem);
 
+				items.push({
+					iconProps: {
+						iconName: record.DeleteNow ? "OpenFile" : "FileBug",
+					},
+					key: "RecCheckInDelete",
+					name: record.DeleteNow
+						? "Disable check in and delete on close"
+						: "Enable check in and delete on close",
+					iconOnly: true,
+					disabled: checkinMenuItem.disabled,
+					onClick: this._onActionClick,
+				});
+			}
+		}
+
+		if (trimType === BaseObjectTypes.CheckinPlace) {
 			items.push({
 				iconProps: {
-					iconName: record.DeleteNow ? "OpenFile" : "FileBug",
+					iconName: "NewFolder",
 				},
-				key: "RecCheckInDelete",
-				name: record.DeleteNow
-					? "Disable check in and delete on close"
-					: "Enable check in and delete on close",
+				key: "New",
+				name: appStore.messages.web_NewLinkedFolder,
 				iconOnly: true,
-				disabled: checkinDisabled,
 				onClick: this._onActionClick,
+				data: { NeedsAnObject: false },
 			});
 		}
 		items.push({

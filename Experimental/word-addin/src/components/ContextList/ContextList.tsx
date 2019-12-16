@@ -15,10 +15,11 @@ interface IContextListProps {
 	appStore?: any;
 	trimConnector?: ITrimConnector;
 	className?: string;
-	trimType?: BaseObjectTypes;
+	trimType: BaseObjectTypes;
 	hideSearchBar?: boolean;
 	searchString?: string;
 	onCommand?: (commandKey: string) => void;
+
 }
 
 export class ContextList extends React.Component<
@@ -68,10 +69,11 @@ export class ContextList extends React.Component<
 							onCommand(key);
 						}
 					}}
+					trimType={trimType}
 				/>
 				{!hideSearchBar && (
 					<SearchBar
-						trimType={BaseObjectTypes.Record}
+						trimType={trimType}
 						onQueryChange={(newValue) => {
 							this.setState({ searchQuery: newValue });
 						}}

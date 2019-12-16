@@ -57,7 +57,11 @@ describe("Context List", function() {
 
 	it("has menu button", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Record}
+			/>
 		);
 
 		expect(wrapper.find(IconButton)).toBeTruthy();
@@ -65,7 +69,11 @@ describe("Context List", function() {
 
 	it("default trimType is Record", () => {
 		const wrapper = shallow<ContextList>(
-			<ContextList appStore={mockAppStore} trimConnector={trimConnector} />
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.Record}
+			/>
 		);
 
 		expect(wrapper.find(TrimObjectSearchList).props().trimType).toEqual(

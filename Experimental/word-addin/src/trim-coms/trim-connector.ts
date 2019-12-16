@@ -125,6 +125,7 @@ export interface ICommandDef {
 	Tooltip: string;
 	StatusBarMessage: string;
 	IsEnabled: boolean;
+	NeedsAnObject: boolean;
 }
 
 export interface ITrimOptions {
@@ -244,6 +245,7 @@ export interface ITrimConnector {
 
 	getGlobalUserOptions(forUserOptionSet: string): Promise<void>;
 	isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean>;
+	getMenuItemsForList(trimType: BaseObjectTypes): Promise<ICommandDef[]>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -268,6 +270,39 @@ export class TrimConnector implements ITrimConnector {
 				return `plnWord:${query}* OR plnTitle:${query}*`;
 			default:
 				return `${query}*`;
+		}
+	}
+
+	public getMenuItemsForList(
+		trimType: BaseObjectTypes
+	): Promise<ICommandDef[]> {
+		if (trimType !== BaseObjectTypes.CheckinPlace) {
+			return new Promise((resolve) => {
+				resolve([]);
+			});
+		} else {
+			const data = {
+				CommandIds: "New",
+				TrimType: trimType,
+			};
+			return this.makeRequest(
+				{ path: "CommandDef", method: "get", data },
+				(data: any) => {
+					const commandDefs = data.CommandDefs.map((cdef: ICommandDef) => {
+						return {
+							CommandId: cdef.CommandId,
+							MenuEntryString: cdef.MenuEntryString,
+							Tooltip: cdef.Tooltip,
+							StatusBarMessage: cdef.StatusBarMessage,
+							IsEnabled: true,
+							NeedsAnObject: cdef.NeedsAnObject,
+						};
+					});
+
+					this.setCache(`${trimType}-menu`, commandDefs);
+					return commandDefs;
+				}
+			);
 		}
 	}
 
@@ -759,6 +794,7 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Select_Folder = "-- Select a Folder --";
 					data.Messages.web_RecordTypeRequiresForm =
 						"The data entry form for this Record Type requires user interaction which is not supported by linked folders.";
+					data.Messages.web_NewLinkedFolder = "New Linked Folder";
 					this.setCache("messages", data.Messages);
 					//this._messageCache = data.Messages;
 

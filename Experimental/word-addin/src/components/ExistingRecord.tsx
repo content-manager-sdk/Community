@@ -89,6 +89,7 @@ export class ExistingRecord extends React.Component<
 							<ObjectContextMenu
 								record={recordDetails.results[0]}
 								isInList={false}
+								trimType={BaseObjectTypes.Record}
 								onCommandComplete={(commandKey: string) => {
 									if (
 										commandKey === "getGlobalProperties" ||
@@ -112,7 +113,7 @@ export class ExistingRecord extends React.Component<
 					</PivotItem>
 					<PivotItem headerText={appStore.messages.web_Context} key={2}>
 						<hr />
-						<ContextList />
+						<ContextList trimType={BaseObjectTypes.Record} />
 					</PivotItem>
 				</Pivot>
 			</div>
