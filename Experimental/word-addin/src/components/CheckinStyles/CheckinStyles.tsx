@@ -20,6 +20,7 @@ interface ICheckinStylesProps {
 interface ICheckinStylesState {
 	view: string;
 	folderId: string;
+	folderName: string;
 }
 
 export class CheckinStyles extends React.Component<
@@ -32,6 +33,7 @@ export class CheckinStyles extends React.Component<
 		this.state = {
 			view: "List",
 			folderId: "",
+			folderName: "",
 		};
 	}
 
@@ -47,7 +49,7 @@ export class CheckinStyles extends React.Component<
 
 	public render() {
 		const { appStore, forServerProcessing } = this.props;
-		const { view, folderId } = this.state;
+		const { view, folderId, folderName } = this.state;
 
 		return (
 			<div>
@@ -57,14 +59,15 @@ export class CheckinStyles extends React.Component<
 						{forServerProcessing && (
 							<OutlookFolderPicker
 								className={this.getStyles()}
-								onChange={(folderId) => {
-									this.setState({ folderId: folderId });
+								onChange={(folderId, folderName) => {
+									this.setState({ folderId, folderName });
 								}}
 							/>
 						)}
 						<NewRecord
 							trimType={BaseObjectTypes.CheckinStyle}
 							folderId={folderId}
+							computedCheckinStyleName={folderName}
 							onTrimObjectCreated={(trimObject) => {
 								const connector = new OutlookConnector();
 								connector.getFolderChangeKey(folderId).then((changeKey) => {

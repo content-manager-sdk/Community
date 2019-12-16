@@ -1242,7 +1242,7 @@ describe("Test fetch from TRIM", () => {
 						Results: [
 							{
 								Uri: 123,
-								NeedsDataEntryForm: { Value: true },
+								RecordNeedsDataEntryForm: { Value: true },
 							},
 						],
 					},
@@ -1250,19 +1250,24 @@ describe("Test fetch from TRIM", () => {
 			});
 		setTimeout(() => {
 			try {
-				trimConnector.isDataEntryFormNeeded(: 1 ).then((isNeeded) => {
-					expect(isNeeded).toBeTruthy();
-					expect(postConfig.data).toEqual(
-						JSON.stringify({
-							RecordRecordType: 1,
-							properties: "RecordNeedsDataEntryForm",
-							ByPassSave: true,
-							RecordTitle: "test",
-						})
-					);
+				trimConnector
+					.isDataEntryFormNeeded(1)
+					.then((isNeeded) => {
+						expect(isNeeded).toBeTruthy();
+						expect(postConfig.data).toEqual(
+							JSON.stringify({
+								RecordRecordType: 1,
+								properties: "RecordNeedsDataEntryForm",
+								ByPassSave: true,
+								RecordTitle: "test",
+							})
+						);
 
-					done();
-				});
+						done();
+					})
+					.catch((e) => {
+						done.fail(e);
+					});
 			} catch (e) {
 				done.fail(e);
 			}

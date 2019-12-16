@@ -25,7 +25,8 @@ describe("New Record layout", function() {
 	const makeWrapper = (
 		trimType: BaseObjectTypes,
 		onCreated?: any,
-		folderId?: string
+		folderId?: string,
+		folderName?: string
 	) => {
 		const innerWrapper = shallow<NewRecord>(
 			<NewRecord
@@ -35,6 +36,7 @@ describe("New Record layout", function() {
 				trimType={trimType}
 				onTrimObjectCreated={onCreated}
 				folderId={folderId}
+				computedCheckinStyleName={folderName}
 			/>
 		);
 		innerWrapper.setState({ formDefinition: { Pages: [] } });
@@ -64,11 +66,8 @@ describe("New Record layout", function() {
 	) => {
 		registerProps.push(properties);
 
-		if (registerType) {
-			registerTypePlace = trimType;
-		} else {
-			registerType = trimType;
-		}
+		registerType = trimType;
+
 		return new Promise<ITrimMainObject>(function(resolve) {
 			resolve({ Uri: 456 });
 		});
@@ -586,5 +585,74 @@ describe("New Record layout", function() {
 				}
 			});
 		});
+	});
+
+	it(`sends computed props for Check in Style`, () => {
+		const wrapper = makeWrapper(
+			BaseObjectTypes.CheckinStyle,
+			null,
+			"cm_auto",
+			"auto connect"
+		);
+
+		const propSheet = wrapper.find(PropertySheet);
+
+		expect(propSheet.props().computedProperties).toEqual(
+			expect.arrayContaining([
+				{
+					Name: "CheckinStyleUseForServerMailCapture",
+					Value: false,
+					Type: "Property",
+				},
+				{
+					Name: "CheckinStyleUseForServerMailFolderType",
+					Value: "NormalFolder",
+					Type: "Property",
+				},
+				{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" },
+			])
+		);
+
+		expect(propSheet.props().computedProperties).not.toEqual(
+			expect.arrayContaining([
+				{
+					Name: "CheckinStyleName",
+					Value: "auto connect",
+					Type: "Property",
+				},
+			])
+		);
+	});
+
+	it(`sends computed props with name for Check in Style`, () => {
+		const wrapper = makeWrapper(
+			BaseObjectTypes.CheckinStyle,
+			null,
+			"abc",
+			"abc label"
+		);
+
+		const propSheet = wrapper.find(PropertySheet);
+
+		expect(propSheet.props().computedProperties).toEqual(
+			expect.arrayContaining([
+				{
+					Name: "CheckinStyleUseForServerMailCapture",
+					Value: false,
+					Type: "Property",
+				},
+				{
+					Name: "CheckinStyleUseForServerMailFolderType",
+					Value: "NormalFolder",
+					Type: "Property",
+				},
+				{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" },
+				{
+					Name: "CheckinStyleName",
+					Value: "abc label",
+					Type: "Property",
+				},
+			])
+		);
 	});
 });

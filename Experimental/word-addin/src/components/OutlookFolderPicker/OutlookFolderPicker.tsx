@@ -12,7 +12,7 @@ interface IOutlookFolderPickerProps {
 	wordConnector?: OutlookConnector;
 	appStore?: IAppStore;
 	className?: string;
-	onChange?: (folderId: string) => void;
+	onChange?: (folderId: string, folderName: string) => void;
 }
 
 export class OutlookFolderPicker extends React.Component<
@@ -27,7 +27,7 @@ export class OutlookFolderPicker extends React.Component<
 				className={className}
 				onChange={(evt, option: IComboBoxOption) => {
 					if (onChange && option) {
-						onChange(`${option.key}`);
+						onChange(`${option.key}`, `${option.text}`);
 					}
 				}}
 				placeholder={appStore!.messages.web_Select_Folder}

@@ -28,6 +28,7 @@ interface INewRecordProps {
 	onTrimObjectCreated?: (newObject?: ITrimMainObject) => void;
 	folderId?: string;
 	validateRecordType?: (recordTypeUri: number) => Promise<Boolean>;
+	computedCheckinStyleName?: string;
 }
 
 export class NewRecord extends React.Component<
@@ -188,7 +189,13 @@ export class NewRecord extends React.Component<
 	};
 
 	public render() {
-		const { appStore, className, trimType, folderId } = this.props;
+		const {
+			appStore,
+			className,
+			trimType,
+			folderId,
+			computedCheckinStyleName,
+		} = this.props;
 		const { formDefinition } = this.state;
 
 		const computedProps = [];
@@ -206,6 +213,13 @@ export class NewRecord extends React.Component<
 				},
 				{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" }
 			);
+			if (folderId && folderId !== "cm_auto" && computedCheckinStyleName) {
+				computedProps.push({
+					Name: "CheckinStyleName",
+					Value: computedCheckinStyleName,
+					Type: "Property",
+				});
+			}
 		}
 
 		return (

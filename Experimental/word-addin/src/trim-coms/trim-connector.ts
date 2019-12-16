@@ -282,7 +282,6 @@ export class TrimConnector implements ITrimConnector {
 		return this.makeRequest(
 			{ path: `${BaseObjectTypes.Record}`, method: "post", data },
 			(data: any) => {
-				console.log(data.Results[0].RecordNeedsDataEntryForm.Value);
 				return data.Results[0].RecordNeedsDataEntryForm.Value;
 			}
 		);
