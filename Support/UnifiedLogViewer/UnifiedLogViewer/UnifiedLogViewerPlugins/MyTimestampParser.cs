@@ -28,7 +28,9 @@ namespace UnifiedLogViewerPlugins
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
-            if (!string.IsNullOrEmpty(Filename) && (Path.GetFileName(Filename).Contains("TRIMEvent") || Path.GetFileName(Filename).Contains("DCI")))
+            if (!string.IsNullOrEmpty(Filename) && (Path.GetFileName(Filename).Contains("TRIMEvent") 
+                                                    || Path.GetFileName(Filename).Contains("DCI"))
+                                                    || Path.GetFileName(Filename).Contains("Render"))
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
@@ -191,7 +193,9 @@ namespace UnifiedLogViewerPlugins
             {
                 return OfficeIntegrationLog(line);
             }
-            else if (Path.GetFileName(logFile.ToString()).Contains("TRIMEvent") || Path.GetFileName(logFile.ToString()).Contains("DCI"))
+            else if (Path.GetFileName(logFile.ToString()).Contains("TRIMEvent") 
+                    || Path.GetFileName(logFile.ToString()).Contains("DCI")
+                    || Path.GetFileName(logFile.ToString()).Contains("Render"))
             {
                 return TRIMLog(logFile, line);
             }
