@@ -30,7 +30,8 @@ namespace UnifiedLogViewerPlugins
             }
             if (!string.IsNullOrEmpty(Filename) && (Path.GetFileName(Filename).Contains("TRIMEvent") 
                                                     || Path.GetFileName(Filename).Contains("DCI"))
-                                                    || Path.GetFileName(Filename).Contains("Render"))
+                                                    || Path.GetFileName(Filename).Contains("Render")
+                                                    || Path.GetFileName(Filename).Contains("TRIM.exe"))
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
@@ -103,18 +104,7 @@ namespace UnifiedLogViewerPlugins
             // "29/03/2019  14:09:54:177"
 
             const int timestampPartLength = 19;
-            var formats = new[]
-            {
-                "yyyy-MM-dd  HH:mm:ss:fff",
-                "dd/MM/yyyy  HH:mm:ss:fff",
-                "MM/dd/yyyy HH:mm:ss:fff",
-                "M/dd/yyyy HH:mm:ss:fff",
-                "M/d/yyyy HH:mm:ss:fff",
-                "MM/dd/yy HH:mm:ss:fff",
-                "M/d/yy HH:mm:ss:fff",
-                "dd-MMM-yy HH:mm:ss:fff",
-                 "dd/MM/yyyy HH:mm:ss"
-            };
+            var formats = SupportedFormats();
 
             return TryParseExact(content, timestampPartLength, formats, out timestamp);
         }
@@ -195,7 +185,8 @@ namespace UnifiedLogViewerPlugins
             }
             else if (Path.GetFileName(logFile.ToString()).Contains("TRIMEvent") 
                     || Path.GetFileName(logFile.ToString()).Contains("DCI")
-                    || Path.GetFileName(logFile.ToString()).Contains("Render"))
+                    || Path.GetFileName(logFile.ToString()).Contains("Render")
+                    || Path.GetFileName(logFile.ToString()).Contains("TRIM.exe"))
             {
                 return TRIMLog(logFile, line);
             }
