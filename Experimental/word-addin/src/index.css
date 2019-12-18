@@ -139,13 +139,13 @@ hr.trim-menu-sep {
 	z-index: 9999;
 }
 
-div.new-record-body-Record div.trim-properties {
+.new-record-body-Record div.trim-properties {
 	max-height: calc(100% - 110px);
 	overflow-y: auto;
 	margin-bottom: 10px;
 }
 
-div.new-record-body-CheckinStyle div.trim-properties {
+.new-record-body-CheckinStyle div.trim-properties {
 	max-height: calc(100% - 150px);
 	overflow-y: auto;
 	margin-bottom: 10px;
@@ -157,4 +157,7 @@ div.new-record-body-CheckinStyle div.trim-properties {
 
 .trim-register {
 	margin-top: 10px;
+}
+.disabled {
+	pointer-events: none;
 }

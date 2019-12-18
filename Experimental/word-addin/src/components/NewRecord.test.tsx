@@ -21,6 +21,23 @@ describe("New Record layout", function() {
 	//let registerPropsForPlace = undefined;
 	let registerType = undefined;
 	let errorMessage: string = undefined;
+	let populatePages = false;
+
+	const pageItemsWithTitle = {
+		Pages: [
+			{
+				Caption: "General",
+				Type: "Normal",
+				PageItems: [
+					{
+						Format: "String",
+						Name: "RecordTypedTitle",
+						Caption: "Title (Free Text Part)",
+					},
+				],
+			},
+		],
+	};
 
 	const makeWrapper = (
 		trimType: BaseObjectTypes,
@@ -55,6 +72,7 @@ describe("New Record layout", function() {
 		registerProps = [];
 		registerType = undefined;
 		errorMessage = undefined;
+		populatePages = false;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -82,7 +100,9 @@ describe("New Record layout", function() {
 	mockTrimConnector.getPropertySheet = (trimType: BaseObjectTypes) => {
 		propertySheetTrimType = trimType;
 		return new Promise(function(resolve) {
-			resolve({ PageItems: [] });
+			resolve(
+				populatePages ? pageItemsWithTitle : { Pages: [{ PageItems: [] }] }
+			);
 		});
 	};
 
@@ -201,6 +221,7 @@ describe("New Record layout", function() {
 			{ key: 1, text: "Document" },
 			{ key: 5, text: "Document 5" },
 		]);
+
 		wrapper
 			.update()
 			.find(Dropdown)
@@ -220,6 +241,32 @@ describe("New Record layout", function() {
 		expect(instance.recordTypeUri).toEqual(1);
 	});
 
+	it("persists selected Record Type", () => {
+		const instance = wrapper.instance();
+		instance.setRecordTypes([]);
+
+		expect(instance.recordTypeUri).toEqual(0);
+
+		// should be zero after the record types list has been changed
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		expect(
+			wrapper
+				.update()
+				.find(Dropdown)
+				.props().defaultSelectedKey
+		).toEqual(5);
+	});
+
 	it("calls create record on button press", () => {
 		const instance = wrapper.instance();
 		instance.setRecordTypes([
@@ -235,9 +282,9 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
 
 		expect(mockStore.RecordUri).toEqual(1);
 	});
@@ -256,14 +303,16 @@ describe("New Record layout", function() {
 			.props()
 			.onChange(null, null, 1);
 
-		wrapper
-			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+		setTimeout(() => {
+			wrapper
+				.update()
+				.find(PrimaryButton)
+				.props()
+				.onClick(null);
 
-		expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
-		expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+			expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
+			expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+		});
 	});
 
 	it("create a checkin place for a Check in Style", (done) => {
@@ -282,9 +331,10 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
+
 		setTimeout(() => {
 			try {
 				expect(registerProps[1]).toEqual({
@@ -319,9 +369,9 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
 
 		setTimeout(() => {
 			try {
@@ -371,23 +421,6 @@ describe("New Record layout", function() {
 			]);
 		});
 	});
-	it("sends the default on click even if no fields on the form have been modified", () => {
-		const instance = wrapper.instance();
-		instance.setRecordTypes([
-			{ key: 1, text: "Document" },
-			{ key: 5, text: "Document 5" },
-		]);
-
-		wrapper
-			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
-
-		expect(mockStore.RecordProps).toEqual({
-			RecordTypedTitle: "default title",
-		});
-	});
 
 	it("sends updated properties button press", () => {
 		const instance = wrapper.instance();
@@ -410,9 +443,9 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
 
 		expect(mockStore.RecordProps).toEqual({ RecordTypedTitle: "test title" });
 	});
@@ -426,9 +459,9 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
 
 		setTimeout(() => {
 			try {
@@ -450,9 +483,9 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(PrimaryButton)
-			.props()
-			.onClick(null);
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
 
 		setTimeout(() => {
 			try {
@@ -491,13 +524,11 @@ describe("New Record layout", function() {
 			try {
 				// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
 				expect(shallowWrapper.state().formDefinition).toEqual({
-					PageItems: [],
+					Pages: [{ PageItems: [] }],
 				});
 				expect(
 					shallowWrapper.find(PropertySheet).props().formDefinition
-				).toEqual({
-					PageItems: [],
-				});
+				).toEqual({ Pages: [{ PageItems: [] }] });
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -529,6 +560,58 @@ describe("New Record layout", function() {
 			try {
 				expect(propertySheetTrimType).toEqual(BaseObjectTypes.CheckinStyle);
 
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("displays a property sheet with default record title", (done) => {
+		populatePages = true;
+
+		const shallowWrapper = shallow<NewRecord>(
+			<NewRecord
+				appStore={mockStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={new MockWordConnector()}
+				trimType={BaseObjectTypes.Record}
+			/>
+		);
+
+		const instance = shallowWrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "test" },
+			{ key: 2, text: "test" },
+		]);
+
+		shallowWrapper
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		setImmediate(() => {
+			try {
+				// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+
+				expect(
+					shallowWrapper.find(PropertySheet).props().formDefinition
+				).toEqual({
+					Pages: [
+						{
+							Caption: "General",
+							Type: "Normal",
+							PageItems: [
+								{
+									Format: "String",
+									Name: "RecordTypedTitle",
+									Caption: "Title (Free Text Part)",
+									Value: "default title",
+								},
+							],
+						},
+					],
+				});
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -582,6 +665,44 @@ describe("New Record layout", function() {
 					done.fail(e);
 				}
 			});
+		});
+	});
+
+	it(`persists the selected Record Type when Record is is validated`, (done) => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+
+		wrapper.setProps({
+			validateRecordType: () => {
+				return new Promise<Boolean>(function(resolve) {
+					resolve(true);
+				});
+			},
+		});
+
+		// should be zero after the record types list has been changed
+		wrapper.instance().setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		setTimeout(() => {
+			try {
+				expect(
+					wrapper
+						.update()
+						.find(Dropdown)
+						.props().defaultSelectedKey
+				).toEqual(5);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 

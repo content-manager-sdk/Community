@@ -17,6 +17,8 @@ import { ResponsiveMode } from "office-ui-fabric-react/lib/utilities/decorators/
 
 interface INewRecordState {
 	formDefinition: any;
+
+	processing: Boolean;
 }
 
 interface INewRecordProps {
@@ -40,6 +42,8 @@ export class NewRecord extends React.Component<
 
 		this.state = {
 			formDefinition: {},
+
+			processing: false,
 		};
 	}
 
@@ -65,17 +69,28 @@ export class NewRecord extends React.Component<
 					appStore.documentInfo.EmailPath
 				)
 				.then((data) => {
+					if (data && data.Pages && data.Pages.length > 0) {
+						for (let counter = 0; counter < data.Pages.length; counter++) {
+							const page = data.Pages[counter];
+							for (
+								let itemCounter = 0;
+								itemCounter < page.PageItems.length;
+								itemCounter++
+							) {
+								const pageItem = page.PageItems[itemCounter];
+								if (pageItem.Name === "RecordTypedTitle") {
+									pageItem.Value = pageItem.Value || appStore.FileName;
+								}
+							}
+						}
+					}
 					this.setState({ formDefinition: data });
 				});
 		}
 	}
 
 	componentDidMount() {
-		const { trimConnector, appStore, trimType } = this.props;
-
-		if (trimType === BaseObjectTypes.Record) {
-			this.recordProps["RecordTypedTitle"] = appStore.FileName;
-		}
+		const { trimConnector, appStore } = this.props;
 
 		let me = this;
 		return trimConnector!
@@ -112,6 +127,7 @@ export class NewRecord extends React.Component<
 			validateRecordType(recordTypeUri).then((isValid) => {
 				if (isValid) {
 					this.recordTypeUri = recordTypeUri;
+
 					this.setPropertySheet();
 				} else {
 					appStore.setError(appStore.messages.web_RecordTypeRequiresForm);
@@ -119,20 +135,30 @@ export class NewRecord extends React.Component<
 			});
 		} else {
 			this.recordTypeUri = recordTypeUri;
+
 			this.setPropertySheet();
 		}
 	};
 
-	private _onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+	private _trimObjectCreated = () => {
+		const { onTrimObjectCreated } = this.props;
+
+		if (onTrimObjectCreated) {
+			onTrimObjectCreated();
+		}
+
+		this.setState({ processing: false });
+	};
+
+	private _onClick = (event: React.MouseEvent<HTMLFormElement>) => {
 		const {
 			appStore,
 			wordConnector,
 			trimConnector,
 			trimType,
-			onTrimObjectCreated,
 			folderId,
 		} = this.props;
-
+		this.setState({ processing: true });
 		if (trimType === BaseObjectTypes.Record) {
 			appStore
 				.createRecord(this.recordTypeUri, this.recordProps, this.recordFields)
@@ -145,15 +171,17 @@ export class NewRecord extends React.Component<
 						appStore.documentInfo.URN,
 						item.EmailSubjectPrefix
 					);
-					if (onTrimObjectCreated) {
-						onTrimObjectCreated();
-					}
+					this._trimObjectCreated();
+				})
+				.catch(() => {
+					this.setState({ processing: false });
 				});
 		} else {
 			const props = {
 				CheckinStyleRecordType: this.recordTypeUri,
 				...this.recordProps,
 			};
+
 			trimConnector!
 				.registerInTrim(trimType, props, this.recordFields)
 				.then((trimObject: ITrimMainObject) => {
@@ -169,18 +197,17 @@ export class NewRecord extends React.Component<
 								{}
 							)
 							.then((trimObject) => {
-								// 		console.log("3333333333");
-								if (onTrimObjectCreated) {
-									onTrimObjectCreated(trimObject);
-								}
+								this._trimObjectCreated();
+							})
+							.catch(() => {
+								this.setState({ processing: false });
 							});
 					} else {
-						if (onTrimObjectCreated) {
-							onTrimObjectCreated(trimObject);
-						}
+						this._trimObjectCreated();
 					}
 				});
 		}
+		event.preventDefault();
 	};
 
 	private _onPropertySheetChange = (newProps: any, newFields: any) => {
@@ -196,7 +223,7 @@ export class NewRecord extends React.Component<
 			folderId,
 			computedCheckinStyleName,
 		} = this.props;
-		const { formDefinition } = this.state;
+		const { formDefinition, processing } = this.state;
 
 		const computedProps = [];
 		if (trimType === BaseObjectTypes.CheckinStyle) {
@@ -223,7 +250,10 @@ export class NewRecord extends React.Component<
 		}
 
 		return (
-			<div className={className}>
+			<form
+				className={className + (processing === true ? " disabled" : "")}
+				onSubmit={this._onClick}
+			>
 				<Dropdown
 					disabled={trimType === BaseObjectTypes.CheckinStyle && !folderId}
 					options={this.recordTypes}
@@ -237,17 +267,16 @@ export class NewRecord extends React.Component<
 				<div className={`new-record-body new-record-body-${trimType}`}>
 					<PropertySheet
 						formDefinition={formDefinition}
-						defaultRecordTitle={this.recordProps["RecordTypedTitle"]}
 						onChange={this._onPropertySheetChange}
 						computedProperties={computedProps}
 					/>
 					{formDefinition.Pages && (
-						<PrimaryButton className="trim-register" onClick={this._onClick}>
+						<PrimaryButton className="trim-register" type="submit">
 							{appStore.messages.web_Register}
 						</PrimaryButton>
 					)}
 				</div>
-			</div>
+			</form>
 		);
 	}
 }

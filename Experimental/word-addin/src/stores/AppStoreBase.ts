@@ -167,7 +167,7 @@ export class AppStoreBase implements IAppStore {
 		fields?: any
 	): Promise<void> => {
 		return new Promise((resolve, reject) => {
-			this.setStatus("STARTING");
+			//	this.setStatus("STARTING");
 			this.getFileToSave().then((fileName) => {
 				fields = fields || {};
 				fields.DriveID = this.documentInfo.Id;

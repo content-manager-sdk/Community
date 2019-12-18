@@ -53,7 +53,6 @@ export interface IPropertySheetState {
 
 export interface IPropertySheetProps {
 	formDefinition: any;
-	defaultRecordTitle?: string;
 	onChange?: (newValue?: any, newFields?: any) => void;
 	trimConnector?: ITrimConnector;
 	computedProperties?: IPageItemValue[];
@@ -278,9 +277,7 @@ export class PropertySheet extends React.Component<
 						const val = this.getFieldValue(
 							pageItem,
 							() => {
-								return pageItem.Name === "RecordTypedTitle"
-									? this.props.defaultRecordTitle || pageItem.Value
-									: pageItem.Value;
+								return pageItem.Value;
 							},
 							FieldPickerType.Text
 						);

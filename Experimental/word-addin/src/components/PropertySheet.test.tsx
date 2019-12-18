@@ -117,7 +117,6 @@ describe("Property Sheet", function() {
 	it("displays a text field with label", () => {
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				defaultRecordTitle="test title"
 				formDefinition={{
 					Pages: [
 						{
@@ -128,6 +127,7 @@ describe("Property Sheet", function() {
 									Format: "String",
 									Name: "RecordTypedTitle",
 									Caption: "Title (Free Text Part)",
+									Value: "test title",
 								},
 							],
 						},
