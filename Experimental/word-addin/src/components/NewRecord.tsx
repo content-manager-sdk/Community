@@ -199,12 +199,17 @@ export class NewRecord extends React.Component<
 							.then((trimObject) => {
 								this._trimObjectCreated();
 							})
-							.catch(() => {
+							.catch((e) => {
 								this.setState({ processing: false });
+								appStore.setError(e);
 							});
 					} else {
 						this._trimObjectCreated();
 					}
+				})
+				.catch((e) => {
+					this.setState({ processing: false });
+					appStore.setError(e);
 				});
 		}
 		event.preventDefault();

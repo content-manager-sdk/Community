@@ -22,6 +22,7 @@ describe("New Record layout", function() {
 	let registerType = undefined;
 	let errorMessage: string = undefined;
 	let populatePages = false;
+	let rejectRegister = false;
 
 	const pageItemsWithTitle = {
 		Pages: [
@@ -73,6 +74,7 @@ describe("New Record layout", function() {
 		registerType = undefined;
 		errorMessage = undefined;
 		populatePages = false;
+		rejectRegister = false;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -86,8 +88,12 @@ describe("New Record layout", function() {
 
 		registerType = trimType;
 
-		return new Promise<ITrimMainObject>(function(resolve) {
-			resolve({ Uri: 456 });
+		return new Promise<ITrimMainObject>(function(resolve, reject) {
+			if (rejectRegister) {
+				reject("create error");
+			} else {
+				resolve({ Uri: 456 });
+			}
 		});
 	};
 
@@ -241,32 +247,6 @@ describe("New Record layout", function() {
 		expect(instance.recordTypeUri).toEqual(1);
 	});
 
-	it("persists selected Record Type", () => {
-		const instance = wrapper.instance();
-		instance.setRecordTypes([]);
-
-		expect(instance.recordTypeUri).toEqual(0);
-
-		// should be zero after the record types list has been changed
-		instance.setRecordTypes([
-			{ key: 1, text: "Document" },
-			{ key: 5, text: "Document 5" },
-		]);
-
-		wrapper
-			.update()
-			.find(Dropdown)
-			.props()
-			.onChange(null, null, 1);
-
-		expect(
-			wrapper
-				.update()
-				.find(Dropdown)
-				.props().defaultSelectedKey
-		).toEqual(5);
-	});
-
 	it("calls create record on button press", () => {
 		const instance = wrapper.instance();
 		instance.setRecordTypes([
@@ -289,7 +269,7 @@ describe("New Record layout", function() {
 		expect(mockStore.RecordUri).toEqual(1);
 	});
 
-	it("calls register in TRIM for non Record object", () => {
+	it("calls register in TRIM for non Record object", (done) => {
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 		const instance = wrapper.instance();
 		instance.setRecordTypes([
@@ -304,14 +284,50 @@ describe("New Record layout", function() {
 			.onChange(null, null, 1);
 
 		setTimeout(() => {
-			wrapper
-				.update()
-				.find(PrimaryButton)
-				.props()
-				.onClick(null);
+			try {
+				wrapper
+					.update()
+					.find("form")
+					.first()
+					.simulate("submit", { preventDefault: function() {} });
 
-			expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
-			expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+				expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
+				expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("sets error on register non Record object", (done) => {
+		rejectRegister = true;
+
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		wrapper
+			.update()
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
+		setTimeout(() => {
+			try {
+				expect(errorMessage).toEqual("create error");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
 		});
 	});
 
@@ -665,44 +681,6 @@ describe("New Record layout", function() {
 					done.fail(e);
 				}
 			});
-		});
-	});
-
-	it(`persists the selected Record Type when Record is is validated`, (done) => {
-		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
-
-		wrapper.setProps({
-			validateRecordType: () => {
-				return new Promise<Boolean>(function(resolve) {
-					resolve(true);
-				});
-			},
-		});
-
-		// should be zero after the record types list has been changed
-		wrapper.instance().setRecordTypes([
-			{ key: 1, text: "Document" },
-			{ key: 5, text: "Document 5" },
-		]);
-
-		wrapper
-			.update()
-			.find(Dropdown)
-			.props()
-			.onChange(null, null, 1);
-
-		setTimeout(() => {
-			try {
-				expect(
-					wrapper
-						.update()
-						.find(Dropdown)
-						.props().defaultSelectedKey
-				).toEqual(5);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
 		});
 	});
 

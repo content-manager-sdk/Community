@@ -127,7 +127,7 @@
 
 						<!-- Message read form -->
 						<ExtensionPoint xsi:type="MessageReadCommandSurface">
-							<OfficeTab id="TabDefault">
+							<CustomTab id="Trim.Tab1">
 								<Group id="msgReadDemoGroup">
 									<Label resid="groupLabel" />
 									<!-- Function (UI-less) button -->
@@ -272,7 +272,8 @@
                     </Action>
                   </Control> -->
 								</Group>
-							</OfficeTab>
+								<Label resid="Trim.TabLabel" />
+							</CustomTab>
 						</ExtensionPoint>
 
 
@@ -321,12 +322,12 @@
 					<bt:Url id="linksTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/OutlookLinks"/>
 					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/CheckinStyles"/>
 					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/LinkedFolders"/>
-					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/CheckinStyles"/>
 
 
 					<bt:Url id="restMobileTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/RestCaller/mobile/RestCallerMobile.html"/>
 				</bt:Urls>
 				<bt:ShortStrings>
+					<bt:String id="Trim.TabLabel" DefaultValue="Content Manager" />
 					<bt:String id="groupLabel" DefaultValue="Content Manager"/>
 					<!-- Compose mode -->
 					<bt:String id="funcComposeButtonLabel" DefaultValue="Insert links"/>
