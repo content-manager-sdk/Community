@@ -1,4 +1,4 @@
-# UnifiedLogViwer Plugin For TailViewer
+# UnifiedLogViewer Plugin For TailViewer
 
 # Overview
 
@@ -10,6 +10,7 @@ Content Manager is made up of a variety of components including:
 - WebDrawer
 - DataPort
 - Office Integrations
+- Email Link
 - and more...
 
 The hub for all of these components is the WGS but other than that they are relatively independent of each other and keep independent log files. When it comes to diagnosing a problem it is sometimes the case that you will need to view the logs of one or more components together (e.g. the web service and WGS). This plugin for TailViewer harmonizes the different formats of the log files and allows them to be merged and viewed as a single log file.
