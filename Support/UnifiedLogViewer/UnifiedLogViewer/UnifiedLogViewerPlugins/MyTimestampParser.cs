@@ -35,10 +35,10 @@ namespace UnifiedLogViewerPlugins
             {
                 return TryParse12CharacterTimestamp(content, out timestamp);
             }
-
+            else if (TryParse22CharacterTimestamp(content, out timestamp))
+                return true;
             else if (TryParse24CharacterTimestamp(content, out timestamp))
                 return true;
-
             else if (TryParse23CharacterTimestamp(content, out timestamp))
                 return true;
             else if (TryParse19CharacterTimestamp(content, out timestamp))
@@ -59,7 +59,9 @@ namespace UnifiedLogViewerPlugins
                 "MM/dd/yy HH:mm:ss:fff",
                 "M/d/yy HH:mm:ss:fff",
                 "dd-MMM-yy HH:mm:ss:fff",
-                "dd/MM/yyyy HH:mm:ss"
+                "dd/MM/yyyy HH:mm:ss",
+                "MM/dd/yyyy hh:mm:ss tt",
+                 "MM/dd/yyyy h:mm:ss tt"
             };
         }
         private bool TryParse23CharacterTimestamp(string content, out DateTime timestamp)
@@ -104,6 +106,18 @@ namespace UnifiedLogViewerPlugins
             // "29/03/2019  14:09:54:177"
 
             const int timestampPartLength = 19;
+            var formats = SupportedFormats();
+
+            return TryParseExact(content, timestampPartLength, formats, out timestamp);
+        }
+
+        private bool TryParse22CharacterTimestamp(string content, out DateTime timestamp)
+        {
+            // Example strings:
+            // "2019-03-18  14:09:54:177"
+            // "29/03/2019  14:09:54:177"
+
+            const int timestampPartLength = 22;
             var formats = SupportedFormats();
 
             return TryParseExact(content, timestampPartLength, formats, out timestamp);
@@ -190,7 +204,11 @@ namespace UnifiedLogViewerPlugins
             {
                 return TRIMLog(logFile, line);
             }
+            else if ((Path.GetFileName(logFile.ToString()).Contains("SharePoint")))
+            {
+                return SharePointIntegrationLog(line);
 
+            }
             //indexOfSecondSpace = FindIndexOfOldTimeStamp(line.Message);
             //if (indexOfSecondSpace == -1)
             //    return line;
@@ -346,6 +364,36 @@ namespace UnifiedLogViewerPlugins
             message.Insert(0, newTimestamp);
 
             return new LogLine(line.LineIndex, line.LogEntryIndex, message.ToString(), line.Level, line.Timestamp);
+        }
+
+        private LogLine SharePointIntegrationLog(LogLine line)
+        {
+            indexOfSecondSpace = FindIndexOfOldTimeStamp(line.Message);           
+            string timestamp = string.Empty;           
+
+            if (CheckDate(line.Message))
+            {              
+                line.Message = String.Format("{0:yyyy-MM-dd HH:mm:ss }", DateTime.Parse(line.Message));
+                return line;
+            }
+            var message = new StringBuilder(line.Message);
+            if (!string.IsNullOrEmpty(message.ToString()))
+                message.Insert(0, "     ");
+
+            return new LogLine(line.LineIndex, line.LogEntryIndex, message.ToString(), line.Level, line.Timestamp);
+        }
+
+        private bool CheckDate(String date)
+        {
+            try
+            {
+                DateTime dt = DateTime.Parse(date);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static int FindIndexOfSecondSpace(string message)
