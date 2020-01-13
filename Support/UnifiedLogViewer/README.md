@@ -22,6 +22,7 @@ To use the plugin:
 - install [Tailviewer](https://kittyfisto.github.io/Tailviewer/)
 - download the plugin from [published](Published/UnifiedLogViewerPlugins.1.1.tvp)
 - copy it to the Tailviewer plugins folder (e.g. C:\Program Files\Tailviewer\Plugins)
+- too see it in action watch the video [here](http://hprm.info/Unified-Log-Viewer/)
 
 # Tailviewer Overview
 
