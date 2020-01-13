@@ -29,6 +29,7 @@ interface INewRecordProps {
 	trimType: BaseObjectTypes;
 	onTrimObjectCreated?: (newObject?: ITrimMainObject) => void;
 	folderId?: string;
+	isLinkedFolder?: Boolean;
 	validateRecordType?: (recordTypeUri: number) => Promise<Boolean>;
 	computedCheckinStyleName?: string;
 }
@@ -185,27 +186,26 @@ export class NewRecord extends React.Component<
 			trimConnector!
 				.registerInTrim(trimType, props, this.recordFields)
 				.then((trimObject: ITrimMainObject) => {
-					if (folderId) {
-						trimConnector!
-							.registerInTrim(
-								BaseObjectTypes.CheckinPlace,
-								{
-									CheckinPlacePlaceId: folderId,
-									CheckinPlaceCheckinAs: trimObject.Uri,
-									CheckinPlacePlaceType: "MailForServerProcessing",
-								},
-								{}
-							)
-							.then((trimObject) => {
-								this._trimObjectCreated();
-							})
-							.catch((e) => {
-								this.setState({ processing: false });
-								appStore.setError(e);
-							});
-					} else {
-						this._trimObjectCreated();
-					}
+					const placeBody = folderId
+						? {
+								CheckinPlacePlaceId: folderId,
+								CheckinPlaceCheckinAs: trimObject.Uri,
+								CheckinPlacePlaceType: "MailForServerProcessing",
+						  }
+						: {
+								CheckinPlaceCheckinAs: trimObject.Uri,
+								CheckinPlacePlaceType: "MailForClientProcessing",
+						  };
+
+					trimConnector!
+						.registerInTrim(BaseObjectTypes.CheckinPlace, placeBody, {})
+						.then((trimObject) => {
+							this._trimObjectCreated();
+						})
+						.catch((e) => {
+							this.setState({ processing: false });
+							appStore.setError(e);
+						});
 				})
 				.catch((e) => {
 					this.setState({ processing: false });
@@ -227,6 +227,7 @@ export class NewRecord extends React.Component<
 			trimType,
 			folderId,
 			computedCheckinStyleName,
+			isLinkedFolder,
 		} = this.props;
 		const { formDefinition, processing } = this.state;
 
@@ -260,7 +261,11 @@ export class NewRecord extends React.Component<
 				onSubmit={this._onClick}
 			>
 				<Dropdown
-					disabled={trimType === BaseObjectTypes.CheckinStyle && !folderId}
+					disabled={
+						trimType === BaseObjectTypes.CheckinStyle &&
+						!folderId &&
+						isLinkedFolder === true
+					}
 					options={this.recordTypes}
 					placeholder={appStore.messages.web_SelectRecordType}
 					onChange={this._onChange}

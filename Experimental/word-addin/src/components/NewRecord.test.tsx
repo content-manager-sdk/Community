@@ -44,7 +44,8 @@ describe("New Record layout", function() {
 		trimType: BaseObjectTypes,
 		onCreated?: any,
 		folderId?: string,
-		folderName?: string
+		folderName?: string,
+		isLinkedFolder?: boolean
 	) => {
 		const innerWrapper = shallow<NewRecord>(
 			<NewRecord
@@ -55,6 +56,7 @@ describe("New Record layout", function() {
 				onTrimObjectCreated={onCreated}
 				folderId={folderId}
 				computedCheckinStyleName={folderName}
+				isLinkedFolder={isLinkedFolder}
 			/>
 		);
 		innerWrapper.setState({ formDefinition: { Pages: [] } });
@@ -331,8 +333,14 @@ describe("New Record layout", function() {
 		});
 	});
 
-	it("create a checkin place for a Check in Style", (done) => {
-		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle, () => {}, "123");
+	it("create a linked folder checkin place for a Check in Style", (done) => {
+		const wrapper = makeWrapper(
+			BaseObjectTypes.CheckinStyle,
+			() => {},
+			"123",
+			null,
+			true
+		);
 		const instance = wrapper.instance();
 		instance.setRecordTypes([
 			{ key: 1, text: "Document" },
@@ -357,6 +365,45 @@ describe("New Record layout", function() {
 					CheckinPlacePlaceId: "123",
 					CheckinPlaceCheckinAs: 456,
 					CheckinPlacePlaceType: "MailForServerProcessing",
+				});
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("create checkin place for a Check in Style", (done) => {
+		const wrapper = makeWrapper(
+			BaseObjectTypes.CheckinStyle,
+			() => {},
+			null,
+			null,
+			false
+		);
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		wrapper
+			.update()
+			.find(Dropdown)
+			.props()
+			.onChange(null, null, 1);
+
+		wrapper
+			.update()
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
+
+		setTimeout(() => {
+			try {
+				expect(registerProps[1]).toEqual({
+					CheckinPlaceCheckinAs: 456,
+					CheckinPlacePlaceType: "MailForClientProcessing",
 				});
 				done();
 			} catch (e) {
@@ -636,9 +683,27 @@ describe("New Record layout", function() {
 	});
 
 	it("disables form when no folder Id set", () => {
-		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+		const wrapper = makeWrapper(
+			BaseObjectTypes.CheckinStyle,
+			null,
+			null,
+			null,
+			true
+		);
 
 		expect(wrapper.find(Dropdown).props().disabled).toBeTruthy();
+	});
+
+	it("dooes not disable form when no folder Id set and not linked foder", () => {
+		const wrapper = makeWrapper(
+			BaseObjectTypes.CheckinStyle,
+			null,
+			null,
+			null,
+			false
+		);
+
+		expect(wrapper.find(Dropdown).props().disabled).toBeFalsy();
 	});
 
 	it("enables form when  folder Id set", () => {

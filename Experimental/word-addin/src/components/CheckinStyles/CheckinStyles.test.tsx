@@ -173,5 +173,23 @@ describe("Check in Styles", function() {
 			.onChange("abc");
 
 		expect(wrapper.find(NewRecord).props().folderId).toEqual("abc");
+		expect(wrapper.find(NewRecord).props().isLinkedFolder).toBeTruthy();
+	});
+
+	it("isLinked folder not set for client side processing", () => {
+		const wrapper = shallow<CheckinStyles>(
+			<CheckinStyles
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				forServerProcessing={false}
+			/>
+		);
+
+		wrapper
+			.find(ContextList)
+			.props()
+			.onCommand("New");
+
+		expect(wrapper.find(NewRecord).props().isLinkedFolder).toBeFalsy();
 	});
 });

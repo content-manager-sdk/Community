@@ -67,17 +67,22 @@ export class CheckinStyles extends React.Component<
 						<NewRecord
 							trimType={BaseObjectTypes.CheckinStyle}
 							folderId={folderId}
+							isLinkedFolder={forServerProcessing}
 							computedCheckinStyleName={folderName}
 							onTrimObjectCreated={(trimObject) => {
-								const connector = new OutlookConnector();
-								connector.getFolderChangeKey(folderId).then((changeKey) => {
-									connector.setUrnOnFolder(
-										folderId,
-										changeKey,
-										trimObject!.URN!
-									);
+								if (forServerProcessing) {
+									const connector = new OutlookConnector();
+									connector.getFolderChangeKey(folderId).then((changeKey) => {
+										connector.setUrnOnFolder(
+											folderId,
+											changeKey,
+											trimObject!.URN!
+										);
+										this.setState({ view: "List" });
+									});
+								} else {
 									this.setState({ view: "List" });
-								});
+								}
 							}}
 							validateRecordType={(recordTypeUri) => {
 								const { trimConnector } = this.props;
