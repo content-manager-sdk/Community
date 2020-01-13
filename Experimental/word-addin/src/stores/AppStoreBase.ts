@@ -112,6 +112,7 @@ export class AppStoreBase implements IAppStore {
 				}
 			})
 			.catch((error) => {
+				console.log(error);
 				self.setError(error, "fetch base settings");
 			});
 	};

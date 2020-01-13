@@ -396,10 +396,9 @@
 				<Id>09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Id>
 				<Resource>api://desktop-39dgcn3:3000/09f0ec5c-87e9-4568-8b60-4eb3e20de75e</Resource>
 				<Scopes>
+					<Scope>Mail.Read</Scope>
 					<Scope>Sites.ReadWrite.All</Scope>
 					<Scope>user.read</Scope>
-					<Scope>files.read</Scope>
-					<Scope>files.read.all</Scope>
 					<Scope>profile</Scope>
 					<Scope>openid</Scope>
 				</Scopes>

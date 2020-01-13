@@ -37,16 +37,11 @@ export class OfficeConnector {
 			// 	resolve("me");
 			// }
 
-			(Office.context["auth"] as any).getAccessTokenAsync(
-				{ forceConsent: false },
-				(result: any) => {
-					if (result.status === "succeeded") {
-						resolve(result.value);
-					} else {
-						reject({ message: result.error.message });
-					}
-				}
-			);
+			((global as any).OfficeRuntime.auth as any)
+				.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: true })
+				.then((token: string) => {
+					resolve(token);
+				});
 		});
 	}
 }

@@ -33,31 +33,31 @@ export class OutlookConnector extends OfficeConnector
 	}
 
 	public initialize(trimConnector: ITrimConnector, appStore: IAppStore): void {
-		this.loadCustomProps().then();
-
-		const handlerFN = () => {
-			if (Office.context.mailbox.item) {
-				appStore.setStatus("STARTING");
-				this.loadCustomProps().then(() => {
-					this.getWebUrl().then((webUrl) => {
-						trimConnector
-							.getDriveId(webUrl, true, this.getRecordUri())
-							.then((driveInfo) => {
-								appStore.setDocumentInfo(driveInfo);
-								appStore.setStatus("WAITING");
-							})
-							.catch((error) => {
-								appStore.setError(error, "fetch base settings for dialog");
-							});
+		this.loadCustomProps().then(() => {
+			const handlerFN = () => {
+				if (Office.context.mailbox.item) {
+					appStore.setStatus("STARTING");
+					this.loadCustomProps().then(() => {
+						this.getWebUrl().then((webUrl) => {
+							trimConnector
+								.getDriveId(webUrl, true, this.getRecordUri())
+								.then((driveInfo) => {
+									appStore.setDocumentInfo(driveInfo);
+									appStore.setStatus("WAITING");
+								})
+								.catch((error) => {
+									appStore.setError(error, "fetch base settings for dialog");
+								});
+						});
 					});
-				});
-			}
-		};
+				}
+			};
 
-		Office.context.mailbox.addHandlerAsync(
-			Office.EventType.ItemChanged,
-			handlerFN
-		);
+			Office.context.mailbox.addHandlerAsync(
+				Office.EventType.ItemChanged,
+				handlerFN
+			);
+		});
 	}
 
 	getRecordUri(): number {
