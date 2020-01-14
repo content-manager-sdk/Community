@@ -45,12 +45,13 @@ export class ObjectContextMenu extends React.Component<
 	}
 
 	componentDidUpdate(prevProps: IContextMenuProps) {
-		const { isInList, record } = this.props;
-		if (isInList) {
-			if (prevProps.record.Uri != record.Uri) {
-				this.setState({ commandDefs: record.CommandDefs! });
-			}
+		const { record } = this.props;
+
+		//	if (isInList) {
+		if (!prevProps.record || prevProps.record.Uri != record.Uri) {
+			this.setState({ commandDefs: record.CommandDefs! });
 		}
+		//	}
 	}
 
 	private callCommandComplete(key: string): void {

@@ -447,7 +447,9 @@ export class OutlookConnector extends OfficeConnector
 		return false;
 	}
 	saveDocument(): Promise<void> {
-		throw new Error("Method not implemented.");
+		return new Promise((resolve, reject) => {
+			resolve();
+		});
 	}
 
 	getDocumentData(writeSlice: any): Promise<string> {

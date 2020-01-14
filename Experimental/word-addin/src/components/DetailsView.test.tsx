@@ -22,6 +22,7 @@ describe("Details View", function() {
 				results: [
 					{
 						Uri: 5,
+						CommandDefs: [{ IsEnabled: true }],
 						RecordTitle: { StringValue: "my record" },
 						RecordNumber: { StringValue: "REC_1" },
 						RecordAccessControl: { StringValue: "my record" },
@@ -39,6 +40,7 @@ describe("Details View", function() {
 					{ Id: "RecordContainer", Caption: "Container" },
 					{ Id: "RecordAccessControl", Caption: "Acl" },
 					{ Id: "SparkleLevel", Caption: "SparkleLevel" },
+					{ Id: "CommandDefs", Caption: "CommandDefs" },
 				],
 			},
 		});
@@ -162,6 +164,14 @@ describe("Details View", function() {
 		).toEqual("my record");
 	});
 
+	it("does not display the command defs", function(this: any) {
+		expect(
+			wrapper
+				.find("div.details-item")
+				.containsMatchingElement(<Label>CommandDefs</Label>)
+		).toBeFalsy();
+	});
+
 	it("displays an icon to remove the property", function(this: any) {
 		expect(
 			wrapper
@@ -188,6 +198,7 @@ describe("Details View", function() {
 			"RecordContainer",
 			"RecordAccessControl",
 			"SparkleLevel",
+			"CommandDefs",
 		]);
 	});
 
@@ -288,6 +299,7 @@ describe("Details View", function() {
 					"RecordContainer",
 					"RecordAccessControl",
 					"SparkleLevel",
+					"CommandDefs",
 					"AField",
 				]);
 				done();

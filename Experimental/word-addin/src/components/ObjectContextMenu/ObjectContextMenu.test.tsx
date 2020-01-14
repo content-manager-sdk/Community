@@ -285,7 +285,22 @@ describe("Object Context Menu", () => {
 
 	it("error when record not selected", (done) => {
 		const wrapper = makeWrapper(true, false);
-		wrapper.setProps({ record: { Uri: 0, TrimType: BaseObjectTypes.Record } });
+		wrapper.setProps({
+			record: {
+				Uri: 0,
+				TrimType: BaseObjectTypes.Record,
+				CommandDefs: [
+					{
+						CommandId: "RecCheckIn",
+						MenuEntryString: "checkin",
+						Tooltip: "Checkin",
+						StatusBarMessage: "Checkin",
+						IsEnabled: true,
+						NeedsAnObject: true,
+					},
+				],
+			},
+		});
 
 		const menuItem = findMenu(wrapper)
 			.items.find((mp) => {

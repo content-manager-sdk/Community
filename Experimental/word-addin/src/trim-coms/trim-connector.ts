@@ -666,7 +666,7 @@ export class TrimConnector implements ITrimConnector {
 			propertySets: "Detailed",
 			propertyValue: "Both",
 			stringDisplayType: "ViewPane",
-			properties: "ToolTip,NameString,DeleteNow",
+			properties: "ToolTip,NameString,DeleteNow,CommandDefs",
 			descendantProperties: "RecordNumber",
 		};
 
