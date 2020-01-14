@@ -290,21 +290,16 @@ export class TrimObjectPicker
 	};
 
 	private _onTextFieldClick = (): void => {
-		console.log("11111111111111111111");
 		if (!this.state.isObjectPickerShown && !this.props.disabled) {
-			console.log("2222222222222222");
 			this._showObjectPickerPopup();
 		} else {
-			// if (this.props.allowTextInput) {
 			this.setState({
 				isObjectPickerShown: false,
 			});
-			//  }
 		}
 	};
 
 	private _showObjectPickerPopup(): void {
-		console.log(this.state.isObjectPickerShown);
 		if (!this.state.isObjectPickerShown) {
 			try {
 				this.setState({

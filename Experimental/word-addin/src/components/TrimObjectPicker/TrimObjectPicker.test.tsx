@@ -197,13 +197,12 @@ describe("TrimObjectPicker", function() {
 	});
 
 	it("should open callout when button clicked", () => {
-		const wrapper = mountObjectPicker({ disabled: true, label: "label" });
+		const wrapper = mountObjectPicker({ disabled: false, label: "label" });
 
 		wrapper
-			.find("button")
+			.find("i")
 			.last()
 			.simulate("click");
-
 		expect(wrapper.state("isObjectPickerShown")).toBe(true);
 	});
 
