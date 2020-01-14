@@ -11,7 +11,7 @@ import {
 } from "office-ui-fabric-react/lib/TextField";
 import { Callout, DirectionalHint } from "office-ui-fabric-react/lib/Callout";
 import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
-import { TrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList";
+import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { ITrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList.types";
 import { ITrimMainObject } from "src/trim-coms/trim-connector";
@@ -165,6 +165,7 @@ export class TrimObjectPicker
 									}
 									contentsInReverseDateOrder={contentsInReverseDateOrder}
 									advancedSearch={advancedSearch}
+									singleClickActAsDouble={true}
 								/>
 							</FocusTrapZone>
 						}
@@ -174,15 +175,19 @@ export class TrimObjectPicker
 		);
 	}
 
-	private _trimObjectSelected = (trimObject: ITrimMainObject): void => {
+	private _trimObjectSelected = (
+		trimObject: ITrimMainObject,
+		isDoubleClick: boolean
+	): void => {
 		const { onTrimObjectSelected } = this.props;
 		this.setState({
 			selectedItems: [trimObject],
 			textFieldText: "",
 		});
 
-		this._dismissObjectPickerPopup();
-
+		if (isDoubleClick) {
+			this._dismissObjectPickerPopup();
+		}
 		if (onTrimObjectSelected) {
 			onTrimObjectSelected(trimObject);
 		}
@@ -285,7 +290,9 @@ export class TrimObjectPicker
 	};
 
 	private _onTextFieldClick = (): void => {
+		console.log("11111111111111111111");
 		if (!this.state.isObjectPickerShown && !this.props.disabled) {
+			console.log("2222222222222222");
 			this._showObjectPickerPopup();
 		} else {
 			// if (this.props.allowTextInput) {
@@ -297,6 +304,7 @@ export class TrimObjectPicker
 	};
 
 	private _showObjectPickerPopup(): void {
+		console.log(this.state.isObjectPickerShown);
 		if (!this.state.isObjectPickerShown) {
 			try {
 				this.setState({

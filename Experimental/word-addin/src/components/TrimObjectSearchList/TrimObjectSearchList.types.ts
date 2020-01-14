@@ -33,6 +33,7 @@ export interface ITrimObjectSearchListProps
 	dialogDisplay?: boolean;
 	filterSearch?: string;
 	excludeShortCuts?: boolean;
+	singleClickActAsDouble?: boolean;
 
 	/**
 	 * Callback issued when search is closed

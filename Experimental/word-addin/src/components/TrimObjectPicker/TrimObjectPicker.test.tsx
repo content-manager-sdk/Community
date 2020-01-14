@@ -7,7 +7,7 @@ import { TrimObjectPicker } from "./TrimObjectPicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { FocusTrapZone } from "office-ui-fabric-react/lib/FocusTrapZone";
 
-import { TrimObjectSearchList } from "../TrimObjectSearchList/TrimObjectSearchList";
+import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import {
 	TrimConnector,
@@ -194,6 +194,17 @@ describe("TrimObjectPicker", function() {
 			.simulate("click");
 
 		expect(wrapper.state("advancedSearch")).toBe(false);
+	});
+
+	it("should open callout when button clicked", () => {
+		const wrapper = mountObjectPicker({ disabled: true, label: "label" });
+
+		wrapper
+			.find("button")
+			.last()
+			.simulate("click");
+
+		expect(wrapper.state("isObjectPickerShown")).toBe(true);
 	});
 
 	describe("props passed through", () => {

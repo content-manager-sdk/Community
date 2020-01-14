@@ -296,7 +296,12 @@ export class TrimObjectSearchList extends React.Component<
 	};
 
 	public render(): JSX.Element {
-		const { trimType, dialogDisplay, excludeShortCuts } = this.props;
+		const {
+			trimType,
+			dialogDisplay,
+			excludeShortCuts,
+			singleClickActAsDouble,
+		} = this.props;
 		const { searchShortCuts, items, ancestors, isRunning } = this.state;
 
 		return (
@@ -383,7 +388,7 @@ export class TrimObjectSearchList extends React.Component<
 								onRenderCell={this._onRenderCell}
 								onShouldVirtualize={this._onVirtualize}
 								onClick={(evt: React.MouseEvent<HTMLDivElement>) => {
-									this._onListClick(evt, false);
+									this._onListClick(evt, singleClickActAsDouble || false);
 								}}
 								onDoubleClick={(evt: React.MouseEvent<HTMLDivElement>) => {
 									this._onListClick(evt, true);
