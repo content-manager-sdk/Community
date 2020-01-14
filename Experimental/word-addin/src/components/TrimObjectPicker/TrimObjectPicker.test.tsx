@@ -1,7 +1,7 @@
 (global as any).config = { BASE_URL: "" };
 import * as React from "react";
 import { mount, shallow, ShallowWrapper } from "enzyme";
-import { initializeIcons } from "@uifabric/icons";
+//import { initializeIcons } from "@uifabric/icons";
 
 import { TrimObjectPicker } from "./TrimObjectPicker";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
@@ -18,7 +18,7 @@ import {
 } from "../../trim-coms/trim-connector";
 import { Provider } from "mobx-react";
 
-initializeIcons();
+//initializeIcons();
 
 describe("TrimObjectPicker", function() {
 	let startPoint = "Containers";
@@ -59,7 +59,7 @@ describe("TrimObjectPicker", function() {
 
 	const mountObjectPicker = (props: any) => {
 		const wrapper = mount(
-			<Provider trimConnector={trimConnector}>
+			<Provider trimConnector={trimConnector} appStore={{}}>
 				<TrimObjectPicker
 					{...props}
 					trimType={BaseObjectTypes.Record}
