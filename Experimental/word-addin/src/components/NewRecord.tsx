@@ -1,24 +1,30 @@
 import * as React from "react";
 import { observable, action } from "mobx";
 import { inject, observer } from "mobx-react";
-import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
-import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
+import {
+	DefaultButton,
+	PrimaryButton,
+} from "office-ui-fabric-react/lib/Button";
+import { IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import {
 	ITrimConnector,
 	IRecordType,
 	ISearchResults,
 	IDatabase,
 	ITrimMainObject,
+	ICheckinPlace,
 } from "../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "src/office-coms/office-connector";
-import { ResponsiveMode } from "office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode";
+//import { ResponsiveMode } from "office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode";
+import { ComboBox, IComboBoxOption, IComboBox } from "office-ui-fabric-react";
 
 interface INewRecordState {
 	formDefinition: any;
-
 	processing: Boolean;
+	checkinStyles: IDropdownOption[];
+	checkinUsingStyle: Boolean;
 }
 
 interface INewRecordProps {
@@ -43,8 +49,9 @@ export class NewRecord extends React.Component<
 
 		this.state = {
 			formDefinition: {},
-
 			processing: false,
+			checkinStyles: [],
+			checkinUsingStyle: false,
 		};
 	}
 
@@ -61,32 +68,38 @@ export class NewRecord extends React.Component<
 
 	setPropertySheet() {
 		const { trimConnector, appStore, trimType } = this.props;
+		const { checkinUsingStyle } = this.state;
 
 		if (this.recordTypeUri > 0) {
-			trimConnector!
-				.getPropertySheet(
-					trimType || BaseObjectTypes.Record,
-					this.recordTypeUri,
-					appStore.documentInfo.EmailPath
-				)
-				.then((data) => {
-					if (data && data.Pages && data.Pages.length > 0) {
-						for (let counter = 0; counter < data.Pages.length; counter++) {
-							const page = data.Pages[counter];
-							for (
-								let itemCounter = 0;
-								itemCounter < page.PageItems.length;
-								itemCounter++
-							) {
-								const pageItem = page.PageItems[itemCounter];
-								if (pageItem.Name === "RecordTypedTitle") {
-									pageItem.Value = pageItem.Value || appStore.FileName;
-								}
+			const getPropsSheet = checkinUsingStyle
+				? trimConnector!.getPropertySheetFromStyle(
+						this.recordTypeUri,
+						appStore.documentInfo.EmailPath
+				  )
+				: trimConnector!.getPropertySheet(
+						trimType || BaseObjectTypes.Record,
+						this.recordTypeUri,
+						appStore.documentInfo.EmailPath
+				  );
+
+			getPropsSheet.then((data) => {
+				if (data && data.Pages && data.Pages.length > 0) {
+					for (let counter = 0; counter < data.Pages.length; counter++) {
+						const page = data.Pages[counter];
+						for (
+							let itemCounter = 0;
+							itemCounter < page.PageItems.length;
+							itemCounter++
+						) {
+							const pageItem = page.PageItems[itemCounter];
+							if (pageItem.Name === "RecordTypedTitle") {
+								pageItem.Value = pageItem.Value || appStore.FileName;
 							}
 						}
 					}
-					this.setState({ formDefinition: data });
-				});
+				}
+				this.setState({ formDefinition: data });
+			});
 		}
 	}
 
@@ -94,50 +107,79 @@ export class NewRecord extends React.Component<
 		const { trimConnector, appStore } = this.props;
 
 		let me = this;
-		return trimConnector!
-			.search<IRecordType>({
+
+		const promisesToRun = [
+			trimConnector!.search<IRecordType>({
 				trimType: BaseObjectTypes.RecordType,
 				q: "unkAll",
 				filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
 				purpose: 3,
-			})
-			.then(function(response: ISearchResults<IRecordType>) {
-				me.setRecordTypes(
-					response.results.map(function(o: IRecordType) {
-						return { key: o.Uri, text: o.NameString } as IDropdownOption;
-					})
-				);
+			}),
+			trimConnector!.search<ITrimMainObject>({
+				trimType: BaseObjectTypes.CheckinPlace,
+				q: "cipType:MailForClientProcessing",
+				properties: "CheckinPlaceCheckinAs,NameString",
+				purpose: 0,
+			}),
+		];
 
-				if (appStore.documentInfo.Options.DefaultDocumentRecordType > 0) {
-					me.recordTypeUri =
-						appStore.documentInfo.Options.DefaultDocumentRecordType;
-					me.setPropertySheet();
-				}
+		return Promise.all(promisesToRun).then((values) => {
+			const response = values[0] as ISearchResults<IRecordType>;
+			me.setRecordTypes(
+				response.results.map(function(o: IRecordType) {
+					return { key: o.Uri, text: o.NameString } as IDropdownOption;
+				})
+			);
+
+			const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
+			this.setState({
+				checkinStyles: placesResponse.results.map(function(o: ICheckinPlace) {
+					return {
+						key: o.CheckinAs.Uri,
+						text: o.NameString,
+					} as IDropdownOption;
+				}),
 			});
+
+			if (appStore.documentInfo.Options.DefaultDocumentRecordType > 0) {
+				me.recordTypeUri =
+					appStore.documentInfo.Options.DefaultDocumentRecordType;
+				me.setPropertySheet();
+			}
+		});
 	}
 
 	private _onChange = (
-		event: React.FormEvent<HTMLDivElement>,
-		option: IDropdownOption,
-		index: number
+		event: React.FormEvent<IComboBox>,
+		option?: IComboBoxOption,
+		index?: number,
+		value?: string
 	) => {
 		const { validateRecordType, appStore } = this.props;
-		const recordTypeUri = Number(this.recordTypes[index].key);
+		const { checkinUsingStyle, checkinStyles } = this.state;
 
-		if (validateRecordType) {
-			validateRecordType(recordTypeUri).then((isValid) => {
-				if (isValid) {
-					this.recordTypeUri = recordTypeUri;
-
-					this.setPropertySheet();
-				} else {
-					appStore.setError(appStore.messages.web_RecordTypeRequiresForm);
-				}
-			});
-		} else {
-			this.recordTypeUri = recordTypeUri;
+		if (checkinUsingStyle) {
+			this.recordTypeUri = Number(checkinStyles[index!].key);
 
 			this.setPropertySheet();
+		} else {
+			const recordTypeUri = Number(this.recordTypes[index!].key);
+
+			if (validateRecordType) {
+				validateRecordType(recordTypeUri).then((isValid) => {
+					if (isValid) {
+						this.recordTypeUri = recordTypeUri;
+
+						this.setPropertySheet();
+					} else {
+						appStore.setError(appStore.messages.web_RecordTypeRequiresForm);
+					}
+				});
+			} else {
+				this.recordTypeUri = recordTypeUri;
+
+				this.setPropertySheet();
+			}
 		}
 	};
 
@@ -159,10 +201,24 @@ export class NewRecord extends React.Component<
 			trimType,
 			folderId,
 		} = this.props;
+
+		const { checkinUsingStyle } = this.state;
+
 		this.setState({ processing: true });
 		if (trimType === BaseObjectTypes.Record) {
-			appStore
-				.createRecord(this.recordTypeUri, this.recordProps, this.recordFields)
+			const createRec = checkinUsingStyle
+				? appStore.createRecordFromStyle(
+						this.recordTypeUri,
+						this.recordProps,
+						this.recordFields
+				  )
+				: appStore.createRecord(
+						this.recordTypeUri,
+						this.recordProps,
+						this.recordFields
+				  );
+
+			createRec
 				.then(() => {
 					return trimConnector!.getDatabaseProperties();
 				})
@@ -229,7 +285,12 @@ export class NewRecord extends React.Component<
 			computedCheckinStyleName,
 			isLinkedFolder,
 		} = this.props;
-		const { formDefinition, processing } = this.state;
+		const {
+			formDefinition,
+			processing,
+			checkinStyles,
+			checkinUsingStyle,
+		} = this.state;
 
 		const computedProps = [];
 		if (trimType === BaseObjectTypes.CheckinStyle) {
@@ -260,20 +321,55 @@ export class NewRecord extends React.Component<
 				className={className + (processing === true ? " disabled" : "")}
 				onSubmit={this._onClick}
 			>
-				<Dropdown
-					disabled={
-						trimType === BaseObjectTypes.CheckinStyle &&
-						!folderId &&
-						isLinkedFolder === true
-					}
-					options={this.recordTypes}
-					placeholder={appStore.messages.web_SelectRecordType}
-					onChange={this._onChange}
-					responsiveMode={ResponsiveMode.large}
-					defaultSelectedKey={
-						appStore.documentInfo.Options.DefaultDocumentRecordType
-					}
-				/>
+				{checkinUsingStyle ? (
+					<ComboBox
+						useComboBoxAsMenuWidth={true}
+						options={checkinStyles}
+						placeholder={appStore.messages.web_SelectCheckinStyle}
+						onChange={this._onChange}
+						onRenderLowerContent={() => {
+							return checkinStyles.length > 0 ? (
+								<DefaultButton
+									style={{
+										width: "100%",
+									}}
+									text={appStore.messages.web_UseRecordTypes}
+									onClick={() => {
+										this.setState({ checkinUsingStyle: false });
+									}}
+								/>
+							) : null;
+						}}
+					/>
+				) : (
+					<ComboBox
+						disabled={
+							trimType === BaseObjectTypes.CheckinStyle &&
+							!folderId &&
+							isLinkedFolder === true
+						}
+						useComboBoxAsMenuWidth={true}
+						options={this.recordTypes}
+						placeholder={appStore.messages.web_SelectRecordType}
+						onChange={this._onChange}
+						defaultSelectedKey={
+							appStore.documentInfo.Options.DefaultDocumentRecordType
+						}
+						onRenderLowerContent={() => {
+							return checkinStyles.length > 0 ? (
+								<DefaultButton
+									style={{
+										width: "100%",
+									}}
+									text={appStore.messages.web_UseCheckinStyles}
+									onClick={() => {
+										this.setState({ checkinUsingStyle: true });
+									}}
+								/>
+							) : null;
+						}}
+					/>
+				)}
 				<div className={`new-record-body new-record-body-${trimType}`}>
 					<PropertySheet
 						formDefinition={formDefinition}

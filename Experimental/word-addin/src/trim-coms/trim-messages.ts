@@ -2,6 +2,7 @@ export class TrimMessages {
 	public web_HPRM = ""; // tslint:disable-line
 	public web_Register = ""; // tslint:disable-line
 	public web_SelectRecordType = ""; // tslint:disable-line
+	public web_SelectCheckinStyle = ""; // tslint:disable-line
 	public web_Actions = ""; // tslint:disable-line
 	public web_Checkin = ""; // tslint:disable-line
 	public web_Finalize = ""; // tslint:disable-line
@@ -14,6 +15,8 @@ export class TrimMessages {
 	public web_Select_Folder = "";
 	public web_RecordTypeRequiresForm = "";
 	public web_NewLinkedFolder = "";
+	public web_UseCheckinStyles = "";
+	public web_UseRecordTypes = "";
 }
 
 export default TrimMessages;

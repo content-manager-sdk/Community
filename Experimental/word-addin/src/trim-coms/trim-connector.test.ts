@@ -430,6 +430,39 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("Property sheet requested for Record based on Checkin Style", () => {
+		let postConfig: any;
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+			postConfig = config;
+			return [
+				200,
+				{
+					Results: [
+						{
+							TrimType: "RecordType",
+							DataEntryFormDefinition: {
+								Version: "1",
+								SupportsElectronicDocs: true,
+								TitlingMethod: "FreeText",
+								Pages: [{}],
+							},
+						},
+					],
+				},
+			];
+		});
+
+		expect.assertions(4);
+		return trimConnector.getPropertySheetFromStyle(123).then((data) => {
+			expect(data.Pages.length).toBe(1);
+			expect(JSON.parse(postConfig.data).CreateFromCheckinStyle).toBe(123);
+			expect(JSON.parse(postConfig.data).ByPassSave).toBeTruthy();
+			expect(JSON.parse(postConfig.data).properties).toBe(
+				"DataEntryFormDefinition"
+			);
+		});
+	});
+
 	it("Error is handled", () => {
 		//mock.reset();
 		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(500, {

@@ -4,15 +4,16 @@ import * as React from "react";
 import { mount, shallow } from "enzyme";
 import { NewRecord } from "./NewRecord";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-import { TrimConnector } from "../trim-coms/trim-connector";
+import { TrimConnector, ICheckinPlace } from "../trim-coms/trim-connector";
 import { IRecordType, ITrimMainObject } from "../trim-coms/trim-connector";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "../office-coms/office-connector";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import { ComboBox } from "office-ui-fabric-react";
 
 describe("New Record layout", function() {
 	let resolveRecordTypes;
+	let resolveCheckinStyles;
 	let testRecordUrn = "";
 	let testSubjectPrefix = "";
 	let propertySheetTrimType = BaseObjectTypes.Location;
@@ -99,9 +100,13 @@ describe("New Record layout", function() {
 		});
 	};
 
-	mockTrimConnector.search = () => {
+	mockTrimConnector.search = (options) => {
 		return new Promise(function(resolve) {
-			resolveRecordTypes = resolve;
+			if (options.trimType === BaseObjectTypes.CheckinPlace) {
+				resolveCheckinStyles = resolve;
+			} else {
+				resolveRecordTypes = resolve;
+			}
 		});
 	};
 
@@ -188,23 +193,28 @@ describe("New Record layout", function() {
 		}
 	}
 
-	it("contains a Record Type dropdown", async (done) => {
+	it("contains a Record Type dropdown", (done) => {
 		resolveRecordTypes({
 			results: [{ Uri: 1, NameString: "Document" } as IRecordType],
 		});
+		resolveCheckinStyles({ results: [] });
 
-		expect(wrapper.find(Dropdown).exists()).toBeTruthy();
-		expect(wrapper.find(Dropdown).props().placeholder).toEqual(
+		expect(wrapper.find(ComboBox).exists()).toBeTruthy();
+		expect(wrapper.find(ComboBox).props().placeholder).toEqual(
 			"Select a Record Type"
 		);
 		setImmediate(() => {
-			expect(
-				wrapper
-					.update()
-					.find(Dropdown)
-					.props().options
-			).toEqual([{ key: 1, text: "Document" }]);
-			done();
+			try {
+				expect(
+					wrapper
+						.update()
+						.find(ComboBox)
+						.props().options
+				).toEqual([{ key: 1, text: "Document" }]);
+				done();
+			} catch (error) {
+				done.fail(error);
+			}
 		});
 	});
 
@@ -232,7 +242,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -242,7 +252,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 0);
 
@@ -258,7 +268,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 0);
 
@@ -281,7 +291,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -314,7 +324,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -349,7 +359,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -389,7 +399,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -426,7 +436,7 @@ describe("New Record layout", function() {
 
 		wrapper
 			.update()
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -464,7 +474,7 @@ describe("New Record layout", function() {
 
 			wrapper
 				.update()
-				.find(Dropdown)
+				.find(ComboBox)
 				.props()
 				.onChange(null, null, 0);
 
@@ -491,12 +501,6 @@ describe("New Record layout", function() {
 			{ key: 1, text: "Document" },
 			{ key: 5, text: "Document 5" },
 		]);
-
-		// wrapper
-		//   .update()
-		//   .find(Dropdown)
-		//   .props()
-		//   .onChange(null, null, 0);
 
 		wrapper
 			.update()
@@ -579,7 +583,7 @@ describe("New Record layout", function() {
 		expect(shallowWrapper.find(PropertySheet).exists()).toBeTruthy();
 
 		shallowWrapper
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -615,7 +619,7 @@ describe("New Record layout", function() {
 		]);
 
 		shallowWrapper
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -649,7 +653,7 @@ describe("New Record layout", function() {
 		]);
 
 		shallowWrapper
-			.find(Dropdown)
+			.find(ComboBox)
 			.props()
 			.onChange(null, null, 1);
 
@@ -691,10 +695,10 @@ describe("New Record layout", function() {
 			true
 		);
 
-		expect(wrapper.find(Dropdown).props().disabled).toBeTruthy();
+		expect(wrapper.find(ComboBox).props().disabled).toBeTruthy();
 	});
 
-	it("dooes not disable form when no folder Id set and not linked foder", () => {
+	it("does not disable form when no folder Id set and not linked foder", () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			null,
@@ -703,14 +707,14 @@ describe("New Record layout", function() {
 			false
 		);
 
-		expect(wrapper.find(Dropdown).props().disabled).toBeFalsy();
+		expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
 	});
 
 	it("enables form when  folder Id set", () => {
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 
 		wrapper.setProps({ folderId: "fff" });
-		expect(wrapper.find(Dropdown).props().disabled).toBeFalsy();
+		expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
 	});
 
 	[
@@ -735,7 +739,7 @@ describe("New Record layout", function() {
 			]);
 			wrapper
 				.update()
-				.find(Dropdown)
+				.find(ComboBox)
 				.props()
 				.onChange(null, null, 1);
 			setTimeout(() => {
@@ -816,5 +820,78 @@ describe("New Record layout", function() {
 				},
 			])
 		);
+	});
+
+	it("checkin Style List populated", (done) => {
+		const wrapper = makeWrapper(BaseObjectTypes.Record);
+
+		resolveRecordTypes({
+			results: [],
+		});
+
+		resolveCheckinStyles({
+			results: [
+				{
+					Uri: 1,
+					CheckinAs: { Uri: 1 },
+					NameString: "checkin style 1",
+				} as ICheckinPlace,
+			],
+		});
+
+		const instance = wrapper.instance();
+		instance.setRecordTypes([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
+
+		setTimeout(() => {
+			try {
+				expect(wrapper.state().checkinStyles.length).toEqual(1);
+				expect(wrapper.state().checkinStyles[0].text).toEqual(
+					"checkin style 1"
+				);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("selected checkinplace", (done) => {
+		const wrapper = makeWrapper(BaseObjectTypes.Record);
+
+		resolveRecordTypes({
+			results: [],
+		});
+
+		resolveCheckinStyles({
+			results: [
+				{
+					Uri: 1,
+					CheckinAs: { Uri: 111 },
+					NameString: "checkin style 1",
+				} as ICheckinPlace,
+			],
+		});
+
+		wrapper.setState({ checkinUsingStyle: true });
+
+		setTimeout(() => {
+			try {
+				wrapper
+					.update()
+					.find(ComboBox)
+					.props()
+					.onChange(null, null, 0);
+
+				const instance = wrapper.instance();
+
+				expect(instance.recordTypeUri).toEqual(111);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 });

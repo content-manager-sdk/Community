@@ -162,8 +162,29 @@ export class AppStoreBase implements IAppStore {
 		this.documentInfo = documentInfo;
 	}
 
+	public createRecordFromStyle = (
+		checkinStyle: number,
+		properties: any,
+		fields?: any
+	): Promise<void> => {
+		return this.createRecordInternal(
+			{ CreateFromCheckinStyle: checkinStyle, ...properties },
+			fields
+		);
+	};
+
 	public createRecord = (
 		recordType: number,
+		properties: any,
+		fields?: any
+	): Promise<void> => {
+		return this.createRecordInternal(
+			{ RecordRecordType: recordType, ...properties },
+			fields
+		);
+	};
+
+	private createRecordInternal = (
 		properties: any,
 		fields?: any
 	): Promise<void> => {
@@ -177,7 +198,6 @@ export class AppStoreBase implements IAppStore {
 					.registerInTrim(
 						BaseObjectTypes.Record,
 						{
-							RecordRecordType: recordType,
 							...properties,
 							RecordFilePath: fileName,
 						},

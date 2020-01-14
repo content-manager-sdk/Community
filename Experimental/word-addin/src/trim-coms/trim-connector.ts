@@ -119,6 +119,9 @@ export interface IClassification extends ITrimMainObject {
 }
 
 export interface IRecordType extends ITrimMainObject {}
+export interface ICheckinPlace extends ITrimMainObject {
+	CheckinAs: ITrimMainObject;
+}
 export interface ICommandDef {
 	CommandId: string;
 	MenuEntryString: string;
@@ -193,6 +196,10 @@ export interface ITrimConnector {
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>>;
+	getPropertySheetFromStyle(
+		checkinStyleUri: number,
+		withFile?: string
+	): Promise<any>;
 	getPropertySheet(
 		trimType: BaseObjectTypes,
 		recordTypeUri: number,
@@ -717,6 +724,28 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
+	public getPropertySheetFromStyle(
+		checkinStyleUri: number,
+		withFile?: string
+	): Promise<any> {
+		const body = {
+			properties: "DataEntryFormDefinition",
+			CreateFromCheckinStyle: checkinStyleUri,
+			ByPassSave: true,
+		};
+
+		if (withFile) {
+			body["RecordFilePath"] = withFile;
+		}
+
+		return this.makeRequest(
+			{ path: `${BaseObjectTypes.Record}`, method: "post", data: body },
+			(data: any) => {
+				return data.Results[0].DataEntryFormDefinition;
+			}
+		);
+	}
+
 	public getPropertySheet(
 		trimType: BaseObjectTypes,
 		recordTypeUri: number,
@@ -758,6 +787,9 @@ export class TrimConnector implements ITrimConnector {
 					// temporary - need to go in TRIM Messages
 					data.Messages.web_Register = "Register in Content Manager";
 					data.Messages.web_SelectRecordType = "Select a Record Type";
+					data.Messages.web_SelectCheckinStyle = "Select Checkin Style";
+					data.Messages.web_UseCheckinStyles = "Use Checkin Styles";
+					data.Messages.web_UseRecordTypes = "Use Record Types";
 					data.Messages.web_Actions = "Actions";
 					data.Messages.web_Checkin = "Check In";
 					data.Messages.web_Finalize = "Make Final";
