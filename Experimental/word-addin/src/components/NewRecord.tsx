@@ -106,47 +106,54 @@ export class NewRecord extends React.Component<
 	componentDidMount() {
 		const { trimConnector, appStore } = this.props;
 
-		let me = this;
-
-		const promisesToRun = [
-			trimConnector!.search<IRecordType>({
-				trimType: BaseObjectTypes.RecordType,
-				q: "unkAll",
-				filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
-				purpose: 3,
-			}),
-			trimConnector!.search<ITrimMainObject>({
-				trimType: BaseObjectTypes.CheckinPlace,
-				q: "cipType:MailForClientProcessing",
-				properties: "CheckinPlaceCheckinAs,NameString",
-				purpose: 0,
-			}),
-		];
-
-		return Promise.all(promisesToRun).then((values) => {
-			const response = values[0] as ISearchResults<IRecordType>;
-			me.setRecordTypes(
-				response.results.map(function(o: IRecordType) {
-					return { key: o.Uri, text: o.NameString } as IDropdownOption;
-				})
-			);
-
-			const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
+		if (trimConnector) {
 			this.setState({
-				checkinStyles: placesResponse.results.map(function(o: ICheckinPlace) {
-					return {
-						key: o.CheckinAs.Uri,
-						text: o.NameString,
-					} as IDropdownOption;
-				}),
+				checkinUsingStyle: trimConnector.getUseCheckinStyles(),
 			});
+			let me = this;
 
-			if (appStore.documentInfo.Options.DefaultDocumentRecordType > 0) {
-				me.recordTypeUri =
-					appStore.documentInfo.Options.DefaultDocumentRecordType;
-				me.setPropertySheet();
-			}
-		});
+			const promisesToRun = [
+				trimConnector.search<IRecordType>({
+					trimType: BaseObjectTypes.RecordType,
+					q: "unkAll",
+					filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
+					purpose: 3,
+				}),
+				trimConnector.search<ITrimMainObject>({
+					trimType: BaseObjectTypes.CheckinPlace,
+					q: "cipType:MailForClientProcessing",
+					properties: "CheckinPlaceCheckinAs,NameString",
+					purpose: 0,
+				}),
+			];
+
+			return Promise.all(promisesToRun).then((values) => {
+				const response = values[0] as ISearchResults<IRecordType>;
+				me.setRecordTypes(
+					response.results.map(function(o: IRecordType) {
+						return { key: o.Uri, text: o.NameString } as IDropdownOption;
+					})
+				);
+
+				const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
+				this.setState({
+					checkinStyles: placesResponse.results.map(function(o: ICheckinPlace) {
+						return {
+							key: o.CheckinAs.Uri,
+							text: o.NameString,
+						} as IDropdownOption;
+					}),
+				});
+
+				if (appStore.documentInfo.Options.DefaultDocumentRecordType > 0) {
+					me.recordTypeUri =
+						appStore.documentInfo.Options.DefaultDocumentRecordType;
+					me.setPropertySheet();
+				}
+			});
+		} else {
+			return null;
+		}
 	}
 
 	private _onChange = (
@@ -177,7 +184,6 @@ export class NewRecord extends React.Component<
 				});
 			} else {
 				this.recordTypeUri = recordTypeUri;
-
 				this.setPropertySheet();
 			}
 		}
@@ -278,6 +284,7 @@ export class NewRecord extends React.Component<
 
 	public render() {
 		const {
+			trimConnector,
 			appStore,
 			className,
 			trimType,
@@ -285,6 +292,7 @@ export class NewRecord extends React.Component<
 			computedCheckinStyleName,
 			isLinkedFolder,
 		} = this.props;
+
 		const {
 			formDefinition,
 			processing,
@@ -336,6 +344,7 @@ export class NewRecord extends React.Component<
 									text={appStore.messages.web_UseRecordTypes}
 									onClick={() => {
 										this.setState({ checkinUsingStyle: false });
+										trimConnector!.setUseCheckinStyles(false);
 									}}
 								/>
 							) : null;
@@ -364,6 +373,7 @@ export class NewRecord extends React.Component<
 									text={appStore.messages.web_UseCheckinStyles}
 									onClick={() => {
 										this.setState({ checkinUsingStyle: true });
+										trimConnector!.setUseCheckinStyles(true);
 									}}
 								/>
 							) : null;

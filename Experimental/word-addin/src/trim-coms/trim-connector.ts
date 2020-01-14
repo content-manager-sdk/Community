@@ -253,12 +253,26 @@ export interface ITrimConnector {
 	getGlobalUserOptions(forUserOptionSet: string): Promise<void>;
 	isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean>;
 	getMenuItemsForList(trimType: BaseObjectTypes): Promise<ICommandDef[]>;
+	getUseCheckinStyles(): Boolean;
+	setUseCheckinStyles(use: boolean): void;
 }
 
 export class TrimConnector implements ITrimConnector {
 	private CancelToken = Axios.CancelToken;
 	private source = this.CancelToken.source();
 	private _databaseProperties: IDatabase;
+
+	getUseCheckinStyles(): Boolean {
+		const useCheckinStyles = this.getFromCache("use-checkin-styles");
+		if (useCheckinStyles === null) {
+			this.setCache("use-checkin-styles", false);
+		}
+		return this.getFromCache("use-checkin-styles");
+	}
+
+	setUseCheckinStyles(use: boolean): void {
+		this.setCache("use-checkin-styles", use);
+	}
 
 	public cancel(): void {
 		this.source.cancel();
