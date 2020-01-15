@@ -53,13 +53,13 @@ export class BootStrap extends React.Component<
 
 		this.trimConnector.credentialsResolver = (callback) => {
 			const accessToken = getQueryStringValue("accessToken");
-			if (!getAccessToken) {
-				getAccessToken = this.getOfficeConnector()!.getAccessToken();
-			}
 
 			if (accessToken) {
 				callback(accessToken, "");
 			} else {
+				if (!getAccessToken) {
+					getAccessToken = this.getOfficeConnector()!.getAccessToken();
+				}
 				getAccessToken
 					.then((token) => callback(token, ""))
 					.catch(function(error) {

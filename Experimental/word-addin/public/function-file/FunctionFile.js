@@ -17,12 +17,14 @@ function loadProps() {
 		if (accessToken) {
 			dfd.resolve("success");
 		} else {
-			OfficeRuntime.auth.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: true }).then((function(token){
-				accessToken = token;
-				dfd.resolve("success");
-
-			}).catch(function(error) {
-				console.log(error);
+			OfficeRuntime.auth
+				.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: true })
+				.then(function(token) {
+					accessToken = token;
+					dfd.resolve("success");
+				})
+				.catch(function(error) {
+					console.log(error);
 					// alert(result.error)
 					if (result.error.code === 13003) {
 						// SSO is not supported for domain user accounts, only
@@ -31,7 +33,7 @@ function loadProps() {
 						// Handle error
 					}
 					dfd.resolve("error");
-			});
+				});
 		}
 	} else {
 		dfd.resolve("error");

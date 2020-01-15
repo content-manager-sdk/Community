@@ -72,19 +72,18 @@ export class AppStoreBase implements IAppStore {
 		const tc = this.trimConnector;
 		const self = this;
 
-		const promisesToRun = [
-			tc.getMe(),
-			tc.getMessages(),
-			this.wordConnector!.getWebUrl(),
-		];
-
+		const promisesToRun = [tc.getMe(), tc.getMessages()];
+		if (!fromDialog) {
+			promisesToRun.push(this.wordConnector!.getWebUrl());
+		}
 		Promise.all(promisesToRun)
 			.then((values) => {
 				self.setMe(values[0]);
 				self.setMessages(values[1]);
-				self.WebUrl = values[2];
 
 				if (!fromDialog) {
+					self.WebUrl = values[2];
+
 					tc.getSearchClauseOrFieldDefinitions(
 						BaseObjectTypes.Record
 					).then(() => {});
