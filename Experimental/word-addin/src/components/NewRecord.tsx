@@ -75,7 +75,7 @@ export class NewRecord extends React.Component<
 		return mergeStyles({
 			selectors: {
 				"& .ms-ComboBox-optionsContainerWrapper": {
-					maxHeight: "280px",
+					maxHeight: `${window.innerHeight - 100}px`,
 					overflowY: "auto",
 				},
 			},
@@ -121,6 +121,8 @@ export class NewRecord extends React.Component<
 
 	componentDidMount() {
 		const { trimConnector, appStore } = this.props;
+
+		console.log(window.innerHeight);
 
 		if (trimConnector) {
 			this.setState({
