@@ -1,36 +1,37 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import DetailsView from "./DetailsView";
+import DetailsView from "../DetailsView";
 import {
 	ITrimConnector,
 	IObjectDetails,
 	ITrimBooleanField,
-} from "../trim-coms/trim-connector";
+} from "../../trim-coms/trim-connector";
 import { MessageBar } from "office-ui-fabric-react/lib/MessageBar";
-import { IOfficeConnector } from "../office-coms/office-connector";
+import { IOfficeConnector } from "../../office-coms/office-connector";
 import {
 	Pivot,
 	PivotItem,
 	PivotLinkFormat,
 	PivotLinkSize,
 } from "office-ui-fabric-react/lib/Pivot";
-import ContextList from "./ContextList/ContextList";
-import ObjectContextMenu from "./ObjectContextMenu/ObjectContextMenu";
-import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import ContextList from "../ContextList/ContextList";
+import ObjectContextMenu from "../ObjectContextMenu/ObjectContextMenu";
+import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 
-interface ExistingRecordProps {
+interface ViewTrimObjectProps {
 	appStore?: any;
 	trimConnector?: ITrimConnector;
 	wordConnector?: IOfficeConnector;
 	className?: string;
 	recordUri: number;
+	onEdit?: () => void;
 }
 
-export class ExistingRecord extends React.Component<
-	ExistingRecordProps,
+export class ViewTrimObject extends React.Component<
+	ViewTrimObjectProps,
 	{ menuMessage: string; recordDetails: IObjectDetails }
 > {
-	constructor(props: ExistingRecordProps) {
+	constructor(props: ViewTrimObjectProps) {
 		super(props);
 
 		this.state = {
@@ -53,7 +54,7 @@ export class ExistingRecord extends React.Component<
 		return this.loadRecordDetails();
 	}
 
-	componentDidUpdate(prevProps: ExistingRecordProps) {
+	componentDidUpdate(prevProps: ViewTrimObjectProps) {
 		const { recordUri } = this.props;
 		if (recordUri !== prevProps.recordUri) {
 			return this.loadRecordDetails();
@@ -65,7 +66,7 @@ export class ExistingRecord extends React.Component<
 	};
 
 	public render() {
-		const { className, appStore } = this.props;
+		const { className, appStore, onEdit } = this.props;
 
 		const { menuMessage, recordDetails } = this.state;
 
@@ -100,6 +101,8 @@ export class ExistingRecord extends React.Component<
 										this.loadRecordDetails().then(() => {
 											appStore.setStatus("WAITING");
 										});
+									} else if (commandKey === "edit" && onEdit) {
+										onEdit();
 									}
 								}}
 							/>
@@ -125,4 +128,4 @@ export default inject(
 	"appStore",
 	"trimConnector",
 	"wordConnector"
-)(observer(ExistingRecord));
+)(observer(ViewTrimObject));

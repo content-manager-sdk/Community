@@ -513,6 +513,26 @@ describe("Object Context Menu", () => {
 		});
 	});
 
+	it("calls edit when edit button clicked", (done) => {
+		const wrapper = makeWrapper();
+
+		expect.assertions(1);
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "edit";
+		});
+
+		menuItem.onClick(null, menuItem);
+
+		setImmediate(() => {
+			try {
+				expect(completedCommand).toEqual("edit");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
 	it("calls finalize when checkin button clicked", async (done) => {
 		const wrapper = makeWrapper();
 

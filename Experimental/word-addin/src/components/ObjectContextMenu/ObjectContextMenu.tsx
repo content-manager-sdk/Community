@@ -47,11 +47,11 @@ export class ObjectContextMenu extends React.Component<
 	componentDidUpdate(prevProps: IContextMenuProps) {
 		const { record } = this.props;
 
-		//	if (isInList) {
-		if (!prevProps.record || prevProps.record.Uri != record.Uri) {
-			this.setState({ commandDefs: record.CommandDefs! });
+		if (record) {
+			if (!prevProps.record || prevProps.record.Uri != record.Uri) {
+				this.setState({ commandDefs: record.CommandDefs! });
+			}
 		}
-		//	}
 	}
 
 	private callCommandComplete(key: string): void {
@@ -291,6 +291,15 @@ export class ObjectContextMenu extends React.Component<
 				text: appStore.messages.web_Get_Global_View_Pane,
 				onClick: this._onActionClick,
 			});
+
+			if (!isInList) {
+				menuItems.push({
+					key: "edit",
+					text: appStore.messages.web_EditTrimObject,
+					onClick: this._onActionClick,
+					data: {},
+				});
+			}
 		}
 
 		const items = [];

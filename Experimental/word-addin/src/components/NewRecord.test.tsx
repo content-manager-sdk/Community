@@ -82,7 +82,7 @@ describe("New Record layout", function() {
 
 	let mockTrimConnector = new TrimConnector();
 
-	mockTrimConnector.registerInTrim = (
+	mockTrimConnector.saveToTrim = (
 		trimType: BaseObjectTypes,
 		properties: any,
 		fields: any

@@ -1,22 +1,45 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import NewRecord from "./NewRecord";
-import ExistingRecord from "./ExistingRecord";
+import ViewTrimObject from "./ViewTrimObject/ViewTrimObject";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import EditTrimObject from "./EditTrimObject/EditTrimObject";
 
 export class MainApp extends React.Component<
 	{ appStore?: any; className?: string },
-	any
+	{ editMode: boolean }
 > {
+	constructor(props: { appStore?: any; className?: string }) {
+		super(props);
+
+		this.state = { editMode: false };
+	}
+
 	public render() {
 		const { appStore, className } = this.props;
+		const { editMode } = this.state;
 
 		if (appStore.status === "STARTING") {
 			return null;
 		}
 		if (appStore!.RecordUri > 0) {
-			return (
-				<ExistingRecord className={className} recordUri={appStore!.RecordUri} />
+			return editMode === true ? (
+				<EditTrimObject
+					trimType={BaseObjectTypes.Record}
+					className={className}
+					recordUri={appStore!.RecordUri}
+					onSave={() => {
+						this.setState({ editMode: false });
+					}}
+				/>
+			) : (
+				<ViewTrimObject
+					className={className}
+					recordUri={appStore!.RecordUri}
+					onEdit={() => {
+						this.setState({ editMode: true });
+					}}
+				/>
 			);
 		} else if (appStore!.DriveId !== "") {
 			return (

@@ -143,7 +143,7 @@ class MockTrimConnector implements ITrimConnector {
 	setAccessToken(accessToken: string) {
 		//	throw new Error("Method not implemented.");
 	}
-	registerInTrim(
+	saveToTrim(
 		trimType: BaseObjectTypes,
 		properties: any,
 		fields: any

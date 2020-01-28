@@ -538,7 +538,7 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(4);
 
 		return trimConnector
-			.registerInTrim(BaseObjectTypes.Record, {
+			.saveToTrim(BaseObjectTypes.Record, {
 				RecordTypedTitle: "test",
 				RecordRecordType: 1,
 			})
@@ -578,7 +578,7 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(4);
 
 		return trimConnector
-			.registerInTrim(BaseObjectTypes.CheckinStyle, {
+			.saveToTrim(BaseObjectTypes.CheckinStyle, {
 				CheckinStyleName: "test",
 			})
 			.then((data) => {
@@ -615,7 +615,7 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(5);
 
 		return trimConnector
-			.registerInTrim(
+			.saveToTrim(
 				BaseObjectTypes.Record,
 				{ RecordTypedTitle: "test", RecordRecordType: 1 },
 				{ DriveId: "test" }
@@ -811,7 +811,7 @@ describe("Test fetch from TRIM", () => {
 		let completed = false;
 
 		trimConnector
-			.registerInTrim(BaseObjectTypes.Record, { RecordTypedTitle: "test" })
+			.saveToTrim(BaseObjectTypes.Record, { RecordTypedTitle: "test" })
 
 			.then((data) => {
 				completed = true;

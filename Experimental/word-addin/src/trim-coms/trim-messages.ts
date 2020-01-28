@@ -10,13 +10,15 @@ export class TrimMessages {
 	public web_GoToTextSearch = ""; // tslint:disable-line
 	public web_GoToAdvancedSearch = ""; // tslint:disable-line
 	public bob_needSelectedRow = ""; // tslint:disable-line
-	public web_ApplySearchFilter = "";
-	public web_Auto_Generate_Folder = "";
-	public web_Select_Folder = "";
-	public web_RecordTypeRequiresForm = "";
-	public web_NewLinkedFolder = "";
-	public web_UseCheckinStyles = "";
-	public web_UseRecordTypes = "";
+	public web_ApplySearchFilter = ""; // tslint:disable-line
+	public web_Auto_Generate_Folder = ""; // tslint:disable-line
+	public web_Select_Folder = ""; // tslint:disable-line
+	public web_RecordTypeRequiresForm = ""; // tslint:disable-line
+	public web_NewLinkedFolder = ""; // tslint:disable-line
+	public web_UseCheckinStyles = ""; // tslint:disable-line
+	public web_UseRecordTypes = ""; // tslint:disable-line
+	public web_EditTrimObject = ""; // tslint:disable-line
+	public web_save = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

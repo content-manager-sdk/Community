@@ -205,7 +205,11 @@ export interface ITrimConnector {
 		recordTypeUri: number,
 		withFile?: string
 	): Promise<any>;
-	registerInTrim(
+	getPropertySheetForObject(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<any>;
+	saveToTrim(
 		trimType: BaseObjectTypes,
 		properties: any,
 		fields?: any
@@ -718,7 +722,7 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public registerInTrim(
+	public saveToTrim(
 		trimType: BaseObjectTypes,
 		properties: any,
 		fields: any = null
@@ -783,6 +787,22 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
+	public getPropertySheetForObject(
+		trimType: BaseObjectTypes,
+		uri: number
+	): Promise<any> {
+		const data = {
+			properties: "DataEntryFormDefinition",
+		};
+
+		return this.makeRequest(
+			{ path: `${trimType}/${uri}`, method: "get", data },
+			(data: any) => {
+				return data.Results[0].DataEntryFormDefinition;
+			}
+		);
+	}
+
 	public getMessages(): Promise<any> {
 		const params = {
 			MatchMessages: Object.keys(new TrimMessages()).join("|"),
@@ -841,7 +861,9 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_RecordTypeRequiresForm =
 						"The data entry form for this Record Type requires user interaction which is not supported by linked folders.";
 					data.Messages.web_NewLinkedFolder = "New Linked Folder";
+					data.Messages.web_EditTrimObject = "Edit";
 					this.setCache("messages", data.Messages);
+
 					//this._messageCache = data.Messages;
 
 					return data.Messages;

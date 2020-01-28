@@ -111,7 +111,6 @@ export class AppStoreBase implements IAppStore {
 				}
 			})
 			.catch((error) => {
-				console.log(error);
 				self.setError(error, "fetch base settings");
 			});
 	};
@@ -194,7 +193,7 @@ export class AppStoreBase implements IAppStore {
 				fields.DriveID = this.documentInfo.Id;
 
 				return this.trimConnector
-					.registerInTrim(
+					.saveToTrim(
 						BaseObjectTypes.Record,
 						{
 							...properties,

@@ -246,7 +246,7 @@ export class NewRecord extends React.Component<
 			};
 
 			trimConnector!
-				.registerInTrim(trimType, props, this.recordFields)
+				.saveToTrim(trimType, props, this.recordFields)
 				.then((trimObject: ITrimMainObject) => {
 					const placeBody = folderId
 						? {
@@ -260,7 +260,7 @@ export class NewRecord extends React.Component<
 						  };
 
 					trimConnector!
-						.registerInTrim(BaseObjectTypes.CheckinPlace, placeBody, {})
+						.saveToTrim(BaseObjectTypes.CheckinPlace, placeBody, {})
 						.then((trimObject) => {
 							this._trimObjectCreated();
 						})
