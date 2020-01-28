@@ -17,8 +17,13 @@ import {
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "src/office-coms/office-connector";
-//import { ResponsiveMode } from "office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode";
-import { ComboBox, IComboBoxOption, IComboBox } from "office-ui-fabric-react";
+
+import {
+	ComboBox,
+	IComboBoxOption,
+	IComboBox,
+	mergeStyles,
+} from "office-ui-fabric-react";
 
 interface INewRecordState {
 	formDefinition: any;
@@ -64,6 +69,17 @@ export class NewRecord extends React.Component<
 	setRecordTypes(recTypes: IDropdownOption[]) {
 		this.recordTypes = recTypes;
 		this.recordTypeUri = 0;
+	}
+
+	private getStyles(): string {
+		return mergeStyles({
+			selectors: {
+				"& .ms-ComboBox-optionsContainerWrapper": {
+					maxHeight: "280px",
+					overflowY: "auto",
+				},
+			},
+		});
 	}
 
 	setPropertySheet() {
@@ -324,6 +340,15 @@ export class NewRecord extends React.Component<
 			}
 		}
 
+		const comboProps = {
+			calloutProps: {
+				hideOverflow: true,
+				className: this.getStyles(),
+			},
+			useComboBoxAsMenuWidth: true,
+			onChange: this._onChange,
+		};
+
 		return (
 			<form
 				className={className + (processing === true ? " disabled" : "")}
@@ -331,10 +356,9 @@ export class NewRecord extends React.Component<
 			>
 				{checkinUsingStyle ? (
 					<ComboBox
-						useComboBoxAsMenuWidth={true}
+						{...comboProps}
 						options={checkinStyles}
 						placeholder={appStore.messages.web_SelectCheckinStyle}
-						onChange={this._onChange}
 						onRenderLowerContent={() => {
 							return checkinStyles.length > 0 ? (
 								<DefaultButton
@@ -352,15 +376,14 @@ export class NewRecord extends React.Component<
 					/>
 				) : (
 					<ComboBox
+						{...comboProps}
 						disabled={
 							trimType === BaseObjectTypes.CheckinStyle &&
 							!folderId &&
 							isLinkedFolder === true
 						}
-						useComboBoxAsMenuWidth={true}
 						options={this.recordTypes}
 						placeholder={appStore.messages.web_SelectRecordType}
-						onChange={this._onChange}
 						defaultSelectedKey={
 							appStore.documentInfo.Options.DefaultDocumentRecordType
 						}
