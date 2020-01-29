@@ -78,6 +78,7 @@ describe("New Record layout", function() {
 		errorMessage = undefined;
 		populatePages = false;
 		rejectRegister = false;
+		mockStore.documentInfo.EmailPath = null;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -136,7 +137,7 @@ describe("New Record layout", function() {
 			web_SelectRecordType: "Select a Record Type",
 			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 		},
-		documentInfo: { Options: {}, URN: "test_urn" },
+		documentInfo: { Options: {}, URN: "test_urn", EmailPath: null },
 		createRecord: (recordUri, recordProps) => {
 			mockStore.RecordUri = recordUri;
 			mockStore.RecordProps = recordProps;
@@ -197,7 +198,7 @@ describe("New Record layout", function() {
 		resolveRecordTypes({
 			results: [{ Uri: 1, NameString: "Document" } as IRecordType],
 		});
-		resolveCheckinStyles({ results: [] });
+		//	resolveCheckinStyles({ results: [] });
 
 		expect(wrapper.find(ComboBox).exists()).toBeTruthy();
 		expect(wrapper.find(ComboBox).props().placeholder).toEqual(
@@ -823,7 +824,8 @@ describe("New Record layout", function() {
 	});
 
 	it("checkin Style List populated", (done) => {
-		const wrapper = makeWrapper(BaseObjectTypes.Record);
+		mockStore.documentInfo.EmailPath = "test";
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinPlace);
 
 		resolveRecordTypes({
 			results: [],
@@ -859,7 +861,8 @@ describe("New Record layout", function() {
 	});
 
 	it("selected checkinplace", (done) => {
-		const wrapper = makeWrapper(BaseObjectTypes.Record);
+		mockStore.documentInfo.EmailPath = "test";
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinPlace);
 
 		resolveRecordTypes({
 			results: [],

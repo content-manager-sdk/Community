@@ -147,8 +147,10 @@ export class NewRecord extends React.Component<
 					})
 				);
 			}
+
 			return Promise.all(promisesToRun).then((values) => {
 				const response = values[0] as ISearchResults<IRecordType>;
+
 				me.setRecordTypes(
 					response.results.map(function(o: IRecordType) {
 						return { key: o.Uri, text: o.NameString } as IDropdownOption;
