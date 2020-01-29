@@ -61,7 +61,7 @@ export class AppStoreBase implements IAppStore {
 	}
 
 	protected getFileToSave(): Promise<string> {
-		throw new Error("Method not impemented");
+		throw new Error("Method not implemented");
 	}
 
 	protected isEmail(): boolean {

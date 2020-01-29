@@ -122,8 +122,6 @@ export class NewRecord extends React.Component<
 	componentDidMount() {
 		const { trimConnector, appStore } = this.props;
 
-		console.log(window.innerHeight);
-
 		if (trimConnector) {
 			this.setState({
 				checkinUsingStyle: trimConnector.getUseCheckinStyles(),
@@ -137,14 +135,18 @@ export class NewRecord extends React.Component<
 					filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
 					purpose: 3,
 				}),
-				trimConnector.search<ITrimMainObject>({
-					trimType: BaseObjectTypes.CheckinPlace,
-					q: "cipType:MailForClientProcessing",
-					properties: "CheckinPlaceCheckinAs,NameString",
-					purpose: 0,
-				}),
 			];
 
+			if (appStore.documentInfo.EmailPath) {
+				promisesToRun.push(
+					trimConnector.search<ITrimMainObject>({
+						trimType: BaseObjectTypes.CheckinPlace,
+						q: "cipType:MailForClientProcessing",
+						properties: "CheckinPlaceCheckinAs,NameString",
+						purpose: 0,
+					})
+				);
+			}
 			return Promise.all(promisesToRun).then((values) => {
 				const response = values[0] as ISearchResults<IRecordType>;
 				me.setRecordTypes(
@@ -152,17 +154,19 @@ export class NewRecord extends React.Component<
 						return { key: o.Uri, text: o.NameString } as IDropdownOption;
 					})
 				);
-
-				const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
-				this.setState({
-					checkinStyles: placesResponse.results.map(function(o: ICheckinPlace) {
-						return {
-							key: o.CheckinAs.Uri,
-							text: o.NameString,
-						} as IDropdownOption;
-					}),
-				});
-
+				if (values.length > 1) {
+					const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
+					this.setState({
+						checkinStyles: placesResponse.results.map(function(
+							o: ICheckinPlace
+						) {
+							return {
+								key: o.CheckinAs.Uri,
+								text: o.NameString,
+							} as IDropdownOption;
+						}),
+					});
+				}
 				if (appStore.documentInfo.Options.DefaultDocumentRecordType > 0) {
 					me.recordTypeUri =
 						appStore.documentInfo.Options.DefaultDocumentRecordType;

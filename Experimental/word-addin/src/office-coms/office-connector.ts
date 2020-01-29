@@ -38,9 +38,13 @@ export class OfficeConnector {
 			// }
 
 			((global as any).OfficeRuntime.auth as any)
-				.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: true })
+				.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: false })
 				.then((token: string) => {
 					resolve(token);
+				})
+				.catch((e: any) => {
+					console.log(JSON.stringify(e));
+					reject(e);
 				});
 		});
 	}
