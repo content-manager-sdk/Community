@@ -16,6 +16,7 @@ let Mock_Action = "";
 let uriProp = { key: "", value: "" };
 let addedItem = { key: "", value: "" };
 let addedItemSynced: any = {};
+let testToken = "";
 export namespace Word {
 	export const run = function(callback) {
 		return callback({
@@ -71,7 +72,17 @@ export namespace Office {
   }
 }
 
+export namespace OfficeRuntime {
+	export const auth = {
+    getAccessToken: () =>{	return new Promise((resolve) => {
+		resolve(testToken);
+	});}
+  }
+}
+
+
 (<any>global).Office = Office;
+(<any>global).OfficeRuntime = OfficeRuntime;
 // export namespace Office {
 //   export const initialize = function() {};
 // }
@@ -79,7 +90,10 @@ export namespace Office {
 
 describe("word apis", () => {
 	const wordConnector = new WordConnector();
-
+beforeEach(() =>{
+	testToken = "";
+	localStorage.removeItem("access-token");
+});
 	test("the default is not OK", async () => {
 		Mock_Action = "URI_NULL";
 		expect.assertions(1);
@@ -148,4 +162,54 @@ describe("word apis", () => {
 		expect(uriProp.key).toEqual("CM_Record_Uri");
 		expect(uriProp.value).toEqual("9");
 	});
+
+	const createJwt = (exp:Date): any => {
+		const prefix = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkhsQzBSMTJza3hOWjFXUXdtak9GXzZ0X3RERSJ9.";
+		try {
+			const jwt = {exp:exp.getTime()/1000}
+			return `${prefix}${btoa(JSON.stringify(jwt))}`;
+		} catch (e) {
+			return null;
+		}
+	};
+
+	test("get token", async () => {
+		testToken = createJwt(new Date());
+		
+		const token = await wordConnector.getAccessToken();
+		expect(token).toEqual(testToken);
+
+	});
+
+	test("get token from cache", async () => {
+		testToken = createJwt(new Date());
+		const cacheToken = createJwt(new Date(new Date().getTime()+1000 /1000));
+
+		localStorage.setItem("access-token", cacheToken);
+
+		const token = await wordConnector.getAccessToken();
+		expect(token).toEqual(cacheToken);
+
+	});
+
+	test("token in cache is stale", async () => {
+		testToken = createJwt(new Date());
+	//	const cacheToken = createJwt(new Date(new Date().getTime() + 1*60000));
+
+		const cacheToken = createJwt(new Date(new Date().getTime()-1000 /1000));
+
+		localStorage.setItem("access-token", cacheToken);
+
+		const token = await wordConnector.getAccessToken();
+		expect(token).toEqual(testToken);
+
+	});
+
+	test("token is added to cache", async () => {
+		testToken = createJwt(new Date());
+	
+		const token = await wordConnector.getAccessToken();
+		expect(localStorage.getItem("access-token")).toEqual(token);
+	});
+
 });

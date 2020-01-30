@@ -37,15 +37,34 @@ export class OfficeConnector {
 			// 	resolve("me");
 			// }
 
-			((global as any).OfficeRuntime.auth as any)
-				.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: false })
-				.then((token: string) => {
-					resolve(token);
-				})
-				.catch((e: any) => {
-					console.log(JSON.stringify(e));
-					reject(e);
-				});
+			const parseJwt = (token: string): any => {
+				try {
+					return JSON.parse(atob(token.split(".")[1]));
+				} catch (e) {
+					return null;
+				}
+			};
+
+			const cachedToken = localStorage.getItem("access-token");
+
+			if (
+				cachedToken &&
+				parseJwt(cachedToken).exp * 1000 > new Date().getTime()
+			) {
+				resolve(cachedToken);
+			} else {
+				((global as any).OfficeRuntime.auth as any)
+					.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: false })
+					.then((token: string) => {
+						localStorage.setItem("access-token", token);
+						resolve(token);
+					})
+					.catch((e: any) => {
+						console.log(JSON.stringify(e));
+
+						reject(e);
+					});
+			}
 		});
 	}
 }
