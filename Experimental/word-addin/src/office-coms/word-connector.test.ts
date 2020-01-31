@@ -183,7 +183,7 @@ beforeEach(() =>{
 
 	test("get token from cache", async () => {
 		testToken = createJwt(new Date());
-		const cacheToken = createJwt(new Date(new Date().getTime()+1000 /1000));
+		const cacheToken = createJwt(new Date(new Date().getTime()+5000 /1000));
 
 		localStorage.setItem("access-token", cacheToken);
 

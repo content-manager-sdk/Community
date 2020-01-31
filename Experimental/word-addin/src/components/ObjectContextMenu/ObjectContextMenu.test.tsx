@@ -42,7 +42,7 @@ describe("Object Context Menu", () => {
 		isInList: boolean = false,
 		trimType: BaseObjectTypes = BaseObjectTypes.Record
 	) => {
-		return shallow<ObjectContextMenu>(
+		const wrapper = shallow<ObjectContextMenu>(
 			<ObjectContextMenu
 				isInList={isInList}
 				onCommandComplete={(key: string) => {
@@ -80,40 +80,7 @@ describe("Object Context Menu", () => {
 						Enums: {
 							RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
 						},
-						CommandDefs: [
-							{
-								CommandId: "RecCheckIn",
-								MenuEntryString: "checkin",
-								Tooltip: "Checkin",
-								StatusBarMessage: "Checkin",
-								IsEnabled: menuItemsEnabled,
-								NeedsAnObject: true,
-							},
-							{
-								CommandId: "RecDocFinal",
-								MenuEntryString: "Final",
-								Tooltip: "Make Final",
-								StatusBarMessage: "Make Final",
-								IsEnabled: menuItemsEnabled,
-								NeedsAnObject: true,
-							},
-							{
-								CommandId: "Properties",
-								MenuEntryString: "Properties",
-								Tooltip: "Properties",
-								StatusBarMessage: "Properties",
-								IsEnabled: menuItemsEnabled,
-								NeedsAnObject: true,
-							},
-							{
-								CommandId: "New",
-								MenuEntryString: "new",
-								Tooltip: "new",
-								StatusBarMessage: "new",
-								IsEnabled: menuItemsEnabled,
-								NeedsAnObject: false,
-							},
-						],
+						CommandDefs: [],
 					},
 				}}
 				trimConnector={trimConnector}
@@ -126,6 +93,44 @@ describe("Object Context Menu", () => {
 				}}
 			/>
 		);
+
+		wrapper.setState({
+			commandDefs: [
+				{
+					CommandId: "RecCheckIn",
+					MenuEntryString: "checkin",
+					Tooltip: "Checkin",
+					StatusBarMessage: "Checkin",
+					IsEnabled: menuItemsEnabled,
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "RecDocFinal",
+					MenuEntryString: "Final",
+					Tooltip: "Make Final",
+					StatusBarMessage: "Make Final",
+					IsEnabled: menuItemsEnabled,
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "Properties",
+					MenuEntryString: "Properties",
+					Tooltip: "Properties",
+					StatusBarMessage: "Properties",
+					IsEnabled: menuItemsEnabled,
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "New",
+					MenuEntryString: "new",
+					Tooltip: "new",
+					StatusBarMessage: "new",
+					IsEnabled: menuItemsEnabled,
+					NeedsAnObject: false,
+				},
+			],
+		});
+		return wrapper;
 	};
 
 	beforeEach(() => {
@@ -204,7 +209,8 @@ describe("Object Context Menu", () => {
 		wrapper: shallow<ObjectContextMenu>,
 		getFirstItem?: boolean
 	): IContextualMenuItem => {
-		return wrapper.find(CommandBar).props().farItems[getFirstItem ? 0 : 2];
+		const farItems = wrapper.find(CommandBar).props().farItems;
+		return farItems[getFirstItem ? 0 : farItems.length - 1];
 	};
 
 	const findMenu = (
@@ -675,6 +681,26 @@ describe("Object Context Menu", () => {
 				menuItem.onClick(null, menuItem);
 
 				expect(testUri).toEqual(7);
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("not opens in CM for non Record in list", (done) => {
+		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
+
+		setImmediate(() => {
+			try {
+				const menuItem = findMenu(wrapper).items.find((mi) => {
+					return mi.key === "Properties";
+				});
+
+				menuItem.onClick(null, menuItem);
+
+				expect(testUri).toEqual(0);
 				expect.assertions(1);
 				done();
 			} catch (e) {

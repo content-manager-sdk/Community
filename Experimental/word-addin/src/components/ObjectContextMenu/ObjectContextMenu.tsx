@@ -66,7 +66,14 @@ export class ObjectContextMenu extends React.Component<
 		evt: React.MouseEvent<HTMLElement>,
 		item: IContextualMenuItem
 	) => {
-		const { trimConnector, wordConnector, appStore, record } = this.props;
+		const {
+			trimConnector,
+			wordConnector,
+			appStore,
+			record,
+			trimType,
+			isInList,
+		} = this.props;
 		if (record.Uri < 1 && item.key !== "New") {
 			trimConnector!
 				.getObjectCaption(BaseObjectTypes.Record)
@@ -87,7 +94,7 @@ export class ObjectContextMenu extends React.Component<
 			} else if (item.key === "pasteTitle") {
 				wordConnector!.insertText(record.ToolTip!);
 				this.callCommandComplete(item.key);
-			} else if (item.key === "Properties") {
+			} else if (item.key === "Properties" && !isInList) {
 				appStore.openInCM(record.Uri);
 				this.callCommandComplete(item.key);
 			} else if (item.key === "getGlobalProperties") {

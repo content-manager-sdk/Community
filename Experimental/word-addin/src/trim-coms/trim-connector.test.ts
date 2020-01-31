@@ -639,19 +639,6 @@ describe("Test fetch from TRIM", () => {
 	it("get view pane property defs", () => {
 		let postConfig: any;
 
-		// mock
-		// 	.onGet(`${SERVICEAPI_BASE_URI}/Location/me`)
-		// 	.replyOnce(function(config: any) {
-		// 		body = config.data;
-
-		// 		return [
-		// 			200,
-		// 			{
-		// 				Results: [{ LocationFullFormattedName: { Value: "david" } }],
-		// 			},
-		// 		];
-		// 	});
-
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/PropertyDef`)
 			.replyOnce(function(config: any) {
@@ -690,11 +677,10 @@ describe("Test fetch from TRIM", () => {
 		expect.assertions(2);
 
 		return trimConnector
-			.getViewPanePropertyDefs(BaseObjectTypes.Record, 5)
+			.getViewPanePropertyDefs(BaseObjectTypes.Record)
 			.then((data) => {
 				expect(postConfig.params).toEqual({
 					TrimType: "Record",
-					ForObject: 5,
 					Get: "ViewPane",
 				});
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
