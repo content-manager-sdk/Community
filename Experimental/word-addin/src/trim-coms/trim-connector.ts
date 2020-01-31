@@ -250,8 +250,7 @@ export interface ITrimConnector {
 	): Promise<IPropertyOrFieldDef[]>;
 
 	getViewPanePropertyDefs(
-		trimType: BaseObjectTypes,
-		uri: number
+		trimType: BaseObjectTypes
 	): Promise<IPropertyOrFieldDef[]>;
 
 	getGlobalUserOptions(forUserOptionSet: string): Promise<void>;
@@ -596,23 +595,32 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public getViewPanePropertyDefs(
-		trimType: BaseObjectTypes,
-		uri: number
+		trimType: BaseObjectTypes
 	): Promise<IPropertyOrFieldDef[]> {
-		const path = "PropertyDef";
+		const cachedResults = this.getFromCache("viewpane-prop-defs") || {};
 
-		const params = {
-			TrimType: trimType,
-			ForObject: uri,
-			Get: "ViewPane",
-		};
+		if (cachedResults[trimType]) {
+			return new Promise((resolve) => {
+				resolve(cachedResults[trimType]);
+			});
+		} else {
+			const path = "PropertyDef";
 
-		return this.makeRequest(
-			{ path, method: "get", data: params },
-			(data: any) => {
-				return data.PropertiesAndFields;
-			}
-		);
+			const params = {
+				TrimType: trimType,
+
+				Get: "ViewPane",
+			};
+
+			return this.makeRequest(
+				{ path, method: "get", data: params },
+				(data: any) => {
+					cachedResults[trimType] = data.PropertiesAndFields;
+					this.setCache("viewpane-prop-defs", cachedResults);
+					return data.PropertiesAndFields;
+				}
+			);
+		}
 	}
 
 	public setViewPaneProperties(

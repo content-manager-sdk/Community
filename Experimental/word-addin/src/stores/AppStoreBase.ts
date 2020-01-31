@@ -139,13 +139,13 @@ export class AppStoreBase implements IAppStore {
 		return 0;
 	}
 
-	@computed
-	get RecordType(): string {
-		if (this.documentInfo != null) {
-			return this.documentInfo.RecordType;
-		}
-		return "";
-	}
+	// @computed
+	// get RecordType(): string {
+	// 	if (this.documentInfo != null) {
+	// 		return this.documentInfo.RecordType;
+	// 	}
+	// 	return "";
+	// }
 
 	@computed
 	get DriveId(): string {

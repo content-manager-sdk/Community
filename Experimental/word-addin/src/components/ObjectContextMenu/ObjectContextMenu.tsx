@@ -37,7 +37,7 @@ export class ObjectContextMenu extends React.Component<
 		if (!this.props.isInList) {
 			this.state = {
 				menuMessage: "",
-				commandDefs: props.appStore!.documentInfo.CommandDefs,
+				commandDefs: [],
 			};
 		} else {
 			this.state = { menuMessage: "", commandDefs: [] };

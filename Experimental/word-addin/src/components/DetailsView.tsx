@@ -208,8 +208,6 @@ export class DetailsView extends React.Component<
 	private _gettingPropDefs: boolean = false;
 
 	private onMenuOpen = () => {
-		const { recordProperties } = this.state;
-
 		if (!this._gettingPropDefs) {
 			this._gettingPropDefs = true;
 			const { propertyAndFieldDefinitions } = this.state;
@@ -217,7 +215,7 @@ export class DetailsView extends React.Component<
 
 			if (propertyAndFieldDefinitions.length < 1) {
 				trimConnector!
-					.getViewPanePropertyDefs(BaseObjectTypes.Record, recordProperties.Uri)
+					.getViewPanePropertyDefs(BaseObjectTypes.Record)
 					.then((data) => {
 						this.setState({
 							propertyAndFieldDefinitions: data,
