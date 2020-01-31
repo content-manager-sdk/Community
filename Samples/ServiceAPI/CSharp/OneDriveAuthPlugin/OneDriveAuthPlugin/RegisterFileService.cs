@@ -97,7 +97,7 @@ namespace OneDriveAuthPlugin
 			{
 				supportedCommandIds = new Dictionary<BaseObjectTypes, CommandIds[]>();
 				supportedCommandIds[BaseObjectTypes.Record] = new CommandIds[] { CommandIds.Properties, CommandIds.RecCheckIn, CommandIds.RecDocFinal, CommandIds.AddToFavorites, CommandIds.RemoveFromFavorites };
-				supportedCommandIds[BaseObjectTypes.CheckinPlace] = new CommandIds[] { CommandIds.New, CommandIds.Remove };
+				supportedCommandIds[BaseObjectTypes.CheckinPlace] = new CommandIds[] { CommandIds.New, CommandIds.Remove, CommandIds.Properties };
 			}
 
 			var commandDefs = new List<MyCommandDef>();
@@ -334,6 +334,7 @@ namespace OneDriveAuthPlugin
 
 					log.Debug("GetItem");
 					var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveShareUrl(request.WebUrl);
+					log.Debug("Got URL");
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, token, null);
 					log.Debug("GotItem");
 				}
