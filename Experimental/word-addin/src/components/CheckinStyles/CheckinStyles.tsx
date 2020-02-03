@@ -97,7 +97,7 @@ export class CheckinStyles extends React.Component<
 										isLinkedFolder={forServerProcessing}
 										computedCheckinStyleName={folderName}
 										onTrimObjectCreated={(trimObject) => {
-											if (forServerProcessing) {
+											if (forServerProcessing && folderId !== "cm_auto") {
 												const connector = new OutlookConnector();
 												connector
 													.getFolderChangeKey(folderId)
@@ -108,6 +108,9 @@ export class CheckinStyles extends React.Component<
 															trimObject!.URN!
 														);
 														this.setState({ view: "List" });
+													})
+													.catch((e) => {
+														appStore!.setError(e);
 													});
 											} else {
 												this.setState({ view: "List" });

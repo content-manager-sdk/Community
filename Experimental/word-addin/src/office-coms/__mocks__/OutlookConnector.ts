@@ -8,6 +8,8 @@ export interface IOutlookFolder {
 	displayName: string;
 }
 
+(global as any).mockObject = {};
+
 export class OutlookConnector extends OfficeConnector
 	implements IOfficeConnector {
 	_customProps: Office.CustomProperties;
@@ -56,7 +58,9 @@ export class OutlookConnector extends OfficeConnector
 	getDocumentData(writeSlice: any): Promise<string> {
 		throw new Error("Method not implemented.");
 	}
-	setUrnOnFolder(folderId: string, changeKey: string, urn: string): void {}
+	setUrnOnFolder(folderId: string, changeKey: string, urn: string): void {
+		(global as any).mockObject.setUrnOnFolderId = folderId;
+	}
 
 	getFolderChangeKey(folderId: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {

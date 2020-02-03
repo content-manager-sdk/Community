@@ -231,7 +231,7 @@ export class NewRecord extends React.Component<
 			trimType,
 			folderId,
 		} = this.props;
-
+		event.preventDefault();
 		const { checkinUsingStyle } = this.state;
 
 		this.setState({ processing: true });
@@ -298,7 +298,6 @@ export class NewRecord extends React.Component<
 					appStore.setError(e);
 				});
 		}
-		event.preventDefault();
 	};
 
 	private _onPropertySheetChange = (newProps: any, newFields: any) => {

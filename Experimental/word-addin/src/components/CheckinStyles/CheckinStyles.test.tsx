@@ -235,4 +235,64 @@ describe("Check in Styles", function() {
 
 		expect(wrapper.find(NewRecord).props().isLinkedFolder).toBeFalsy();
 	});
+
+	it("does not attempt to link folder for an auto generated linked folder", (done) => {
+		(global as any).mockObject.setUrnOnFolderId = "not_set";
+		const wrapper = shallow<CheckinStyles>(
+			<CheckinStyles
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				forServerProcessing={true}
+			/>
+		);
+
+		wrapper
+			.find(ContextList)
+			.props()
+			.onCommand("New");
+
+		wrapper.setState({ folderId: "cm_auto" });
+		wrapper
+			.find(NewRecord)
+			.props()
+			.onTrimObjectCreated({ Uri: 1 });
+		setTimeout(() => {
+			try {
+				expect((global as any).mockObject.setUrnOnFolderId).toEqual("not_set");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("does not attempt to link folder for an auto generated linked folder", (done) => {
+		(global as any).mockObject.setUrnOnFolderId = "not_set";
+		const wrapper = shallow<CheckinStyles>(
+			<CheckinStyles
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				forServerProcessing={true}
+			/>
+		);
+
+		wrapper
+			.find(ContextList)
+			.props()
+			.onCommand("New");
+
+		wrapper.setState({ folderId: "aaaa" });
+		wrapper
+			.find(NewRecord)
+			.props()
+			.onTrimObjectCreated({ Uri: 1 });
+		setTimeout(() => {
+			try {
+				expect((global as any).mockObject.setUrnOnFolderId).toEqual("aaaa");
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
 });

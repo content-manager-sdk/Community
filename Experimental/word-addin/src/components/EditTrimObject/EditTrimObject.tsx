@@ -68,11 +68,12 @@ export class EditTrimObject extends React.Component<
 					this.recordFields
 				)
 				.then(() => {
+					this.setState({ saving: false });
 					if (onSave) {
 						onSave();
 					}
 				})
-				.finally(() => {
+				.catch(() => {
 					this.setState({ saving: false });
 				});
 		}

@@ -15,6 +15,7 @@ export interface IOutlookFolder {
 	displayName: string;
 }
 const T_NS = "http://schemas.microsoft.com/exchange/services/2006/types";
+const M_NS = "http://schemas.microsoft.com/exchange/services/2006/messages";
 export class OutlookConnector extends OfficeConnector
 	implements IOfficeConnector {
 	_customProps: Office.CustomProperties;
@@ -323,11 +324,36 @@ export class OutlookConnector extends OfficeConnector
 						const parser = new DOMParser();
 						const xml = parser.parseFromString(result.value, "text/xml");
 
+						const responseMessage = xml.getElementsByTagNameNS(
+							M_NS,
+							"GetFolderResponseMessage"
+						);
+
+						if (responseMessage && responseMessage.length > 0) {
+							const responseClass = responseMessage[0].getAttribute(
+								"ResponseClass"
+							);
+
+							if (responseClass === "Error") {
+								const messageText = responseMessage[0].getElementsByTagNameNS(
+									M_NS,
+									"MessageText"
+								);
+
+								if (messageText && messageText.length > 0) {
+									reject(
+										`${messageText[0].childNodes[0].nodeValue!} (${folderId})`
+									);
+									return;
+								}
+							}
+						}
+
 						const folderElements = xml.getElementsByTagNameNS(T_NS, "FolderId");
 
 						resolve(folderElements[0].getAttribute("ChangeKey")!);
 					} else {
-						reject("Error fetching folders.");
+						reject("Error in FolderChangeKey.");
 					}
 				});
 			} catch (e) {
