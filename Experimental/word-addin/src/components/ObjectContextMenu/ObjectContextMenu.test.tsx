@@ -695,13 +695,14 @@ describe("Object Context Menu", () => {
 		setImmediate(() => {
 			try {
 				const menuItem = findMenu(wrapper).items.find((mi) => {
-					return mi.key === "Properties";
+					return mi.key === "New";
 				});
 
 				menuItem.onClick(null, menuItem);
 
 				expect(testUri).toEqual(0);
-				expect.assertions(1);
+				expect(completedCommand).toEqual("New");
+				expect.assertions(2);
 				done();
 			} catch (e) {
 				done.fail(e);

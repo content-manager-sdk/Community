@@ -38,18 +38,25 @@ namespace OneDriveAuthPlugin
 			string expectedAudience = ConfigurationManager.AppSettings["ida:Audience"];
 			string expectedIssuer = ConfigurationManager.AppSettings["ida:Issuer"];
 
-			System.Threading.Tasks.Task<SsoTokenValidationResult> task = System.Threading.Tasks.Task.Run<SsoTokenValidationResult>(async () => await ssotoken.Validate(expectedAudience, expectedIssuer));
+			Log.Debug("val1");
 
-			if (task.Result.IsValid == false)
+			var result = Task.Run(() => ssotoken.Validate(expectedAudience, expectedIssuer)).GetAwaiter().GetResult();
+
+			//var result = ssotoken.Validate(expectedAudience, expectedIssuer).GetAwaiter().GetResult();
+							//System.Threading.Tasks.Task<SsoTokenValidationResult> task = System.Threading.Tasks.Task.Run<SsoTokenValidationResult>(async () => await ssotoken.Validate(expectedAudience, expectedIssuer));
+			Log.Debug("val2");
+			if (result.IsValid == false)
 			{
 
-				Log.Error(task.Result.Message);
+				Log.Error(result.Message);
 				Log.Info(accessToken);
 			}
-
-			return task.Result.PreferredName;
+			Log.Debug("val3");
+			return result.PreferredName;
 
 		}
+
+		
 
 		public override object Authenticate(IServiceBase authService, IAuthSession session, Authenticate request)
 		{

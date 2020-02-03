@@ -71,7 +71,6 @@ export class ObjectContextMenu extends React.Component<
 			wordConnector,
 			appStore,
 			record,
-			trimType,
 			isInList,
 		} = this.props;
 		if (record.Uri < 1 && item.key !== "New") {
@@ -94,8 +93,10 @@ export class ObjectContextMenu extends React.Component<
 			} else if (item.key === "pasteTitle") {
 				wordConnector!.insertText(record.ToolTip!);
 				this.callCommandComplete(item.key);
-			} else if (item.key === "Properties" && !isInList) {
-				appStore.openInCM(record.Uri);
+			} else if (item.key === "Properties") {
+				if (!isInList) {
+					appStore.openInCM(record.Uri);
+				}
 				this.callCommandComplete(item.key);
 			} else if (item.key === "getGlobalProperties") {
 				appStore.setStatus("STARTING");

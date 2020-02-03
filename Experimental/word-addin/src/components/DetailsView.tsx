@@ -15,6 +15,7 @@ interface IDetailsViewProps {
 	trimConnector?: ITrimConnector;
 	wordConnector?: IOfficeConnector;
 	recordDetails: IObjectDetails;
+	trimType: BaseObjectTypes;
 }
 import {
 	mergeStyles,
@@ -148,7 +149,7 @@ export class DetailsView extends React.Component<
 				)
 				.then((newProps: IPropertyOrFieldDef[]) => {
 					trimConnector!
-						.getObjectDetails(BaseObjectTypes.Record, recordProperties.Uri)
+						.getObjectDetails(this.getTrimType(), recordProperties.Uri)
 
 						.then((recordDetails) => {
 							this.setState({
@@ -215,7 +216,7 @@ export class DetailsView extends React.Component<
 
 			if (propertyAndFieldDefinitions.length < 1) {
 				trimConnector!
-					.getViewPanePropertyDefs(BaseObjectTypes.Record)
+					.getViewPanePropertyDefs(this.getTrimType())
 					.then((data) => {
 						this.setState({
 							propertyAndFieldDefinitions: data,
@@ -223,6 +224,14 @@ export class DetailsView extends React.Component<
 					});
 			}
 		}
+	};
+
+	private getTrimType = () => {
+		const { trimType } = this.props;
+
+		return BaseObjectTypes.CheckinPlace
+			? BaseObjectTypes.CheckinStyle
+			: trimType;
 	};
 
 	private _comboChangePropertyDef = (

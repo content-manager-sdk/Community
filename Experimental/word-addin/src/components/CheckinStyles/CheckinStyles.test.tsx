@@ -4,6 +4,8 @@ import { CheckinStyles } from "./CheckinStyles";
 import { TrimConnector } from "../../trim-coms/trim-connector";
 import ContextList from "../ContextList/ContextList";
 import NewRecord from "../NewRecord";
+import ViewTrimObject from "../ViewTrimObject/ViewTrimObject";
+import EditTrimObject from "../EditTrimObject/EditTrimObject";
 import OutlookFolderPicker from "../OutlookFolderPicker/OutlookFolderPicker";
 
 jest.mock("../../office-coms/OutlookConnector");
@@ -67,7 +69,7 @@ describe("Check in Styles", function() {
 		wrapper
 			.find(ContextList)
 			.props()
-			.onCommand("New");
+			.onCommand("New", 0);
 
 		expect(wrapper.state().view).toEqual("New");
 	});
@@ -85,9 +87,50 @@ describe("Check in Styles", function() {
 		wrapper
 			.find(ContextList)
 			.props()
-			.onCommand("New");
+			.onCommand("New", 7);
 
 		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
+	});
+
+	it("view object", () => {
+		let firedCommand;
+		const wrapper = shallow<CheckinStyles>(
+			<CheckinStyles
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				forServerProcessing={true}
+			/>
+		);
+
+		wrapper
+			.find(ContextList)
+			.props()
+			.onCommand("Properties", 8);
+
+		expect(wrapper.find(ViewTrimObject).exists()).toBeTruthy();
+		expect(wrapper.find(ViewTrimObject).props().recordUri).toEqual(8);
+	});
+
+	it("edit object", () => {
+		const wrapper = shallow<CheckinStyles>(
+			<CheckinStyles
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				forServerProcessing={true}
+			/>
+		);
+
+		wrapper
+			.find(ContextList)
+			.props()
+			.onCommand("Properties", 8);
+
+		wrapper
+			.find(ViewTrimObject)
+			.props()
+			.onEdit();
+		expect(wrapper.find(EditTrimObject).exists()).toBeTruthy();
+		expect(wrapper.find(EditTrimObject).props().recordUri).toEqual(8);
 	});
 
 	it("state re-set after record created", (done) => {

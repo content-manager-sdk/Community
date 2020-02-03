@@ -1,7 +1,11 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import "./ContextList.css";
-import { ITrimConnector, ITrimMainObject } from "src/trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	ITrimMainObject,
+	ICheckinPlace,
+} from "src/trim-coms/trim-connector";
 import { createRef } from "office-ui-fabric-react/lib/Utilities";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
@@ -18,8 +22,7 @@ interface IContextListProps {
 	trimType: BaseObjectTypes;
 	hideSearchBar?: boolean;
 	searchString?: string;
-	onCommand?: (commandKey: string) => void;
-
+	onCommand?: (commandKey: string, uri: number) => void;
 }
 
 export class ContextList extends React.Component<
@@ -66,7 +69,14 @@ export class ContextList extends React.Component<
 					record={selectRecord}
 					onCommandComplete={(key: string) => {
 						if (onCommand) {
-							onCommand(key);
+							let uri = selectRecord.Uri;
+							if (
+								trimType === BaseObjectTypes.CheckinPlace &&
+								(selectRecord as ICheckinPlace).CheckinAs
+							) {
+								uri = (selectRecord as ICheckinPlace).CheckinAs.Uri;
+							}
+							onCommand(key, uri);
 						}
 					}}
 					trimType={trimType}

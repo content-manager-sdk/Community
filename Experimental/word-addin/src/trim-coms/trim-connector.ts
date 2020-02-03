@@ -897,7 +897,10 @@ export class TrimConnector implements ITrimConnector {
 
 		const params = {
 			pageSize: 30,
-			properties: "NameString,PossiblyHasSubordinates,Icon",
+			properties:
+				trimType === BaseObjectTypes.CheckinPlace
+					? "NameString,CheckinAs,Icon"
+					: "NameString,PossiblyHasSubordinates,Icon",
 			purpose,
 			q,
 			start,

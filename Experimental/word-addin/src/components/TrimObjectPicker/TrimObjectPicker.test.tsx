@@ -17,6 +17,7 @@ import {
 	ISearchOptions,
 } from "../../trim-coms/trim-connector";
 import { Provider } from "mobx-react";
+import { IconButton } from "office-ui-fabric-react";
 
 //initializeIcons();
 
@@ -607,6 +608,33 @@ describe("TrimObjectPicker", function() {
 
 		it("no longer shows UI", () => {
 			expect(wrapper.state("isObjectPickerShown")).toBe(false);
+		});
+	});
+
+	describe("selected item pills", () => {
+		let objectToRemove = 99;
+		const wrapper = mount(
+			<TrimObjectPicker
+				label="test"
+				trimType={BaseObjectTypes.Record}
+				trimConnector={trimConnector}
+				onTrimObjectSelected={(trimObject) => {
+					objectToRemove = trimObject.Uri;
+				}}
+			/>
+		);
+		wrapper.setState({ selectedItems: [{ Uri: 9, NameString: "test" }] });
+		wrapper.update();
+		it("shows a pill for a selected item", () => {
+			expect(wrapper.find(".trim-pill-container").length).toEqual(1);
+		});
+
+		it("fires onTrimObjectSelected event on object removed", () => {
+			wrapper
+				.find(".trim-pill-container")
+				.find(IconButton)
+				.simulate("click");
+			expect(objectToRemove).toEqual(0);
 		});
 	});
 });

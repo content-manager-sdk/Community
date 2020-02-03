@@ -17,6 +17,7 @@ describe("Details View", function() {
 		insertedUrl = "";
 		setUri = 0;
 		setProperties = [];
+		sendTrimType = BaseObjectTypes.Unknown;
 		wrapper.setProps({
 			recordDetails: {
 				results: [
@@ -51,6 +52,7 @@ describe("Details View", function() {
 	let setForOptionsSet = "";
 	let setProperties = [];
 	let insertedUrl = "";
+	let sendTrimType = BaseObjectTypes.Unknown;
 
 	const mockWordConnector = {
 		insertText(textToInsert: string): void {
@@ -73,6 +75,7 @@ describe("Details View", function() {
 	}.bind(trimConnector);
 
 	trimConnector.getViewPanePropertyDefs = function(trimType, uri) {
+		sendTrimType = trimType;
 		return new Promise((resolve) => {
 			resolve([
 				{ Id: "RecordTitle", Caption: "title" },
@@ -82,6 +85,7 @@ describe("Details View", function() {
 	}.bind(trimConnector);
 
 	trimConnector.getObjectDetails = function(trimType, uri) {
+		sendTrimType = trimType;
 		return new Promise((resolve) => {
 			resolve({
 				results: [
@@ -117,6 +121,28 @@ describe("Details View", function() {
 			trimConnector={trimConnector}
 			wordConnector={mockWordConnector}
 			recordDetails={{}}
+			trimType={BaseObjectTypes.Record}
+		/>
+	);
+
+	const placeWrapper = shallow<DetailsView>(
+		<DetailsView
+			appStore={{
+				getWebClientUrl: function(uri: number, isContainer?: boolean) {
+					if (isContainer) {
+						return `recContainer:${uri}`;
+					} else {
+						return uri.toString();
+					}
+				},
+				RecordUri: 0,
+				Id: "my id",
+				messages: { web_Add: "Add" },
+			}}
+			trimConnector={trimConnector}
+			wordConnector={mockWordConnector}
+			recordDetails={{}}
+			trimType={BaseObjectTypes.CheckinPlace}
 		/>
 	);
 
@@ -302,6 +328,68 @@ describe("Details View", function() {
 					"CommandDefs",
 					"AField",
 				]);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("adds property to Checkin Place view pane", (done) => {
+		let combo = placeWrapper.find(ComboBox);
+
+		placeWrapper.setState({
+			propertyAndFieldDefinitions: [
+				{ Id: "RecordTitle", Caption: "Title" },
+				{ Id: "RecordNumber", Caption: "Number" },
+				{ Id: "RecordContainer", Caption: "Container" },
+				{ Id: "RecordAccessControl", Caption: "Acl" },
+				{ Id: "SparkleLevel", Caption: "SparkleLevel" },
+				{ Id: "AField", Caption: "" },
+			],
+			keysToAdd: ["AField"],
+		});
+
+		const button = placeWrapper.find(DefaultButton);
+		button.props().onClick(null);
+
+		setImmediate(() => {
+			try {
+				expect(sendTrimType).toEqual(BaseObjectTypes.CheckinStyle);
+
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("gets property defs on a Checkin Place combo menu open", (done) => {
+		const placeWrapper = shallow<DetailsView>(
+			<DetailsView
+				appStore={{
+					getWebClientUrl: function(uri: number, isContainer?: boolean) {
+						if (isContainer) {
+							return `recContainer:${uri}`;
+						} else {
+							return uri.toString();
+						}
+					},
+					RecordUri: 0,
+					Id: "my id",
+					messages: { web_Add: "Add" },
+				}}
+				trimConnector={trimConnector}
+				wordConnector={mockWordConnector}
+				recordDetails={{}}
+				trimType={BaseObjectTypes.CheckinPlace}
+			/>
+		);
+
+		setImmediate(() => {
+			try {
+				expect(sendTrimType).toEqual(BaseObjectTypes.CheckinStyle);
+
 				done();
 			} catch (e) {
 				done.fail(e);

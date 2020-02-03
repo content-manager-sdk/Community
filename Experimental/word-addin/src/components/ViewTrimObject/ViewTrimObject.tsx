@@ -25,6 +25,7 @@ interface ViewTrimObjectProps {
 	className?: string;
 	recordUri: number;
 	onEdit?: () => void;
+	trimType: BaseObjectTypes;
 }
 
 export class ViewTrimObject extends React.Component<
@@ -41,10 +42,10 @@ export class ViewTrimObject extends React.Component<
 	}
 
 	private loadRecordDetails = (): any => {
-		const { trimConnector, recordUri } = this.props;
+		const { trimConnector, recordUri, trimType } = this.props;
 
 		return trimConnector!
-			.getObjectDetails(BaseObjectTypes.Record, recordUri)
+			.getObjectDetails(trimType, recordUri)
 			.then((response: IObjectDetails) => {
 				this.setState({ recordDetails: response });
 			});
@@ -66,7 +67,7 @@ export class ViewTrimObject extends React.Component<
 	};
 
 	public render() {
-		const { className, appStore, onEdit } = this.props;
+		const { className, appStore, onEdit, trimType } = this.props;
 
 		const { menuMessage, recordDetails } = this.state;
 
@@ -90,7 +91,7 @@ export class ViewTrimObject extends React.Component<
 							<ObjectContextMenu
 								record={recordDetails.results[0]}
 								isInList={false}
-								trimType={BaseObjectTypes.Record}
+								trimType={BaseObjectTypes.CheckinStyle}
 								onCommandComplete={(commandKey: string) => {
 									if (
 										commandKey === "getGlobalProperties" ||
@@ -111,13 +112,17 @@ export class ViewTrimObject extends React.Component<
 									{menuMessage}
 								</MessageBar>
 							)}
-							<DetailsView recordDetails={recordDetails} />
+							<DetailsView recordDetails={recordDetails} trimType={trimType} />
 						</div>
 					</PivotItem>
-					<PivotItem headerText={appStore.messages.web_Context} key={2}>
-						<hr />
-						<ContextList trimType={BaseObjectTypes.Record} />
-					</PivotItem>
+					{trimType === BaseObjectTypes.Record ? (
+						<PivotItem headerText={appStore.messages.web_Context} key={2}>
+							<hr />
+							<ContextList trimType={BaseObjectTypes.Record} />
+						</PivotItem>
+					) : (
+						<React.Fragment />
+					)}
 				</Pivot>
 			</div>
 		);

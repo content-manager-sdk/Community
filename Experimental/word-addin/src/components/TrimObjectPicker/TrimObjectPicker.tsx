@@ -284,9 +284,15 @@ export class TrimObjectPicker
 		this.setState({ advancedSearch: !advancedSearch });
 	};
 	private _removeSelectedItem = () => {
+		const { onTrimObjectSelected } = this.props;
+
 		this.setState({
 			selectedItems: [],
 		});
+
+		if (onTrimObjectSelected) {
+			onTrimObjectSelected({ Uri: 0 });
+		}
 	};
 
 	private _onTextFieldClick = (): void => {

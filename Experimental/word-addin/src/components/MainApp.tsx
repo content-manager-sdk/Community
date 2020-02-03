@@ -36,6 +36,7 @@ export class MainApp extends React.Component<
 				<ViewTrimObject
 					className={className}
 					recordUri={appStore!.RecordUri}
+					trimType={BaseObjectTypes.Record}
 					onEdit={() => {
 						this.setState({ editMode: true });
 					}}

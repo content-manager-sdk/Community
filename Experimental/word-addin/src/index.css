@@ -139,6 +139,10 @@ hr.trim-menu-sep {
 	z-index: 9999;
 }
 
+.trim-edit-spinner {
+	top: 60px;
+}
+
 .new-record-body-Record div.trim-properties {
 	max-height: calc(100% - 110px);
 	overflow-y: auto;

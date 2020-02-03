@@ -6,6 +6,7 @@ import {
 	TrimConnector,
 	IClassification,
 	ITrimMainObject,
+	ICheckinPlace,
 } from "./trim-connector";
 import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
@@ -114,6 +115,46 @@ describe("Test fetch from TRIM", () => {
 			.then((data) => {
 				expect(props).toEqual("NameString,PossiblyHasSubordinates,Icon");
 				expect(data.results[0].NameString).toBe("Document");
+			});
+	});
+
+	it("Checkin Places are returned", () => {
+		let props: string = "";
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/CheckinPlace`, {
+				params: {
+					q: "all",
+					properties: "NameString,CheckinAs,Icon",
+					pageSize: 30,
+					purpose: 0,
+					start: 1,
+					ExcludeCount: true,
+					ApplyDefaults: true,
+				},
+			})
+			.reply(function(config: any) {
+				props = config.params.properties;
+
+				return [
+					200,
+					{
+						Results: [
+							{ NameString: "place 1", Uri: 1, CheckinAs: { Uri: 11 } },
+						],
+					},
+				];
+			});
+
+		expect.assertions(2);
+		return trimConnector
+			.search<ICheckinPlace>({
+				trimType: BaseObjectTypes.CheckinPlace,
+				q: "all",
+				purpose: 0,
+			})
+			.then((data) => {
+				expect(props).toEqual("NameString,CheckinAs,Icon");
+				expect(data.results[0].CheckinAs).toEqual({ Uri: 11 });
 			});
 	});
 

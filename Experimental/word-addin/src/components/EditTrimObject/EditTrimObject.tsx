@@ -5,10 +5,12 @@ import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { ITrimConnector } from "../../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "../PropertySheet";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react";
 
 interface IEditTrimObjectState {
 	formDefinition: any;
 	processing: boolean;
+	saving: boolean;
 }
 
 interface IEditTrimObjectProps {
@@ -30,6 +32,7 @@ export class EditTrimObject extends React.Component<
 		this.state = {
 			formDefinition: {},
 			processing: false,
+			saving: false,
 		};
 	}
 
@@ -49,6 +52,10 @@ export class EditTrimObject extends React.Component<
 	}
 
 	private _onClick = (event: React.MouseEvent<HTMLFormElement>) => {
+		this.setState({ saving: true });
+		if (event) {
+			event.preventDefault();
+		}
 		const { trimConnector, trimType, recordUri, onSave } = this.props;
 		if (trimConnector) {
 			trimConnector
@@ -64,6 +71,9 @@ export class EditTrimObject extends React.Component<
 					if (onSave) {
 						onSave();
 					}
+				})
+				.finally(() => {
+					this.setState({ saving: false });
 				});
 		}
 	};
@@ -76,25 +86,31 @@ export class EditTrimObject extends React.Component<
 	public render() {
 		const { appStore, className, trimType } = this.props;
 
-		const { formDefinition, processing } = this.state;
+		const { formDefinition, processing, saving } = this.state;
 
 		return (
-			<form
-				className={className + (processing === true ? " disabled" : "")}
-				onSubmit={this._onClick}
-			>
-				<div className={`new-record-body new-record-body-${trimType}`}>
-					<PropertySheet
-						formDefinition={formDefinition}
-						onChange={this._onPropertySheetChange}
-					/>
-					{formDefinition.Pages && (
-						<PrimaryButton className="trim-register" type="submit">
-							{appStore.messages.web_save}
-						</PrimaryButton>
-					)}
-				</div>
-			</form>
+			<React.Fragment>
+				{saving && (
+					<Spinner className="trim-edit-spinner" size={SpinnerSize.large} />
+				)}
+
+				<form
+					className={className + (processing === true ? " disabled" : "")}
+					onSubmit={this._onClick}
+				>
+					<div className={`new-record-body new-record-body-${trimType}`}>
+						<PropertySheet
+							formDefinition={formDefinition}
+							onChange={this._onPropertySheetChange}
+						/>
+						{formDefinition.Pages && (
+							<PrimaryButton className="trim-register" type="submit">
+								{appStore.messages.web_save}
+							</PrimaryButton>
+						)}
+					</div>
+				</form>
+			</React.Fragment>
 		);
 	}
 }

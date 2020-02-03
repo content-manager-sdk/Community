@@ -135,21 +135,51 @@ describe("Context List", function() {
 
 	it("fire command", () => {
 		let firedCommand;
+		let commandUri;
+
 		const wrapper = shallow<ContextList>(
 			<ContextList
 				appStore={mockAppStore}
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Location}
 				searchString="test"
-				onCommand={(key: string) => {
+				onCommand={(key: string, uri: number) => {
 					firedCommand = key;
+					commandUri = uri;
 				}}
 			/>
 		);
+		wrapper.setState({ selectRecord: { Uri: 5 } });
 		wrapper
 			.find(ObjectContextMenu)
 			.props()
 			.onCommandComplete("New");
 		expect(firedCommand).toEqual("New");
+		expect(commandUri).toEqual(5);
+	});
+
+	it("fire command checkin place", () => {
+		let firedCommand;
+		let commandUri;
+
+		const wrapper = shallow<ContextList>(
+			<ContextList
+				appStore={mockAppStore}
+				trimConnector={trimConnector}
+				trimType={BaseObjectTypes.CheckinPlace}
+				searchString="test"
+				onCommand={(key: string, uri: number) => {
+					firedCommand = key;
+					commandUri = uri;
+				}}
+			/>
+		);
+		wrapper.setState({ selectRecord: { Uri: 5, CheckinAs: { Uri: 66 } } });
+		wrapper
+			.find(ObjectContextMenu)
+			.props()
+			.onCommandComplete("New");
+		expect(firedCommand).toEqual("New");
+		expect(commandUri).toEqual(66);
 	});
 });

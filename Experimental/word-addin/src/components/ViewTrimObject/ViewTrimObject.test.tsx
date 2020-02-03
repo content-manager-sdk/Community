@@ -70,6 +70,7 @@ describe("ViewTrimObject", () => {
 					appStore={appStore}
 					trimConnector={mockTrimConnector}
 					wordConnector={mockWordConnector}
+					trimType={BaseObjectTypes.Record}
 					onEdit={() => {
 						editCalled = true;
 					}}

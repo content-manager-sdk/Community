@@ -284,7 +284,11 @@ namespace OneDriveAuthPlugin
 			string token = await getToken();
 			log.Debug("gotToken");
 
-			string driveId = getDriveIdFromTrim(request);
+			string driveId;
+			
+			if (!request.IsEmail)) {
+				driveId = getDriveIdFromTrim(request);
+			}
 			log.Debug("got Drive ID");
 			OneDriveItem fileResult = null;
 
@@ -296,20 +300,7 @@ namespace OneDriveAuthPlugin
 
 				if (request.IsEmail)
 				{
-
 					recordUri = await getEmailLinkUri(request.WebUrl, token);
-					//var mailResult = await ODataHelper.GetItem<MailItem>(GraphApiHelper.GetMailItemURL(request.WebUrl), token, null);
-
-					//if (mailResult != null && mailResult.SingleValueExtendedProperties != null)
-					//{
-					//	foreach (var prop in mailResult.SingleValueExtendedProperties)
-					//	{
-					//		if (prop.Id.Equals(GraphApiHelper.IDPropName(), StringComparison.InvariantCultureIgnoreCase))
-					//		{
-					//			long.TryParse(prop.Value.Split('/').Last(), out recordUri);
-					//		}
-					//	}
-					//}
 				}
 
 				if (request.IsEmail && recordUri == 0)
