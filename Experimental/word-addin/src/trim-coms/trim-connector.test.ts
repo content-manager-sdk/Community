@@ -872,6 +872,21 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
+	it("sends the attachment name", () => {
+		let attachmentName = "";
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
+			.reply(function(config: any) {
+				attachmentName = config.params["attachmentName"];
+
+				return [200, { Results: [{ Id: "0123", Uri: 567 }] }];
+			});
+
+		return trimConnector.getDriveId("abc", true, 0, "a.name").then((data) => {
+			expect(attachmentName).toEqual("a.name");
+		});
+	});
+
 	it("gets the record text", () => {
 		let token = "";
 		let uri = 0;

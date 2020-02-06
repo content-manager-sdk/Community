@@ -21,6 +21,7 @@ export interface IAppStore {
 	errorMessage?: string;
 	messages: TrimMessages;
 	fetchBaseSettingFromTrim: any;
+	FileName: string;
 	resetError(): void;
 	setError(error: any, module?: string): void;
 	setErrorMessage(message: string, ...args: string[]): void;
@@ -28,9 +29,12 @@ export interface IAppStore {
 	getWebClientUrl(uri: number, containerSearch?: boolean): void;
 	setDocumentInfo(documentInfo: IDriveInformation): void;
 	setStatus(status: string): void;
+	deferFetchDriveInfo(): void;
 }
 
 export class AppStoreBase implements IAppStore {
+	private _deferFetchDriveInfo = false;
+
 	@observable public errorMessage: string;
 	@observable public errorBody: any;
 	@observable public documentInfo: IDriveInformation = {
@@ -67,6 +71,9 @@ export class AppStoreBase implements IAppStore {
 	protected isEmail(): boolean {
 		return false;
 	}
+	public deferFetchDriveInfo = () => {
+		this._deferFetchDriveInfo = true;
+	};
 
 	public fetchBaseSettingFromTrim = (fromDialog: boolean) => {
 		const tc = this.trimConnector;
@@ -94,18 +101,22 @@ export class AppStoreBase implements IAppStore {
 						self.setFileName(fileName);
 					});
 
-					tc.getDriveId(
-						self.WebUrl,
-						this.isEmail(),
-						this.wordConnector!.getRecordUri()
-					)
-						.then((driveInfo) => {
-							self.setDocumentInfo(driveInfo);
-							self.setStatus("WAITING");
-						})
-						.catch((error) => {
-							self.setError(error, "fetch base settings for dialog");
-						});
+					if (this._deferFetchDriveInfo === false) {
+						tc.getDriveId(
+							self.WebUrl,
+							this.isEmail(),
+							this.wordConnector!.getRecordUri()
+						)
+							.then((driveInfo) => {
+								self.setDocumentInfo(driveInfo);
+								self.setStatus("WAITING");
+							})
+							.catch((error) => {
+								self.setError(error, "fetch base settings for dialog");
+							});
+					} else {
+						self.setStatus("WAITING");
+					}
 				} else {
 					self.setStatus("WAITING");
 				}

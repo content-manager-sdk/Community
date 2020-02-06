@@ -1,8 +1,8 @@
 import BootStrap from "./BootStrap";
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import AppStoreOutlook from "../../stores/AppStoreOutlook";
-import { IOfficeConnector } from "src/office-coms/office-connector";
-import { IAppStore } from "src/stores/AppStoreBase";
+import { IOfficeConnector } from "../../office-coms/office-connector";
+import { IAppStore } from "../../stores/AppStoreBase";
 import * as React from "react";
 import { Provider } from "mobx-react";
 

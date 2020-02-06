@@ -42,6 +42,8 @@ describe("TrimObjectPicker", function() {
 		});
 	};
 
+	trimConnector.search = doSearch.bind(trimConnector);
+
 	const getSearchOptions = function(): Promise<ISearchOptions> {
 		return new Promise(function(resolve) {
 			resolve({
@@ -55,7 +57,6 @@ describe("TrimObjectPicker", function() {
 		});
 	};
 
-	trimConnector.search = doSearch.bind(trimConnector);
 	trimConnector.getSearchOptions = getSearchOptions.bind(trimConnector);
 
 	const mountObjectPicker = (props: any) => {

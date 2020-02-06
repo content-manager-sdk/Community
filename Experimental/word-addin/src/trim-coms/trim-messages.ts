@@ -19,6 +19,10 @@ export class TrimMessages {
 	public web_UseRecordTypes = ""; // tslint:disable-line
 	public web_EditTrimObject = ""; // tslint:disable-line
 	public web_save = ""; // tslint:disable-line
+	public web_All = ""; // tslint:disable-line
+	public rp_none = ""; // tslint:disable-line
+	public vb_nts_Next = ""; // tslint:disable-line
+	public web_attachmentName = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

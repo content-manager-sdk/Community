@@ -4,10 +4,14 @@ import { observable } from "mobx";
 import { IAppStore } from "../AppStoreBase";
 
 export class AppStoreWord implements IAppStore {
+	public FileName: string;
 	UserProfile?: import("../AppStoreBase").IUserProfile | undefined;
 	errorMessage?: string | undefined;
 	messages: import("../../trim-coms/trim-messages").TrimMessages;
 	fetchBaseSettingFromTrim: any;
+	deferFetchDriveInfo(): void {
+		throw new Error("Method not implemented.");
+	}
 	resetError(): void {
 		throw new Error("Method not implemented.");
 	}

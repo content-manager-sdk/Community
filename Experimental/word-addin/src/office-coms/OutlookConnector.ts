@@ -2,13 +2,15 @@ import { OfficeConnector, IOfficeConnector } from "./office-connector";
 import { ITrimConnector } from "../trim-coms/trim-connector";
 import { IAppStore } from "../stores/AppStoreBase";
 import Axios from "axios";
+import { IGetRecordUriResponse } from "./word-connector";
 
-// interface IOutlookFolderItem {
-// 	Id: string;
-// 	DisplayName: any;
-// 	SingleValueExtendedProperties: any;
-// 	WellKnownName: string;
-// }
+export interface IOutlookAttachment {
+	Id: string;
+	Name: any;
+	Filed?: boolean;
+	// 	SingleValueExtendedProperties: any;
+	// 	WellKnownName: string;
+}
 
 export interface IOutlookFolder {
 	id: string;
@@ -87,12 +89,10 @@ export class OutlookConnector extends OfficeConnector
 		});
 	}
 
-	getUri(): Promise<import("./word-connector").IGetRecordUriResponse> {
+	getUri(): Promise<IGetRecordUriResponse> {
 		throw new Error("Method not implemented.");
 	}
-	setUri(
-		uri: number
-	): Promise<import("./word-connector").IGetRecordUriResponse> {
+	setUri(uri: number): Promise<IGetRecordUriResponse> {
 		throw new Error("Method not implemented.");
 	}
 	insertText(textToInsert: string): void {
@@ -100,6 +100,22 @@ export class OutlookConnector extends OfficeConnector
 	}
 	insertLink(textToInsert: string, url: string): void {
 		throw new Error("Method not implemented.");
+	}
+
+	public getAttachments(): IOutlookAttachment[] {
+		const item = Office.context.mailbox.item;
+		console.log(item.itemId);
+		const attachments: IOutlookAttachment[] = [];
+		if (item.attachments.length > 0) {
+			for (let i = 0; i < item.attachments.length; i++) {
+				const attachment = item.attachments[i];
+				if (attachment.attachmentType === "file") {
+					attachments.push({ Id: attachment.id, Name: attachment.name });
+				}
+			}
+		}
+
+		return attachments;
 	}
 
 	makeEwsXml(): string {

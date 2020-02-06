@@ -12,6 +12,7 @@ import { IAppStore } from "../../stores/AppStoreBase";
 import { getQueryStringValue } from "../../utils/getQueryStringValue";
 import { IOfficeConnector } from "../../office-coms/office-connector";
 import TrimConnector, { ITrimConnector } from "../../trim-coms/trim-connector";
+import OutlookAttachments from "../OutlookAttachments/OutlookAttachments";
 
 interface IProps {}
 
@@ -79,6 +80,10 @@ export class BootStrap extends React.Component<
 		throw new Error("Method not implemented.");
 	}
 
+	protected isAttachments(): boolean {
+		return false;
+	}
+
 	componentDidMount() {
 		const appStore = this.getAppStore();
 		const wordConnector = this.getOfficeConnector();
@@ -96,7 +101,7 @@ export class BootStrap extends React.Component<
 		};
 	}
 
-	public render() {
+	public render(): any {
 		const appStore = this.getAppStore();
 		const wordConnector = this.getOfficeConnector();
 		const trimConnector = this.getTrimConnector();
@@ -110,7 +115,9 @@ export class BootStrap extends React.Component<
 				<div>
 					{appStore.status === "ERROR" && <ErrorDisplay />}
 
-					{this.state.dialogName === "/searchdialog" ? (
+					{this.isAttachments() ? (
+						<OutlookAttachments />
+					) : this.state.dialogName === "/searchdialog" ? (
 						<TrimSearchDialog
 							trimType={BaseObjectTypes.Record}
 							trimConnector={this.trimConnector}

@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import FunctionFile from "./components/FunctionFile/FunctionFile";
 import BootStrapOutlook from "./components/BootStrap/BootStrapOutlook";
 import BootStrapCheckinStyles from "./components/BootStrap/BootStrapCheckinStyles";
+import BootStrapAttachments from "./components/BootStrap/BootStrapAttachments";
 
 initializeIcons();
 
@@ -17,6 +18,9 @@ const root = (
 		<Switch>
 			<Route path="/functions">
 				<FunctionFile />
+			</Route>
+			<Route path="/Attachments">
+				<BootStrapAttachments />
 			</Route>
 			<Route path="/OutlookLinks">
 				<BootStrapOutlook />

@@ -34,6 +34,9 @@ class MockWordConnector implements IWordUrl {
 			resolve("My.Url");
 		});
 	}
+	getRecordUri = () => {
+		return "";
+	};
 }
 
 let postedFields: any;
@@ -223,6 +226,21 @@ describe("Test basic setup from Trim", () => {
 				expect(appStore.documentInfo.URN).toBe("trim:567");
 
 				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("does not get DriveInfo for attachments", (done) => {
+		appStore.setDocumentInfo(null);
+		appStore.deferFetchDriveInfo();
+		appStore.fetchBaseSettingFromTrim(false);
+		setTimeout(() => {
+			try {
+				expect(appStore.documentInfo).toBeFalsy();
+				expect(appStore.status).toEqual("WAITING");
 				done();
 			} catch (e) {
 				done.fail(e);

@@ -30,6 +30,7 @@ namespace OneDriveAuthPlugin
 		public OperationType Operation { get; set; }
 
 		public bool IsEmail { get; set; }
+		public string AttachmentName { get; set; }
 	}
 
 	[Route("/DriveFile", "POST")]
@@ -50,7 +51,7 @@ namespace OneDriveAuthPlugin
 		public string RecordType { get; set; }
 		public TrimOptions Options { get; set; }
 
-		public Dictionary<string, IList<MyEnumItem>> Enums {get; set;}
+		public Dictionary<string, IList<MyEnumItem>> Enums { get; set; }
 
 		public string EmailPath { get; set; }
 
@@ -121,7 +122,7 @@ namespace OneDriveAuthPlugin
 		{
 			string fileName = request.FileName;
 			try
-			{			
+			{
 
 				RegisterFileResponse response = new RegisterFileResponse();
 
@@ -145,7 +146,7 @@ namespace OneDriveAuthPlugin
 					record.RemoveFromFavorites();
 				}
 
-				if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1 
+				if (request.Action.IndexOf("checkin", StringComparison.InvariantCultureIgnoreCase) > -1
 					&& request.Action.IndexOf("checkin-requst-del", StringComparison.InvariantCultureIgnoreCase) < 1)
 				{
 					string token = await getToken();
@@ -154,7 +155,7 @@ namespace OneDriveAuthPlugin
 
 
 
-					
+
 						if (!Path.IsPathRooted(request.FileName))
 						{
 							fileName = Path.Combine(this.ServiceDefaults.UploadBasePath, request.FileName);
@@ -163,10 +164,11 @@ namespace OneDriveAuthPlugin
 						var inputDocument = new InputDocument(fileName);
 
 						inputDocument.CheckinAs = request.WebUrl;
-							record.SetDocument(inputDocument, true, false, "checkin from Word Online");
-					
+						record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 
-					} else
+
+					}
+					else
 					{
 
 						string downloadUrl = GraphApiHelper.GetOneDriveItemContentIdUrl(driveId);
@@ -187,7 +189,7 @@ namespace OneDriveAuthPlugin
 						record.SetDocument(inputDocument, true, false, "checkin from Word Online");
 					}
 				}
-				
+
 				if (request.Action.IndexOf("request-del", StringComparison.InvariantCultureIgnoreCase) > -1)
 				{
 					record.SetDeleteNow(!record.GetDeleteNow());
@@ -217,10 +219,10 @@ namespace OneDriveAuthPlugin
 			finally
 			{
 
-					if (!string.IsNullOrWhiteSpace(fileName))
-					{
-						File.Delete(fileName);
-					}
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					File.Delete(fileName);
+				}
 
 			}
 		}
@@ -242,11 +244,11 @@ namespace OneDriveAuthPlugin
 
 						dbid = idTokens.First().Split(':').Last();
 
-							long.TryParse(prop.Value.Split('/').Last(), out recordUri);
-						
-						
-							
-		
+						long.TryParse(prop.Value.Split('/').Last(), out recordUri);
+
+
+
+
 					}
 
 					if (prop.Id.Equals(GraphApiHelper.IDPropNameForMAPIBIID(), StringComparison.InvariantCultureIgnoreCase))
@@ -258,7 +260,7 @@ namespace OneDriveAuthPlugin
 					{
 						long.TryParse(prop.Value.Split(',').First().Trim(), out recordUri);
 					}
-				
+
 				}
 
 				if (dbid.EqualsIgnoreCase(this.Database.Id))
@@ -284,9 +286,10 @@ namespace OneDriveAuthPlugin
 			string token = await getToken();
 			log.Debug("gotToken");
 
-			string driveId;
-			
-			if (!request.IsEmail)) {
+			string driveId = null;
+
+			if (!request.IsEmail)
+			{
 				driveId = getDriveIdFromTrim(request);
 			}
 			log.Debug("got Drive ID");
@@ -298,7 +301,7 @@ namespace OneDriveAuthPlugin
 			try
 			{
 
-				if (request.IsEmail)
+				if (request.IsEmail && string.IsNullOrWhiteSpace(request.AttachmentName))
 				{
 					recordUri = await getEmailLinkUri(request.WebUrl, token);
 				}
@@ -309,18 +312,25 @@ namespace OneDriveAuthPlugin
 
 					string userFolder = Path.Combine("ForUser", this.Database.CurrentUser.Uri.ToString());
 
-					string fullUserFolder = Path.Combine( this.ServiceDefaults.UploadBasePath, userFolder);
+					string fullUserFolder = Path.Combine(this.ServiceDefaults.UploadBasePath, userFolder);
 
 					Directory.CreateDirectory(fullUserFolder);
 					string fileName = Path.ChangeExtension(request.WebUrl, "eml");
+
+					if (!string.IsNullOrWhiteSpace(request.AttachmentName))
+					{
+						fileName = request.AttachmentName;
+					}
+
 					string filePath = Path.Combine(fullUserFolder, fileName);
 
 
-					 await ODataHelper.GetItem<string>(emailUrl, token, filePath);
+					await ODataHelper.GetItem<string>(emailUrl, token, filePath);
 					registeredFile.EmailPath = Path.Combine(userFolder, fileName); ;
 
-				} else if (!string.IsNullOrWhiteSpace(request.WebUrl) && new string[] { "https://", "http://"}
-				.Any(s => request.WebUrl.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
+				}
+				else if (!string.IsNullOrWhiteSpace(request.WebUrl) && new string[] { "https://", "http://" }
+			  .Any(s => request.WebUrl.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
 				{
 
 					log.Debug("GetItem");
@@ -332,14 +342,14 @@ namespace OneDriveAuthPlugin
 				else if (!string.IsNullOrWhiteSpace(driveId) && !request.IsEmail)
 				{
 					fileResult = await ODataHelper.GetItem<OneDriveItem>(GraphApiHelper.GetOneDriveItemIdUrl(driveId), token, null);
-				} 
+				}
 			}
 			catch
 			{
 				throw;
 			}
 
-			
+
 
 			DroppedFilesUserOptions fileOptions = new DroppedFilesUserOptions(this.Database);
 			var options = new TrimOptions();
@@ -354,7 +364,7 @@ namespace OneDriveAuthPlugin
 
 			HP.HPTRIM.SDK.Enum relationshipEnum = new HP.HPTRIM.SDK.Enum(AllEnumerations.RecordRelationshipType, this.Database);
 
-			foreach (var relEnum in relationshipEnum.GetItemArray(new int[] {(int)RecordRelationshipType.InSharepointSite, (int)RecordRelationshipType.IsInSeries, (int)RecordRelationshipType.IsRootPart, (int)RecordRelationshipType.IsTempCopy, (int)RecordRelationshipType.IsVersion, (int)RecordRelationshipType.RedactionOf }, true).OrderBy(ei => ei.Caption))
+			foreach (var relEnum in relationshipEnum.GetItemArray(new int[] { (int)RecordRelationshipType.InSharepointSite, (int)RecordRelationshipType.IsInSeries, (int)RecordRelationshipType.IsRootPart, (int)RecordRelationshipType.IsTempCopy, (int)RecordRelationshipType.IsVersion, (int)RecordRelationshipType.RedactionOf }, true).OrderBy(ei => ei.Caption))
 			{
 				enumItems.Add(new MyEnumItem() { Name = relEnum.Name, Caption = relEnum.Caption });
 			}
@@ -378,11 +388,12 @@ namespace OneDriveAuthPlugin
 				if (uris.Count == 1)
 				{
 					updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
-				}				
-			} else if (request.IsEmail && recordUri > 0)
+				}
+			}
+			else if (request.IsEmail && recordUri > 0)
 			{
 				updateFromRecord(registeredFile, new Record(this.Database, recordUri));
-			}			
+			}
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };
 

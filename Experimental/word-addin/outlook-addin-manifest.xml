@@ -147,6 +147,23 @@
 											<SupportsPinning>true</SupportsPinning>
 										</Action>
 									</Control>
+									<Control xsi:type="Button" id="msgAttachmentsButton">
+										<Label resid="funcAttachmentsButtonLabel" />
+										<Supertip>
+											<Title resid="funcAttachmentsSuperTipTitle" />
+											<Description resid="attachmentsSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="attachments-icon-16" />
+											<bt:Image size="32" resid="attachments-icon-32" />
+											<bt:Image size="80" resid="attachments-icon-80" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="attachmentsTaskPaneUrl" />
+											<SupportsPinning>true</SupportsPinning>
+										</Action>
+									</Control>
+
 									<Control xsi:type="Button" id="msgCheckinStylesFunctionButton">
 										<Label resid="funcCheckinStylesButtonLabel" />
 										<Supertip>
@@ -305,6 +322,9 @@
 					<bt:Image id="folder-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/folder_x32.png"/>
 					<bt:Image id="folder-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/folder_x80.png"/>
 
+					<bt:Image id="attachments-icon-16" DefaultValue="https://desktop-39dgcn3:3000/Assets/checkinattachmentonly_x16.png"/>
+					<bt:Image id="attachments-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/checkinattachmentonly_x32.png"/>
+					<bt:Image id="attachments-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/checkinattachmentonly_x80.png"/>
 					<!-- Red icon -->
 					<bt:Image id="red-icon-16" DefaultValue="https://desktop-39dgcn3:3000/Assets/Images/red-16.png"/>
 					<bt:Image id="red-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/Images/red-32.png"/>
@@ -319,6 +339,7 @@
 					<bt:Url id="readTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/AllPropsView/AllProps.html"/>
 					<bt:Url id="composeTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/InsertTextPane/InsertText.html"/>
 					<bt:Url id="checkinTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/Outlook"/>
+					<bt:Url id="attachmentsTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/Attachments"/>
 					<bt:Url id="linksTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/OutlookLinks"/>
 					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/CheckinStyles"/>
 					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/LinkedFolders"/>
@@ -344,6 +365,8 @@
 
 					<!-- Read mode -->
 					<bt:String id="funcReadButtonLabel" DefaultValue="Record"/>
+					<bt:String id="funcAttachmentsButtonLabel" DefaultValue="Attachments"/>
+
 					<bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles"/>
 					<bt:String id="linkedFoldersButtonLabel" DefaultValue="Linked Folders"/>
 					<bt:String id="residExtensionPointLabel" DefaultValue="Content Manager"/>
@@ -358,6 +381,7 @@
 					<bt:String id="restpaneReadButtonLabel" DefaultValue="Test REST Calls"/>
 
 					<bt:String id="funcReadSuperTipTitle" DefaultValue="Checks the item into Content Manager"/>
+					<bt:String id="funcAttachmentsSuperTipTitle" DefaultValue="Checks the attachments into Content Manager"/>
 					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles"/>
 					<bt:String id="linkedFoldersSuperTipTitle" DefaultValue="Create linked folders"/>
 					<bt:String id="menuReadSuperTipTitle" DefaultValue="Choose a property to get"/>
@@ -380,7 +404,9 @@
 					<bt:String id="menuItem3ComposeTip" DefaultValue="Inserts Visit Outlook Dev Center into the body of the message or appointment." />
 
 					<!-- Read mode -->
-					<bt:String id="funcReadSuperTipDescription" DefaultValue="Check and email into Content Manager."/>
+					<bt:String id="funcReadSuperTipDescription" DefaultValue="Check an email into Content Manager."/>
+					<bt:String id="attachmentsSuperTipDescription" DefaultValue="Check email attachments into Content Manager."/>
+
 					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles."/>
 					<bt:String id="linkedFolderSuperTipDescription" DefaultValue="Edit linked folders."/>
 					<bt:String id="menuReadSuperTipDescription" DefaultValue="Gets the selected property of the message or appointment and displays it in the info bar. This is an example of a drop-down menu button."/>
