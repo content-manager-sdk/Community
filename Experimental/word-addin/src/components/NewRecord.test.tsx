@@ -24,7 +24,8 @@ describe("New Record layout", function() {
 	let wrapper;
 	let registerProps = [];
 	//let registerPropsForPlace = undefined;
-	let registerType = undefined;
+	let registerType1 = undefined;
+	let registerType2 = undefined;
 	let errorMessage: string = undefined;
 	let populatePages = false;
 	let rejectRegister = false;
@@ -78,7 +79,8 @@ describe("New Record layout", function() {
 		testSubjectPrefix = "";
 		propertySheetTrimType = BaseObjectTypes.Location;
 		registerProps = [];
-		registerType = undefined;
+		registerType1 = undefined;
+		registerType2 = undefined;
 		errorMessage = undefined;
 		populatePages = false;
 		rejectRegister = false;
@@ -94,7 +96,11 @@ describe("New Record layout", function() {
 	) => {
 		registerProps.push(properties);
 
-		registerType = trimType;
+		if (registerType1) {
+			registerType2 = trimType;
+		} else {
+			registerType1 = trimType;
+		}
 
 		return new Promise<ITrimMainObject>(function(resolve, reject) {
 			if (rejectRegister) {
@@ -269,21 +275,36 @@ describe("New Record layout", function() {
 			.props()
 			.onRecordTypeSelected(5, false);
 
+		wrapper
+			.find("form")
+			.first()
+			.simulate("submit", { preventDefault: function() {} });
 		setTimeout(() => {
 			try {
-				wrapper
-					.update()
-					.find("form")
-					.first()
-					.simulate("submit", { preventDefault: function() {} });
 
-				expect(registerType).toEqual(BaseObjectTypes.CheckinStyle);
+				expect(registerType1).toEqual(BaseObjectTypes.CheckinStyle);
+				expect(registerType2).toEqual(BaseObjectTypes.CheckinPlace);
+
 				expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
 				done();
 			} catch (e) {
 				done.fail(e);
 			}
 		});
+	});
+
+	it("sets default record type on picker", () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
+		wrapper.setProps({
+			defaultRecordType: { Uri: 66, TrimType: BaseObjectTypes.RecordType },
+		});
+
+		expect(
+			wrapper
+				.find(RecordTypePicker)
+				.first()
+				.props().defaultRecordType
+		).toEqual({ Uri: 66, TrimType: BaseObjectTypes.RecordType });
 	});
 
 	it("sets error on register non Record object", (done) => {

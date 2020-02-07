@@ -1,5 +1,5 @@
 import { OfficeConnector, IOfficeConnector } from "./office-connector";
-import { ITrimConnector } from "../trim-coms/trim-connector";
+import { ITrimConnector, ITrimMainObject } from "../trim-coms/trim-connector";
 import { IAppStore } from "../stores/AppStoreBase";
 import Axios from "axios";
 import { IGetRecordUriResponse } from "./word-connector";
@@ -8,6 +8,7 @@ export interface IOutlookAttachment {
 	Id: string;
 	Name: any;
 	Filed?: boolean;
+	FileUsing?: ITrimMainObject;
 	// 	SingleValueExtendedProperties: any;
 	// 	WellKnownName: string;
 }

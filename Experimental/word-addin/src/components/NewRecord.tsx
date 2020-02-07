@@ -35,6 +35,7 @@ interface INewRecordProps {
 	bypassUpdateEmailSubject?: Boolean;
 	validateRecordType?: (recordTypeUri: number) => Promise<Boolean>;
 	computedCheckinStyleName?: string;
+	defaultRecordType?: ITrimMainObject;
 }
 
 export class NewRecord extends React.Component<
@@ -105,6 +106,7 @@ export class NewRecord extends React.Component<
 
 			this.setPropertySheet();
 		} else {
+
 			const recordTypeUri = uri;
 
 			if (validateRecordType) {
@@ -119,7 +121,9 @@ export class NewRecord extends React.Component<
 					}
 				});
 			} else {
+
 				this.recordTypeUri = recordTypeUri;
+
 				this.setPropertySheet();
 			}
 		}
@@ -239,6 +243,7 @@ export class NewRecord extends React.Component<
 			folderId,
 			computedCheckinStyleName,
 			isLinkedFolder,
+			defaultRecordType,
 		} = this.props;
 
 		const { formDefinition, processing } = this.state;
@@ -279,10 +284,11 @@ export class NewRecord extends React.Component<
 				<RecordTypePicker
 					trimType={trimType}
 					computedCheckinStyleName={computedCheckinStyleName!}
-					className={className!}
 					folderId={folderId!}
 					isLinkedFolder={isLinkedFolder!}
 					onRecordTypeSelected={this._onChange}
+					includeCheckinStyles={appStore.documentInfo.EmailPath}
+					defaultRecordType={defaultRecordType}
 				/>
 				<div className={`new-record-body new-record-body-${trimType}`}>
 					<PropertySheet
