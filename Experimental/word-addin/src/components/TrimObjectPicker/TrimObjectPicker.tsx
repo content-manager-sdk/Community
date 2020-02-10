@@ -245,6 +245,7 @@ export class TrimObjectPicker
 		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
 	): JSX.Element => {
 		const { advancedSearch } = this.state;
+
 		return (
 			<React.Fragment>
 				<IconButton

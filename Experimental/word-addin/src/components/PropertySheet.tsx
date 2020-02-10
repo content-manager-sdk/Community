@@ -77,8 +77,7 @@ export class PropertySheet extends React.Component<
 	private fieldInit: IGetItemDef[] = [];
 
 	doValues() {
-		const { fieldValues } = this.state;
-		const newValues = { ...fieldValues };
+		const newValues = {};
 
 		this.fieldInit.forEach((initData) => {
 			newValues[initData.pageItem.Name] = this.getFieldValue(
@@ -91,7 +90,9 @@ export class PropertySheet extends React.Component<
 
 		this.setState({ fieldValues: newValues });
 	}
-
+	componentDidMount() {
+		this.doValues();
+	}
 	componentDidUpdate(prevProps: IPropertySheetProps) {
 		const { formDefinition, onChange } = this.props;
 
@@ -137,7 +138,9 @@ export class PropertySheet extends React.Component<
 	) => {
 		const { fieldValues } = this.state;
 
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: trimObject } });
+		this.setState({
+			fieldValues: { ...fieldValues, [prop.Name]: [trimObject] },
+		});
 
 		this.doPropOrFieldChange(prop, trimObject.Uri);
 	};
@@ -146,7 +149,9 @@ export class PropertySheet extends React.Component<
 		trimObject: ITrimMainObject
 	) => {
 		const { fieldValues } = this.state;
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: trimObject } });
+		this.setState({
+			fieldValues: { ...fieldValues, [prop.Name]: [trimObject] },
+		});
 
 		this.doPropOrFieldChange(prop, trimObject.NameString);
 	};
@@ -287,6 +292,7 @@ export class PropertySheet extends React.Component<
 									: [];
 							},
 							fieldType: FieldPickerType.LookupSet,
+							asArray: true,
 						});
 
 						return (

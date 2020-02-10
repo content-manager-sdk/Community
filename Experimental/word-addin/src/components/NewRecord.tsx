@@ -53,18 +53,19 @@ export class NewRecord extends React.Component<
 			checkinUsingStyle: false,
 		};
 	}
-	_isMounted = false;
-	componentDidMount() {
-		this._isMounted = true;
-	}
 
-	componentWillUnmount() {
-		this._isMounted = false;
+	componentDidMount() {
+		const { defaultRecordType } = this.props;
+
+		if (defaultRecordType) {
+			this._onChange(defaultRecordType.Uri, false);
+		}
 	}
 
 	recordTypeUri: number = 0;
 	recordProps: any = {};
 	recordFields: any = {};
+	showUI: Boolean = false;
 
 	setPropertySheet() {
 		const {
@@ -74,6 +75,7 @@ export class NewRecord extends React.Component<
 			processInBackgroundIfPossible,
 		} = this.props;
 		const { checkinUsingStyle } = this.state;
+		this.showUI = false;
 
 		if (this.recordTypeUri > 0) {
 			const getPropsSheet = checkinUsingStyle
@@ -115,13 +117,11 @@ export class NewRecord extends React.Component<
 
 					this.setState({ formDefinition: data.DataEntryFormDefinition });
 					this.setState({ processing: false });
-					console.log(processInBackgroundIfPossible);
-					console.log(data.NeedsDataEntryForm);
-					if (
-						processInBackgroundIfPossible &&
-						data.NeedsDataEntryForm === false
-					) {
-						console.log("3333333333333333333333");
+
+					this.showUI =
+						processInBackgroundIfPossible === false ||
+						data.NeedsDataEntryForm === true;
+					if (!this.showUI) {
 						this.recordProps = {
 							DataEntryFormDefinition: data.DataEntryFormDefinition,
 						};
@@ -281,6 +281,7 @@ export class NewRecord extends React.Component<
 			computedCheckinStyleName,
 			isLinkedFolder,
 			defaultRecordType,
+			processInBackgroundIfPossible,
 		} = this.props;
 
 		const { formDefinition, processing } = this.state;
@@ -315,30 +316,42 @@ export class NewRecord extends React.Component<
 				onSubmit={this._onClick}
 			>
 				{processing && (
-					<Spinner className="trim-edit-spinner" size={SpinnerSize.large} />
+					<Spinner
+						className="trim-edit-spinner"
+						size={SpinnerSize.large}
+						label={
+							this.showUI
+								? undefined
+								: `Processing ${appStore.documentInfo.EmailPath}`
+						}
+					/>
 				)}
 
-				<RecordTypePicker
-					trimType={trimType}
-					computedCheckinStyleName={computedCheckinStyleName!}
-					folderId={folderId!}
-					isLinkedFolder={isLinkedFolder!}
-					onRecordTypeSelected={this._onChange}
-					includeCheckinStyles={appStore.documentInfo.EmailPath}
-					defaultRecordType={defaultRecordType}
-				/>
-				<div className={`new-record-body new-record-body-${trimType}`}>
-					<PropertySheet
-						formDefinition={formDefinition}
-						onChange={this._onPropertySheetChange}
-						computedProperties={computedProps}
+				{(!processInBackgroundIfPossible || this.showUI === true) && (
+					<RecordTypePicker
+						trimType={trimType}
+						computedCheckinStyleName={computedCheckinStyleName!}
+						folderId={folderId!}
+						isLinkedFolder={isLinkedFolder!}
+						onRecordTypeSelected={this._onChange}
+						includeCheckinStyles={appStore.documentInfo.EmailPath}
+						defaultRecordType={defaultRecordType}
 					/>
-					{formDefinition.Pages && (
-						<PrimaryButton className="trim-register" type="submit">
-							{appStore.messages.web_Register}
-						</PrimaryButton>
-					)}
-				</div>
+				)}
+				{(!processInBackgroundIfPossible || this.showUI === true) && (
+					<div className={`new-record-body new-record-body-${trimType}`}>
+						<PropertySheet
+							formDefinition={formDefinition}
+							onChange={this._onPropertySheetChange}
+							computedProperties={computedProps}
+						/>
+						{formDefinition.Pages && (
+							<PrimaryButton className="trim-register" type="submit">
+								{appStore.messages.web_Register}
+							</PrimaryButton>
+						)}
+					</div>
+				)}
 			</form>
 		);
 	}

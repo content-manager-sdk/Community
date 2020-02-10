@@ -330,12 +330,6 @@ describe("New Record layout", function() {
 			/>
 		);
 
-		wrapper
-			.find(RecordTypePicker)
-			.first()
-			.props()
-			.onRecordTypeSelected(4, false);
-
 		setTimeout(() => {
 			try {
 				expect(mockStore.RecordUri).toEqual(4);

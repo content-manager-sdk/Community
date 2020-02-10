@@ -968,7 +968,9 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 			},
 		},
 	].forEach((item) => {
-		it(`${item.format} Field`, (done) => {
+		it(` retain values ${item.format} Field ${
+			item.lookupSetUri > 0 ? "lookup" : "string"
+		}`, (done) => {
 			const wrapper = makeWrapper(item.format, item.lookupSetUri || 0);
 
 			setTimeout(() => {
