@@ -396,7 +396,7 @@ describe("Test fetch from TRIM", () => {
 		return trimConnector
 			.getPropertySheet(BaseObjectTypes.Record, 123)
 			.then((data) => {
-				expect(data.Pages.length).toBe(1);
+				expect(data.DataEntryFormDefinition.Pages.length).toBe(1);
 				expect(postConfig.RecordFilePath).toBeFalsy();
 			});
 	});
@@ -428,7 +428,7 @@ describe("Test fetch from TRIM", () => {
 		return trimConnector
 			.getPropertySheet(BaseObjectTypes.Record, 123, "myfile.eml")
 			.then((data) => {
-				expect(data.Pages.length).toBe(1);
+				expect(data.DataEntryFormDefinition.Pages.length).toBe(1);
 				expect(JSON.parse(postConfig.data).RecordFilePath).toBe("myfile.eml");
 			});
 	});
@@ -462,11 +462,11 @@ describe("Test fetch from TRIM", () => {
 		return trimConnector
 			.getPropertySheet(BaseObjectTypes.CheckinStyle, 123)
 			.then((data) => {
-				expect(data.Pages.length).toBe(1);
+				expect(data.DataEntryFormDefinition.Pages.length).toBe(1);
 				expect(JSON.parse(postConfig.data).CheckinStyleRecordType).toBe(123);
 				expect(JSON.parse(postConfig.data).ByPassSave).toBeTruthy();
 				expect(JSON.parse(postConfig.data).properties).toBe(
-					"DataEntryFormDefinition"
+					"DataEntryFormDefinition,NeedsDataEntryForm"
 				);
 			});
 	});
@@ -495,11 +495,11 @@ describe("Test fetch from TRIM", () => {
 
 		expect.assertions(4);
 		return trimConnector.getPropertySheetFromStyle(123).then((data) => {
-			expect(data.Pages.length).toBe(1);
+			expect(data.DataEntryFormDefinition.Pages.length).toBe(1);
 			expect(JSON.parse(postConfig.data).CreateFromCheckinStyle).toBe(123);
 			expect(JSON.parse(postConfig.data).ByPassSave).toBeTruthy();
 			expect(JSON.parse(postConfig.data).properties).toBe(
-				"DataEntryFormDefinition"
+				"DataEntryFormDefinition,NeedsDataEntryForm"
 			);
 		});
 	});

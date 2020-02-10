@@ -23,6 +23,7 @@ export class TrimMessages {
 	public rp_none = ""; // tslint:disable-line
 	public vb_nts_Next = ""; // tslint:disable-line
 	public web_attachmentName = ""; // tslint:disable-line
+	public web_suppressDataEntryForm = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

@@ -17,33 +17,55 @@ import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import RecordTypePicker from "../components/RecordTypePicker/RecordTypePicker";
 
 describe("New Record layout", function() {
-	let resolveCheckinStyles;
 	let testRecordUrn = "";
 	let testSubjectPrefix = "";
 	let propertySheetTrimType = BaseObjectTypes.Location;
 	let wrapper;
 	let registerProps = [];
-	//let registerPropsForPlace = undefined;
+
 	let registerType1 = undefined;
 	let registerType2 = undefined;
 	let errorMessage: string = undefined;
 	let populatePages = false;
 	let rejectRegister = false;
+	let noFormNeeded = false;
 
 	const pageItemsWithTitle = {
-		Pages: [
-			{
-				Caption: "General",
-				Type: "Normal",
-				PageItems: [
-					{
-						Format: "String",
-						Name: "RecordTypedTitle",
-						Caption: "Title (Free Text Part)",
-					},
-				],
-			},
-		],
+		NeedsDataEntryForm: true,
+		DataEntryFormDefinition: {
+			Pages: [
+				{
+					Caption: "General",
+					Type: "Normal",
+					PageItems: [
+						{
+							Format: "String",
+							Name: "RecordTypedTitle",
+							Caption: "Title (Free Text Part)",
+						},
+					],
+				},
+			],
+		},
+	};
+
+	const noFormForm = {
+		NeedsDataEntryForm: false,
+		DataEntryFormDefinition: {
+			Pages: [
+				{
+					Caption: "General",
+					Type: "Normal",
+					PageItems: [
+						{
+							Format: "String",
+							Name: "RecordTypedTitle",
+							Caption: "Title (Free Text Part)",
+						},
+					],
+				},
+			],
+		},
 	};
 
 	const makeWrapper = (
@@ -63,6 +85,7 @@ describe("New Record layout", function() {
 				folderId={folderId}
 				computedCheckinStyleName={folderName}
 				isLinkedFolder={isLinkedFolder}
+				processInBackgroundIfPossible={false}
 			/>
 		);
 		innerWrapper.setState({ formDefinition: { Pages: [] } });
@@ -85,6 +108,8 @@ describe("New Record layout", function() {
 		populatePages = false;
 		rejectRegister = false;
 		mockStore.documentInfo.EmailPath = null;
+		noFormNeeded = false;
+		mockStore.RecordUri = 0;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -115,17 +140,13 @@ describe("New Record layout", function() {
 		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
 		return new Promise(function(resolve) {
-			if (options.trimType === BaseObjectTypes.CheckinPlace) {
-				resolveCheckinStyles = resolve;
-			} else {
-				resolve({
-					results: [
-						{ Uri: 1, NameString: "Document" } as T,
-						{ Uri: 5, NameString: "Document 5" } as T,
-					],
-					hasMoreItems: false,
-				});
-			}
+			resolve({
+				results: [
+					{ Uri: 1, NameString: "Document" } as T,
+					{ Uri: 5, NameString: "Document 5" } as T,
+				],
+				hasMoreItems: false,
+			});
 		});
 	};
 
@@ -135,7 +156,11 @@ describe("New Record layout", function() {
 		propertySheetTrimType = trimType;
 		return new Promise(function(resolve) {
 			resolve(
-				populatePages ? pageItemsWithTitle : { Pages: [{ PageItems: [] }] }
+				noFormNeeded
+					? noFormForm
+					: populatePages
+					? pageItemsWithTitle
+					: { DataEntryFormDefinition: { Pages: [{ PageItems: [] }] } }
 			);
 		});
 	};
@@ -281,11 +306,40 @@ describe("New Record layout", function() {
 			.simulate("submit", { preventDefault: function() {} });
 		setTimeout(() => {
 			try {
-
 				expect(registerType1).toEqual(BaseObjectTypes.CheckinStyle);
 				expect(registerType2).toEqual(BaseObjectTypes.CheckinPlace);
 
 				expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("calls create record automatically when data entry form not required", (done) => {
+		noFormNeeded = true;
+		const wrapper = shallow<NewRecord>(
+			<NewRecord
+				appStore={mockStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={new MockWordConnector()}
+				trimType={BaseObjectTypes.Record}
+				processInBackgroundIfPossible={true}
+				defaultRecordType={{ Uri: 4, TrimType: BaseObjectTypes.RecordType }}
+			/>
+		);
+
+		wrapper
+			.find(RecordTypePicker)
+			.first()
+			.props()
+			.onRecordTypeSelected(4, false);
+
+		setTimeout(() => {
+			try {
+				expect(mockStore.RecordUri).toEqual(4);
+				expect(mockStore.RecordProps["DataEntryFormDefinition"]).toBeTruthy();
 				done();
 			} catch (e) {
 				done.fail(e);

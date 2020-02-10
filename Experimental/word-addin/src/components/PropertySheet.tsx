@@ -58,6 +58,13 @@ export interface IPropertySheetProps {
 	computedProperties?: IPageItemValue[];
 }
 
+interface IGetItemDef {
+	pageItem: IPageItemValue;
+	getValue: () => any;
+	fieldType: FieldPickerType;
+	asArray?: boolean;
+}
+
 export class PropertySheet extends React.Component<
 	IPropertySheetProps,
 	IPropertySheetState
@@ -67,6 +74,24 @@ export class PropertySheet extends React.Component<
 		this.state = { isTextFieldMultiline: {}, fieldValues: {} };
 	}
 
+	private fieldInit: IGetItemDef[] = [];
+
+	doValues() {
+		const { fieldValues } = this.state;
+		const newValues = { ...fieldValues };
+
+		this.fieldInit.forEach((initData) => {
+			newValues[initData.pageItem.Name] = this.getFieldValue(
+				initData.pageItem,
+				initData.getValue,
+				initData.fieldType,
+				initData.asArray
+			);
+		});
+
+		this.setState({ fieldValues: newValues });
+	}
+
 	componentDidUpdate(prevProps: IPropertySheetProps) {
 		const { formDefinition, onChange } = this.props;
 
@@ -74,6 +99,8 @@ export class PropertySheet extends React.Component<
 			JSON.stringify(formDefinition) !==
 			JSON.stringify(prevProps.formDefinition)
 		) {
+			this.doValues();
+
 			this.formValues = {};
 			this.formFields = {};
 
@@ -111,6 +138,7 @@ export class PropertySheet extends React.Component<
 		const { fieldValues } = this.state;
 
 		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: trimObject } });
+
 		this.doPropOrFieldChange(prop, trimObject.Uri);
 	};
 
@@ -136,7 +164,6 @@ export class PropertySheet extends React.Component<
 		const { fieldValues } = this.state;
 
 		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: newText } });
-
 		this.textChange(prop, newText);
 	};
 
@@ -218,7 +245,7 @@ export class PropertySheet extends React.Component<
 	};
 
 	private makePageItems = (formItems: any) => {
-		const { isTextFieldMultiline } = this.state;
+		const { isTextFieldMultiline, fieldValues } = this.state;
 		const { computedProperties } = this.props;
 
 		(computedProperties || []).forEach((pageItem: IPageItemValue) => {
@@ -252,16 +279,15 @@ export class PropertySheet extends React.Component<
 					pageItem.Format === "Geography"
 				) {
 					if (pageItem.LookupSetUri > 0) {
-						const val = this.getFieldValue(
-							pageItem,
-							() => {
+						this.fieldInit.push({
+							pageItem: pageItem,
+							getValue: () => {
 								return pageItem.Value
 									? [{ Uri: 0, NameString: pageItem.Value }]
 									: [];
 							},
-							FieldPickerType.LookupSet,
-							true
-						);
+							fieldType: FieldPickerType.LookupSet,
+						});
 
 						return (
 							<TrimObjectPicker
@@ -270,17 +296,17 @@ export class PropertySheet extends React.Component<
 								propertyName={pageItem.Name}
 								filter={"lkiSet:" + pageItem.LookupSetUri}
 								onTrimObjectSelected={this._onSelectLookupItem(pageItem)}
-								value={val}
+								value={fieldValues[pageItem.Name]}
 							/>
 						);
 					} else {
-						const val = this.getFieldValue(
-							pageItem,
-							() => {
+						this.fieldInit.push({
+							pageItem: pageItem,
+							getValue: () => {
 								return pageItem.Value;
 							},
-							FieldPickerType.Text
-						);
+							fieldType: FieldPickerType.Text,
+						});
 
 						return (
 							<TextField
@@ -288,27 +314,35 @@ export class PropertySheet extends React.Component<
 								multiline={
 									pageItem.MultiLine || isTextFieldMultiline[pageItem.Name]
 								}
-								defaultValue={val}
+								defaultValue={fieldValues[pageItem.Name]}
 								onChange={this._onTextChange(pageItem)}
 							/>
 						);
 					}
 				} else if (TrimNumberFieldHelpers.IsNumberField(pageItem.Format)) {
-					const val = this.getFieldValue(pageItem, () => {
-						return pageItem.Value;
+					this.fieldInit.push({
+						pageItem: pageItem,
+						getValue: () => {
+							return pageItem.Value;
+						},
+						fieldType: FieldPickerType.Any,
 					});
 
 					return (
 						<TrimNumberField
 							format={pageItem.Format}
 							{...commonProps}
-							defaultValue={val}
+							defaultValue={fieldValues[pageItem.Name]}
 							onChange={this._onNumberChange(pageItem)}
 						/>
 					);
 				} else if (pageItem.Format === "Enum") {
-					const val = this.getFieldValue(pageItem, () => {
-						return pageItem.Value;
+					this.fieldInit.push({
+						pageItem: pageItem,
+						getValue: () => {
+							return pageItem.Value;
+						},
+						fieldType: FieldPickerType.Any,
 					});
 
 					return (
@@ -318,18 +352,22 @@ export class PropertySheet extends React.Component<
 								return { key: item.Name, text: item.Caption };
 							})}
 							onChange={this._onComboChange(pageItem)}
-							selectedKey={val}
+							selectedKey={fieldValues[pageItem.Name]}
 						/>
 					);
 				} else if (pageItem.Format === "Boolean") {
-					const val = this.getFieldValue(pageItem, () => {
-						return pageItem.Value;
+					this.fieldInit.push({
+						pageItem: pageItem,
+						getValue: () => {
+							return pageItem.Value;
+						},
+						fieldType: FieldPickerType.Any,
 					});
 
 					return (
 						<Checkbox
 							{...commonProps}
-							defaultChecked={val}
+							defaultChecked={fieldValues[pageItem.Name]}
 							onChange={this._onBooleanChange(pageItem)}
 						/>
 					);
@@ -337,36 +375,36 @@ export class PropertySheet extends React.Component<
 					pageItem.Format === "Datetime" ||
 					pageItem.Format === "Date"
 				) {
-					const val = this.getFieldValue(
-						pageItem,
-						() => {
+					this.fieldInit.push({
+						pageItem: pageItem,
+						getValue: () => {
 							return !pageItem.Value || pageItem.Value.IsClear
 								? undefined
 								: new Date(pageItem.Value.DateTime);
 						},
-						FieldPickerType.Date
-					);
+						fieldType: FieldPickerType.Date,
+					});
 
 					return (
 						<DatePicker
 							{...commonProps}
 							showMonthPickerAsOverlay={true}
-							value={val}
+							value={fieldValues[pageItem.Name]}
 							onSelectDate={this._onSelectDate(pageItem)}
 						/>
 					);
 				} else if (pageItem.Format === "Object") {
-					const val = this.getFieldValue(
-						pageItem,
-						() => {
+					this.fieldInit.push({
+						pageItem: pageItem,
+						getValue: () => {
 							return pageItem.Value &&
 								(pageItem.Value as ITrimMainObject).Uri > 0
 								? [pageItem.Value as ITrimMainObject]
 								: [];
 						},
-						FieldPickerType.Object,
-						true
-					);
+						fieldType: FieldPickerType.Object,
+						asArray: true,
+					});
 
 					return (
 						<TrimObjectPicker
@@ -375,7 +413,7 @@ export class PropertySheet extends React.Component<
 							propertyName={pageItem.Name}
 							purpose={pageItem.EditPurpose}
 							purposeExtra={pageItem.EditPurposeExtra}
-							value={val}
+							value={fieldValues[pageItem.Name]}
 							onTrimObjectSelected={this._onSelectObject(pageItem)}
 						/>
 					);

@@ -36,6 +36,7 @@ interface INewRecordProps {
 	validateRecordType?: (recordTypeUri: number) => Promise<Boolean>;
 	computedCheckinStyleName?: string;
 	defaultRecordType?: ITrimMainObject;
+	processInBackgroundIfPossible?: Boolean;
 }
 
 export class NewRecord extends React.Component<
@@ -52,13 +53,26 @@ export class NewRecord extends React.Component<
 			checkinUsingStyle: false,
 		};
 	}
+	_isMounted = false;
+	componentDidMount() {
+		this._isMounted = true;
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
 
 	recordTypeUri: number = 0;
 	recordProps: any = {};
 	recordFields: any = {};
 
 	setPropertySheet() {
-		const { trimConnector, appStore, trimType } = this.props;
+		const {
+			trimConnector,
+			appStore,
+			trimType,
+			processInBackgroundIfPossible,
+		} = this.props;
 		const { checkinUsingStyle } = this.state;
 
 		if (this.recordTypeUri > 0) {
@@ -73,40 +87,61 @@ export class NewRecord extends React.Component<
 						appStore.documentInfo.EmailPath
 				  );
 
-			getPropsSheet.then((data) => {
-				if (data && data.Pages && data.Pages.length > 0) {
-					for (let counter = 0; counter < data.Pages.length; counter++) {
-						const page = data.Pages[counter];
+			getPropsSheet
+				.then((data) => {
+					if (
+						data &&
+						data.DataEntryFormDefinition.Pages &&
+						data.DataEntryFormDefinition.Pages.length > 0
+					) {
 						for (
-							let itemCounter = 0;
-							itemCounter < page.PageItems.length;
-							itemCounter++
+							let counter = 0;
+							counter < data.DataEntryFormDefinition.Pages.length;
+							counter++
 						) {
-							const pageItem = page.PageItems[itemCounter];
-							if (pageItem.Name === "RecordTypedTitle") {
-								pageItem.Value = pageItem.Value || appStore.FileName;
+							const page = data.DataEntryFormDefinition.Pages[counter];
+							for (
+								let itemCounter = 0;
+								itemCounter < page.PageItems.length;
+								itemCounter++
+							) {
+								const pageItem = page.PageItems[itemCounter];
+								if (pageItem.Name === "RecordTypedTitle") {
+									pageItem.Value = pageItem.Value || appStore.FileName;
+								}
 							}
 						}
 					}
-				}
 
-				this.setState({ formDefinition: data });
-				this.setState({ processing: false });
-			});
+					this.setState({ formDefinition: data.DataEntryFormDefinition });
+					this.setState({ processing: false });
+					console.log(processInBackgroundIfPossible);
+					console.log(data.NeedsDataEntryForm);
+					if (
+						processInBackgroundIfPossible &&
+						data.NeedsDataEntryForm === false
+					) {
+						console.log("3333333333333333333333");
+						this.recordProps = {
+							DataEntryFormDefinition: data.DataEntryFormDefinition,
+						};
+						this.doSave();
+					}
+				})
+				.catch(appStore.setError);
 		}
 	}
 
 	private _onChange = (uri: number, isCheckinStyle: boolean) => {
 		const { validateRecordType, appStore } = this.props;
 
-		this.setState({ processing: true });
+		this.setState({ processing: true, checkinUsingStyle: isCheckinStyle });
 
 		if (isCheckinStyle) {
 			this.recordTypeUri = uri;
 
 			this.setPropertySheet();
 		} else {
-
 			const recordTypeUri = uri;
 
 			if (validateRecordType) {
@@ -121,7 +156,6 @@ export class NewRecord extends React.Component<
 					}
 				});
 			} else {
-
 				this.recordTypeUri = recordTypeUri;
 
 				this.setPropertySheet();
@@ -131,20 +165,19 @@ export class NewRecord extends React.Component<
 
 	private saveFinished = (saved: boolean) => {
 		const { onTrimObjectCreated, onAfterSave } = this.props;
+		this.setState({ processing: false });
 		if (saved) {
 			if (onTrimObjectCreated) {
 				onTrimObjectCreated();
 			}
 		}
 
-		this.setState({ processing: false });
-
 		if (onAfterSave) {
 			onAfterSave();
 		}
 	};
 
-	private _onClick = (event: React.MouseEvent<HTMLFormElement>) => {
+	private doSave = () => {
 		const {
 			appStore,
 			wordConnector,
@@ -159,7 +192,6 @@ export class NewRecord extends React.Component<
 			onBeforeSave();
 		}
 
-		event.preventDefault();
 		const { checkinUsingStyle } = this.state;
 
 		this.setState({ processing: true });
@@ -228,6 +260,11 @@ export class NewRecord extends React.Component<
 					appStore.setError(e);
 				});
 		}
+	};
+
+	private _onClick = (event: React.MouseEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		this.doSave();
 	};
 
 	private _onPropertySheetChange = (newProps: any, newFields: any) => {

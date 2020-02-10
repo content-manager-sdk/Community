@@ -175,6 +175,11 @@ export interface IDatabase {
 	EmailSubjectPrefix: string;
 }
 
+export interface IDataEntryForm {
+	NeedsDataEntryForm: Boolean;
+	DataEntryFormDefinition: any;
+}
+
 export interface ITrimConnector {
 	clearCache: () => void;
 	cancel: () => void;
@@ -199,12 +204,12 @@ export interface ITrimConnector {
 	getPropertySheetFromStyle(
 		checkinStyleUri: number,
 		withFile?: string
-	): Promise<any>;
+	): Promise<IDataEntryForm>;
 	getPropertySheet(
 		trimType: BaseObjectTypes,
 		recordTypeUri: number,
 		withFile?: string
-	): Promise<any>;
+	): Promise<IDataEntryForm>;
 	getPropertySheetForObject(
 		trimType: BaseObjectTypes,
 		uri: number
@@ -752,25 +757,42 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public getPropertySheetFromStyle(
-		checkinStyleUri: number,
+	private getPropertySheetInternal(
+		trimType: BaseObjectTypes,
+		body: any,
 		withFile?: string
-	): Promise<any> {
-		const body = {
-			properties: "DataEntryFormDefinition",
-			CreateFromCheckinStyle: checkinStyleUri,
-			ByPassSave: true,
-		};
+	): Promise<IDataEntryForm> {
+		body.properties = "DataEntryFormDefinition,NeedsDataEntryForm";
+		body.ByPassSave = true;
 
 		if (withFile) {
 			body["RecordFilePath"] = withFile;
 		}
 
 		return this.makeRequest(
-			{ path: `${BaseObjectTypes.Record}`, method: "post", data: body },
+			{ path: `${trimType}`, method: "post", data: body },
 			(data: any) => {
-				return data.Results[0].DataEntryFormDefinition;
+				return {
+					DataEntryFormDefinition: data.Results[0].DataEntryFormDefinition,
+					NeedsDataEntryForm: (data.Results[0].RecordNeedsDataEntryForm || {})
+						.Value,
+				};
 			}
+		);
+	}
+
+	public getPropertySheetFromStyle(
+		checkinStyleUri: number,
+		withFile?: string
+	): Promise<IDataEntryForm> {
+		const body = {
+			CreateFromCheckinStyle: checkinStyleUri,
+		};
+
+		return this.getPropertySheetInternal(
+			BaseObjectTypes.Record,
+			body,
+			withFile
 		);
 	}
 
@@ -780,21 +802,10 @@ export class TrimConnector implements ITrimConnector {
 		withFile?: string
 	): Promise<any> {
 		const body = {
-			properties: "DataEntryFormDefinition",
 			[`${trimType}RecordType`]: recordTypeUri,
-			ByPassSave: true,
 		};
 
-		if (withFile) {
-			body["RecordFilePath"] = withFile;
-		}
-
-		return this.makeRequest(
-			{ path: `${trimType}`, method: "post", data: body },
-			(data: any) => {
-				return data.Results[0].DataEntryFormDefinition;
-			}
-		);
+		return this.getPropertySheetInternal(trimType, body, withFile);
 	}
 
 	public getPropertySheetForObject(
