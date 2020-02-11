@@ -143,6 +143,11 @@ hr.trim-menu-sep {
 	top: 60px;
 }
 
+.trim-edit-spinner-label {
+	top: 60px;
+	left: calc(30% - 14px);
+}
+
 .new-record-body-Record div.trim-properties {
 	max-height: calc(100% - 110px);
 	overflow-y: auto;

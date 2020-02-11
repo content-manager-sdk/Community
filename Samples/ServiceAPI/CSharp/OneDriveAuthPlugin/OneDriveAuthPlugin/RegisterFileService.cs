@@ -45,7 +45,7 @@ namespace OneDriveAuthPlugin
 	public class RegisterdFileResponse
 	{
 		public string Id { get; set; }
-		public long Uri { get; set; }
+		public long[] Uri { get; set; }
 		public OneDriveItem DriveItem { get; set; }
 		public IList<MyCommandDef> CommandDefs { get; set; }
 		public string RecordType { get; set; }
@@ -112,7 +112,7 @@ namespace OneDriveAuthPlugin
 
 		private void updateFromRecord(RegisterdFileResponse fileToUpdate, Record fromRecord)
 		{
-			fileToUpdate.Uri = fromRecord.Uri;
+			fileToUpdate.Uri = new long[] { fromRecord.Uri };
 			fileToUpdate.RecordType = fromRecord.RecordType.Name;
 			fileToUpdate.CommandDefs = getCommandDefs(fromRecord);
 
@@ -228,9 +228,9 @@ namespace OneDriveAuthPlugin
 		}
 
 
-		private async Task<long> getEmailLinkUri(string webUrl, string token)
+		private async Task<long[]> getEmailLinkUri(string webUrl, string token)
 		{
-			long recordUri = 0;
+			List<long> recordUris = new List<long>();
 			string dbid = "";
 			var mailResult = await ODataHelper.GetItem<MailItem>(GraphApiHelper.GetMailItemURL(webUrl), token, null);
 
@@ -244,7 +244,15 @@ namespace OneDriveAuthPlugin
 
 						dbid = idTokens.First().Split(':').Last();
 
-						long.TryParse(prop.Value.Split('/').Last(), out recordUri);
+						foreach(string s in prop.Value.Split(','))
+						{
+							long recordUri;
+							if (long.TryParse(s.Split('/').Last().Trim(), out recordUri))
+							{
+								recordUris.Add(recordUri);
+							}
+						}
+						
 
 
 
@@ -258,18 +266,26 @@ namespace OneDriveAuthPlugin
 
 					if (prop.Id.Equals(GraphApiHelper.IDPropNameForMAPIUri(), StringComparison.InvariantCultureIgnoreCase))
 					{
-						long.TryParse(prop.Value.Split(',').First().Trim(), out recordUri);
-					}
+						//long.TryParse(prop.Value.Split(',').First().Trim(), out recordUri);
 
+						foreach (string s in prop.Value.Split(','))
+						{
+							long recordUri;
+							if (long.TryParse(s.Trim(), out recordUri))
+							{
+								recordUris.Add(recordUri);
+							}
+						}
+					}
 				}
 
 				if (dbid.EqualsIgnoreCase(this.Database.Id))
 				{
-					return recordUri;
+					return recordUris.ToArray();
 				}
 			}
 
-			return 0;
+			return new long[] { };
 		}
 
 
@@ -295,7 +311,7 @@ namespace OneDriveAuthPlugin
 			log.Debug("got Drive ID");
 			OneDriveItem fileResult = null;
 
-			long recordUri = 0;
+			long[] recordUris = new long[] { };
 
 			RegisterdFileResponse registeredFile = new RegisterdFileResponse();
 			try
@@ -303,10 +319,10 @@ namespace OneDriveAuthPlugin
 
 				if (request.IsEmail && string.IsNullOrWhiteSpace(request.AttachmentName))
 				{
-					recordUri = await getEmailLinkUri(request.WebUrl, token);
+					recordUris = await getEmailLinkUri(request.WebUrl, token);
 				}
 
-				if (request.IsEmail && recordUri == 0)
+				if (request.IsEmail && recordUris.Length > 0)
 				{
 					var emailUrl = GraphApiHelper.GetEMLUrl(request.WebUrl);
 
@@ -387,12 +403,15 @@ namespace OneDriveAuthPlugin
 
 				if (uris.Count == 1)
 				{
-					updateFromRecord(registeredFile, new Record(this.Database, uris[0]));
+					registeredFile.Uri = recordUris;
 				}
 			}
-			else if (request.IsEmail && recordUri > 0)
+			else if (request.IsEmail && recordUris.Length > 0)
 			{
-				updateFromRecord(registeredFile, new Record(this.Database, recordUri));
+
+
+					registeredFile.Uri = recordUris;
+
 			}
 
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };

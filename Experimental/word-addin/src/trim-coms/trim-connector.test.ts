@@ -860,14 +860,14 @@ describe("Test fetch from TRIM", () => {
 				token = config.headers["Authorization"];
 				webUrl = config.params["webUrl"];
 
-				return [200, { Results: [{ Id: "0123", Uri: 567 }] }];
+				return [200, { Results: [{ Id: "0123", Uri: [567] }] }];
 			});
 
 		expect.assertions(4);
-		return trimConnector.getDriveId("abc").then((data) => {
+		return trimConnector.getDriveId("abc", false, 0).then((data) => {
 			expect(webUrl).toEqual("abc");
 			expect(data.Id).toEqual("0123");
-			expect(data.Uri).toEqual(567);
+			expect(data.Uris).toEqual([567]);
 			expect(token).toEqual("Bearer token123");
 		});
 	});
@@ -879,7 +879,7 @@ describe("Test fetch from TRIM", () => {
 			.reply(function(config: any) {
 				attachmentName = config.params["attachmentName"];
 
-				return [200, { Results: [{ Id: "0123", Uri: 567 }] }];
+				return [200, { Results: [{ Id: "0123", Uri: [567] }] }];
 			});
 
 		return trimConnector.getDriveId("abc", true, 0, "a.name").then((data) => {
@@ -922,14 +922,13 @@ describe("Test fetch from TRIM", () => {
 			.reply(function(config: any) {
 				return [
 					200,
-					{ Results: [{ Id: "0123", Uri: 567, CommandDefs: replyValue }] },
+					{ Results: [{ Id: "0123", Uri: [567], CommandDefs: replyValue }] },
 				];
 			});
 
-		expect.assertions(2);
-		const data = await trimConnector.getDriveId("test");
-		expect(data.CommandDefs.length).toEqual(1);
-		expect(data.CommandDefs).toEqual(replyValue);
+		expect.assertions(1);
+		const data = await trimConnector.getDriveId("test", false, 0);
+		expect(data.Uris).toEqual([567]);
 	});
 
 	it("handles an error response without a body", async () => {

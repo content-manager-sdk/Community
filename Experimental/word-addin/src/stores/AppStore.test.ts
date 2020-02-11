@@ -131,11 +131,11 @@ class MockTrimConnector implements ITrimConnector {
 	getDriveId(webUrl: string): Promise<IDriveInformation> {
 		return new Promise(function(resolve, reject) {
 			if (Mock_Action == "NOT_FOUND") {
-				resolve({ Uri: 0, Id: "abc", CommandDefs: [] });
+				resolve({ Uris: [], Id: "abc", CommandDefs: [] });
 			} else if (Mock_Action == "ERROR") {
-				reject({ message: "some message" });
+				reject({ message: "some message", Uri: [] });
 			} else {
-				resolve({ Uri: 567, Id: "abc", CommandDefs: [] });
+				resolve({ Uris: [567], Id: "abc", CommandDefs: [] });
 			}
 		});
 	}
@@ -252,13 +252,12 @@ describe("Test basic setup from Trim", () => {
 	test("word connector URI found", (done) => {
 		Mock_Action = "";
 
-		expect(appStore.RecordUri).toBe(0);
 		appStore.fetchBaseSettingFromTrim(false);
 		setTimeout(() => {
 			try {
 				expect(appStore.RecordUri).toBe(567);
 				expect(appStore.status).toBe("WAITING");
-				expect.assertions(3);
+				expect.assertions(2);
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -269,14 +268,13 @@ describe("Test basic setup from Trim", () => {
 	test("word connector URI not found", (done) => {
 		Mock_Action = "NOT_FOUND";
 
-		expect(appStore.RecordUri).toBe(0);
+		expect(appStore.RecordUri).toEqual(0);
 		appStore.fetchBaseSettingFromTrim(false);
 
 		setTimeout(() => {
 			try {
-				expect(appStore.RecordUri).toBe(0);
 				expect(appStore.status).toBe("WAITING");
-				expect.assertions(3);
+				expect.assertions(2);
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -326,7 +324,7 @@ describe("Test basic setup from Trim", () => {
 	it("updates the store after a document has been registered in TRIM", async () => {
 		// appStore.dcTest("ffff");
 		await appStore.createRecord(2, {});
-		expect(appStore.documentInfo.Uri).toBe(567);
+		expect(appStore.documentInfo.Uris).toEqual([567]);
 	});
 
 	it("sets the Drive Id in the DriveID field when stored in TRIM", (done) => {

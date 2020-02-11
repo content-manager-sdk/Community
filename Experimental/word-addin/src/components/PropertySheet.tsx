@@ -80,12 +80,16 @@ export class PropertySheet extends React.Component<
 		const newValues = {};
 
 		this.fieldInit.forEach((initData) => {
-			newValues[initData.pageItem.Name] = this.getFieldValue(
+			const v = this.getFieldValue(
 				initData.pageItem,
 				initData.getValue,
 				initData.fieldType,
 				initData.asArray
 			);
+
+			if (v) {
+				newValues[initData.pageItem.Name] = v;
+			}
 		});
 
 		this.setState({ fieldValues: newValues });

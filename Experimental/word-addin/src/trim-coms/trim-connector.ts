@@ -69,7 +69,16 @@ export interface IEnums {
 
 export interface IDriveInformation {
 	Id: string;
-	Uri: number;
+	Uris: number[];
+	Options: ITrimOptions;
+	Enums: IEnums;
+	EmailPath: string;
+	URN: string;
+}
+
+export interface IDriveActionInformation {
+	Id: string;
+	Uris: number[];
 	RecordType: string;
 	CommandDefs: ICommandDef[];
 	Options: ITrimOptions;
@@ -237,7 +246,7 @@ export interface ITrimConnector {
 		uri: number,
 		fileName: string,
 		webUrl: string
-	): Promise<IDriveInformation>;
+	): Promise<IDriveActionInformation>;
 
 	createRelationship(
 		uri: number,
@@ -567,7 +576,7 @@ export class TrimConnector implements ITrimConnector {
 		uri: number,
 		fileName: string,
 		webUrl: string
-	): Promise<IDriveInformation> {
+	): Promise<IDriveActionInformation> {
 		const path = "DriveFile";
 
 		const postBodies = {
@@ -712,9 +721,11 @@ export class TrimConnector implements ITrimConnector {
 				data: { webUrl, isEmail, uri: recordUri, attachmentName },
 			},
 			(data: any) => {
-				return data.Results
+				const returnData = data.Results
 					? data.Results[0]
-					: { Id: "", Uri: 0, CommandDefs: [] };
+					: { Id: "", Uri: [], CommandDefs: [] };
+				returnData.Uris = returnData.Uri;
+				return returnData;
 			}
 		);
 	}
@@ -884,6 +895,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_NewLinkedFolder = "New Linked Folder";
 					data.Messages.web_EditTrimObject = "Edit";
 					data.Messages.web_attachmentName = "Attachment Name";
+					data.Messages.web_fetching = "Fetching";
+					data.Messages.web_filing = "Filing";
 					this.setCache("messages", data.Messages);
 
 					//this._messageCache = data.Messages;

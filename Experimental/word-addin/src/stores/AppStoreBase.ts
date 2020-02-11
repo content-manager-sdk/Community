@@ -39,9 +39,8 @@ export class AppStoreBase implements IAppStore {
 	@observable public errorBody: any;
 	@observable public documentInfo: IDriveInformation = {
 		Id: "",
-		Uri: 0,
-		CommandDefs: [],
-		RecordType: "",
+		Uris: [],
+
 		Options: { DefaultDocumentRecordType: 0 },
 		Enums: { RecordRelationshipType: [] },
 		EmailPath: "",
@@ -144,8 +143,12 @@ export class AppStoreBase implements IAppStore {
 
 	@computed
 	get RecordUri(): number {
-		if (this.documentInfo != null) {
-			return this.documentInfo.Uri;
+		if (
+			this.documentInfo != null &&
+			this.documentInfo.Uris &&
+			this.documentInfo.Uris.length > 0
+		) {
+			return this.documentInfo.Uris[0];
 		}
 		return 0;
 	}
@@ -207,10 +210,9 @@ export class AppStoreBase implements IAppStore {
 					.then((newRecord: ITrimMainObject) => {
 						if (newRecord.Uri > 0) {
 							this.setDocumentInfo({
-								Uri: newRecord.Uri,
-								CommandDefs: newRecord.CommandDefs!,
+								Uris: [newRecord.Uri],
+								//CommandDefs: newRecord.CommandDefs!,
 								Id: this.documentInfo.Id,
-								RecordType: this.documentInfo.RecordType,
 								Options: this.documentInfo.Options,
 								Enums: this.documentInfo.Enums,
 								EmailPath: this.documentInfo.EmailPath,

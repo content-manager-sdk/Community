@@ -28,7 +28,6 @@ interface INewRecordProps {
 	className?: string;
 	trimType: BaseObjectTypes;
 	onTrimObjectCreated?: (newObject?: ITrimMainObject) => void;
-	onBeforeSave?: () => void;
 	onAfterSave?: () => void;
 	folderId?: string;
 	isLinkedFolder?: Boolean;
@@ -55,9 +54,9 @@ export class NewRecord extends React.Component<
 	}
 
 	componentDidMount() {
-		const { defaultRecordType } = this.props;
+		const { defaultRecordType, processInBackgroundIfPossible } = this.props;
 
-		if (defaultRecordType) {
+		if (defaultRecordType && processInBackgroundIfPossible) {
 			this._onChange(defaultRecordType.Uri, false);
 		}
 	}
@@ -119,8 +118,7 @@ export class NewRecord extends React.Component<
 					this.setState({ processing: false });
 
 					this.showUI =
-						processInBackgroundIfPossible === false ||
-						data.NeedsDataEntryForm === true;
+						!processInBackgroundIfPossible || data.NeedsDataEntryForm === true;
 					if (!this.showUI) {
 						this.recordProps = {
 							DataEntryFormDefinition: data.DataEntryFormDefinition,
@@ -184,13 +182,9 @@ export class NewRecord extends React.Component<
 			trimConnector,
 			trimType,
 			folderId,
-			onBeforeSave,
+
 			bypassUpdateEmailSubject,
 		} = this.props;
-
-		if (onBeforeSave) {
-			onBeforeSave();
-		}
 
 		const { checkinUsingStyle } = this.state;
 
@@ -231,29 +225,37 @@ export class NewRecord extends React.Component<
 				...this.recordProps,
 			};
 
+			if (folderId === "cm_auto") {
+				props.CheckinStyleUseForServerMailCapture = true;
+			}
+
 			trimConnector!
 				.saveToTrim(trimType, props, this.recordFields)
 				.then((trimObject: ITrimMainObject) => {
-					const placeBody = folderId
-						? {
-								CheckinPlacePlaceId: folderId,
-								CheckinPlaceCheckinAs: trimObject.Uri,
-								CheckinPlacePlaceType: "MailForServerProcessing",
-						  }
-						: {
-								CheckinPlaceCheckinAs: trimObject.Uri,
-								CheckinPlacePlaceType: "MailForClientProcessing",
-						  };
+					if (folderId === "cm_auto") {
+						this.saveFinished(true);
+					} else {
+						const placeBody = folderId
+							? {
+									CheckinPlacePlaceId: folderId,
+									CheckinPlaceCheckinAs: trimObject.Uri,
+									CheckinPlacePlaceType: "MailForServerProcessing",
+							  }
+							: {
+									CheckinPlaceCheckinAs: trimObject.Uri,
+									CheckinPlacePlaceType: "MailForClientProcessing",
+							  };
 
-					trimConnector!
-						.saveToTrim(BaseObjectTypes.CheckinPlace, placeBody, {})
-						.then((trimObject) => {
-							this.saveFinished(true);
-						})
-						.catch((e) => {
-							this.saveFinished(false);
-							appStore.setError(e);
-						});
+						trimConnector!
+							.saveToTrim(BaseObjectTypes.CheckinPlace, placeBody, {})
+							.then((trimObject) => {
+								this.saveFinished(true);
+							})
+							.catch((e) => {
+								this.saveFinished(false);
+								appStore.setError(e);
+							});
+					}
 				})
 				.catch((e) => {
 					this.saveFinished(false);
@@ -309,7 +311,11 @@ export class NewRecord extends React.Component<
 				});
 			}
 		}
-
+		let spinnerLabel = appStore.documentInfo.EmailPath;
+		if (spinnerLabel && spinnerLabel.indexOf("\\") > -1) {
+			const tokens = spinnerLabel.split("\\");
+			spinnerLabel = tokens[tokens.length - 1];
+		}
 		return (
 			<form
 				className={className + (processing === true ? " disabled" : "")}
@@ -317,12 +323,12 @@ export class NewRecord extends React.Component<
 			>
 				{processing && (
 					<Spinner
-						className="trim-edit-spinner"
+						className="trim-edit-spinner-label"
 						size={SpinnerSize.large}
 						label={
-							this.showUI
+							this.showUI || !spinnerLabel
 								? undefined
-								: `Processing ${appStore.documentInfo.EmailPath}`
+								: `${appStore!.messages.web_filing} ${spinnerLabel}`
 						}
 					/>
 				)}

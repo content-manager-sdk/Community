@@ -24,6 +24,8 @@ export class TrimMessages {
 	public vb_nts_Next = ""; // tslint:disable-line
 	public web_attachmentName = ""; // tslint:disable-line
 	public web_suppressDataEntryForm = ""; // tslint:disable-line
+	public web_fetching = ""; // tslint:disable-line
+	public web_filing = ""; // tslint:disable-line
 }
 
 export default TrimMessages;
