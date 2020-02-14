@@ -9,6 +9,7 @@ import TrimConnector, {
 	ISearchParameters,
 	ITrimMainObject,
 	ISearchResults,
+	IRecord,
 } from "../../trim-coms/trim-connector";
 import { Link } from "office-ui-fabric-react";
 import { exists } from "fs";
@@ -16,6 +17,7 @@ import { exists } from "fs";
 describe("View Trim Objects", function() {
 	let resolveRecords;
 	let recordQuery: ISearchParameters;
+	let searchResults = [];
 	beforeEach(() => {
 		resolveRecords = undefined;
 		recordQuery = undefined;
@@ -32,15 +34,17 @@ describe("View Trim Objects", function() {
 
 		return new Promise(function(resolve) {
 			resolve({
-				results: [
-					{ Uri: 1, NameString: "Document", ToolTip: "Doc" } as T,
-					{ Uri: 2, NameString: "Document 5", ToolTip: "Doc 5" } as T,
-				],
+				results: searchResults,
 				hasMoreItems: false,
 			});
 		});
 	}.bind(mockTrimConnector);
-
+	beforeEach(() => {
+		searchResults = [
+			{ Uri: 1, NameString: "Document", ToolTip: "Doc" } as ITrimMainObject,
+			{ Uri: 2, NameString: "Document 5", ToolTip: "Doc 5" } as ITrimMainObject,
+		];
+	});
 	it("shows the View Object component when there is only one Record", () => {
 		appStore.setDocumentInfo({ Uris: [1] });
 
@@ -80,7 +84,39 @@ describe("View Trim Objects", function() {
 			try {
 				expect(wrapper.find("li").length).toEqual(2);
 				expect(recordQuery.q).toEqual("unkUri:1,2");
-				expect(recordQuery.properties).toEqual("ToolTip");
+				expect(recordQuery.properties).toEqual("ToolTip,RecordMessageId");
+				expect(wrapper.state().itemNotYetFiled).toBeTruthy();
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("item has been filed", (done) => {
+		appStore.setDocumentInfo({ Uris: [1, 2] });
+
+		searchResults = [
+			{ Uri: 1, NameString: "Document", ToolTip: "Doc" } as IRecord,
+			{
+				Uri: 2,
+				NameString: "Document 5",
+				ToolTip: "Doc 5",
+				MessageId: { Value: "test" },
+			} as IRecord,
+		];
+
+		const wrapper = shallow<ViewTrimObjects>(
+			<ViewTrimObjects
+				trimType={BaseObjectTypes.Record}
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+			/>
+		);
+
+		setTimeout(() => {
+			try {
+				expect(wrapper.state().itemNotYetFiled).toBeFalsy();
 				done();
 			} catch (e) {
 				done.fail(e);

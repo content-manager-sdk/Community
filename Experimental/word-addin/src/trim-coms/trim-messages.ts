@@ -28,6 +28,7 @@ export class TrimMessages {
 	public web_filing = ""; // tslint:disable-line
 	public web_attachmentsList = ""; // tslint:disable-line
 	public web_noAttachments = ""; // tslint:disable-line
+	public web_fileFullEmail = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

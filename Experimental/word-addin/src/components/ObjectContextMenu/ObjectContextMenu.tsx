@@ -132,14 +132,14 @@ export class ObjectContextMenu extends React.Component<
 				}
 				this.callCommandComplete(item.key);
 			} else if (item.key === "getGlobalProperties") {
-				appStore.setStatus("STARTING");
+				appStore.setSpinning(true);
 
 				trimConnector!.getGlobalUserOptions("ViewPane").then((data) => {
 					this.callCommandComplete(item.key);
-					appStore.setStatus("WAITING");
+					appStore.setSpinning(false);
 				});
 			} else if (item.data.NeedsAnObject) {
-				appStore.setStatus("STARTING");
+				appStore.setSpinning(true);
 				const me = this;
 				wordConnector!.saveDocument().then(() => {
 					const runAction = (fileName: string) => {
@@ -159,7 +159,7 @@ export class ObjectContextMenu extends React.Component<
 									me._dismissMessage();
 								}, 3000);
 								this.callCommandComplete(item.key);
-								appStore.setStatus("WAITING");
+								appStore.setSpinning(false);
 							});
 					};
 
@@ -211,11 +211,11 @@ export class ObjectContextMenu extends React.Component<
 										);
 									});
 							} else {
-								appStore.setStatus("STARTING");
+								appStore.setSpinning(true);
 								trimConnector!
 									.createRelationship(appStore.RecordUri, record.Uri, rel.Name)
 									.then(() => {
-										appStore.setStatus("WAITING");
+										appStore.setSpinning(false);
 									})
 									.catch((error) => {
 										appStore.setError(error);

@@ -114,6 +114,9 @@ export class BootStrap extends React.Component<
 			>
 				<div>
 					{appStore.status === "ERROR" && <ErrorDisplay />}
+					{appStore.spinning && appStore!.status !== "STARTING" && (
+						<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
+					)}
 
 					{this.isAttachments() ? (
 						<OutlookAttachments />
@@ -128,8 +131,11 @@ export class BootStrap extends React.Component<
 						/>
 					) : (
 						<React.Fragment>
-							{appStore!.status === "STARTING" && (
-								<Spinner size={SpinnerSize.large} />
+							{appStore!.status === "STARTING" && !appStore.spinning && (
+								<Spinner
+									className="trim-top-spinner"
+									size={SpinnerSize.large}
+								/>
 							)}
 							<MainApp className="trim-main" />
 						</React.Fragment>

@@ -9,10 +9,18 @@ import ViewTrimObjects from "./ViewTrimObjects/ViewTrimObjects";
 describe("MainApp", function() {
 	it("Shows New Record component when no Record Uri found", function(this: any) {
 		const wrapper = shallow<MainApp>(
-			<MainApp appStore={{ documentInfo: { Uris: [] }, Id: "my id" }} />
+			<MainApp appStore={{ documentInfo: { Uris: [] }, status: "WAITING" }} />
 		);
 
 		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
+	});
+
+	it("Does not show New Record component when no Record Uri found", function(this: any) {
+		const wrapper = shallow<MainApp>(
+			<MainApp appStore={{ documentInfo: { Uris: [] }, status: "STARTING" }} />
+		);
+
+		expect(wrapper.find(NewRecord).exists()).toBeFalsy();
 	});
 
 	it("Shows Existing Record component when no Record Uri found", function(this: any) {

@@ -122,7 +122,7 @@ export class TrimSearchDialog
 		return (
 			<div className="dialog-top">
 				{isRunning === true ? (
-					<Spinner size={SpinnerSize.large} />
+					<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
 				) : (
 					<React.Fragment>
 						<SearchBar

@@ -381,7 +381,7 @@ export class TrimObjectSearchList extends React.Component<
 							/>
 						)}
 						{isRunning === true ? (
-							<Spinner size={SpinnerSize.large} />
+							<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
 						) : (
 							<List
 								items={items}

@@ -118,6 +118,10 @@ export interface ITrimDetailsObject {
 	[x: string]: any;
 }
 
+export interface IRecord extends ITrimMainObject {
+	MessageId: ITrimString;
+}
+
 export interface ILocation extends ITrimMainObject {
 	FullFormattedName: ITrimString;
 }
@@ -901,6 +905,7 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_attachmentsList = "Records related to this item";
 					data.Messages.web_noAttachments =
 						"There are no attachments on this item.  Please use 'Record' to create or view this item in Content Manager.";
+					data.Messages.web_fileFullEmail = "File full email";
 					this.setCache("messages", data.Messages);
 
 					//this._messageCache = data.Messages;

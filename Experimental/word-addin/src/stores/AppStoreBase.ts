@@ -18,6 +18,7 @@ export interface IUserProfile {
 }
 
 export interface IAppStore {
+	spinning: Boolean;
 	status: string;
 	UserProfile?: IUserProfile;
 	errorMessage?: string;
@@ -32,6 +33,7 @@ export interface IAppStore {
 	getWebClientUrl(uri: number, containerSearch?: boolean): void;
 	setDocumentInfo(documentInfo: IDriveInformation): void;
 	setStatus(status: string): void;
+	setSpinning(on: Boolean): void;
 	deferFetchDriveInfo(): void;
 	createRecordFromStyle(
 		checkinStyle: number,
@@ -61,6 +63,7 @@ export class AppStoreBase implements IAppStore {
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
 	@observable public status: string = "STARTING";
+	@observable public spinning: Boolean;
 	@observable public WebUrl: string;
 	@observable public FileName: string;
 
@@ -133,10 +136,13 @@ export class AppStoreBase implements IAppStore {
 									.getRecordUrisFromItem(database.Id)
 									.then((uris: number[]) => {
 										self.setDocumentInfo({ ...this.documentInfo, Uris: uris });
+										self.setStatus("WAITING");
 									});
+							})
+							.catch((error) => {
+								self.setError(error, "get mai items");
 							});
 						//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
-						self.setStatus("WAITING");
 					}
 				} else {
 					self.setStatus("WAITING");
@@ -173,14 +179,6 @@ export class AppStoreBase implements IAppStore {
 			return this.documentInfo.Uris[0];
 		}
 		return 0;
-	}
-
-	@computed
-	get DriveId(): string {
-		if (this.documentInfo != null) {
-			return this.documentInfo.Id;
-		}
-		return "";
 	}
 
 	@action.bound
@@ -270,6 +268,11 @@ export class AppStoreBase implements IAppStore {
 	}
 
 	@action.bound
+	public setSpinning = (on: Boolean) => {
+		this.spinning = on;
+	};
+
+	@action.bound
 	public setStatus = (status: string) => {
 		this.status = status;
 	};
@@ -302,6 +305,7 @@ export class AppStoreBase implements IAppStore {
 
 		this.errorBody = error;
 		this.status = "ERROR";
+		this.spinning = false;
 	};
 
 	@action.bound
