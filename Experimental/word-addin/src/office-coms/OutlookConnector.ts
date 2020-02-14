@@ -105,13 +105,16 @@ export class OutlookConnector extends OfficeConnector
 
 	public getAttachments(): IOutlookAttachment[] {
 		const item = Office.context.mailbox.item;
-		console.log(item.itemId);
+
 		const attachments: IOutlookAttachment[] = [];
 		if (item.attachments.length > 0) {
 			for (let i = 0; i < item.attachments.length; i++) {
 				const attachment = item.attachments[i];
 				if (attachment.attachmentType === "file") {
-					attachments.push({ Id: attachment.id, Name: attachment.name });
+					attachments.push({
+						Id: attachment.id.replace("/", "-"),
+						Name: attachment.name,
+					});
 				}
 			}
 		}
@@ -416,6 +419,91 @@ export class OutlookConnector extends OfficeConnector
 		mailbox.makeEwsRequestAsync(xml, (result: any) => {});
 	}
 
+	getRecordUrisFromItem(databaseId: string): Promise<number[]> {
+		return new Promise<number[]>((resolve, reject) => {
+			Office.context.mailbox.getCallbackTokenAsync(
+				{ isRest: true },
+				(result: any) => {
+					if (result.status === "succeeded") {
+						var accessToken = result.value;
+						this.getWebUrl()
+							.then((itemId) => {
+								const getMessageUrl =
+									Office.context.mailbox.restUrl +
+									"/v2.0/me/messages/" +
+									itemId +
+									"?$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN' OR PropertyId eq 'String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri' OR PropertyId eq 'String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset')";
+
+								const options = {
+									headers: {
+										Accept: "application/json",
+										Authorization: `Bearer ${accessToken}`,
+									},
+									method: "GET",
+									url: getMessageUrl,
+								};
+								Axios(options).then((response) => {
+									const uris1: number[] = [];
+									const uris2: number[] = [];
+									let urnDatabaseId: string = "";
+									if (response.data.SingleValueExtendedProperties) {
+										response.data.SingleValueExtendedProperties.forEach(
+											(prop: { PropertyId: string; Value: string }) => {
+												if (
+													prop.PropertyId ===
+													"String {0708434c-2e95-41c8-992f-8ee34b796fec} Name HPRM_RECORD_URN"
+												) {
+													prop.Value.split(";").forEach((propVal) => {
+														const uri = Number(propVal.split("/").pop());
+														const db = propVal.split(":")[1].split("/")[0];
+														if (db === databaseId) {
+															uris1.push(Number(propVal.split("/").pop()));
+														}
+													});
+												}
+
+												if (
+													prop.PropertyId ===
+													"String {00020386-0000-0000-c000-000000000046} Name HPTrimRecordUri"
+												) {
+													prop.Value.split(",").forEach((uriString) => {
+														const uri = Number(uriString);
+
+														uris2.push(uri);
+													});
+												}
+
+												if (
+													prop.PropertyId ===
+													"String {00020386-0000-0000-c000-000000000046} Name HPTrimDataset"
+												) {
+													urnDatabaseId = prop.Value;
+												}
+											}
+										);
+
+										if (databaseId === urnDatabaseId) {
+											uris2.forEach((uri) => {
+												if (!uris1.includes(uri)) {
+													uris1.push(uri);
+												}
+											});
+										}
+										resolve(uris1);
+									}
+								});
+							})
+							.catch((e) => {
+								reject(e);
+							});
+					} else {
+						reject(result);
+					}
+				}
+			);
+		});
+	}
+
 	setAutoOpen(
 		autoOpen: boolean,
 		recordUrn?: string,
@@ -443,7 +531,14 @@ export class OutlookConnector extends OfficeConnector
 
 				const getMessageUrl =
 					Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
-				let idTokens = recordUrn!.split("/");
+				const uris: string[] = [];
+				let dbid;
+				recordUrn!.split(";").forEach((urn) => {
+					let idTokens = urn!.split("/");
+					uris.push(idTokens.pop()!);
+					dbid = idTokens[0].split(":").pop();
+				});
+
 				let data: any = {
 					SingleValueExtendedProperties: [
 						{
@@ -454,12 +549,12 @@ export class OutlookConnector extends OfficeConnector
 						{
 							PropertyId:
 								"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
-							Value: idTokens.pop(),
+							Value: uris.join(","),
 						},
 						{
 							PropertyId:
 								"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
-							Value: idTokens[0].split(":").pop(),
+							Value: dbid,
 						},
 					],
 				};

@@ -244,15 +244,18 @@ namespace OneDriveAuthPlugin
 
 						dbid = idTokens.First().Split(':').Last();
 
-						foreach(string s in prop.Value.Split(','))
+						foreach (string s in prop.Value.Split(',', ';'))
 						{
 							long recordUri;
 							if (long.TryParse(s.Split('/').Last().Trim(), out recordUri))
 							{
-								recordUris.Add(recordUri);
+								if (!recordUris.Contains(recordUri))
+								{
+									recordUris.Add(recordUri);
+								}
 							}
 						}
-						
+
 
 
 
@@ -273,7 +276,10 @@ namespace OneDriveAuthPlugin
 							long recordUri;
 							if (long.TryParse(s.Trim(), out recordUri))
 							{
-								recordUris.Add(recordUri);
+								if (!recordUris.Contains(recordUri))
+								{
+									recordUris.Add(recordUri);
+								}
 							}
 						}
 					}
@@ -322,7 +328,7 @@ namespace OneDriveAuthPlugin
 					recordUris = await getEmailLinkUri(request.WebUrl, token);
 				}
 
-				if (request.IsEmail && recordUris.Length > 0)
+				if (request.IsEmail && recordUris.Length == 0)
 				{
 					var emailUrl = GraphApiHelper.GetEMLUrl(request.WebUrl);
 
@@ -410,7 +416,7 @@ namespace OneDriveAuthPlugin
 			{
 
 
-					registeredFile.Uri = recordUris;
+				registeredFile.Uri = recordUris;
 
 			}
 

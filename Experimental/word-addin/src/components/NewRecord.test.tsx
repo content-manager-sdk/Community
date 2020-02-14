@@ -13,8 +13,10 @@ import { ITrimMainObject } from "../trim-coms/trim-connector";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "../office-coms/office-connector";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import AppStoreWord from "../stores/AppStoreWord";
 
 import RecordTypePicker from "../components/RecordTypePicker/RecordTypePicker";
+import { IGetRecordUriResponse } from "../office-coms/word-connector";
 
 describe("New Record layout", function() {
 	let testRecordUrn = "";
@@ -29,6 +31,8 @@ describe("New Record layout", function() {
 	let populatePages = false;
 	let rejectRegister = false;
 	let noFormNeeded = false;
+	let recordPropsTest;
+	let recordUriTest = 0;
 
 	const pageItemsWithTitle = {
 		NeedsDataEntryForm: true,
@@ -109,7 +113,9 @@ describe("New Record layout", function() {
 		rejectRegister = false;
 		mockStore.documentInfo.EmailPath = null;
 		noFormNeeded = false;
-		mockStore.RecordUri = 0;
+		//mockStore.RecordUri = 0;
+		recordUriTest = 0;
+		recordPropsTest = undefined;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -174,28 +180,50 @@ describe("New Record layout", function() {
 		});
 	};
 
-	const mockStore = {
-		RecordUri: 0,
-		RecordProps: {},
-		messages: {
-			web_Register: "Register",
-			web_SelectRecordType: "Select a Record Type",
-			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
-		},
-		documentInfo: { Options: {}, URN: "test_urn", EmailPath: null },
-		createRecord: (recordUri, recordProps) => {
-			mockStore.RecordUri = recordUri;
-			mockStore.RecordProps = recordProps;
+	// const mockStore = {
+	// 	RecordUri: 0,
+	// 	RecordProps: {},
+	// 	messages: {
+	// 		web_Register: "Register",
+	// 		web_SelectRecordType: "Select a Record Type",
+	// 		web_RecordTypeRequiresForm: "NeedsDataEntryForm",
+	// 	},
+	// 	documentInfo: { Options: {}, URN: "test_urn", EmailPath: null },
+	// 	createRecord: (recordUri, recordProps) => {
+	// 		mockStore.RecordUri = recordUri;
+	// 		mockStore.RecordProps = recordProps;
 
-			return new Promise(function(resolve) {
-				resolve();
-			});
-		},
-		FileName: "default title",
-		setError: (message: string) => {
-			errorMessage = message;
-		},
+	// 		return new Promise(function(resolve) {
+	// 			resolve();
+	// 		});
+	// 	},
+	// 	FileName: "default title",
+	// 	setError: (message: string) => {
+	// 		errorMessage = message;
+	// 	},
+	// };
+
+	let mockStore = new AppStoreWord(null, null);
+	mockStore.setDocumentInfo({ Uris: [], URN: "test_urn" });
+	mockStore.messages = {
+		web_Register: "Register",
+		web_SelectRecordType: "Select a Record Type",
+		web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 	};
+	mockStore.createRecord = function(recordUri, recordProps) {
+		recordUriTest = recordUri;
+		recordPropsTest = recordProps;
+
+		return new Promise(function(resolve) {
+			resolve({ Uri: 5678 });
+		});
+	}.bind(mockStore);
+
+	mockStore.setFileName("default title");
+
+	mockStore.setError = function(message: string) {
+		errorMessage = message;
+	}.bind(mockStore);
 
 	class MockWordConnector implements IOfficeConnector {
 		insertLink(textToInsert: string, url: string): void {
@@ -224,17 +252,13 @@ describe("New Record layout", function() {
 		getAccessToken(): Promise<string> {
 			throw new Error("Method not implemented.");
 		}
-		setUri(
-			uri: number
-		): Promise<import("../office-coms/word-connector").IGetRecordUriResponse> {
+		setUri(uri: number): Promise<IGetRecordUriResponse> {
 			throw new Error("Method not implemented.");
 		}
 		getWebUrl(): Promise<string> {
 			throw new Error("Method not implemented.");
 		}
-		getUri(): Promise<
-			import("../office-coms/word-connector").IGetRecordUriResponse
-		> {
+		getUri(): Promise<IGetRecordUriResponse> {
 			throw new Error("Method not implemented.");
 		}
 	}
@@ -288,7 +312,7 @@ describe("New Record layout", function() {
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		expect(mockStore.RecordUri).toEqual(1);
+		expect(recordUriTest).toEqual(1);
 	});
 
 	it("calls register in TRIM for non Record object", (done) => {
@@ -332,8 +356,8 @@ describe("New Record layout", function() {
 
 		setTimeout(() => {
 			try {
-				expect(mockStore.RecordUri).toEqual(4);
-				expect(mockStore.RecordProps["DataEntryFormDefinition"]).toBeTruthy();
+				expect(recordUriTest).toEqual(4);
+				expect(recordPropsTest["DataEntryFormDefinition"]).toBeTruthy();
 				done();
 			} catch (e) {
 				done.fail(e);
@@ -451,9 +475,11 @@ describe("New Record layout", function() {
 
 	it("calls on created event", (done) => {
 		let eventCalled = false;
+		let createdObject;
 
-		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle, () => {
+		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle, (trimObject) => {
 			eventCalled = true;
+			createdObject = trimObject;
 		});
 
 		wrapper
@@ -471,6 +497,7 @@ describe("New Record layout", function() {
 		setTimeout(() => {
 			try {
 				expect(eventCalled).toBeTruthy();
+				expect(createdObject).toEqual({ Uri: 456 });
 			} catch (e) {
 				done.fail(e);
 			}
@@ -525,7 +552,7 @@ describe("New Record layout", function() {
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		expect(mockStore.RecordProps).toEqual({ RecordTypedTitle: "test title" });
+		expect(recordPropsTest).toEqual({ RecordTypedTitle: "test title" });
 	});
 
 	it("sends record URN to auto open", (done) => {

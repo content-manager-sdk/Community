@@ -5,9 +5,11 @@ import {
 	ILocation,
 	ITrimConnector,
 	ITrimMainObject,
+	IDatabase,
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import { OutlookConnector } from "src/office-coms/OutlookConnector";
 
 const config = (global as any).config;
 
@@ -22,6 +24,7 @@ export interface IAppStore {
 	messages: TrimMessages;
 	fetchBaseSettingFromTrim: any;
 	FileName: string;
+	documentInfo: IDriveInformation;
 	resetError(): void;
 	setError(error: any, module?: string): void;
 	setErrorMessage(message: string, ...args: string[]): void;
@@ -30,6 +33,16 @@ export interface IAppStore {
 	setDocumentInfo(documentInfo: IDriveInformation): void;
 	setStatus(status: string): void;
 	deferFetchDriveInfo(): void;
+	createRecordFromStyle(
+		checkinStyle: number,
+		properties: any,
+		fields?: any
+	): Promise<ITrimMainObject>;
+	createRecord(
+		recordType: number,
+		properties: any,
+		fields?: any
+	): Promise<ITrimMainObject>;
 }
 
 export class AppStoreBase implements IAppStore {
@@ -114,6 +127,16 @@ export class AppStoreBase implements IAppStore {
 								self.setError(error, "fetch base settings for dialog");
 							});
 					} else {
+						this.trimConnector
+							.getDatabaseProperties()
+							.then((database: IDatabase) => {
+								(this.wordConnector as OutlookConnector)
+									.getRecordUrisFromItem(database.Id)
+									.then((uris: number[]) => {
+										self.setDocumentInfo({ ...this.documentInfo, Uris: uris });
+									});
+							});
+						//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
 						self.setStatus("WAITING");
 					}
 				} else {
@@ -170,7 +193,7 @@ export class AppStoreBase implements IAppStore {
 		checkinStyle: number,
 		properties: any,
 		fields?: any
-	): Promise<void> => {
+	): Promise<ITrimMainObject> => {
 		return this.createRecordInternal(
 			{ CreateFromCheckinStyle: checkinStyle, ...properties },
 			fields
@@ -181,7 +204,7 @@ export class AppStoreBase implements IAppStore {
 		recordType: number,
 		properties: any,
 		fields?: any
-	): Promise<void> => {
+	): Promise<ITrimMainObject> => {
 		return this.createRecordInternal(
 			{ RecordRecordType: recordType, ...properties },
 			fields
@@ -191,9 +214,8 @@ export class AppStoreBase implements IAppStore {
 	private createRecordInternal = (
 		properties: any,
 		fields?: any
-	): Promise<void> => {
+	): Promise<ITrimMainObject> => {
 		return new Promise((resolve, reject) => {
-			//	this.setStatus("STARTING");
 			this.getFileToSave().then((fileName) => {
 				fields = fields || {};
 				fields.DriveID = this.documentInfo.Id;
@@ -220,7 +242,7 @@ export class AppStoreBase implements IAppStore {
 							});
 						}
 						this.setStatus("WAITING");
-						resolve();
+						resolve(newRecord);
 					})
 					.catch((error) => {
 						this.setError(error, "create record");

@@ -1,0 +1,64 @@
+{
+	"@odata.context": "https://outlook.office365.com/api/v2.0/$metadata#Me/Messages(SingleValueExtendedProperties())/$entity",
+	"@odata.id": "https://outlook.office365.com/api/v2.0/Users('a84bb61c-32eb-4aaa-af83-b01e691eb894@08363ee4-6592-4325-9d5a-5a25e00d482b')/Messages('AAMkADJlMTUzYmY1LWJiNTMtNGMyNS1hNjhjLTUwZGZiMjQ0YmJkNABGAAAAAADmFIH7IW9TSrtTBZjbYsfzBwCjhKCg59RNQ4YnJZN5sQewAAAAAAEMAACjhKCg59RNQ4YnJZN5sQewAABuVJkcAAA=')",
+	"@odata.etag": "W/\"CQAAABYAAACjhKCg59RNQ4YnJZN5sQewAABu2hED\"",
+	"Id": "AAMkADJlMTUzYmY1LWJiNTMtNGMyNS1hNjhjLTUwZGZiMjQ0YmJkNABGAAAAAADmFIH7IW9TSrtTBZjbYsfzBwCjhKCg59RNQ4YnJZN5sQewAAAAAAEMAACjhKCg59RNQ4YnJZN5sQewAABuVJkcAAA=",
+	"CreatedDateTime": "2020-02-13T02:32:56Z",
+	"LastModifiedDateTime": "2020-02-13T08:39:13Z",
+	"ChangeKey": "CQAAABYAAACjhKCg59RNQ4YnJZN5sQewAABu2hED",
+	"Categories": [],
+	"ReceivedDateTime": "2020-02-13T02:32:57Z",
+	"SentDateTime": "2020-02-13T02:29:41Z",
+	"HasAttachments": true,
+	"InternetMessageId": "<MWHPR18MB1645475126D4A79B3E80720CF31A0@MWHPR18MB1645.namprd18.prod.outlook.com>",
+	"Subject": "CM: attach 2",
+	"BodyPreview": "",
+	"Importance": "Normal",
+	"ParentFolderId": "AAMkADJlMTUzYmY1LWJiNTMtNGMyNS1hNjhjLTUwZGZiMjQ0YmJkNAAuAAAAAADmFIH7IW9TSrtTBZjbYsfzAQCjhKCg59RNQ4YnJZN5sQewAAAAAAEMAAA=",
+	"ConversationId": "AAQkADJlMTUzYmY1LWJiNTMtNGMyNS1hNjhjLTUwZGZiMjQ0YmJkNAAQALpCWfo5I06XiikYjMp7IB8=",
+	"ConversationIndex": "AdXiSQ9sukJZ+jkjTpeKKRiMynsgHw==",
+	"IsDeliveryReceiptRequested": null,
+	"IsReadReceiptRequested": false,
+	"IsRead": false,
+	"IsDraft": false,
+	"WebLink": "https://outlook.office365.com/owa/?ItemID=AAMkADJlMTUzYmY1LWJiNTMtNGMyNS1hNjhjLTUwZGZiMjQ0YmJkNABGAAAAAADmFIH7IW9TSrtTBZjbYsfzBwCjhKCg59RNQ4YnJZN5sQewAAAAAAEMAACjhKCg59RNQ4YnJZN5sQewAABuVJkcAAA%3D&exvsurl=1&viewmodel=ReadMessageItem",
+	"InferenceClassification": "Focused",
+	"Body": {
+		"ContentType": "HTML",
+		"Content": "<html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta content=\"text/html; charset=iso-8859-1\">\r\n<style type=\"text/css\" style=\"display:none\">\r\n<!--\r\np\r\n\t{margin-top:0;\r\n\tmargin-bottom:0}\r\n-->\r\n</style>\r\n</head>\r\n<body dir=\"ltr\">\r\n<div style=\"font-family:Calibri,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">\r\n<br>\r\n</div>\r\n</body>\r\n</html>\r\n"
+	},
+	"Sender": {
+		"EmailAddress": {
+			"Name": "David Churchland",
+			"Address": "david.churchland@microfocus.com"
+		}
+	},
+	"From": {
+		"EmailAddress": {
+			"Name": "David Churchland",
+			"Address": "david.churchland@microfocus.com"
+		}
+	},
+	"ToRecipients": [
+		{
+			"EmailAddress": {
+				"Name": "David Churchland",
+				"Address": "dchurchland@cmofficedev.onmicrosoft.com"
+			}
+		}
+	],
+	"CcRecipients": [],
+	"BccRecipients": [],
+	"ReplyTo": [],
+	"Flag": { "FlagStatus": "NotFlagged" },
+	"SingleValueExtendedProperties": [
+		{
+			"PropertyId": "String {00020386-0000-0000-c000-000000000046} Name HPTrimRecordUri",
+			"Value": "9001849760,9001849761,9001849762"
+		},
+		{
+			"PropertyId": "String {00020386-0000-0000-c000-000000000046} Name HPTrimDataset",
+			"Value": "P1"
+		}
+	]
+}

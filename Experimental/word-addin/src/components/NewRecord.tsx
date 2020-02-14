@@ -10,9 +10,9 @@ import {
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "src/office-coms/office-connector";
-
 import { Spinner, SpinnerSize } from "office-ui-fabric-react";
 import RecordTypePicker from "./RecordTypePicker/RecordTypePicker";
+import { IAppStore } from "src/stores/AppStoreBase";
 
 interface INewRecordState {
 	formDefinition: any;
@@ -22,7 +22,7 @@ interface INewRecordState {
 }
 
 interface INewRecordProps {
-	appStore?: any;
+	appStore?: IAppStore;
 	trimConnector?: ITrimConnector;
 	wordConnector?: IOfficeConnector;
 	className?: string;
@@ -80,12 +80,12 @@ export class NewRecord extends React.Component<
 			const getPropsSheet = checkinUsingStyle
 				? trimConnector!.getPropertySheetFromStyle(
 						this.recordTypeUri,
-						appStore.documentInfo.EmailPath
+						appStore!.documentInfo.EmailPath
 				  )
 				: trimConnector!.getPropertySheet(
 						trimType || BaseObjectTypes.Record,
 						this.recordTypeUri,
-						appStore.documentInfo.EmailPath
+						appStore!.documentInfo.EmailPath
 				  );
 
 			getPropsSheet
@@ -108,7 +108,7 @@ export class NewRecord extends React.Component<
 							) {
 								const pageItem = page.PageItems[itemCounter];
 								if (pageItem.Name === "RecordTypedTitle") {
-									pageItem.Value = pageItem.Value || appStore.FileName;
+									pageItem.Value = pageItem.Value || appStore!.FileName;
 								}
 							}
 						}
@@ -126,7 +126,9 @@ export class NewRecord extends React.Component<
 						this.doSave();
 					}
 				})
-				.catch(appStore.setError);
+				.catch((e) => {
+					appStore!.setError(e);
+				});
 		}
 	}
 
@@ -149,7 +151,7 @@ export class NewRecord extends React.Component<
 
 						this.setPropertySheet();
 					} else {
-						appStore.setError(appStore.messages.web_RecordTypeRequiresForm);
+						appStore!.setError(appStore!.messages.web_RecordTypeRequiresForm);
 						this.setState({ processing: false });
 					}
 				});
@@ -161,12 +163,12 @@ export class NewRecord extends React.Component<
 		}
 	};
 
-	private saveFinished = (saved: boolean) => {
+	private saveFinished = (saved: boolean, trimObject?: ITrimMainObject) => {
 		const { onTrimObjectCreated, onAfterSave } = this.props;
 		this.setState({ processing: false });
 		if (saved) {
 			if (onTrimObjectCreated) {
-				onTrimObjectCreated();
+				onTrimObjectCreated(trimObject);
 			}
 		}
 
@@ -182,42 +184,45 @@ export class NewRecord extends React.Component<
 			trimConnector,
 			trimType,
 			folderId,
-
 			bypassUpdateEmailSubject,
 		} = this.props;
 
 		const { checkinUsingStyle } = this.state;
-
+		let newTrimObject: ITrimMainObject;
 		this.setState({ processing: true });
 		if (trimType === BaseObjectTypes.Record) {
 			const createRec = checkinUsingStyle
-				? appStore.createRecordFromStyle(
+				? appStore!.createRecordFromStyle(
 						this.recordTypeUri,
 						this.recordProps,
 						this.recordFields
 				  )
-				: appStore.createRecord(
+				: appStore!.createRecord(
 						this.recordTypeUri,
 						this.recordProps,
 						this.recordFields
 				  );
 
 			createRec
-				.then(() => {
-					return trimConnector!.getDatabaseProperties();
+				.then((trimObject) => {
+					newTrimObject = trimObject;
+					if (!bypassUpdateEmailSubject) {
+						return trimConnector!.getDatabaseProperties();
+					} else {
+						return Promise.reject("saved");
+					}
 				})
 				.then((item: IDatabase) => {
-					if (!bypassUpdateEmailSubject) {
-						wordConnector!.setAutoOpen(
-							true,
-							appStore.documentInfo.URN,
-							item.EmailSubjectPrefix
-						);
-					}
-					this.saveFinished(true);
+					wordConnector!.setAutoOpen(
+						true,
+						appStore!.documentInfo.URN,
+						item.EmailSubjectPrefix
+					);
+
+					this.saveFinished(true, newTrimObject);
 				})
-				.catch(() => {
-					this.saveFinished(false);
+				.catch((value) => {
+					this.saveFinished(value === "saved", newTrimObject);
 				});
 		} else {
 			const props = {
@@ -233,7 +238,7 @@ export class NewRecord extends React.Component<
 				.saveToTrim(trimType, props, this.recordFields)
 				.then((trimObject: ITrimMainObject) => {
 					if (folderId === "cm_auto") {
-						this.saveFinished(true);
+						this.saveFinished(true, trimObject);
 					} else {
 						const placeBody = folderId
 							? {
@@ -249,17 +254,17 @@ export class NewRecord extends React.Component<
 						trimConnector!
 							.saveToTrim(BaseObjectTypes.CheckinPlace, placeBody, {})
 							.then((trimObject) => {
-								this.saveFinished(true);
+								this.saveFinished(true, trimObject);
 							})
 							.catch((e) => {
 								this.saveFinished(false);
-								appStore.setError(e);
+								appStore!.setError(e);
 							});
 					}
 				})
 				.catch((e) => {
 					this.saveFinished(false);
-					appStore.setError(e);
+					appStore!.setError(e);
 				});
 		}
 	};
@@ -311,7 +316,7 @@ export class NewRecord extends React.Component<
 				});
 			}
 		}
-		let spinnerLabel = appStore.documentInfo.EmailPath;
+		let spinnerLabel = appStore!.documentInfo.EmailPath;
 		if (spinnerLabel && spinnerLabel.indexOf("\\") > -1) {
 			const tokens = spinnerLabel.split("\\");
 			spinnerLabel = tokens[tokens.length - 1];
@@ -340,7 +345,7 @@ export class NewRecord extends React.Component<
 						folderId={folderId!}
 						isLinkedFolder={isLinkedFolder!}
 						onRecordTypeSelected={this._onChange}
-						includeCheckinStyles={appStore.documentInfo.EmailPath}
+						includeCheckinStyles={!!appStore!.documentInfo.EmailPath}
 						defaultRecordType={defaultRecordType}
 					/>
 				)}
@@ -353,7 +358,7 @@ export class NewRecord extends React.Component<
 						/>
 						{formDefinition.Pages && (
 							<PrimaryButton className="trim-register" type="submit">
-								{appStore.messages.web_Register}
+								{appStore!.messages.web_Register}
 							</PrimaryButton>
 						)}
 					</div>

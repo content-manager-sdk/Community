@@ -26,6 +26,8 @@ export class TrimMessages {
 	public web_suppressDataEntryForm = ""; // tslint:disable-line
 	public web_fetching = ""; // tslint:disable-line
 	public web_filing = ""; // tslint:disable-line
+	public web_attachmentsList = ""; // tslint:disable-line
+	public web_noAttachments = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

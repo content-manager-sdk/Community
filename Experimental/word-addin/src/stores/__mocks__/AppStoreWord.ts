@@ -1,13 +1,33 @@
-import { ITrimConnector } from "../../trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	IDriveInformation,
+	ITrimMainObject,
+} from "../../trim-coms/trim-connector";
 import { IWordUrl } from "../../office-coms/office-connector";
 import { observable } from "mobx";
-import { IAppStore } from "../AppStoreBase";
+import { IAppStore, IUserProfile } from "../AppStoreBase";
+import TrimMessages from "src/trim-coms/trim-messages";
 
 export class AppStoreWord implements IAppStore {
+	createRecordFromStyle(
+		checkinStyle: number,
+		properties: any,
+		fields?: any
+	): Promise<ITrimMainObject> {
+		throw new Error("Method not implemented.");
+	}
+	createRecord(
+		recordType: number,
+		properties: any,
+		fields?: any
+	): Promise<ITrimMainObject> {
+		throw new Error("Method not implemented.");
+	}
+	public documentInfo: IDriveInformation;
 	public FileName: string;
-	UserProfile?: import("../AppStoreBase").IUserProfile | undefined;
+	UserProfile?: IUserProfile | undefined;
 	errorMessage?: string | undefined;
-	messages: import("../../trim-coms/trim-messages").TrimMessages;
+	messages: TrimMessages;
 	fetchBaseSettingFromTrim: any;
 	deferFetchDriveInfo(): void {
 		throw new Error("Method not implemented.");
@@ -27,9 +47,7 @@ export class AppStoreWord implements IAppStore {
 	getWebClientUrl(uri: number, containerSearch?: boolean | undefined): void {
 		throw new Error("Method not implemented.");
 	}
-	setDocumentInfo(
-		documentInfo: import("../../trim-coms/trim-connector").IDriveInformation
-	): void {
+	setDocumentInfo(documentInfo: IDriveInformation): void {
 		throw new Error("Method not implemented.");
 	}
 	setStatus(status: string): void {

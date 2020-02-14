@@ -1,44 +1,45 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 import NewRecord from "./NewRecord";
-import ViewTrimObject from "./ViewTrimObject/ViewTrimObject";
+import ViewTrimObjects from "./ViewTrimObjects/ViewTrimObjects";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import EditTrimObject from "./EditTrimObject/EditTrimObject";
+import { IAppStore } from "src/stores/AppStoreBase";
 
 export class MainApp extends React.Component<
 	{ appStore?: any; className?: string },
-	{ editMode: boolean }
+	{ editUri: number }
 > {
 	constructor(props: { appStore?: any; className?: string }) {
 		super(props);
 
-		this.state = { editMode: false };
+		this.state = { editUri: 0 };
 	}
 
 	public render() {
 		const { appStore, className } = this.props;
-		const { editMode } = this.state;
+		const { editUri } = this.state;
 
 		if (appStore.status === "STARTING") {
 			return null;
 		}
-		if (appStore!.RecordUri > 0) {
-			return editMode === true ? (
+
+		if ((appStore as IAppStore)!.documentInfo.Uris.length > 0) {
+			return editUri > 0 ? (
 				<EditTrimObject
 					trimType={BaseObjectTypes.Record}
 					className={className}
-					recordUri={appStore!.RecordUri}
+					recordUri={editUri}
 					onSave={() => {
-						this.setState({ editMode: false });
+						this.setState({ editUri: 0 });
 					}}
 				/>
 			) : (
-				<ViewTrimObject
+				<ViewTrimObjects
 					className={className}
-					recordUri={appStore!.RecordUri}
 					trimType={BaseObjectTypes.Record}
-					onEdit={() => {
-						this.setState({ editMode: true });
+					onEdit={(uri: number) => {
+						this.setState({ editUri: uri });
 					}}
 				/>
 			);

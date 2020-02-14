@@ -24,7 +24,7 @@ interface ViewTrimObjectProps {
 	wordConnector?: IOfficeConnector;
 	className?: string;
 	recordUri: number;
-	onEdit?: () => void;
+	onEdit?: (uri: number) => void;
 	trimType: BaseObjectTypes;
 }
 
@@ -67,7 +67,7 @@ export class ViewTrimObject extends React.Component<
 	};
 
 	public render() {
-		const { className, appStore, onEdit, trimType } = this.props;
+		const { className, appStore, onEdit, trimType, recordUri } = this.props;
 
 		const { menuMessage, recordDetails } = this.state;
 
@@ -103,7 +103,7 @@ export class ViewTrimObject extends React.Component<
 											appStore.setStatus("WAITING");
 										});
 									} else if (commandKey === "edit" && onEdit) {
-										onEdit();
+										onEdit(recordUri);
 									}
 								}}
 							/>

@@ -55,52 +55,91 @@ describe("Outlook connector tests", () => {
 	const outlookConnector = new OutlookConnector();
 	const mock = new MockAdapter(axios);
 
-	it("set URN on email", (done) => {
-		let postConfig;
-		mock
-			.onPatch(`rest_url/v2.0/me/messages/rest_id`)
-			.reply(function(config: any) {
-				postConfig = config;
+	[
+		{ json: "extended_prop_this_db", uris: [9001849758, 9001849759] },
+		{
+			json: "extended_prop_from_native",
+			uris: [9001849760, 9001849761, 9001849762],
+		},
+		{ json: "extended_prop_from_native_other_db", uris: [] },
+		{ json: "extended_prop_other_db", uris: [] },
+		{ json: "extended_prop_only_this_db", uris: [9001849758, 9001849759] },
+		{ json: "extended_prop_diff_dbs2", uris: [9001849758, 900184999] },
+		{ json: "extended_prop_diff_dbs", uris: [9001849751, 9001849752] },
+	].forEach((data) => {
+		it(`gets Uris from Email Link extended property ${data.json}`, (done) => {
+			var json = require(`./${data.json}.json`);
 
-				return [200, {}];
+			mock.onGet().reply(function(config: any) {
+				return [200, json];
 			});
 
-		outlookConnector.setAutoOpen(true, "trim:N1/123", "CM:");
-		setTimeout(() => {
-			try {
-				expect(postConfig.data).toEqual(
-					JSON.stringify({
-						SingleValueExtendedProperties: [
-							{
-								PropertyId:
-									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: "trim:N1/123",
-							},
-							{
-								PropertyId:
-									"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
-								Value: "123",
-							},
-							{
-								PropertyId:
-									"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
-								Value: "N1",
-							},
-						],
-						Subject: "CM: test_subject",
-					})
-				);
-
-				expect(postConfig.headers.Authorization).toEqual("Bearer abc");
-
-				expect.assertions(2);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+			outlookConnector
+				.getRecordUrisFromItem("N1")
+				.then((uris: number[]) => {
+					expect(uris).toEqual(data.uris);
+					done();
+				})
+				.catch((e) => {
+					done.fail(e);
+				});
 		});
 	});
 
+	[
+		{ urn: "trim:N1/123", expectedUrn: "trim:N1/123", expectedUri: "123" },
+		{
+			urn: "trim:N1/123;trim:N1/124",
+			expectedUrn: "trim:N1/123;trim:N1/124",
+			expectedUri: "123,124",
+		},
+	].forEach((data) => {
+		it(`set URN on email (${data.urn})`, (done) => {
+			let postConfig;
+			mock
+				.onPatch(`rest_url/v2.0/me/messages/rest_id`)
+				.reply(function(config: any) {
+					postConfig = config;
+
+					return [200, {}];
+				});
+
+			outlookConnector.setAutoOpen(true, data.urn, "CM:");
+			setTimeout(() => {
+				try {
+					expect(postConfig.data).toEqual(
+						JSON.stringify({
+							SingleValueExtendedProperties: [
+								{
+									PropertyId:
+										"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
+									Value: data.expectedUrn,
+								},
+								{
+									PropertyId:
+										"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+									Value: data.expectedUri,
+								},
+								{
+									PropertyId:
+										"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+									Value: "N1",
+								},
+							],
+							Subject: "CM: test_subject",
+						})
+					);
+
+					expect(postConfig.headers.Authorization).toEqual("Bearer abc");
+
+					expect.assertions(2);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			});
+		});
+	});
 	it("not duplicate prefix", (done) => {
 		Office.context.mailbox.item.subject = "CM: test_subject";
 

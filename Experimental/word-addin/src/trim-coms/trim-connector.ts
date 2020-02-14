@@ -182,6 +182,7 @@ export interface ISearchOptions {
 export interface IDatabase {
 	CurrencySymbol: string;
 	EmailSubjectPrefix: string;
+	Id: string;
 }
 
 export interface IDataEntryForm {
@@ -278,7 +279,6 @@ export interface ITrimConnector {
 export class TrimConnector implements ITrimConnector {
 	private CancelToken = Axios.CancelToken;
 	private source = this.CancelToken.source();
-	private _databaseProperties: IDatabase;
 
 	getUseCheckinStyles(): Boolean {
 		const useCheckinStyles = this.getFromCache("use-checkin-styles");
@@ -372,9 +372,10 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public getDatabaseProperties(): Promise<IDatabase> {
-		if (this._databaseProperties) {
+		const cachedOptions = this.getFromCache("database-options");
+		if (cachedOptions) {
 			return new Promise((resolve) => {
-				resolve(this._databaseProperties);
+				resolve(cachedOptions);
 			});
 		} else {
 			return this.makeRequest(
@@ -382,7 +383,8 @@ export class TrimConnector implements ITrimConnector {
 					path: "Database",
 					method: "get",
 					data: {
-						properties: "DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix",
+						properties:
+							"DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix,DatabaseId",
 					},
 				},
 				(data: any) => {
@@ -396,8 +398,8 @@ export class TrimConnector implements ITrimConnector {
 							databaseProperties[key as string] = data.Results[0][key].Value;
 						}
 					}
-
-					return (this._databaseProperties = databaseProperties as IDatabase);
+					this.setCache("database-options", databaseProperties);
+					return databaseProperties;
 				}
 			);
 		}
@@ -897,6 +899,9 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_attachmentName = "Attachment Name";
 					data.Messages.web_fetching = "Fetching";
 					data.Messages.web_filing = "Filing";
+					data.Messages.web_attachmentsList = "Records related to this item";
+					data.Messages.web_noAttachments =
+						"There are no attachments on this item.  Please use 'Record' to create or view this item in Content Manager.";
 					this.setCache("messages", data.Messages);
 
 					//this._messageCache = data.Messages;

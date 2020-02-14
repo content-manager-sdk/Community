@@ -349,6 +349,24 @@ describe("Test basic setup from Trim", () => {
 			}
 		});
 	});
+
+	it("returns record from create", (done) => {
+		expect.assertions(1);
+
+		appStore
+			.createRecord(2, {}, { Speed: 20 })
+			.then((trimMainObject) => {
+				try {
+					expect(trimMainObject.Uri).toBe(567);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			})
+			.catch((e) => {
+				done.fail(e);
+			});
+	});
 });
 
 describe("Test operation", () => {
