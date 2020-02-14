@@ -24,7 +24,10 @@ export class MainApp extends React.Component<
 			return null;
 		}
 
-		if ((appStore as IAppStore)!.documentInfo.Uris.length > 0) {
+		if (
+			(appStore as IAppStore)!.documentInfo.Uris &&
+			(appStore as IAppStore)!.documentInfo.Uris.length > 0
+		) {
 			return editUri > 0 ? (
 				<EditTrimObject
 					trimType={BaseObjectTypes.Record}
@@ -43,7 +46,7 @@ export class MainApp extends React.Component<
 					}}
 				/>
 			);
-		} else if (appStore!.DriveId !== "") {
+		} else if (appStore!.status === "WAITING") {
 			return (
 				<NewRecord className={className} trimType={BaseObjectTypes.Record} />
 			);
