@@ -8,6 +8,7 @@ import TrimConnector, {
 	IObjectDetails,
 	ITrimMainObject,
 	IDriveActionInformation,
+	IEnumDetails,
 } from "../../trim-coms/trim-connector";
 import { CommandIds } from "../../trim-coms/trim-command-ids";
 import {
@@ -152,6 +153,12 @@ describe("Object Context Menu", () => {
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
+	trimConnector.getEnum = function() {
+		return new Promise<IEnumDetails[]>(function(resolve) {
+			resolve([{ Name: "Copy", Caption: "Copy" }]);
+		});
+	}.bind(trimConnector);
+
 	trimConnector.getObjectDefinitions = function() {
 		return new Promise((resolve) => {
 			resolve([{ Id: "Record", Caption: "Record" }]);
@@ -257,15 +264,22 @@ describe("Object Context Menu", () => {
 		).toBeUndefined();
 	});
 
-	it("contain add relationship", function(this: any) {
+	it("contains add relationship", (done) => {
 		expect.assertions(1);
 		const wrapper = makeWrapper(true, true);
 
-		expect(
-			findMenu(wrapper, true).items.find((menuItem) => {
-				return menuItem.key === "addRelationshipto";
-			})
-		).toBeTruthy();
+		setTimeout(() => {
+			try {
+				expect(
+					findMenu(wrapper, true).items.find((menuItem) => {
+						return menuItem.key === "addRelationshipto";
+					})
+				).toBeTruthy();
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("not contain add relationship", function(this: any) {
@@ -332,20 +346,21 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(true, true);
 
 		wrapper.setProps({ record: { Uri: 0, TrimType: BaseObjectTypes.Record } });
-
-		const menuItem = findMenu(wrapper, true).items.find((mi) => {
-			return mi.key === "addRelationshipto";
-		}).subMenuProps.items[0];
-
-		menuItem.onClick(null, menuItem);
 		setImmediate(() => {
-			try {
-				expect(testError).toEqual("bob_needSelectedRow");
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+			const menuItem = findMenu(wrapper, true).items.find((mi) => {
+				return mi.key === "addRelationshipto";
+			}).subMenuProps.items[0];
+
+			menuItem.onClick(null, menuItem);
+			setImmediate(() => {
+				try {
+					expect(testError).toEqual("bob_needSelectedRow");
+					expect.assertions(1);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			});
 		});
 	});
 

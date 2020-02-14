@@ -10,7 +10,13 @@ namespace OneDriveConnector
 	{
 		public static string GetDriveId(this Record record)
 		{
-			return record.GetFieldValueAsString(new FieldDefinition(record.Database, "DriveID"), StringDisplayType.Default, false);
+			try
+			{
+				return record.GetFieldValueAsString(new FieldDefinition(record.Database, "DriveID"), StringDisplayType.Default, false);
+			} catch
+			{
+				return "";
+			}
 		}
 
 		public static void SetDriveId(this Record record, string id)

@@ -55,7 +55,6 @@ export class AppStoreBase implements IAppStore {
 		Uris: [],
 
 		Options: { DefaultDocumentRecordType: 0 },
-		Enums: { RecordRelationshipType: [] },
 		EmailPath: "",
 		URN: "",
 	};
@@ -236,7 +235,6 @@ export class AppStoreBase implements IAppStore {
 								//CommandDefs: newRecord.CommandDefs!,
 								Id: this.documentInfo.Id,
 								Options: this.documentInfo.Options,
-								Enums: this.documentInfo.Enums,
 								EmailPath: this.documentInfo.EmailPath,
 								URN: newRecord.URN!,
 							});

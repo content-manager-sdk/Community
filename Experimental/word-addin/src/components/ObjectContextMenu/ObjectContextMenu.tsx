@@ -27,9 +27,15 @@ interface IContextMenuProps {
 	trimType: BaseObjectTypes;
 }
 
+interface IContextMenuState {
+	menuMessage: string;
+	commandDefs: ICommandDef[];
+	items: IContextualMenuItem[];
+}
+
 export class ObjectContextMenu extends React.Component<
 	IContextMenuProps,
-	{ menuMessage: string; commandDefs: ICommandDef[] }
+	IContextMenuState
 > {
 	constructor(props: IContextMenuProps) {
 		super(props);
@@ -38,18 +44,45 @@ export class ObjectContextMenu extends React.Component<
 			this.state = {
 				menuMessage: "",
 				commandDefs: [],
+				items: [],
 			};
 		} else {
-			this.state = { menuMessage: "", commandDefs: [] };
+			this.state = { menuMessage: "", commandDefs: [], items: [] };
 		}
 	}
 
-	componentDidUpdate(prevProps: IContextMenuProps) {
+	componentDidMount() {
+		this.loadMenu();
+	}
+
+	componentDidUpdate(
+		prevProps: IContextMenuProps,
+		prevState: IContextMenuState
+	) {
+		this.loadMenu(prevProps, prevState);
+	}
+
+	private loadMenu(
+		prevProps?: IContextMenuProps,
+		prevState?: IContextMenuState
+	) {
 		const { record } = this.props;
+		const { commandDefs } = this.state;
 
 		if (record) {
-			if (!prevProps.record || prevProps.record.Uri != record.Uri) {
+			if (
+				!prevProps ||
+				!prevProps.record ||
+				prevProps.record.Uri != record.Uri
+			) {
 				this.setState({ commandDefs: record.CommandDefs! });
+			}
+
+			if (
+				!prevState ||
+				JSON.stringify(commandDefs) !== JSON.stringify(prevState.commandDefs)
+			) {
+				this.getFarItems();
 			}
 		}
 	}
@@ -152,48 +185,45 @@ export class ObjectContextMenu extends React.Component<
 		this.setState({ menuMessage: "" });
 	};
 
-	private _makeRelationshipMenu() {
+	private async _makeRelationshipMenu() {
 		const { trimConnector, record, appStore } = this.props;
+		const relationshipEnums: IEnumDetails[] = await trimConnector!.getEnum(
+			"RecordRelationshipType"
+		);
 
 		return {
 			key: "addRelationshipto",
 			text: appStore.messages.web_Add_Relationship,
 			title: appStore.messages.web_Add_RelationshipTitle,
 			subMenuProps: {
-				items: appStore.documentInfo.Enums.RecordRelationshipType.map(
-					(rel: IEnumDetails) => {
-						return {
-							key: rel.Name,
-							text: rel.Caption,
-							onClick: () => {
-								if (record.Uri < 1) {
-									trimConnector!
-										.getObjectCaption(BaseObjectTypes.Record)
-										.then((caption) => {
-											appStore.setErrorMessage(
-												"bob_needSelectedRow",
-												caption.toLowerCase()
-											);
-										});
-								} else {
-									appStore.setStatus("STARTING");
-									trimConnector!
-										.createRelationship(
-											appStore.RecordUri,
-											record.Uri,
-											rel.Name
-										)
-										.then(() => {
-											appStore.setStatus("WAITING");
-										})
-										.catch((error) => {
-											appStore.setError(error);
-										});
-								}
-							},
-						};
-					}
-				),
+				items: relationshipEnums.map((rel: IEnumDetails) => {
+					return {
+						key: rel.Name,
+						text: rel.Caption,
+						onClick: () => {
+							if (record.Uri < 1) {
+								trimConnector!
+									.getObjectCaption(BaseObjectTypes.Record)
+									.then((caption) => {
+										appStore.setErrorMessage(
+											"bob_needSelectedRow",
+											caption.toLowerCase()
+										);
+									});
+							} else {
+								appStore.setStatus("STARTING");
+								trimConnector!
+									.createRelationship(appStore.RecordUri, record.Uri, rel.Name)
+									.then(() => {
+										appStore.setStatus("WAITING");
+									})
+									.catch((error) => {
+										appStore.setError(error);
+									});
+							}
+						},
+					};
+				}),
 			},
 		};
 	}
@@ -212,14 +242,15 @@ export class ObjectContextMenu extends React.Component<
 		return lbl || commandDef.Tooltip;
 	}
 
-	private getFarItems = () => {
+	getFarItems = async (): Promise<void> => {
 		const { appStore, isInList, record, trimType } = this.props;
 		const { commandDefs } = this.state;
 
 		let checkinMenuItem: IContextualMenuItem | undefined;
 
 		if (!record) {
-			return [];
+			this.setState({ items: [] });
+			return Promise.resolve();
 		}
 
 		const menuItems = (commandDefs || [])
@@ -279,7 +310,8 @@ export class ObjectContextMenu extends React.Component<
 
 		if (isInList) {
 			if (record.TrimType === BaseObjectTypes.Record) {
-				menuItems.push(this._makeRelationshipMenu());
+				const items = await this._makeRelationshipMenu();
+				menuItems.push(items);
 			}
 		} else {
 			const checkinItem = menuItems.find((mi) => mi.key === "RecCheckIn");
@@ -352,11 +384,15 @@ export class ObjectContextMenu extends React.Component<
 			subMenuProps: { items: menuItems },
 		});
 
-		return items;
+		this.setState({ items });
+
+		return Promise.resolve();
 	};
 
 	public render() {
-		return <CommandBar items={[]} farItems={this.getFarItems()} />;
+		const { items } = this.state;
+
+		return <CommandBar items={[]} farItems={items} />;
 	}
 }
 

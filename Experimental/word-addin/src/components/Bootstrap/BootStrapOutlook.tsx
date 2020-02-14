@@ -13,6 +13,7 @@ export class BootStrapOutlook extends BootStrap {
 				this.getTrimConnector(),
 				this.getOfficeConnector()
 			);
+			this.appStore.deferFetchDriveInfo();
 		}
 		return this.appStore;
 	}

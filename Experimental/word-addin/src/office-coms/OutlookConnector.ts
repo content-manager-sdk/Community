@@ -454,7 +454,6 @@ export class OutlookConnector extends OfficeConnector
 													"String {0708434c-2e95-41c8-992f-8ee34b796fec} Name HPRM_RECORD_URN"
 												) {
 													prop.Value.split(";").forEach((propVal) => {
-														const uri = Number(propVal.split("/").pop());
 														const db = propVal.split(":")[1].split("/")[0];
 														if (db === databaseId) {
 															uris1.push(Number(propVal.split("/").pop()));
