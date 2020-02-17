@@ -9,12 +9,14 @@ jest.mock("../../stores/AppStoreWord");
 describe("BootStrap", function() {
 	it("shows error component", function() {
 		const wrapper = shallow(<BootStrapWord />);
+		wrapper.setState({ ready: true });
 
 		expect(wrapper.find(ErrorDisplay).exists()).toBeTruthy();
 	});
 
 	it("shows Main component", function() {
 		const wrapper = shallow(<BootStrapWord />);
+		wrapper.setState({ ready: true });
 
 		expect(wrapper.find(MainApp).exists()).toBeTruthy();
 	});

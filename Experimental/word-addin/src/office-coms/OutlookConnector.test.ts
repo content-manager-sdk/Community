@@ -23,7 +23,14 @@ export namespace Office {
 				callback({ status: "succeeded", value: "abc" });
 			},
 			restUrl: "rest_url",
-			item: { subject: "test_subject" },
+			item: {
+				subject: "test_subject",
+				attachments: [
+					{ attachmentType: "file", id: "a-id", name: "name" },
+					{ attachmentType: "item", id: "item-id", name: "item-name" },
+					{ attachmentType: "cloud", id: "cloud-id", name: "cloud" },
+				],
+			},
 			makeEwsRequestAsync: function(url, callback) {
 				callback({
 					status: "succeeded",
@@ -66,23 +73,27 @@ describe("Outlook connector tests", () => {
 		{ json: "extended_prop_only_this_db", uris: [9001849758, 9001849759] },
 		{ json: "extended_prop_diff_dbs2", uris: [9001849758, 900184999] },
 		{ json: "extended_prop_diff_dbs", uris: [9001849751, 9001849752] },
+		{ json: "no_extended_prop", uris: [] },
 	].forEach((data) => {
-		it(`gets Uris from Email Link extended property ${data.json}`, (done) => {
+		it(`gets Uris from Email Link extended property ${data.json}`, async () => {
 			var json = require(`./${data.json}.json`);
 
 			mock.onGet().reply(function(config: any) {
 				return [200, json];
 			});
 
-			outlookConnector
-				.getRecordUrisFromItem("N1")
-				.then((uris: number[]) => {
-					expect(uris).toEqual(data.uris);
-					done();
-				})
-				.catch((e) => {
-					done.fail(e);
-				});
+			const uris = await outlookConnector.getRecordUrisFromItem("N1");
+			expect(uris).toEqual(data.uris);
+
+			// outlookConnector
+			// 	.getRecordUrisFromItem("N1")
+			// 	.then((uris: number[]) => {
+			// 		expect(uris).toEqual(data.uris);
+			// 		done();
+			// 	})
+			// 	.catch((e) => {
+			// 		done.fail(e);
+			// 	});
 		});
 	});
 
@@ -405,5 +416,15 @@ describe("Outlook connector tests", () => {
 			.catch((e) => {
 				done.fail(e);
 			});
+	});
+
+	it("excludes folders which are linked", () => {
+		const attachments = outlookConnector.getAttachments();
+
+		expect(attachments.length).toEqual(2);
+		expect(attachments[0].Id).toEqual("rest_id");
+		expect(attachments[0].IsAttachment).toBeFalsy();
+		expect(attachments[0].Name).toEqual("test_subject");
+		expect(attachments[1].IsAttachment).toBeTruthy();
 	});
 });

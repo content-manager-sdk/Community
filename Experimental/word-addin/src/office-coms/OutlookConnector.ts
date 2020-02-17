@@ -9,8 +9,7 @@ export interface IOutlookAttachment {
 	Name: any;
 	Filed?: boolean;
 	FileUsing?: ITrimMainObject;
-	// 	SingleValueExtendedProperties: any;
-	// 	WellKnownName: string;
+	IsAttachment: Boolean;
 }
 
 export interface IOutlookFolder {
@@ -106,7 +105,13 @@ export class OutlookConnector extends OfficeConnector
 	public getAttachments(): IOutlookAttachment[] {
 		const item = Office.context.mailbox.item;
 
-		const attachments: IOutlookAttachment[] = [];
+		const attachments: IOutlookAttachment[] = [
+			{
+				Name: Office.context.mailbox.item.subject,
+				Id: this.getItemId(),
+				IsAttachment: false,
+			},
+		];
 		if (item.attachments.length > 0) {
 			for (let i = 0; i < item.attachments.length; i++) {
 				const attachment = item.attachments[i];
@@ -114,6 +119,7 @@ export class OutlookConnector extends OfficeConnector
 					attachments.push({
 						Id: attachment.id.replace("/", "-"),
 						Name: attachment.name,
+						IsAttachment: true,
 					});
 				}
 			}
@@ -488,8 +494,8 @@ export class OutlookConnector extends OfficeConnector
 												}
 											});
 										}
-										resolve(uris1);
 									}
+									resolve(uris1);
 								});
 							})
 							.catch((e) => {
@@ -503,82 +509,83 @@ export class OutlookConnector extends OfficeConnector
 		});
 	}
 
+	private getItemId(): string {
+		if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
+			// itemId is already REST-formatted.
+			return Office.context.mailbox.item.itemId;
+		} else {
+			// Convert to an item ID for API v2.0.
+			return Office.context.mailbox.convertToRestId(
+				Office.context.mailbox.item.itemId,
+				Office.MailboxEnums.RestVersion.v2_0
+			);
+		}
+	}
+
 	setAutoOpen(
 		autoOpen: boolean,
 		recordUrn?: string,
 		subjectPrefix?: string
 	): void {
-		const getItemId = function() {
-			if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
-				// itemId is already REST-formatted.
-				return Office.context.mailbox.item.itemId;
-			} else {
-				// Convert to an item ID for API v2.0.
-				return Office.context.mailbox.convertToRestId(
-					Office.context.mailbox.item.itemId,
-					Office.MailboxEnums.RestVersion.v2_0
-				);
-			}
-		};
+		Office.context.mailbox.getCallbackTokenAsync(
+			{ isRest: true },
+			(result: any) => {
+				if (result.status === "succeeded") {
+					var accessToken = result.value;
+					const itemId = this.getItemId();
 
-		Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(
-			result: any
-		) {
-			if (result.status === "succeeded") {
-				var accessToken = result.value;
-				const itemId = getItemId();
+					const getMessageUrl =
+						Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
+					const uris: string[] = [];
+					let dbid;
+					recordUrn!.split(";").forEach((urn) => {
+						let idTokens = urn!.split("/");
+						uris.push(idTokens.pop()!);
+						dbid = idTokens[0].split(":").pop();
+					});
 
-				const getMessageUrl =
-					Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
-				const uris: string[] = [];
-				let dbid;
-				recordUrn!.split(";").forEach((urn) => {
-					let idTokens = urn!.split("/");
-					uris.push(idTokens.pop()!);
-					dbid = idTokens[0].split(":").pop();
-				});
+					let data: any = {
+						SingleValueExtendedProperties: [
+							{
+								PropertyId:
+									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
+								Value: recordUrn,
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+								Value: uris.join(","),
+							},
+							{
+								PropertyId:
+									"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+								Value: dbid,
+							},
+						],
+					};
 
-				let data: any = {
-					SingleValueExtendedProperties: [
-						{
-							PropertyId:
-								"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-							Value: recordUrn,
-						},
-						{
-							PropertyId:
-								"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
-							Value: uris.join(","),
-						},
-						{
-							PropertyId:
-								"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
-							Value: dbid,
-						},
-					],
-				};
-
-				if (subjectPrefix) {
-					data.Subject = `${Office.context.mailbox.item.subject}`;
-					if (!data.Subject.startsWith(subjectPrefix!)) {
-						data.Subject = `${subjectPrefix} ${data.Subject}`;
+					if (subjectPrefix) {
+						data.Subject = `${Office.context.mailbox.item.subject}`;
+						if (!data.Subject.startsWith(subjectPrefix!)) {
+							data.Subject = `${subjectPrefix} ${data.Subject}`;
+						}
 					}
-				}
 
-				const options = {
-					headers: {
-						Accept: "application/json",
-						Authorization: `Bearer ${accessToken}`,
-					},
-					method: "PATCH",
-					url: getMessageUrl,
-					data,
-				};
-				Axios(options);
-			} else {
-				// Handle the error.
+					const options = {
+						headers: {
+							Accept: "application/json",
+							Authorization: `Bearer ${accessToken}`,
+						},
+						method: "PATCH",
+						url: getMessageUrl,
+						data,
+					};
+					Axios(options);
+				} else {
+					// Handle the error.
+				}
 			}
-		});
+		);
 	}
 	getAutoOpen(): boolean {
 		return false;

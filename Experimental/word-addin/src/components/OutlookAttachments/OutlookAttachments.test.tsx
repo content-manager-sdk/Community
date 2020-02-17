@@ -14,6 +14,7 @@ import TrimConnector, {
 import { AppStoreOutlook } from "../../stores/AppStoreOutlook";
 import RecordTypePicker from "../RecordTypePicker/RecordTypePicker";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { Text } from "office-ui-fabric-react/lib/Text";
 
 describe("Outlook attachments", function() {
 	let webUrlFound = "";
@@ -22,16 +23,22 @@ describe("Outlook attachments", function() {
 	let attachmentNameFound2 = "";
 	let testRecordUrn;
 	let testPrefix;
+	let foundAttachments = [];
 
 	beforeEach(() => {
 		webUrlFound = "";
 		webUrlFound2 = "";
-		attachmentNameFound = "";
+		attachmentNameFound = undefined;
 		attachmentNameFound2 = "";
 		testRecordUrn = "";
 		testPrefix = "";
 		appStore.setStatus("WAITING");
 		appStore.setDocumentInfo(null);
+		appStore.setMessages({ core_mailAttachmentsCap: "Attachments" });
+		foundAttachments = [
+			{ Id: "a", Name: "A", IsAttachment: false },
+			{ Id: "b", Name: "B", IsAttachment: true },
+		];
 	});
 
 	let trimConnector = new TrimConnector();
@@ -44,16 +51,12 @@ describe("Outlook attachments", function() {
 	) {
 		if (webUrlFound) {
 			webUrlFound2 = webUrl;
-		} else {
-			webUrlFound = webUrl;
-		}
-
-		if (attachmentNameFound) {
 			attachmentNameFound2 = attachmentName;
 			return new Promise((resolve) => {
 				resolve({ Id: "test2" });
 			});
 		} else {
+			webUrlFound = webUrl;
 			attachmentNameFound = attachmentName;
 			return new Promise((resolve) => {
 				resolve({ Id: "test" });
@@ -73,10 +76,7 @@ describe("Outlook attachments", function() {
 	let outlookConnector = new OutlookConnector();
 
 	outlookConnector.getAttachments = function(): IOutlookAttachment[] {
-		return [
-			{ Id: "a", Name: "A" },
-			{ Id: "b", Name: "B" },
-		];
+		return foundAttachments;
 	}.bind(outlookConnector);
 
 	outlookConnector.getWebUrl = function() {
@@ -96,10 +96,6 @@ describe("Outlook attachments", function() {
 
 	const appStore = new AppStoreOutlook(trimConnector, outlookConnector);
 
-	// appStore.setDocumentInfo = function(documentInfo: IDriveInformation) {
-	// 	driveInfoFound = documentInfo;
-	// }.bind(appStore);
-
 	it("displays a list of check boxes", () => {
 		const wrapper = shallow(
 			<OutlookAttachments
@@ -109,6 +105,73 @@ describe("Outlook attachments", function() {
 		);
 
 		expect(wrapper.find(Checkbox).length).toEqual(4);
+	});
+
+	it("displays a heading after the first item", () => {
+		const wrapper = shallow(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+			/>
+		);
+
+		expect(wrapper.find(Text).exists()).toBeTruthy();
+	});
+
+	it("displays the record type picker only for zero attachments ", () => {
+		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
+
+		const wrapper = shallow<OutlookAttachments>(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+			/>
+		);
+
+		expect(wrapper.find(Text).exists()).toBeFalsy();
+		expect(wrapper.find(RecordTypePicker).exists()).toBeTruthy();
+		expect(wrapper.find(Checkbox).exists()).toBeFalsy();
+		expect(wrapper.state().autoCreate).toBeFalsy();
+		expect(wrapper.state().selectedAttachments).toEqual([
+			{
+				Id: "a",
+				Name: "A",
+				IsAttachment: false,
+			},
+		]);
+	});
+
+	it("shows form on Record type selected when there are no attachments", (done) => {
+		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
+
+		const wrapper = shallow<OutlookAttachments>(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+				trimConnector={trimConnector}
+			/>
+		);
+
+		wrapper
+			.find(RecordTypePicker)
+			.props()
+			.onRecordTypeSelected(9, false);
+
+		setImmediate(() => {
+			try {
+				expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
+					Uri: 9,
+					TrimType: BaseObjectTypes.RecordType,
+				});
+
+				expect(webUrlFound).toEqual("id");
+				expect(attachmentNameFound).toBeUndefined();
+				expect(appStore.documentInfo).toEqual({ Id: "test" });
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("selects an attachment", () => {
@@ -125,7 +188,7 @@ describe("Outlook attachments", function() {
 			.simulate("change", null, true);
 
 		expect(wrapper.state().selectedAttachments).toEqual([
-			{ Id: "a", Name: "A" },
+			{ Id: "a", Name: "A", IsAttachment: false },
 		]);
 	});
 
@@ -153,7 +216,7 @@ describe("Outlook attachments", function() {
 			.simulate("change", null, false);
 
 		expect(wrapper.state().selectedAttachments).toEqual([
-			{ Id: "b", Name: "B" },
+			{ Id: "b", Name: "B", IsAttachment: true },
 		]);
 	});
 
@@ -173,8 +236,8 @@ describe("Outlook attachments", function() {
 			.onChange();
 
 		expect(wrapper.state().selectedAttachments).toEqual([
-			{ Id: "a", Name: "A" },
-			{ Id: "b", Name: "B" },
+			{ Id: "a", Name: "A", IsAttachment: false },
+			{ Id: "b", Name: "B", IsAttachment: true },
 		]);
 
 		expect(
@@ -386,7 +449,38 @@ describe("Outlook attachments", function() {
 			});
 		});
 	});
-	it("get drive info on next", (done) => {
+	it("get drive info on next (is attachment)", (done) => {
+		const wrapper = shallow<OutlookAttachments>(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+				trimConnector={trimConnector}
+			/>
+		);
+		wrapper.setState({ autoCreate: false });
+		wrapper
+			.find(Checkbox)
+			.at(2)
+			.simulate("change", null, true);
+
+		wrapper
+			.find(PrimaryButton)
+			.first()
+			.simulate("click");
+
+		setTimeout(() => {
+			try {
+				expect(webUrlFound).toEqual("id/attachments/b");
+				expect(attachmentNameFound).toEqual("B");
+				expect(appStore.documentInfo).toEqual({ Id: "test" });
+				done();
+			} catch (e) {
+				done.fail();
+			}
+		});
+	});
+
+	it("get drive info on next (not attachment)", (done) => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -409,12 +503,12 @@ describe("Outlook attachments", function() {
 
 		setTimeout(() => {
 			try {
-				expect(webUrlFound).toEqual("id/attachments/a");
-				expect(attachmentNameFound).toEqual("A");
+				expect(webUrlFound).toEqual("id");
+				expect(attachmentNameFound).toBeUndefined();
 				expect(appStore.documentInfo).toEqual({ Id: "test" });
 				done();
 			} catch (e) {
-				done.fail();
+				done.fail(e);
 			}
 		});
 	});
@@ -448,9 +542,9 @@ describe("Outlook attachments", function() {
 					.onTrimObjectCreated({ Uri: 1 });
 				setTimeout(() => {
 					try {
-						expect(webUrlFound).toEqual("id/attachments/a");
+						expect(webUrlFound).toEqual("id");
 						expect(webUrlFound2).toEqual("id/attachments/b");
-						expect(attachmentNameFound).toEqual("A");
+						expect(attachmentNameFound).toBeUndefined();
 						expect(attachmentNameFound2).toEqual("B");
 						expect(appStore.documentInfo).toEqual({ Id: "test2" });
 						done();

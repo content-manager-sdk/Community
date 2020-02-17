@@ -899,7 +899,7 @@ export class TrimConnector implements ITrimConnector {
 						"The data entry form for this Record Type requires user interaction which is not supported by linked folders.";
 					data.Messages.web_NewLinkedFolder = "New Linked Folder";
 					data.Messages.web_EditTrimObject = "Edit";
-					data.Messages.web_attachmentName = "Attachment Name";
+					data.Messages.web_attachmentName = "Item Name";
 					data.Messages.web_fetching = "Fetching";
 					data.Messages.web_filing = "Filing";
 					data.Messages.web_attachmentsList = "Records related to this item";

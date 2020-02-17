@@ -67,6 +67,7 @@ describe("Object Context Menu", () => {
 						testUri = uri;
 					},
 					setStatus: (status: string) => {},
+					setSpinning: () => {},
 					RecordUri: 7,
 					Id: "my id",
 					messages: {
@@ -559,20 +560,22 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		const menuItem = findMenu(wrapper).items.find((mp) => {
-			return mp.key === "RecDocFinal";
-		});
-
-		menuItem.onClick(null, menuItem);
-
 		setImmediate(() => {
-			try {
-				expect(checkinUri).toEqual(0);
-				expect(finalizeUri).toEqual(7);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+			const menuItem = findMenu(wrapper).items.find((mp) => {
+				return mp.key === "RecDocFinal";
+			});
+
+			menuItem.onClick(null, menuItem);
+
+			setImmediate(() => {
+				try {
+					expect(checkinUri).toEqual(0);
+					expect(finalizeUri).toEqual(7);
+					done();
+				} catch (e) {
+					done.fail(e);
+				}
+			});
 		});
 	});
 

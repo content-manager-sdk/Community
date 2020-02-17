@@ -10,13 +10,13 @@ import {
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "src/office-coms/office-connector";
-import { Spinner, SpinnerSize } from "office-ui-fabric-react";
 import RecordTypePicker from "./RecordTypePicker/RecordTypePicker";
 import { IAppStore } from "src/stores/AppStoreBase";
 
 interface INewRecordState {
 	formDefinition: any;
 	processing: Boolean;
+	saving: Boolean;
 	checkinStyles: IDropdownOption[];
 	checkinUsingStyle: Boolean;
 }
@@ -50,6 +50,7 @@ export class NewRecord extends React.Component<
 			processing: false,
 			checkinStyles: [],
 			checkinUsingStyle: false,
+			saving: false,
 		};
 	}
 
@@ -58,6 +59,24 @@ export class NewRecord extends React.Component<
 
 		if (defaultRecordType && processInBackgroundIfPossible) {
 			this._onChange(defaultRecordType.Uri, false);
+		}
+	}
+
+	componentDidUpdate(prevProps: INewRecordProps, prevState: INewRecordState) {
+		const { appStore } = this.props;
+		const { processing, saving } = this.state;
+
+		if (processing !== prevState.processing || saving !== prevState.saving) {
+			let spinnerLabel = appStore!.FileName;
+
+			const spinnerLabelFull = !spinnerLabel
+				? undefined
+				: `${appStore!.messages.web_filing} ${spinnerLabel}`;
+
+			appStore!.setSpinning(
+				processing || saving,
+				saving ? spinnerLabelFull : undefined
+			);
 		}
 	}
 
@@ -165,7 +184,7 @@ export class NewRecord extends React.Component<
 
 	private saveFinished = (saved: boolean, trimObject?: ITrimMainObject) => {
 		const { onTrimObjectCreated, onAfterSave } = this.props;
-		this.setState({ processing: false });
+		this.setState({ saving: false });
 		if (saved) {
 			if (onTrimObjectCreated) {
 				onTrimObjectCreated(trimObject);
@@ -189,7 +208,7 @@ export class NewRecord extends React.Component<
 
 		const { checkinUsingStyle } = this.state;
 		let newTrimObject: ITrimMainObject;
-		this.setState({ processing: true });
+		this.setState({ saving: true });
 		if (trimType === BaseObjectTypes.Record) {
 			const createRec = checkinUsingStyle
 				? appStore!.createRecordFromStyle(
@@ -291,7 +310,7 @@ export class NewRecord extends React.Component<
 			processInBackgroundIfPossible,
 		} = this.props;
 
-		const { formDefinition, processing } = this.state;
+		const { formDefinition, processing, saving } = this.state;
 
 		const computedProps = [];
 		if (trimType === BaseObjectTypes.CheckinStyle) {
@@ -316,28 +335,15 @@ export class NewRecord extends React.Component<
 				});
 			}
 		}
-		let spinnerLabel = appStore!.documentInfo.EmailPath;
-		if (spinnerLabel && spinnerLabel.indexOf("\\") > -1) {
-			const tokens = spinnerLabel.split("\\");
-			spinnerLabel = tokens[tokens.length - 1];
-		}
+
 		return (
 			<form
-				className={className + (processing === true ? " disabled" : "")}
+				className={
+					className +
+					(processing === true || saving === true ? " disabled" : "")
+				}
 				onSubmit={this._onClick}
 			>
-				{processing && (
-					<Spinner
-						className="trim-edit-spinner-label"
-						size={SpinnerSize.large}
-						label={
-							this.showUI || !spinnerLabel
-								? undefined
-								: `${appStore!.messages.web_filing} ${spinnerLabel}`
-						}
-					/>
-				)}
-
 				{(!processInBackgroundIfPossible || this.showUI === true) && (
 					<RecordTypePicker
 						trimType={trimType}

@@ -9,12 +9,7 @@ import {
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import { IOutlookAttachment } from "../../office-coms/OutlookConnector";
 import { IOfficeConnector } from "../../office-coms/office-connector";
-import {
-	Spinner,
-	SpinnerSize,
-	Checkbox,
-	PrimaryButton,
-} from "office-ui-fabric-react";
+import { Checkbox, PrimaryButton } from "office-ui-fabric-react";
 import NewRecord from "../NewRecord";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import RecordTypePicker from "../RecordTypePicker/RecordTypePicker";
@@ -31,6 +26,7 @@ interface IOutlookAttachmentsState {
 	spinning: boolean;
 	autoCreate: boolean;
 	showForm: Boolean;
+	attachments: IOutlookAttachment[];
 }
 
 export class OutlookAttachments extends React.Component<
@@ -45,7 +41,20 @@ export class OutlookAttachments extends React.Component<
 			spinning: false,
 			autoCreate: true,
 			showForm: false,
+			attachments: [],
 		};
+	}
+
+	componentDidMount() {
+		const { wordConnector } = this.props;
+
+		const attachments = (wordConnector as OutlookConnector).getAttachments();
+
+		this.setState({
+			attachments,
+			autoCreate: attachments.length > 1,
+			selectedAttachments: attachments.length === 1 ? [attachments[0]] : [],
+		});
 	}
 
 	private _onRecordTypeSelected = (
@@ -53,7 +62,7 @@ export class OutlookAttachments extends React.Component<
 		uri: number,
 		isCheckinStyle: Boolean
 	) => {
-		const { selectedAttachments } = this.state;
+		const { selectedAttachments, attachments } = this.state;
 
 		selectedAttachments.forEach((selectedAttachment) => {
 			if (selectedAttachment.Id === attachmentId) {
@@ -69,6 +78,10 @@ export class OutlookAttachments extends React.Component<
 		this.setState({
 			selectedAttachments: [...selectedAttachments],
 		});
+
+		if (attachments.length === 1) {
+			this._nextClick();
+		}
 	};
 
 	private allChecked = false;
@@ -121,29 +134,35 @@ export class OutlookAttachments extends React.Component<
 		if (!attachment) {
 			return;
 		}
-		this.setState({ spinning: true });
+		//	this.setState({ spinning: true });
+		appStore!.setSpinning(true);
+		appStore!.setFileName(attachment.Name);
+
 		wordConnector!
 			.getWebUrl()
 			.then((webUrl) => {
 				trimConnector!
 					.getDriveId(
-						`${webUrl}/attachments/${attachment.Id}`,
+						attachment.IsAttachment
+							? `${webUrl}/attachments/${attachment.Id}`
+							: webUrl,
 						true,
 						0,
-						attachment.Name
+						attachment.IsAttachment ? attachment.Name : undefined
 					)
 					.then((driveInfo) => {
 						appStore!.setDocumentInfo(driveInfo);
-						this.setState({ showForm: true, spinning: false });
+						this.setState({ showForm: true });
+						appStore!.setSpinning(false);
 					})
 					.catch((e) => {
 						appStore!.setError(e);
-						this.setState({ spinning: false });
+						appStore!.setSpinning(false);
 					});
 			})
 			.catch((e) => {
 				appStore!.setError(e);
-				this.setState({ spinning: false });
+				appStore!.setSpinning(false);
 			});
 	};
 
@@ -189,29 +208,49 @@ export class OutlookAttachments extends React.Component<
 		this.setState({ autoCreate: !autoCreate });
 	};
 
+	private renderPicker = (
+		attachment: IOutlookAttachment,
+		selectedAttachment: IOutlookAttachment | undefined
+	) => {
+		return (
+			<RecordTypePicker
+				includeCheckinStyles={true}
+				onRecordTypeSelected={(uri, isCheckinStyle) =>
+					this._onRecordTypeSelected(attachment.Id, uri, isCheckinStyle)
+				}
+				defaultRecordType={selectedAttachment!.FileUsing}
+			/>
+		);
+	};
+
 	public render() {
-		const { appStore, wordConnector } = this.props;
-		const { selectedAttachments, autoCreate, spinning, showForm } = this.state;
+		const { appStore } = this.props;
+		const {
+			selectedAttachments,
+			autoCreate,
+			spinning,
+			showForm,
+			attachments,
+		} = this.state;
 
-		if (appStore!.status === "STARTING") {
-			return <Spinner size={SpinnerSize.large} />;
-		}
+		// if (appStore!.status === "STARTING") {
+		// 	return <Spinner size={SpinnerSize.large} />;
+		// }
 
-		const attachments = (wordConnector as OutlookConnector).getAttachments();
 		const attachment = selectedAttachments.find((a) => a.Filed !== true);
 		const spinningLabel = attachment
 			? `${appStore!.messages.web_fetching} ${attachment.Name}`
 			: "";
-
+		appStore!.setSpinning(spinning, spinningLabel);
 		return showForm === true ? (
 			<React.Fragment>
-				{spinning && (
+				{/* {spinning && (
 					<Spinner
 						className="trim-edit-spinner-label"
 						size={SpinnerSize.large}
 						label={spinningLabel}
 					/>
-				)}
+				)} */}
 				<NewRecord
 					trimType={BaseObjectTypes.Record}
 					onTrimObjectCreated={this._trimObjectCreated}
@@ -223,45 +262,46 @@ export class OutlookAttachments extends React.Component<
 					bypassUpdateEmailSubject={true}
 				/>
 			</React.Fragment>
+		) : attachments.length === 1 ? (
+			this.renderPicker(attachments[0], attachments[0])
 		) : (
 			<React.Fragment>
-				{spinning && (
+				{/* {spinning && (
 					<Spinner
 						className="trim-edit-spinner-label"
 						size={SpinnerSize.large}
 						label={spinningLabel}
 					/>
-				)}
+				)} */}
 				<div hidden={spinning}>
-					{attachments.length === 0 ? (
-						<Text variant="large">{appStore!.messages.web_noAttachments}</Text>
-					) : (
-						<React.Fragment>
-							<Checkbox
-								className="ms-fontWeight-semibold"
-								key="all_select"
-								label={appStore!.messages.web_attachmentName}
-								onChange={() => {
-									if (this.allChecked) {
-										this._setAttachments([]);
-									} else {
-										this._setAttachments(attachments);
-									}
-									this.allChecked = !this.allChecked;
-								}}
-								onRenderLabel={(props) => {
-									return (
-										<span className="ms-Checkbox-text ms-fontWeight-semibold">
-											{props!.label}
-										</span>
-									);
-								}}
-							/>
-							{attachments.map((attachment: IOutlookAttachment) => {
-								const selectedAttachment = selectedAttachments.find(
-									(a) => a.Id === attachment.Id
-								);
+					(
+					<React.Fragment>
+						<Checkbox
+							className="ms-fontWeight-semibold"
+							key="all_select"
+							label={appStore!.messages.web_attachmentName}
+							onChange={() => {
+								if (this.allChecked) {
+									this._setAttachments([]);
+								} else {
+									this._setAttachments(attachments);
+								}
+								this.allChecked = !this.allChecked;
+							}}
+							onRenderLabel={(props) => {
 								return (
+									<span className="ms-Checkbox-text ms-fontWeight-semibold">
+										{props!.label}
+									</span>
+								);
+							}}
+						/>
+						{attachments.map((attachment: IOutlookAttachment) => {
+							const selectedAttachment = selectedAttachments.find(
+								(a) => a.Id === attachment.Id
+							);
+							return (
+								<React.Fragment key={attachment.Id}>
 									<div key={attachment.Id}>
 										<Checkbox
 											label={attachment.Name}
@@ -272,45 +312,41 @@ export class OutlookAttachments extends React.Component<
 											disabled={
 												selectedAttachment && selectedAttachment.Filed === true
 											}
-										></Checkbox>
+										/>
 										{selectedAttachments.filter(
 											(a) => a.Id === attachment.Id && !a.Filed
-										).length > 0 && (
-											<RecordTypePicker
-												includeCheckinStyles={true}
-												onRecordTypeSelected={(uri, isCheckinStyle) =>
-													this._onRecordTypeSelected(
-														attachment.Id,
-														uri,
-														isCheckinStyle
-													)
-												}
-												defaultRecordType={selectedAttachment!.FileUsing}
-											/>
-										)}
+										).length > 0 &&
+											this.renderPicker(attachment, selectedAttachment)}
 									</div>
-								);
-							})}
-							<hr />
-							<Checkbox
-								label={appStore!.messages.web_suppressDataEntryForm}
-								onChange={this._autoCreate}
-								checked={autoCreate}
-							/>
-							<hr />
-							<PrimaryButton
-								key="next"
-								text={appStore!.messages.vb_nts_Next}
-								disabled={
-									!(
-										selectedAttachments.filter((sel) => {
-											return sel.FileUsing;
-										}).length === selectedAttachments.length
-									) || selectedAttachments.length == 0
-								}
-								onClick={() => this._nextClick()}
-							/>{" "}
-						</React.Fragment>
+									{attachment.IsAttachment === false &&
+										attachments.length > 1 && (
+											<Text variant="large">
+												{appStore!.messages.core_mailAttachmentsCap}
+											</Text>
+										)}
+								</React.Fragment>
+							);
+						})}
+						<hr />
+						<Checkbox
+							label={appStore!.messages.web_suppressDataEntryForm}
+							onChange={this._autoCreate}
+							checked={autoCreate}
+						/>
+						<hr />
+						<PrimaryButton
+							key="next"
+							text={appStore!.messages.vb_nts_Next}
+							disabled={
+								!(
+									selectedAttachments.filter((sel) => {
+										return sel.FileUsing;
+									}).length === selectedAttachments.length
+								) || selectedAttachments.length == 0
+							}
+							onClick={() => this._nextClick()}
+						/>{" "}
+					</React.Fragment>
 					)}
 				</div>
 			</React.Fragment>

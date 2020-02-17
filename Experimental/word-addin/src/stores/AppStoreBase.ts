@@ -33,7 +33,7 @@ export interface IAppStore {
 	getWebClientUrl(uri: number, containerSearch?: boolean): void;
 	setDocumentInfo(documentInfo: IDriveInformation): void;
 	setStatus(status: string): void;
-	setSpinning(on: Boolean): void;
+	setSpinning(on: Boolean, label?: string): void;
 	deferFetchDriveInfo(): void;
 	createRecordFromStyle(
 		checkinStyle: number,
@@ -45,10 +45,13 @@ export interface IAppStore {
 		properties: any,
 		fields?: any
 	): Promise<ITrimMainObject>;
+	getSpinningLabel(): string | undefined;
+	setFileName(fileName: string): void;
 }
 
 export class AppStoreBase implements IAppStore {
 	private _deferFetchDriveInfo = false;
+	private spinningLabel: string | undefined;
 
 	@observable public errorMessage: string;
 	@observable public errorBody: any;
@@ -140,7 +143,7 @@ export class AppStoreBase implements IAppStore {
 									});
 							})
 							.catch((error) => {
-								self.setError(error, "get mai items");
+								self.setError(error, "get mail items");
 							});
 						//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
 					}
@@ -268,8 +271,13 @@ export class AppStoreBase implements IAppStore {
 	}
 
 	@action.bound
-	public setSpinning = (on: Boolean) => {
+	public setSpinning = (on: Boolean, label?: string) => {
 		this.spinning = on;
+		this.spinningLabel = label;
+	};
+
+	public getSpinningLabel = () => {
+		return this.spinningLabel;
 	};
 
 	@action.bound

@@ -15,11 +15,14 @@ import TrimConnector, { ITrimConnector } from "../../trim-coms/trim-connector";
 import OutlookAttachments from "../OutlookAttachments/OutlookAttachments";
 
 interface IProps {}
+interface IBootstrapState {
+	dialogName: string;
+	filter: string;
+	insertText: boolean;
+	ready: Boolean;
+}
 
-export class BootStrap extends React.Component<
-	IProps,
-	{ dialogName: string; filter: string; insertText: boolean }
-> {
+export class BootStrap extends React.Component<IProps, IBootstrapState> {
 	constructor(props: IProps) {
 		super(props);
 
@@ -37,9 +40,15 @@ export class BootStrap extends React.Component<
 				dialogName: "/searchdialog",
 				filter: filter,
 				insertText: insertText,
+				ready: false,
 			};
 		} else {
-			this.state = { dialogName: "", filter: filter, insertText: false };
+			this.state = {
+				dialogName: "",
+				filter: filter,
+				insertText: false,
+				ready: false,
+			};
 		}
 	}
 
@@ -94,6 +103,8 @@ export class BootStrap extends React.Component<
 			appStore.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
 
 			wordConnector.initialize(trimConnector, appStore);
+
+			this.setState({ ready: true });
 		};
 
 		window.onbeforeunload = () => {
@@ -102,11 +113,13 @@ export class BootStrap extends React.Component<
 	}
 
 	public render(): any {
+		const { ready } = this.state;
+
 		const appStore = this.getAppStore();
 		const wordConnector = this.getOfficeConnector();
 		const trimConnector = this.getTrimConnector();
 
-		return (
+		return !ready ? null : (
 			<Provider
 				appStore={appStore}
 				trimConnector={trimConnector}
@@ -114,8 +127,13 @@ export class BootStrap extends React.Component<
 			>
 				<div>
 					{appStore.status === "ERROR" && <ErrorDisplay />}
+
 					{appStore.spinning && appStore!.status !== "STARTING" && (
-						<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
+						<Spinner
+							className="trim-top-spinner"
+							size={SpinnerSize.large}
+							label={appStore.getSpinningLabel()}
+						/>
 					)}
 
 					{this.isAttachments() ? (

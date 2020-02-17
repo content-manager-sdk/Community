@@ -133,7 +133,7 @@ namespace OneDriveAuthPlugin
 
 				var registeredFile = new RegisterdFileResponse() { Id = driveId };
 
-
+		
 				request.Action = request.Action ?? "";
 
 				if (request.Action.IndexOf("AddToFavorites", StringComparison.InvariantCultureIgnoreCase) > -1)

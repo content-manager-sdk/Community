@@ -9,6 +9,12 @@ import { IAppStore, IUserProfile } from "../AppStoreBase";
 import TrimMessages from "src/trim-coms/trim-messages";
 
 export class AppStoreWord implements IAppStore {
+	setFileName(fileName: string): void {
+		throw new Error("Method not implemented.");
+	}
+	getSpinningLabel(): string | undefined {
+		throw new Error("Method not implemented.");
+	}
 	spinning: Boolean;
 	setSpinning(on: Boolean): void {
 		throw new Error("Method not implemented.");

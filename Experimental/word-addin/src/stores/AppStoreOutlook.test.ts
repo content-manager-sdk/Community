@@ -3,7 +3,7 @@
  */
 (global as any).config = { BASE_URL: "", WEB_CLIENT: "cm" };
 import { AppStoreOutlook } from "./AppStoreOutlook";
-
+import { OutlookConnector } from "../office-coms/OutlookConnector";
 import TrimConnector, {
 	IDriveInformation,
 	ISearchClauseDef,
@@ -24,21 +24,28 @@ import { CommandIds } from "../trim-coms/trim-command-ids";
 
 let Mock_Action = "";
 
-class MockWordConnector implements IWordUrl {
-	getDocumentData(writeSlice: any): Promise<string> {
-		return new Promise(function(resolve, reject) {
-			resolve("test");
-		});
-	}
-	getWebUrl(): Promise<string> {
-		return new Promise(function(resolve, reject) {
-			resolve("My.Url");
-		});
-	}
-	getRecordUri = () => {
-		return "";
-	};
-}
+const outlookConnector = new OutlookConnector();
+outlookConnector.getDocumentData = function(writeSlice: any): Promise<string> {
+	return new Promise(function(resolve, reject) {
+		resolve("test");
+	});
+}.bind(outlookConnector);
+
+outlookConnector.getWebUrl = function(): Promise<string> {
+	return new Promise(function(resolve, reject) {
+		resolve("My.Url");
+	});
+}.bind(outlookConnector);
+
+outlookConnector.getRecordUri = function() {
+	return "";
+}.bind(outlookConnector);
+
+outlookConnector.getRecordUrisFromItem = function() {
+	return new Promise(function(resolve, reject) {
+		resolve([]);
+	});
+}.bind(outlookConnector);
 
 let postedFields: any;
 let Mock_Trim_Action = "";
@@ -118,9 +125,9 @@ trimConnector.getMe = function(): Promise<ILocation> {
 	});
 }.bind(trimConnector);
 
-let appStore = new AppStoreOutlook(trimConnector, new MockWordConnector());
+let appStore = new AppStoreOutlook(trimConnector, outlookConnector);
 beforeEach(() => {
-	appStore = new AppStoreOutlook(trimConnector, new MockWordConnector());
+	appStore = new AppStoreOutlook(trimConnector, outlookConnector);
 	Mock_Action = "";
 	Mock_Trim_Action = "";
 	postedFields = null;
@@ -167,7 +174,7 @@ describe("Test basic setup from Trim", () => {
 		appStore.fetchBaseSettingFromTrim(false);
 		setTimeout(() => {
 			try {
-				expect(appStore.documentInfo).toBeFalsy();
+				expect(appStore.documentInfo).toEqual({ Uris: [] });
 				expect(appStore.status).toEqual("WAITING");
 				done();
 			} catch (e) {

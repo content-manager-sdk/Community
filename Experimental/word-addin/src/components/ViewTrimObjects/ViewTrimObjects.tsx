@@ -60,7 +60,9 @@ export class ViewTrimObjects extends React.Component<
 					this.setState({
 						records: data.results,
 						itemNotYetFiled: !data.results.some((i) => {
-							return !!(i as IRecord).MessageId;
+							return !!(
+								(i as IRecord).MessageId && (i as IRecord).MessageId.Value
+							);
 						}),
 					});
 					appStore!.setSpinning(false);
@@ -91,7 +93,6 @@ export class ViewTrimObjects extends React.Component<
 			/>
 		) : (
 			<React.Fragment>
-				{/* {spinning && <Spinner size={SpinnerSize.large} />} */}
 				<Text variant="large">{appStore!.messages.web_attachmentsList}</Text>
 				<ul>
 					{records.map((record) => (

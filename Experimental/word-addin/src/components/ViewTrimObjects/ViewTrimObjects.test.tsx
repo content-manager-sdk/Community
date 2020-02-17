@@ -24,7 +24,6 @@ describe("View Trim Objects", function() {
 	});
 
 	let appStore = new AppStoreOutlook(null, null);
-
 	let mockTrimConnector = new TrimConnector();
 
 	mockTrimConnector.search = function<T extends ITrimMainObject>(
@@ -117,6 +116,42 @@ describe("View Trim Objects", function() {
 		setTimeout(() => {
 			try {
 				expect(wrapper.state().itemNotYetFiled).toBeFalsy();
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("item has not been been filed", (done) => {
+		appStore.setDocumentInfo({ Uris: [1, 2] });
+
+		searchResults = [
+			{
+				Uri: 1,
+				NameString: "Document",
+				ToolTip: "Doc",
+				MessageId: { Value: "" },
+			} as IRecord,
+			{
+				Uri: 2,
+				NameString: "Document 5",
+				ToolTip: "Doc 5",
+				MessageId: { Value: "" },
+			} as IRecord,
+		];
+
+		const wrapper = shallow<ViewTrimObjects>(
+			<ViewTrimObjects
+				trimType={BaseObjectTypes.Record}
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+			/>
+		);
+
+		setTimeout(() => {
+			try {
+				expect(wrapper.state().itemNotYetFiled).toBeTruthy();
 				done();
 			} catch (e) {
 				done.fail(e);

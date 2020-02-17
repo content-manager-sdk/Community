@@ -176,11 +176,26 @@ hr.trim-menu-sep {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	height: 50px;
-	width: 110px;
+	min-height: 60px;
+	min-width: 110px;
 	background-color: cornflowerblue;
 	backdrop-filter: aliceblue;
 	margin-top: 40vh;
 	border-radius: 15px;
 	left: calc(50% - 55px);
+	padding-top: 10px;
+	justify-content: start;
+}
+
+.trim-top-spinner > ms-Spinner-circle {
+	margin-top: 10px;
+}
+
+.trim-top-spinner > .ms-Spinner-label {
+	padding: 10px;
+	color: white;
+}
+
+.trim-top-spinner > .ms-Spinner-circle {
+	margin-top: 10px;
 }

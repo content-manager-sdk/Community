@@ -330,7 +330,7 @@ describe("Test basic setup from Trim", () => {
 	it("sets the Drive Id in the DriveID field when stored in TRIM", (done) => {
 		expect.assertions(1);
 
-		appStore.setDocumentInfo({ Id: "abc", Uri: 0, CommandDefs: [] });
+		appStore.setDocumentInfo({ Id: "abc", Uris: [], CommandDefs: [] });
 		appStore.createRecord(2, {}).then(() => {
 			expect(postedFields["DriveID"]).toBe("abc");
 			done();
