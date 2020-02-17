@@ -906,6 +906,7 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_noAttachments =
 						"There are no attachments on this item.  Please use 'Record' to create or view this item in Content Manager.";
 					data.Messages.web_fileFullEmail = "File full email";
+					data.Messages.core_completeEmail = "Complete email ({0})";
 					this.setCache("messages", data.Messages);
 
 					//this._messageCache = data.Messages;

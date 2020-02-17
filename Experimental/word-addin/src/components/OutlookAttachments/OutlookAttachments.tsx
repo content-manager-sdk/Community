@@ -294,7 +294,14 @@ export class OutlookAttachments extends React.Component<
 								<React.Fragment key={attachment.Id}>
 									<div key={attachment.Id}>
 										<Checkbox
-											label={attachment.Name}
+											label={
+												attachment.IsAttachment
+													? attachment.Name
+													: appStore!.messages.core_completeEmail.replace(
+															"{0}",
+															attachment.Name
+													  )
+											}
 											onChange={(el, checked) =>
 												this._onAttachmentsChange(attachment, checked)
 											}
