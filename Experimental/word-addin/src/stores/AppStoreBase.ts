@@ -232,7 +232,7 @@ export class AppStoreBase implements IAppStore {
 					.then((newRecord: ITrimMainObject) => {
 						if (newRecord.Uri > 0) {
 							this.setDocumentInfo({
-								Uris: [newRecord.Uri],
+								Uris: this.isEmail() ? [] : [newRecord.Uri],
 								//CommandDefs: newRecord.CommandDefs!,
 								Id: this.documentInfo.Id,
 								Options: this.documentInfo.Options,

@@ -151,7 +151,7 @@ describe("Check in Styles", function() {
 		wrapper
 			.find(NewRecord)
 			.props()
-			.onTrimObjectCreated({ Uri: 0 });
+			.onAfterSave({ Uri: 0 });
 		setTimeout(() => {
 			try {
 				expect(wrapper.state().view).toEqual("List");
@@ -255,7 +255,7 @@ describe("Check in Styles", function() {
 		wrapper
 			.find(NewRecord)
 			.props()
-			.onTrimObjectCreated({ Uri: 1 });
+			.onAfterSave({ Uri: 1 });
 		setTimeout(() => {
 			try {
 				expect((global as any).mockObject.setUrnOnFolderId).toEqual("not_set");
@@ -266,7 +266,7 @@ describe("Check in Styles", function() {
 		});
 	});
 
-	it("does not attempt to link folder for an auto generated linked folder", (done) => {
+	it("does not attempt to link folder for a non auto generated linked folder", (done) => {
 		(global as any).mockObject.setUrnOnFolderId = "not_set";
 		const wrapper = shallow<CheckinStyles>(
 			<CheckinStyles
@@ -285,7 +285,7 @@ describe("Check in Styles", function() {
 		wrapper
 			.find(NewRecord)
 			.props()
-			.onTrimObjectCreated({ Uri: 1 });
+			.onAfterSave({ Uri: 1 });
 		setTimeout(() => {
 			try {
 				expect((global as any).mockObject.setUrnOnFolderId).toEqual("aaaa");

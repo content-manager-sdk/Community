@@ -12,7 +12,6 @@ import { IAppStore } from "../../stores/AppStoreBase";
 import { getQueryStringValue } from "../../utils/getQueryStringValue";
 import { IOfficeConnector } from "../../office-coms/office-connector";
 import TrimConnector, { ITrimConnector } from "../../trim-coms/trim-connector";
-import OutlookAttachments from "../OutlookAttachments/OutlookAttachments";
 
 interface IProps {}
 interface IBootstrapState {
@@ -136,9 +135,7 @@ export class BootStrap extends React.Component<IProps, IBootstrapState> {
 						/>
 					)}
 
-					{this.isAttachments() ? (
-						<OutlookAttachments />
-					) : this.state.dialogName === "/searchdialog" ? (
+					{this.state.dialogName === "/searchdialog" ? (
 						<TrimSearchDialog
 							trimType={BaseObjectTypes.Record}
 							trimConnector={this.trimConnector}

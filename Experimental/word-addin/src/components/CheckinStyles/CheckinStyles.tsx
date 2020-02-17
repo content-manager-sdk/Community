@@ -96,24 +96,26 @@ export class CheckinStyles extends React.Component<
 										folderId={folderId}
 										isLinkedFolder={forServerProcessing}
 										computedCheckinStyleName={folderName}
-										onTrimObjectCreated={(trimObject) => {
-											if (forServerProcessing && folderId !== "cm_auto") {
-												const connector = new OutlookConnector();
-												connector
-													.getFolderChangeKey(folderId)
-													.then((changeKey) => {
-														connector.setUrnOnFolder(
-															folderId,
-															changeKey,
-															trimObject!.URN!
-														);
-														this.setState({ view: "List" });
-													})
-													.catch((e) => {
-														appStore!.setError(e);
-													});
-											} else {
-												this.setState({ view: "List" });
+										onAfterSave={(trimObject) => {
+											if (trimObject) {
+												if (forServerProcessing && folderId !== "cm_auto") {
+													const connector = new OutlookConnector();
+													connector
+														.getFolderChangeKey(folderId)
+														.then((changeKey) => {
+															connector.setUrnOnFolder(
+																folderId,
+																changeKey,
+																trimObject!.URN!
+															);
+															this.setState({ view: "List" });
+														})
+														.catch((e) => {
+															appStore!.setError(e);
+														});
+												} else {
+													this.setState({ view: "List" });
+												}
 											}
 										}}
 										validateRecordType={(recordTypeUri) => {

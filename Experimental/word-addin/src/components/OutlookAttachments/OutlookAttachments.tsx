@@ -134,8 +134,14 @@ export class OutlookAttachments extends React.Component<
 		if (!attachment) {
 			return;
 		}
-		//	this.setState({ spinning: true });
-		appStore!.setSpinning(true);
+
+		const spinningLabel = attachment
+			? `${appStore!.messages.web_fetching} ${attachment.Name}`
+			: "";
+		appStore!.setSpinning(true, spinningLabel);
+
+		this.setState({ spinning: true });
+
 		appStore!.setFileName(attachment.Name);
 
 		wordConnector!
@@ -167,37 +173,49 @@ export class OutlookAttachments extends React.Component<
 	};
 
 	private _fullUrn: string[] = [];
+	private _fullUri: number[] = [];
 
 	private _trimObjectCreated = (c: ITrimMainObject) => {
 		const { appStore, wordConnector, trimConnector } = this.props;
 		const { selectedAttachments, autoCreate } = this.state;
-
-		appStore!.setDocumentInfo({
-			...(appStore! as AppStoreBase).documentInfo,
-			EmailPath: "",
-		});
-
-		for (let counter = 0; counter < selectedAttachments.length; counter++) {
-			if (!selectedAttachments[counter].Filed) {
-				this._fullUrn.push(c.URN!);
-				selectedAttachments[counter].Filed = true;
-				break;
-			}
-		}
-
-		this.setState({ selectedAttachments: [...selectedAttachments] });
-
-		if (this._fullUrn.length === selectedAttachments.length) {
-			trimConnector!.getDatabaseProperties().then((database: IDatabase) => {
-				wordConnector!.setAutoOpen(
-					false,
-					this._fullUrn.join(";"),
-					database.EmailSubjectPrefix
-				);
+		if (c) {
+			this.setState({ showForm: false });
+			appStore!.setDocumentInfo({
+				...(appStore! as AppStoreBase).documentInfo,
+				EmailPath: "",
 			});
-		} else {
-			if (autoCreate) {
-				this._nextClick();
+
+			for (let counter = 0; counter < selectedAttachments.length; counter++) {
+				if (!selectedAttachments[counter].Filed) {
+					this._fullUrn.push(c.URN!);
+					this._fullUri.push(c.Uri);
+					selectedAttachments[counter].Filed = true;
+					break;
+				}
+			}
+
+			this.setState({ selectedAttachments: [...selectedAttachments] });
+
+			if (this._fullUrn.length === selectedAttachments.length) {
+				trimConnector!.getDatabaseProperties().then((database: IDatabase) => {
+					wordConnector!.setAutoOpen(
+						false,
+						this._fullUrn.join(";"),
+						database.EmailSubjectPrefix
+					);
+
+					appStore!.setDocumentInfo({
+						...(appStore! as AppStoreBase).documentInfo,
+						Uris: this._fullUri,
+					});
+
+					this.setState({ spinning: false });
+				});
+			} else {
+				this.setState({ showForm: false });
+				if (autoCreate) {
+					this._nextClick();
+				}
 			}
 		}
 	};
@@ -233,51 +251,23 @@ export class OutlookAttachments extends React.Component<
 			attachments,
 		} = this.state;
 
-		// if (appStore!.status === "STARTING") {
-		// 	return <Spinner size={SpinnerSize.large} />;
-		// }
-
 		const attachment = selectedAttachments.find((a) => a.Filed !== true);
-		const spinningLabel = attachment
-			? `${appStore!.messages.web_fetching} ${attachment.Name}`
-			: "";
-		appStore!.setSpinning(spinning, spinningLabel);
+
 		return showForm === true ? (
-			<React.Fragment>
-				{/* {spinning && (
-					<Spinner
-						className="trim-edit-spinner-label"
-						size={SpinnerSize.large}
-						label={spinningLabel}
-					/>
-				)} */}
-				<NewRecord
-					trimType={BaseObjectTypes.Record}
-					onTrimObjectCreated={this._trimObjectCreated}
-					onAfterSave={() => {
-						this.setState({ showForm: false });
-					}}
-					defaultRecordType={attachment ? attachment.FileUsing : undefined}
-					processInBackgroundIfPossible={autoCreate}
-					bypassUpdateEmailSubject={true}
-				/>
-			</React.Fragment>
+			<NewRecord
+				trimType={BaseObjectTypes.Record}
+				onAfterSave={this._trimObjectCreated}
+				defaultRecordType={attachment ? attachment.FileUsing : undefined}
+				processInBackgroundIfPossible={autoCreate}
+				bypassUpdateEmailSubject={true}
+			/>
 		) : attachments.length === 1 ? (
 			this.renderPicker(attachments[0], attachments[0])
 		) : (
-			<React.Fragment>
-				{/* {spinning && (
-					<Spinner
-						className="trim-edit-spinner-label"
-						size={SpinnerSize.large}
-						label={spinningLabel}
-					/>
-				)} */}
-				<div hidden={spinning}>
-					(
+			!spinning && (
+				<div>
 					<React.Fragment>
 						<Checkbox
-							className="ms-fontWeight-semibold"
 							key="all_select"
 							label={appStore!.messages.web_attachmentName}
 							onChange={() => {
@@ -290,7 +280,7 @@ export class OutlookAttachments extends React.Component<
 							}}
 							onRenderLabel={(props) => {
 								return (
-									<span className="ms-Checkbox-text ms-fontWeight-semibold">
+									<span className="ms-fontSize-l ms-fontWeight-semibold">
 										{props!.label}
 									</span>
 								);
@@ -318,12 +308,18 @@ export class OutlookAttachments extends React.Component<
 										).length > 0 &&
 											this.renderPicker(attachment, selectedAttachment)}
 									</div>
-									{attachment.IsAttachment === false &&
-										attachments.length > 1 && (
-											<Text variant="large">
-												{appStore!.messages.core_mailAttachmentsCap}
-											</Text>
-										)}
+									{attachment.IsAttachment === false && attachments.length > 1 && (
+										<Text
+											variant="large"
+											style={{
+												fontStyle: "italic",
+												display: "block",
+												marginTop: "10px",
+											}}
+										>
+											{appStore!.messages.core_mailAttachmentsCap}
+										</Text>
+									)}
 								</React.Fragment>
 							);
 						})}
@@ -345,11 +341,10 @@ export class OutlookAttachments extends React.Component<
 								) || selectedAttachments.length == 0
 							}
 							onClick={() => this._nextClick()}
-						/>{" "}
+						/>
 					</React.Fragment>
-					)}
 				</div>
-			</React.Fragment>
+			)
 		);
 	}
 }

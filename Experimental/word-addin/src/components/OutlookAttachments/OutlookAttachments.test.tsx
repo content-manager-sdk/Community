@@ -539,7 +539,7 @@ describe("Outlook attachments", function() {
 				wrapper
 					.find(NewRecord)
 					.props()
-					.onTrimObjectCreated({ Uri: 1 });
+					.onAfterSave({ Uri: 1 });
 				setTimeout(() => {
 					try {
 						expect(webUrlFound).toEqual("id");
@@ -622,13 +622,13 @@ describe("Outlook attachments", function() {
 			.find(NewRecord)
 			.first()
 			.props()
-			.onTrimObjectCreated({ Uri: 1 });
+			.onAfterSave({ Uri: 1 });
 
 		expect(appStore.documentInfo.EmailPath).toBeFalsy();
 		expect(wrapper.state().selectedAttachments[0].Filed).toBeTruthy();
 		expect(wrapper.state().selectedAttachments[1].Filed).toBeFalsy();
 
-		wrapper.setState({ showForm: false });
+		wrapper.setState({ showForm: false, spinning: false });
 		expect(
 			wrapper
 				.find(Checkbox)
@@ -662,7 +662,7 @@ describe("Outlook attachments", function() {
 			.find(NewRecord)
 			.first()
 			.props()
-			.onTrimObjectCreated({ Uri: 1, URN: "urn_1" });
+			.onAfterSave({ Uri: 1, URN: "urn_1" });
 
 		appStore.setDocumentInfo({ EmailPath: "ForUser\\9000000113\\c.png" });
 		wrapper.setState({ showForm: true });
@@ -671,7 +671,7 @@ describe("Outlook attachments", function() {
 			.find(NewRecord)
 			.first()
 			.props()
-			.onTrimObjectCreated({ Uri: 2, URN: "urn_2" });
+			.onAfterSave({ Uri: 2, URN: "urn_2" });
 
 		setTimeout(() => {
 			try {

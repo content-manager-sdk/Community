@@ -85,7 +85,7 @@ describe("New Record layout", function() {
 				trimConnector={mockTrimConnector}
 				wordConnector={new MockWordConnector()}
 				trimType={trimType}
-				onTrimObjectCreated={onCreated}
+				onAfterSave={onCreated}
 				folderId={folderId}
 				computedCheckinStyleName={folderName}
 				isLinkedFolder={isLinkedFolder}

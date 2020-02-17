@@ -5,14 +5,15 @@ import { MainApp } from "./MainApp";
 import NewRecord from "./NewRecord";
 import EditTrimObject from "./EditTrimObject/EditTrimObject";
 import ViewTrimObjects from "./ViewTrimObjects/ViewTrimObjects";
+import OutlookAttachments from "./OutlookAttachments/OutlookAttachments";
 
 describe("MainApp", function() {
-	it("Shows New Record component when no Record Uri found", function(this: any) {
+	it("Shows OutlookAttachments component when no Record Uri found", function(this: any) {
 		const wrapper = shallow<MainApp>(
 			<MainApp appStore={{ documentInfo: { Uris: [] }, status: "WAITING" }} />
 		);
 
-		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
+		expect(wrapper.find(OutlookAttachments).exists()).toBeTruthy();
 	});
 
 	it("Does not show New Record component when no Record Uri found", function(this: any) {

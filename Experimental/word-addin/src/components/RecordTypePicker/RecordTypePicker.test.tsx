@@ -198,11 +198,12 @@ describe("Record Type Picker", function() {
 			null,
 			true
 		);
-		expect(wrapper.find(ComboBox).props().placeholder).toEqual(
-			"Select a Record Type"
-		);
 		setImmediate(() => {
 			try {
+				expect(wrapper.find(ComboBox).props().placeholder).toEqual(
+					"Select a Record Type"
+				);
+
 				expect(
 					wrapper
 						.update()
@@ -219,7 +220,7 @@ describe("Record Type Picker", function() {
 		});
 	});
 
-	it("disables form when no folder Id set", () => {
+	it("disables form when no folder Id set", (done) => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			null,
@@ -228,10 +229,17 @@ describe("Record Type Picker", function() {
 			true
 		);
 
-		expect(wrapper.find(ComboBox).props().disabled).toBeTruthy();
+		setImmediate(() => {
+			try {
+				expect(wrapper.find(ComboBox).props().disabled).toBeTruthy();
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
-	it("does not disable form when no folder Id set and not linked folder", () => {
+	it("does not disable form when no folder Id set and not linked folder", (done) => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			null,
@@ -240,13 +248,28 @@ describe("Record Type Picker", function() {
 			false
 		);
 
-		expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
+		setImmediate(() => {
+			try {
+				expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
-	it("enables form when  folder Id set", () => {
+	it("enables form when  folder Id set", (done) => {
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 
 		wrapper.setProps({ folderId: "fff" });
-		expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
+
+		setImmediate(() => {
+			try {
+				expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
 	});
 
 	it("checkin Style List populated", (done) => {

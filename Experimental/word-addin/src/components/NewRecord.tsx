@@ -19,6 +19,7 @@ interface INewRecordState {
 	saving: Boolean;
 	checkinStyles: IDropdownOption[];
 	checkinUsingStyle: Boolean;
+	savedObject: ITrimMainObject | undefined;
 }
 
 interface INewRecordProps {
@@ -27,8 +28,7 @@ interface INewRecordProps {
 	wordConnector?: IOfficeConnector;
 	className?: string;
 	trimType: BaseObjectTypes;
-	onTrimObjectCreated?: (newObject?: ITrimMainObject) => void;
-	onAfterSave?: () => void;
+	onAfterSave?: (newObject?: ITrimMainObject) => void;
 	folderId?: string;
 	isLinkedFolder?: Boolean;
 	bypassUpdateEmailSubject?: Boolean;
@@ -51,6 +51,7 @@ export class NewRecord extends React.Component<
 			checkinStyles: [],
 			checkinUsingStyle: false,
 			saving: false,
+			savedObject: undefined,
 		};
 	}
 
@@ -63,8 +64,8 @@ export class NewRecord extends React.Component<
 	}
 
 	componentDidUpdate(prevProps: INewRecordProps, prevState: INewRecordState) {
-		const { appStore } = this.props;
-		const { processing, saving } = this.state;
+		const { appStore, onAfterSave } = this.props;
+		const { processing, saving, savedObject } = this.state;
 
 		if (processing !== prevState.processing || saving !== prevState.saving) {
 			let spinnerLabel = appStore!.FileName;
@@ -77,6 +78,12 @@ export class NewRecord extends React.Component<
 				processing || saving,
 				saving ? spinnerLabelFull : undefined
 			);
+		}
+
+		if (saving === false && prevState.saving === true) {
+			if (onAfterSave) {
+				onAfterSave(savedObject);
+			}
 		}
 	}
 
@@ -92,6 +99,8 @@ export class NewRecord extends React.Component<
 			trimType,
 			processInBackgroundIfPossible,
 		} = this.props;
+		appStore!.setSpinning(true);
+
 		const { checkinUsingStyle } = this.state;
 		this.showUI = false;
 
@@ -143,9 +152,12 @@ export class NewRecord extends React.Component<
 							DataEntryFormDefinition: data.DataEntryFormDefinition,
 						};
 						this.doSave();
+					} else {
+						appStore!.setSpinning(false);
 					}
 				})
 				.catch((e) => {
+					appStore!.setSpinning(false);
 					appStore!.setError(e);
 				});
 		}
@@ -183,17 +195,10 @@ export class NewRecord extends React.Component<
 	};
 
 	private saveFinished = (saved: boolean, trimObject?: ITrimMainObject) => {
-		const { onTrimObjectCreated, onAfterSave } = this.props;
-		this.setState({ saving: false });
 		if (saved) {
-			if (onTrimObjectCreated) {
-				onTrimObjectCreated(trimObject);
-			}
+			this.setState({ savedObject: trimObject });
 		}
-
-		if (onAfterSave) {
-			onAfterSave();
-		}
+		this.setState({ saving: false });
 	};
 
 	private doSave = () => {

@@ -41,18 +41,27 @@ export class ViewTrimObject extends React.Component<
 		};
 	}
 
+	private mounted: Boolean;
+
 	private loadRecordDetails = (): any => {
 		const { trimConnector, recordUri, trimType } = this.props;
 
 		return trimConnector!
 			.getObjectDetails(trimType, recordUri)
 			.then((response: IObjectDetails) => {
-				this.setState({ recordDetails: response });
+				if (this.mounted) {
+					this.setState({ recordDetails: response });
+				}
 			});
 	};
 
 	componentDidMount() {
+		this.mounted = true;
 		return this.loadRecordDetails();
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
 	}
 
 	componentDidUpdate(prevProps: ViewTrimObjectProps) {

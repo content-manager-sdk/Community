@@ -37,6 +37,7 @@ interface IRecordTypePickerProps {
 	computedCheckinStyleName?: string;
 	includeCheckinStyles: boolean;
 	defaultRecordType?: ITrimMainObject;
+	disabled?: boolean;
 }
 
 export class RecordTypePicker extends React.Component<
@@ -56,6 +57,7 @@ export class RecordTypePicker extends React.Component<
 	recordTypeUri: number = 0;
 	recordProps: any = {};
 	recordFields: any = {};
+	_mounted: Boolean;
 
 	setRecordTypes(recTypes: IDropdownOption[]) {
 		const { defaultRecordType, appStore } = this.props;
@@ -91,6 +93,10 @@ export class RecordTypePicker extends React.Component<
 		});
 	}
 
+	componentWillUnmount() {
+		this._mounted = false;
+	}
+
 	componentDidMount() {
 		const {
 			trimConnector,
@@ -99,6 +105,8 @@ export class RecordTypePicker extends React.Component<
 			includeCheckinStyles,
 			defaultRecordType,
 		} = this.props;
+
+		this._mounted = true;
 
 		if (trimConnector) {
 			this.setState({
@@ -129,47 +137,49 @@ export class RecordTypePicker extends React.Component<
 			return Promise.all(promisesToRun).then((values) => {
 				const response = values[0] as ISearchResults<IRecordType>;
 
-				me.setRecordTypes(
-					response.results.map(function(o: IRecordType) {
-						return { key: o.Uri, text: o.NameString } as IDropdownOption;
-					})
-				);
-				if (values.length > 1) {
-					const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
-					this.setState({
-						checkinStyles: placesResponse.results.map(function(
-							o: ICheckinPlace
-						) {
-							let selected = false;
-							if (
-								defaultRecordType &&
-								defaultRecordType.TrimType == BaseObjectTypes.CheckinStyle &&
-								defaultRecordType.Uri === o.CheckinAs.Uri
+				if (this._mounted) {
+					me.setRecordTypes(
+						response.results.map(function(o: IRecordType) {
+							return { key: o.Uri, text: o.NameString } as IDropdownOption;
+						})
+					);
+					if (values.length > 1) {
+						const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
+						this.setState({
+							checkinStyles: placesResponse.results.map(function(
+								o: ICheckinPlace
 							) {
-								selected = true;
-							}
-							return {
-								key: o.CheckinAs.Uri,
-								text: o.NameString,
-								selected,
-							} as IDropdownOption;
-						}),
-					});
-				}
-				if (
-					defaultRecordType ||
-					appStore.documentInfo.Options.DefaultDocumentRecordType > 0
-				) {
-					me.recordTypeUri =
-						defaultRecordType!.Uri ||
-						appStore.documentInfo.Options.DefaultDocumentRecordType;
-					if (onRecordTypeSelected) {
-						onRecordTypeSelected(
-							me.recordTypeUri,
-							defaultRecordType
-								? defaultRecordType.TrimType === BaseObjectTypes.CheckinStyle
-								: false
-						);
+								let selected = false;
+								if (
+									defaultRecordType &&
+									defaultRecordType.TrimType == BaseObjectTypes.CheckinStyle &&
+									defaultRecordType.Uri === o.CheckinAs.Uri
+								) {
+									selected = true;
+								}
+								return {
+									key: o.CheckinAs.Uri,
+									text: o.NameString,
+									selected,
+								} as IDropdownOption;
+							}),
+						});
+					}
+					if (
+						defaultRecordType ||
+						appStore.documentInfo.Options.DefaultDocumentRecordType > 0
+					) {
+						me.recordTypeUri =
+							defaultRecordType!.Uri ||
+							appStore.documentInfo.Options.DefaultDocumentRecordType;
+						if (onRecordTypeSelected) {
+							onRecordTypeSelected(
+								me.recordTypeUri,
+								defaultRecordType
+									? defaultRecordType.TrimType === BaseObjectTypes.CheckinStyle
+									: false
+							);
+						}
 					}
 				}
 			});
@@ -206,6 +216,7 @@ export class RecordTypePicker extends React.Component<
 			folderId,
 			computedCheckinStyleName,
 			isLinkedFolder,
+			disabled,
 		} = this.props;
 
 		const { checkinStyles, checkinUsingStyle, recordTypes } = this.state;
@@ -241,6 +252,7 @@ export class RecordTypePicker extends React.Component<
 			},
 			useComboBoxAsMenuWidth: true,
 			onChange: this._onChange,
+			disabled,
 		};
 
 		return (
@@ -265,7 +277,7 @@ export class RecordTypePicker extends React.Component<
 							) : null;
 						}}
 					/>
-				) : recordTypes ? (
+				) : recordTypes && recordTypes.length > 0 ? (
 					<ComboBox
 						{...comboProps}
 						disabled={
