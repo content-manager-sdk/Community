@@ -7,13 +7,9 @@ import { OutlookConnector } from "../office-coms/OutlookConnector";
 import TrimConnector, {
 	IDriveInformation,
 	ISearchClauseDef,
-	ITrimConnector,
 	ITrimMainObject,
 	ILocation,
-	IObjectDetails,
-	ITokenCallback,
 	ISearchResults,
-	ISearchOptions,
 	ISearchParameters,
 	ISearchClauseOrFieldDef,
 	IDatabase,
@@ -45,6 +41,13 @@ outlookConnector.getRecordUrisFromItem = function() {
 	return new Promise(function(resolve, reject) {
 		resolve([]);
 	});
+}.bind(outlookConnector);
+
+outlookConnector.getAttachments = function() {
+	return [
+		{ Name: "test", Id: "test", IsAttachment: false },
+		{ Name: "test1", Id: "test1", IsAttachment: true },
+	];
 }.bind(outlookConnector);
 
 let postedFields: any;
@@ -181,5 +184,17 @@ describe("Test basic setup from Trim", () => {
 				done.fail(e);
 			}
 		});
+	});
+
+	test("no more to file", () => {
+		appStore.documentInfo.Uris = [1, 2];
+
+		expect(appStore.moreToFile()).toBeFalsy();
+	});
+
+	test("more to file", () => {
+		appStore.documentInfo.Uris = [1];
+
+		expect(appStore.moreToFile()).toBeTruthy();
 	});
 });

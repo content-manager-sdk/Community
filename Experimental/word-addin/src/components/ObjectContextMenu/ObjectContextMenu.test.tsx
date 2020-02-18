@@ -2,11 +2,8 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 import { ObjectContextMenu } from "./ObjectContextMenu";
-import { IconButton } from "office-ui-fabric-react/lib/Button";
+
 import TrimConnector, {
-	IDriveInformation,
-	IObjectDetails,
-	ITrimMainObject,
 	IDriveActionInformation,
 	IEnumDetails,
 } from "../../trim-coms/trim-connector";
@@ -18,6 +15,7 @@ import {
 } from "office-ui-fabric-react/lib/ContextualMenu";
 import { CommandBar } from "office-ui-fabric-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import { OutlookConnector } from "../../office-coms/OutlookConnector";
 
 describe("Object Context Menu", () => {
 	let checkinUri = 0;
@@ -32,6 +30,7 @@ describe("Object Context Menu", () => {
 	let completedCommand = "";
 	let isEmail = false;
 	let saveDocumentCalled = false;
+	let moreToFile = false;
 
 	const returnedDocumentInfo = {
 		Id: "test-id",
@@ -51,6 +50,9 @@ describe("Object Context Menu", () => {
 					completedCommand = key;
 				}}
 				appStore={{
+					moreToFile: () => {
+						return moreToFile;
+					},
 					isEmail: () => {
 						return isEmail;
 					},
@@ -149,6 +151,7 @@ describe("Object Context Menu", () => {
 		completedCommand = "";
 		isEmail = false;
 		saveDocumentCalled = false;
+		moreToFile = false;
 	});
 
 	let trimConnector = new TrimConnector();
@@ -603,6 +606,40 @@ describe("Object Context Menu", () => {
 					return mp.key === "RecCheckIn";
 				})
 		).toBeFalsy();
+	});
+
+	it("file more button not available in Outlook when there are no more to file", () => {
+		isEmail = true;
+		moreToFile = false;
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(
+			wrapper
+				.find(CommandBar)
+				.props()
+				.farItems.pop()
+				.subMenuProps.items.find((mp) => {
+					return mp.key === "FileMore";
+				})
+		).toBeFalsy();
+	});
+
+	it("file more button available in Outlook when there are more to file", () => {
+		isEmail = true;
+		moreToFile = true;
+		const wrapper = makeWrapper(false);
+		expect.assertions(1);
+
+		expect(
+			wrapper
+				.find(CommandBar)
+				.props()
+				.farItems.pop()
+				.subMenuProps.items.find((mp) => {
+					return mp.key === "FileMore";
+				})
+		).toBeTruthy();
 	});
 
 	it("save on delete button hidden for Outlook", () => {

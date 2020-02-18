@@ -116,7 +116,10 @@ export class ObjectContextMenu extends React.Component<
 					);
 				});
 		} else {
-			if (item.key === "pasteLink") {
+			if (item.key === "FileMore") {
+				appStore!.setDocumentInfo({ ...appStore.documentInfo, Uris: [] });
+				this.callCommandComplete(item.key);
+			} else if (item.key === "pasteLink") {
 				const url = appStore.getWebClientUrl(record.Uri);
 				wordConnector!.insertLink(record.NameString!, url);
 				this.callCommandComplete(item.key);
@@ -339,6 +342,14 @@ export class ObjectContextMenu extends React.Component<
 					onClick: this._onActionClick,
 					data: {},
 				});
+
+				if (appStore!.moreToFile()) {
+					menuItems.push({
+						key: "FileMore",
+						text: appStore!.messages.web_fileMore,
+						onClick: this._onActionClick,
+					});
+				}
 			}
 		}
 

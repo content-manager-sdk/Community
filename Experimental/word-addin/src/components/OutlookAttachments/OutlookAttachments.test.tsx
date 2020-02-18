@@ -34,7 +34,10 @@ describe("Outlook attachments", function() {
 		testPrefix = "";
 		appStore.setStatus("WAITING");
 		appStore.setDocumentInfo(null);
-		appStore.setMessages({ core_mailAttachmentsCap: "Attachments" });
+		appStore.setMessages({
+			core_mailAttachmentsCap: "Attachments",
+			core_completeEmail: "test",
+		});
 		foundAttachments = [
 			{ Id: "a", Name: "A", IsAttachment: false },
 			{ Id: "b", Name: "B", IsAttachment: true },
