@@ -111,7 +111,7 @@ describe("New Record layout", function() {
 		errorMessage = undefined;
 		populatePages = false;
 		rejectRegister = false;
-		mockStore.documentInfo.EmailPath = null;
+		mockStore.setDocumentInfo({ ...mockStore.documentInfo, EmailPath: null });
 		noFormNeeded = false;
 		//mockStore.RecordUri = 0;
 		recordUriTest = 0;
@@ -507,7 +507,7 @@ describe("New Record layout", function() {
 
 	[
 		{ folderId: "123", createPlace: false },
-		{ folderId: undefined, createPlace: true },
+		{ folderId: undefined, createPlace: false },
 	].forEach((testData) => {
 		it("sends computed fields to Checkin Style", () => {
 			const wrapper = makeWrapper(
@@ -782,35 +782,45 @@ describe("New Record layout", function() {
 		);
 	});
 
-	it(`sends computed props with name for Check in Style`, () => {
-		const wrapper = makeWrapper(
-			BaseObjectTypes.CheckinStyle,
-			null,
-			"abc",
-			"abc label"
-		);
+	[
+		{ isLinkedFolder: true, useForServerMailCapture: false },
+		{ isLinkedFolder: false, useForServerMailCapture: false },
+	].forEach((data) => {
+		it(`sends computed props with name for Check in Style, is linked folder ${data.isLinkedFolder}`, () => {
+			const wrapper = makeWrapper(
+				BaseObjectTypes.CheckinStyle,
+				null,
+				"abc",
+				"abc label",
+				data.isLinkedFolder
+			);
 
-		const propSheet = wrapper.find(PropertySheet);
+			const propSheet = wrapper.find(PropertySheet);
 
-		expect(propSheet.props().computedProperties).toEqual(
-			expect.arrayContaining([
-				{
-					Name: "CheckinStyleUseForServerMailCapture",
-					Value: false,
-					Type: "Property",
-				},
-				{
-					Name: "CheckinStyleUseForServerMailFolderType",
-					Value: "NormalFolder",
-					Type: "Property",
-				},
-				{ Name: "CheckinStyleRecordType", Value: undefined, Type: "Property" },
-				{
-					Name: "CheckinStyleName",
-					Value: "abc label",
-					Type: "Property",
-				},
-			])
-		);
+			expect(propSheet.props().computedProperties).toEqual(
+				expect.arrayContaining([
+					{
+						Name: "CheckinStyleUseForServerMailCapture",
+						Value: data.useForServerMailCapture,
+						Type: "Property",
+					},
+					{
+						Name: "CheckinStyleUseForServerMailFolderType",
+						Value: "NormalFolder",
+						Type: "Property",
+					},
+					{
+						Name: "CheckinStyleRecordType",
+						Value: undefined,
+						Type: "Property",
+					},
+					{
+						Name: "CheckinStyleName",
+						Value: "abc label",
+						Type: "Property",
+					},
+				])
+			);
+		});
 	});
 });

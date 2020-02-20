@@ -2,7 +2,7 @@ import AppStoreBase from "./AppStoreBase";
 import { OutlookConnector } from "src/office-coms/OutlookConnector";
 
 export class AppStoreOutlook extends AppStoreBase {
-	protected isEmail(): boolean {
+	public isEmail(): boolean {
 		return true;
 	}
 

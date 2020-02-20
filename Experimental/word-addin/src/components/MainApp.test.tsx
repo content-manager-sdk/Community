@@ -10,10 +10,34 @@ import OutlookAttachments from "./OutlookAttachments/OutlookAttachments";
 describe("MainApp", function() {
 	it("Shows OutlookAttachments component when no Record Uri found", function(this: any) {
 		const wrapper = shallow<MainApp>(
-			<MainApp appStore={{ documentInfo: { Uris: [] }, status: "WAITING" }} />
+			<MainApp
+				appStore={{
+					documentInfo: { Uris: [] },
+					status: "WAITING",
+					isEmail: function() {
+						return true;
+					},
+				}}
+			/>
 		);
 
 		expect(wrapper.find(OutlookAttachments).exists()).toBeTruthy();
+	});
+
+	it("Shows NewRecord for Word Addin component when no Record Uri found", function(this: any) {
+		const wrapper = shallow<MainApp>(
+			<MainApp
+				appStore={{
+					documentInfo: { Uris: [] },
+					status: "WAITING",
+					isEmail: function() {
+						return false;
+					},
+				}}
+			/>
+		);
+
+		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
 	});
 
 	it("Does not show New Record component when no Record Uri found", function(this: any) {

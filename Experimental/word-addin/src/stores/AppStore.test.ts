@@ -154,7 +154,7 @@ class MockTrimConnector implements ITrimConnector {
 			if (Mock_Trim_Action === "ERROR") {
 				reject({ message: "error" });
 			} else {
-				resolve({ Uri: 567 });
+				resolve({ Uri: 567, URN: "urn_567" });
 			}
 		});
 	}
@@ -321,10 +321,14 @@ describe("Test basic setup from Trim", () => {
 		});
 	});
 
+	it("isEmail is false", () => {
+		expect(appStore.isEmail()).toBeFalsy();
+	});
+
 	it("updates the store after a document has been registered in TRIM", async () => {
 		// appStore.dcTest("ffff");
 		await appStore.createRecord(2, {});
-		expect(appStore.documentInfo.Uris).toEqual([567]);
+		expect(appStore.documentInfo.URN).toEqual("urn_567");
 	});
 
 	it("sets the Drive Id in the DriveID field when stored in TRIM", (done) => {

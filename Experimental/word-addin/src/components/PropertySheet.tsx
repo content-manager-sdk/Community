@@ -77,47 +77,69 @@ export class PropertySheet extends React.Component<
 	private fieldInit: IGetItemDef[] = [];
 
 	doValues() {
+		const { onChange } = this.props;
 		const newValues = {};
 
 		this.fieldInit.forEach((initData) => {
-			const v = this.getFieldValue(
+			let v = this.getFieldValue(
 				initData.pageItem,
 				initData.getValue,
 				initData.fieldType,
 				initData.asArray
 			);
 
-			if (v) {
+			if (v && (!Array.isArray(v) || v.length > 0)) {
 				newValues[initData.pageItem.Name] = v;
+
+				if (Array.isArray(v) && v.length === 1 && v[0].Uri > 0) {
+					v = v[0].Uri;
+				}
+
+				if (typeof v.toISOString === "function") {
+					v = v.toISOString();
+				}
+
+				if (initData.pageItem.Type === "Field") {
+					this.formFields[initData.pageItem.Name] = v;
+				} else {
+					this.formValues[initData.pageItem.Name] = v;
+				}
 			}
 		});
 
+		if (
+			onChange &&
+			(Object.keys(this.formValues).length > 0 ||
+				Object.keys(this.formFields).length > 0)
+		) {
+			onChange(this.formValues, this.formFields);
+		}
+
 		this.setState({ fieldValues: newValues });
+		this.preservedValues = newValues;
 	}
 	componentDidMount() {
 		this.doValues();
 	}
 	componentDidUpdate(prevProps: IPropertySheetProps) {
-		const { formDefinition, onChange } = this.props;
+		const { formDefinition } = this.props;
 
 		if (
 			JSON.stringify(formDefinition) !==
 			JSON.stringify(prevProps.formDefinition)
 		) {
-			this.doValues();
-
 			this.formValues = {};
 			this.formFields = {};
 
+			this.doValues();
+
 			this.setState({});
-			if (onChange) {
-				onChange(this.formValues, this.formFields);
-			}
 		}
 	}
 
 	private formValues: any = {};
 	private formFields: any = {};
+	private preservedValues: any = {};
 	setMultiLine(propName: string, multiline: boolean) {
 		const newState = this.state;
 		newState.isTextFieldMultiline[propName] = multiline;
@@ -128,10 +150,12 @@ export class PropertySheet extends React.Component<
 	private doPropOrFieldChange = (prop: IPageItemValue, newValue: any) => {
 		const { onChange } = this.props;
 		if (onChange) {
+			let v = newValue;
+
 			if (prop.Type === "Field") {
-				this.formFields[prop.Name] = newValue;
+				this.formFields[prop.Name] = v;
 			} else {
-				this.formValues[prop.Name] = newValue;
+				this.formValues[prop.Name] = v;
 			}
 			onChange(this.formValues, this.formFields);
 		}
@@ -140,29 +164,19 @@ export class PropertySheet extends React.Component<
 	private _onSelectObject = (prop: IPageItem) => (
 		trimObject: ITrimMainObject
 	) => {
-		const { fieldValues } = this.state;
-
-		this.setState({
-			fieldValues: { ...fieldValues, [prop.Name]: [trimObject] },
-		});
-
+		this.preservedValues[prop.Name] = [trimObject];
 		this.doPropOrFieldChange(prop, trimObject.Uri);
 	};
 
 	private _onSelectLookupItem = (prop: IPageItem) => (
 		trimObject: ITrimMainObject
 	) => {
-		const { fieldValues } = this.state;
-		this.setState({
-			fieldValues: { ...fieldValues, [prop.Name]: [trimObject] },
-		});
-
+		this.preservedValues[prop.Name] = [trimObject];
 		this.doPropOrFieldChange(prop, trimObject.NameString);
 	};
 
 	private _onSelectDate = (prop: IPageItem) => (date: Date) => {
-		const { fieldValues } = this.state;
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: date } });
+		this.preservedValues[prop.Name] = date;
 		this.doPropOrFieldChange(prop, date.toISOString());
 	};
 
@@ -170,9 +184,7 @@ export class PropertySheet extends React.Component<
 		event: any,
 		newText: string
 	) => {
-		const { fieldValues } = this.state;
-
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: newText } });
+		this.preservedValues[prop.Name] = newText;
 		this.textChange(prop, newText);
 	};
 
@@ -186,9 +198,7 @@ export class PropertySheet extends React.Component<
 	};
 
 	private _onNumberChange = (prop: IPageItem) => (newNumber: number) => {
-		const { fieldValues } = this.state;
-
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: newNumber } });
+		this.preservedValues[prop.Name] = newNumber;
 		this.doPropOrFieldChange(prop, newNumber);
 	};
 
@@ -196,9 +206,7 @@ export class PropertySheet extends React.Component<
 		event: any,
 		checked: boolean
 	) => {
-		const { fieldValues } = this.state;
-
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: checked } });
+		this.preservedValues[prop.Name] = checked;
 		this.doPropOrFieldChange(prop, checked);
 	};
 
@@ -206,9 +214,7 @@ export class PropertySheet extends React.Component<
 		event: any,
 		item: IComboBoxOption
 	) => {
-		const { fieldValues } = this.state;
-
-		this.setState({ fieldValues: { ...fieldValues, [prop.Name]: item.key } });
+		this.preservedValues[prop.Name] = item.key;
 		this.doPropOrFieldChange(prop, item.key);
 	};
 
@@ -448,7 +454,9 @@ export class PropertySheet extends React.Component<
 						linkFormat={PivotLinkFormat.tabs}
 						linkSize={PivotLinkSize.normal}
 						onLinkClick={() => {
-							this.forceUpdate();
+							this.setState({
+								fieldValues: this.preservedValues,
+							});
 						}}
 					>
 						{formDefinition.Pages.map((page: any) => {

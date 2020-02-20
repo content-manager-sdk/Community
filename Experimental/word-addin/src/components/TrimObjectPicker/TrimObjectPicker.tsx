@@ -93,6 +93,24 @@ export class TrimObjectPicker
 		//	}
 	}
 
+	componentDidUpdate(prevProps: ITrimObjectPickerProps) {
+		let { value } = this.props;
+		value = value || [];
+
+		let prevValue = prevProps.value;
+		prevValue = prevValue || [];
+
+		let updateRequired = value.length !== prevValue.length;
+
+		if (!updateRequired) {
+			updateRequired = JSON.stringify(value) !== JSON.stringify(prevValue);
+		}
+
+		if (updateRequired) {
+			this.setState({ selectedItems: value });
+		}
+	}
+
 	public render(): JSX.Element {
 		const {
 			label,
@@ -244,7 +262,7 @@ export class TrimObjectPicker
 		props?: ITextFieldProps,
 		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
 	): JSX.Element => {
-		const { advancedSearch } = this.state;
+		const { advancedSearch, selectedItems } = this.state;
 
 		return (
 			<React.Fragment>
@@ -261,7 +279,7 @@ export class TrimObjectPicker
 					}}
 				/>
 				<div className="trim-object-pills">
-					{this.state.selectedItems.map((selectedItem) => {
+					{selectedItems.map((selectedItem) => {
 						return (
 							<div className="trim-pill-container" key={selectedItem.Uri}>
 								<div className="trim-pill-content">

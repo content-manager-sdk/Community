@@ -141,7 +141,7 @@ export class ObjectContextMenu extends React.Component<
 					this.callCommandComplete(item.key);
 					appStore.setSpinning(false);
 				});
-			} else if (item.data.NeedsAnObject) {
+			} else if (item.data && item.data.NeedsAnObject) {
 				appStore.setSpinning(true);
 				const me = this;
 				wordConnector!.saveDocument().then(() => {
@@ -173,6 +173,9 @@ export class ObjectContextMenu extends React.Component<
 							})
 							.then((fileName) => {
 								runAction(fileName);
+							})
+							.catch((e) => {
+								appStore.setError(e);
 							});
 					} else {
 						runAction("");
@@ -370,6 +373,7 @@ export class ObjectContextMenu extends React.Component<
 						? "Disable check in and delete on close"
 						: "Enable check in and delete on close",
 					iconOnly: true,
+					data: { NeedsAnObject: true },
 					disabled: checkinMenuItem.disabled,
 					onClick: this._onActionClick,
 				});

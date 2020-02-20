@@ -47,6 +47,8 @@ export interface IAppStore {
 	): Promise<ITrimMainObject>;
 	getSpinningLabel(): string | undefined;
 	setFileName(fileName: string): void;
+	moreToFile(): boolean;
+	isEmail(): boolean;
 }
 
 export class AppStoreBase implements IAppStore {
@@ -85,13 +87,16 @@ export class AppStoreBase implements IAppStore {
 		throw new Error("Method not implemented");
 	}
 
-	protected isEmail(): boolean {
+	public isEmail(): boolean {
 		return false;
 	}
 	public deferFetchDriveInfo = () => {
 		this._deferFetchDriveInfo = true;
 	};
 
+	public moreToFile(): boolean {
+		return false;
+	}
 	public fetchBaseSettingFromTrim = (fromDialog: boolean) => {
 		const tc = this.trimConnector;
 		const self = this;
@@ -232,7 +237,7 @@ export class AppStoreBase implements IAppStore {
 					.then((newRecord: ITrimMainObject) => {
 						if (newRecord.Uri > 0) {
 							this.setDocumentInfo({
-								Uris: this.isEmail() ? [] : [newRecord.Uri],
+								Uris: [],
 								//CommandDefs: newRecord.CommandDefs!,
 								Id: this.documentInfo.Id,
 								Options: this.documentInfo.Options,

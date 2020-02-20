@@ -409,7 +409,7 @@ namespace OneDriveAuthPlugin
 
 				if (uris.Count == 1)
 				{
-					registeredFile.Uri = recordUris;
+					registeredFile.Uri = uris;
 				}
 			}
 			else if (request.IsEmail && recordUris.Length > 0)

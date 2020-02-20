@@ -109,6 +109,24 @@ describe("TrimObjectPicker", function() {
 		]);
 	});
 
+	it("changes the default value", () => {
+		const wrapper = shallow(
+			<TrimObjectPicker
+				disabled
+				label="test"
+				trimType={BaseObjectTypes.Record}
+				trimConnector={trimConnector}
+				value={[{ Uri: 1, NameString: "test" }]}
+			/>
+		);
+
+		wrapper.setProps({ value: [{ Uri: 2, NameString: "test2" }] });
+
+		expect(wrapper.state("selectedItems")).toEqual([
+			{ Uri: 2, NameString: "test2" },
+		]);
+	});
+
 	it("should open Object Picker ", () => {
 		const wrapper = mountObjectPicker({ label: "label" });
 

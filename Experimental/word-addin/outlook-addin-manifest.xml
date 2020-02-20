@@ -147,22 +147,6 @@
 											<SupportsPinning>true</SupportsPinning>
 										</Action>
 									</Control>
-									<Control xsi:type="Button" id="msgAttachmentsButton">
-										<Label resid="funcAttachmentsButtonLabel" />
-										<Supertip>
-											<Title resid="funcAttachmentsSuperTipTitle" />
-											<Description resid="attachmentsSuperTipDescription" />
-										</Supertip>
-										<Icon>
-											<bt:Image size="16" resid="attachments-icon-16" />
-											<bt:Image size="32" resid="attachments-icon-32" />
-											<bt:Image size="80" resid="attachments-icon-80" />
-										</Icon>
-										<Action xsi:type="ShowTaskpane">
-											<SourceLocation resid="attachmentsTaskPaneUrl" />
-											<SupportsPinning>true</SupportsPinning>
-										</Action>
-									</Control>
 
 									<Control xsi:type="Button" id="msgCheckinStylesFunctionButton">
 										<Label resid="funcCheckinStylesButtonLabel" />
@@ -338,11 +322,11 @@
 					<bt:Url id="functionFile" DefaultValue="https://desktop-39dgcn3:3000/FunctionFile/Functions.html"/>
 					<bt:Url id="readTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/AllPropsView/AllProps.html"/>
 					<bt:Url id="composeTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/InsertTextPane/InsertText.html"/>
-					<bt:Url id="checkinTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/Outlook"/>
-					<bt:Url id="attachmentsTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/Attachments"/>
-					<bt:Url id="linksTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/OutlookLinks"/>
-					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/CheckinStyles"/>
-					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/LinkedFolders"/>
+					<bt:Url id="checkinTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?Outlook=1"/>
+					<bt:Url id="attachmentsTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?Attachments=1"/>
+					<bt:Url id="linksTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?OutlookLinks=1"/>
+					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?CheckinStyles=1"/>
+					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?LinkedFolders=1"/>
 
 
 					<bt:Url id="restMobileTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/RestCaller/mobile/RestCallerMobile.html"/>

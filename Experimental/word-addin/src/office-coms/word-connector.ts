@@ -17,7 +17,15 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 				resolve(fileName);
 			};
 
-			this.getDocumentAsCompressed({ onData: onData, writeSlice });
+			const onError = (error: any) => {
+				reject(error);
+			};
+
+			this.getDocumentAsCompressed({
+				onData: onData,
+				writeSlice,
+				onError: onError,
+			});
 		});
 	}
 	setAutoOpen(autoOpen: boolean): void {
@@ -66,6 +74,9 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 					);
 				} else {
 					// showNotification("Error:", result.error.message);
+
+					const { onError } = args;
+					onError(result.error.message);
 				}
 			}
 		);
@@ -121,6 +132,8 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 			} else {
 				gotAllSlices = false;
 				file.closeAsync();
+				const { onError } = args;
+				onError(sliceResult.error.message);
 				//   showNotification("getSliceAsync Error:", sliceResult.error.message);
 			}
 		});

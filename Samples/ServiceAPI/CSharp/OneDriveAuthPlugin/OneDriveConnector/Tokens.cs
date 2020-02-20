@@ -42,7 +42,7 @@ namespace OneDriveConnector
 			//	formData["scope"] = "https://graph.microsoft.com/Files.ReadWrite.All";
 				//
 				formData["resource"] = "https://graph.microsoft.com";
-				//formData["scope"] = "https://graph.microsoft.com/.default";
+				formData["scope"] = "https://graph.microsoft.com/.default";
 				//
 
 

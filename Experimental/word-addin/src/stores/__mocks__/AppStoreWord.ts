@@ -9,6 +9,12 @@ import { IAppStore, IUserProfile } from "../AppStoreBase";
 import TrimMessages from "src/trim-coms/trim-messages";
 
 export class AppStoreWord implements IAppStore {
+	isEmail(): boolean {
+		throw new Error("Method not implemented.");
+	}
+	moreToFile(): boolean {
+		throw new Error("Method not implemented.");
+	}
 	setFileName(fileName: string): void {
 		throw new Error("Method not implemented.");
 	}

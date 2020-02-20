@@ -667,9 +667,6 @@ describe("Property Sheet", function() {
 									EditPurpose: 1,
 									EditPurposeExtra: 9000000500,
 									Value: {
-										TrimType: "LookupItem",
-										NameString: "High",
-
 										Uri: 1,
 									},
 								},

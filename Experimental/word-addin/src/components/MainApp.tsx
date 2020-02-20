@@ -5,6 +5,7 @@ import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import EditTrimObject from "./EditTrimObject/EditTrimObject";
 import { IAppStore } from "src/stores/AppStoreBase";
 import OutlookAttachments from "./OutlookAttachments/OutlookAttachments";
+import NewRecord from "./NewRecord";
 
 export class MainApp extends React.Component<
 	{ appStore?: any; className?: string },
@@ -47,7 +48,11 @@ export class MainApp extends React.Component<
 				/>
 			);
 		} else if (appStore!.status === "WAITING") {
-			return <OutlookAttachments />;
+			return appStore!.isEmail() ? (
+				<OutlookAttachments />
+			) : (
+				<NewRecord className={className} trimType={BaseObjectTypes.Record} />
+			);
 		} else {
 			return null;
 		}

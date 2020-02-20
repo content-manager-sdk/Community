@@ -92,7 +92,7 @@ export class NewRecord extends React.Component<
 	recordFields: any = {};
 	showUI: Boolean = false;
 
-	setPropertySheet() {
+	private setPropertySheet = () => {
 		const {
 			trimConnector,
 			appStore,
@@ -161,44 +161,59 @@ export class NewRecord extends React.Component<
 					appStore!.setError(e);
 				});
 		}
-	}
+	};
 
 	private _onChange = (uri: number, isCheckinStyle: boolean) => {
 		const { validateRecordType, appStore } = this.props;
 
-		this.setState({ processing: true, checkinUsingStyle: isCheckinStyle });
+		this.setState(
+			{ processing: true, checkinUsingStyle: isCheckinStyle },
+			() => {
+				if (isCheckinStyle) {
+					this.recordTypeUri = uri;
 
-		if (isCheckinStyle) {
-			this.recordTypeUri = uri;
+					this.setPropertySheet();
+				} else {
+					const recordTypeUri = uri;
 
-			this.setPropertySheet();
-		} else {
-			const recordTypeUri = uri;
+					if (validateRecordType) {
+						validateRecordType(recordTypeUri).then((isValid) => {
+							if (isValid) {
+								this.recordTypeUri = recordTypeUri;
 
-			if (validateRecordType) {
-				validateRecordType(recordTypeUri).then((isValid) => {
-					if (isValid) {
+								this.setPropertySheet();
+							} else {
+								appStore!.setError(
+									appStore!.messages.web_RecordTypeRequiresForm
+								);
+								this.setState({ processing: false });
+							}
+						});
+					} else {
 						this.recordTypeUri = recordTypeUri;
 
 						this.setPropertySheet();
-					} else {
-						appStore!.setError(appStore!.messages.web_RecordTypeRequiresForm);
-						this.setState({ processing: false });
 					}
-				});
-			} else {
-				this.recordTypeUri = recordTypeUri;
-
-				this.setPropertySheet();
+				}
 			}
-		}
+		);
 	};
 
 	private saveFinished = (saved: boolean, trimObject?: ITrimMainObject) => {
+		const { appStore } = this.props;
+
 		if (saved) {
-			this.setState({ savedObject: trimObject });
+			this.setState({ savedObject: trimObject, saving: false });
+
+			if (!appStore!.isEmail()) {
+				appStore!.setDocumentInfo({
+					...appStore!.documentInfo,
+					Uris: [trimObject!.Uri],
+				});
+			}
+		} else {
+			this.setState({ saving: false });
 		}
-		this.setState({ saving: false });
 	};
 
 	private doSave = () => {
@@ -322,7 +337,7 @@ export class NewRecord extends React.Component<
 			computedProps.push(
 				{
 					Name: "CheckinStyleUseForServerMailCapture",
-					Value: !folderId,
+					Value: isLinkedFolder === true && !folderId ? true : false,
 					Type: "Property",
 				},
 				{

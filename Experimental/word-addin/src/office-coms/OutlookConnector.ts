@@ -49,7 +49,7 @@ export class OutlookConnector extends OfficeConnector
 									appStore.setStatus("WAITING");
 								})
 								.catch((error) => {
-									appStore.setError(error, "fetch base settings for dialog");
+									appStore.setError(error, "initialising Outlook");
 								});
 						});
 					});
