@@ -45,10 +45,26 @@ export class OutlookAttachments extends React.Component<
 		};
 	}
 
-	componentDidMount() {
-		const { wordConnector } = this.props;
+	async componentDidMount() {
+		const { wordConnector, appStore } = this.props;
 
+		const filedRecords = await appStore!.fetchFiledRecords();
 		const attachments = (wordConnector as OutlookConnector).getAttachments();
+		attachments.forEach(function(attachment) {
+			if (
+				filedRecords.some(function(filedRecord) {
+					return (
+						(!attachment.IsAttachment &&
+							filedRecord.MessageId &&
+							filedRecord.MessageId.Value) ||
+						(filedRecord.ESource &&
+							filedRecord.ESource.Value.endsWith(`\\${attachment.Name}`))
+					);
+				})
+			) {
+				attachment.Filed = true;
+			}
+		});
 
 		this.setState({
 			attachments,
@@ -154,10 +170,14 @@ export class OutlookAttachments extends React.Component<
 							: webUrl,
 						true,
 						0,
-						attachment.IsAttachment ? attachment.Name : undefined
+						attachment.IsAttachment ? attachment.Name : undefined,
+						true
 					)
 					.then((driveInfo) => {
-						appStore!.setDocumentInfo(driveInfo);
+						appStore!.setDocumentInfo({
+							...driveInfo,
+							Uris: appStore!.documentInfo.Uris,
+						});
 						this.setState({ showForm: true });
 						appStore!.setSpinning(false);
 					})
@@ -198,15 +218,19 @@ export class OutlookAttachments extends React.Component<
 
 			if (this._fullUrn.length === selectedAttachments.length) {
 				trimConnector!.getDatabaseProperties().then((database: IDatabase) => {
+					const urns = (appStore!.PreservedUris || []).map((uri) => {
+						return `trim:${database.Id}/rec/${uri}`;
+					});
+
 					wordConnector!.setAutoOpen(
 						false,
-						this._fullUrn.join(";"),
+						urns.concat(this._fullUrn).join(";"),
 						database.EmailSubjectPrefix
 					);
 
 					appStore!.setDocumentInfo({
 						...(appStore! as AppStoreBase).documentInfo,
-						Uris: this._fullUri,
+						Uris: (appStore!.PreservedUris || []).concat(this._fullUri),
 					});
 
 					this.setState({ spinning: false });
@@ -274,7 +298,11 @@ export class OutlookAttachments extends React.Component<
 								if (this.allChecked) {
 									this._setAttachments([]);
 								} else {
-									this._setAttachments(attachments);
+									this._setAttachments(
+										attachments.filter(function(attachment) {
+											return !attachment.Filed;
+										})
+									);
 								}
 								this.allChecked = !this.allChecked;
 							}}
@@ -307,7 +335,9 @@ export class OutlookAttachments extends React.Component<
 											}
 											checked={selectedAttachment !== undefined}
 											disabled={
-												selectedAttachment && selectedAttachment.Filed === true
+												attachment.Filed ||
+												(selectedAttachment &&
+													selectedAttachment.Filed === true)
 											}
 										/>
 										{selectedAttachments.filter(

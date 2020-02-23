@@ -23,6 +23,7 @@ import { IWordUrl } from "../office-coms/office-connector";
 import { CommandIds } from "../trim-coms/trim-command-ids";
 
 let Mock_Action = "";
+let testSearchResults;
 
 class MockWordConnector implements IWordUrl {
 	getDocumentData(writeSlice: any): Promise<string> {
@@ -42,6 +43,8 @@ class MockWordConnector implements IWordUrl {
 
 let postedFields: any;
 let Mock_Trim_Action = "";
+let foundOptions;
+
 class MockTrimConnector implements ITrimConnector {
 	clearCache: () => void;
 	cancel: () => void;
@@ -114,7 +117,10 @@ class MockTrimConnector implements ITrimConnector {
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>> {
-		return new Promise(function(resolve, reject) {});
+		foundOptions = options;
+		return new Promise(function(resolve, reject) {
+			resolve(testSearchResults);
+		});
 	}
 	credentialsResolver: (callback: ITokenCallback) => void;
 	runAction(commandId: CommandIds, Uri: number): Promise<IDriveInformation> {
@@ -194,6 +200,8 @@ beforeEach(() => {
 	Mock_Action = "";
 	Mock_Trim_Action = "";
 	postedFields = null;
+	testSearchResults = undefined;
+	foundOptions = undefined;
 });
 
 describe("Test basic setup from Trim", () => {
@@ -331,6 +339,20 @@ describe("Test basic setup from Trim", () => {
 		expect(appStore.documentInfo.URN).toEqual("urn_567");
 	});
 
+	it("clears Uris ready to file more", () => {
+		expect.assertions(2);
+
+		appStore.setDocumentInfo({ Id: "abc", Uris: [1, 2, 3], CommandDefs: [] });
+		appStore.clearUris();
+		expect(appStore.documentInfo).toEqual({
+			Id: "abc",
+			Uris: [],
+			CommandDefs: [],
+		});
+
+		expect(appStore.PreservedUris).toEqual([1, 2, 3]);
+	});
+
 	it("sets the Drive Id in the DriveID field when stored in TRIM", (done) => {
 		expect.assertions(1);
 
@@ -370,6 +392,32 @@ describe("Test basic setup from Trim", () => {
 			.catch((e) => {
 				done.fail(e);
 			});
+	});
+
+	it("returns a list of Records for the current Uris", async () => {
+		testSearchResults = { results: [{ Uri: 1 }] };
+		appStore.setDocumentInfo({ Uris: [1, 3] });
+
+		const records = await appStore.fetchFiledRecords();
+
+		expect(foundOptions.q).toEqual("unkUri:1,3");
+		expect(foundOptions.properties).toEqual(
+			"ToolTip,RecordMessageId,RecordESource"
+		);
+		expect(records).toEqual([{ Uri: 1 }]);
+	});
+
+	it("returns a list of Records for the preserved Uris", async () => {
+		testSearchResults = { results: [{ Uri: 1 }] };
+		appStore.PreservedUris = [1, 3];
+
+		const records = await appStore.fetchFiledRecords();
+
+		expect(foundOptions.q).toEqual("unkUri:1,3");
+		expect(foundOptions.properties).toEqual(
+			"ToolTip,RecordMessageId,RecordESource"
+		);
+		expect(records).toEqual([{ Uri: 1 }]);
 	});
 });
 

@@ -73,6 +73,7 @@ export interface IDriveInformation {
 	Options: ITrimOptions;
 	EmailPath: string;
 	URN: string;
+	PreservedUris?: number[];
 }
 
 export interface IDriveActionInformation {
@@ -120,6 +121,7 @@ export interface ITrimDetailsObject {
 
 export interface IRecord extends ITrimMainObject {
 	MessageId: ITrimString;
+	ESource: ITrimString;
 }
 
 export interface ILocation extends ITrimMainObject {
@@ -238,7 +240,8 @@ export interface ITrimConnector {
 		webUrl: string,
 		isEmail: boolean,
 		recordUri: number,
-		attachmentName?: string
+		attachmentName?: string,
+		getFile?: boolean
 	): Promise<IDriveInformation>;
 	getObjectDetails(
 		trimType: BaseObjectTypes,
@@ -717,13 +720,14 @@ export class TrimConnector implements ITrimConnector {
 		webUrl: string,
 		isEmail: boolean,
 		recordUri: number,
-		attachmentName?: string
+		attachmentName?: string,
+		getFile?: boolean
 	): Promise<IDriveInformation> {
 		return this.makeRequest(
 			{
 				path: "RegisterFile",
 				method: "get",
-				data: { webUrl, isEmail, uri: recordUri, attachmentName },
+				data: { webUrl, isEmail, uri: recordUri, attachmentName, getFile },
 			},
 			(data: any) => {
 				const returnData = data.Results
@@ -905,7 +909,6 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_attachmentsList = "Records related to this item";
 					data.Messages.web_noAttachments =
 						"There are no attachments on this item.  Please use 'Record' to create or view this item in Content Manager.";
-					data.Messages.web_fileFullEmail = "File full email";
 					data.Messages.core_completeEmail = "Complete email ({0})";
 					data.Messages.web_fileMore = "File more";
 					this.setCache("messages", data.Messages);

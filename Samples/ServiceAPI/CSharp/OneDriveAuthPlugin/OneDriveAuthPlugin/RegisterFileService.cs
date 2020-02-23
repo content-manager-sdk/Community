@@ -30,6 +30,7 @@ namespace OneDriveAuthPlugin
 		public OperationType Operation { get; set; }
 
 		public bool IsEmail { get; set; }
+		public bool GetFile { get; set; }
 		public string AttachmentName { get; set; }
 	}
 
@@ -328,7 +329,7 @@ namespace OneDriveAuthPlugin
 					recordUris = await getEmailLinkUri(request.WebUrl, token);
 				}
 
-				if (request.IsEmail && recordUris.Length == 0)
+				if (request.IsEmail && (recordUris.Length == 0 || request.GetFile == true))
 				{
 					var emailUrl = GraphApiHelper.GetEMLUrl(request.WebUrl);
 

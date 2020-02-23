@@ -11,33 +11,44 @@ import TrimConnector, {
 	ISearchResults,
 	IRecord,
 } from "../../trim-coms/trim-connector";
-import { Link } from "office-ui-fabric-react";
+import { Link, PrimaryButton } from "office-ui-fabric-react";
 import { exists } from "fs";
+import flushPromises = require("flush-promises");
 
 describe("View Trim Objects", function() {
 	let resolveRecords;
 	let recordQuery: ISearchParameters;
 	let searchResults = [];
+	let moreToFile = false;
+	let clearUrisCalled = false;
+	let fetchFiledCalled = false;
 	beforeEach(() => {
 		resolveRecords = undefined;
 		recordQuery = undefined;
+		moreToFile = false;
+		clearUrisCalled = false;
+		fetchFiledCalled = false;
 	});
 
 	let appStore = new AppStoreOutlook(null, null);
+
+	appStore.moreToFile = function() {
+		return moreToFile;
+	}.bind(appStore);
+
+	appStore.clearUris = function() {
+		clearUrisCalled = true;
+	}.bind(appStore);
+
+	appStore.fetchFiledRecords = function() {
+		fetchFiledCalled = true;
+		return new Promise(function(resolve) {
+			resolve(searchResults);
+		});
+	}.bind(appStore);
+
 	let mockTrimConnector = new TrimConnector();
 
-	mockTrimConnector.search = function<T extends ITrimMainObject>(
-		options: ISearchParameters
-	): Promise<ISearchResults<T>> {
-		recordQuery = options;
-
-		return new Promise(function(resolve) {
-			resolve({
-				results: searchResults,
-				hasMoreItems: false,
-			});
-		});
-	}.bind(mockTrimConnector);
 	beforeEach(() => {
 		searchResults = [
 			{ Uri: 1, NameString: "Document", ToolTip: "Doc" } as ITrimMainObject,
@@ -68,7 +79,7 @@ describe("View Trim Objects", function() {
 		expect(wrapper.find(ViewTrimObject).exists()).toBeFalsy();
 	});
 
-	it("creates a list of Records base on a search", (done) => {
+	it("creates a list of Records based on a search", async () => {
 		appStore.setDocumentInfo({ Uris: [1, 2] });
 
 		const wrapper = shallow<ViewTrimObjects>(
@@ -79,31 +90,26 @@ describe("View Trim Objects", function() {
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				expect(wrapper.find("li").length).toEqual(2);
-				expect(recordQuery.q).toEqual("unkUri:1,2");
-				expect(recordQuery.properties).toEqual("ToolTip,RecordMessageId");
-				expect(wrapper.state().itemNotYetFiled).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.find("li").length).toEqual(2);
+		expect(fetchFiledCalled).toBeTruthy();
 	});
 
-	it("item has been filed", (done) => {
-		appStore.setDocumentInfo({ Uris: [1, 2] });
+	it("item has been filed", () => {
+		moreToFile = false;
+		const wrapper = shallow<ViewTrimObjects>(
+			<ViewTrimObjects
+				trimType={BaseObjectTypes.Record}
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+			/>
+		);
 
-		searchResults = [
-			{ Uri: 1, NameString: "Document", ToolTip: "Doc" } as IRecord,
-			{
-				Uri: 2,
-				NameString: "Document 5",
-				ToolTip: "Doc 5",
-				MessageId: { Value: "test" },
-			} as IRecord,
-		];
+		expect(wrapper.find(PrimaryButton).exists()).toBeFalsy();
+	});
+
+	it("item has not been been filed", () => {
+		moreToFile = true;
 
 		const wrapper = shallow<ViewTrimObjects>(
 			<ViewTrimObjects
@@ -113,33 +119,11 @@ describe("View Trim Objects", function() {
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				expect(wrapper.state().itemNotYetFiled).toBeFalsy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
 	});
 
-	it("item has not been been filed", (done) => {
-		appStore.setDocumentInfo({ Uris: [1, 2] });
-
-		searchResults = [
-			{
-				Uri: 1,
-				NameString: "Document",
-				ToolTip: "Doc",
-				MessageId: { Value: "" },
-			} as IRecord,
-			{
-				Uri: 2,
-				NameString: "Document 5",
-				ToolTip: "Doc 5",
-				MessageId: { Value: "" },
-			} as IRecord,
-		];
+	it("calls appstore to clear uris", () => {
+		moreToFile = true;
 
 		const wrapper = shallow<ViewTrimObjects>(
 			<ViewTrimObjects
@@ -149,17 +133,11 @@ describe("View Trim Objects", function() {
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				expect(wrapper.state().itemNotYetFiled).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		wrapper.find(PrimaryButton).simulate("click");
+		expect(clearUrisCalled).toBeTruthy();
 	});
 
-	it("creates a link to view a single Record", (done) => {
+	it("creates a link to view a single Record", async () => {
 		appStore.setDocumentInfo({ Uris: [1, 2] });
 
 		const wrapper = shallow<ViewTrimObjects>(
@@ -170,32 +148,26 @@ describe("View Trim Objects", function() {
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				expect(
-					wrapper
-						.find("li")
-						.first()
-						.find(Link)
-						.exists()
-				).toBeTruthy();
+		await flushPromises();
+		expect(
+			wrapper
+				.find("li")
+				.first()
+				.find(Link)
+				.exists()
+		).toBeTruthy();
 
-				expect(
-					wrapper
-						.find("li")
-						.first()
-						.find(Link)
-						.first()
-						.props().children
-				).toEqual("Doc");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(
+			wrapper
+				.find("li")
+				.first()
+				.find(Link)
+				.first()
+				.props().children
+		).toEqual("Doc");
 	});
 
-	it("selects a Record for Viewing", (done) => {
+	it("selects a Record for Viewing", async () => {
 		appStore.setDocumentInfo({ Uris: [7, 2] });
 
 		const wrapper = shallow<ViewTrimObjects>(
@@ -206,26 +178,22 @@ describe("View Trim Objects", function() {
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				wrapper
-					.find("li")
-					.at(1)
-					.find(Link)
-					.props()
-					.onClick(null);
+		moreToFile = true;
 
-				expect(wrapper.find(ViewTrimObject).exists()).toBeTruthy();
-				expect(
-					wrapper
-						.find(ViewTrimObject)
-						.first()
-						.props().recordUri
-				).toEqual(2);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		wrapper
+			.find("li")
+			.at(1)
+			.find(Link)
+			.props()
+			.onClick(null);
+
+		expect(wrapper.find(ViewTrimObject).exists()).toBeTruthy();
+		expect(
+			wrapper
+				.find(ViewTrimObject)
+				.first()
+				.props().recordUri
+		).toEqual(2);
 	});
 });

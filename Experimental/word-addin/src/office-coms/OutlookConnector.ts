@@ -40,6 +40,7 @@ export class OutlookConnector extends OfficeConnector
 			const handlerFN = () => {
 				if (Office.context.mailbox.item) {
 					appStore.setStatus("STARTING");
+					appStore.PreservedUris = [];
 					this.loadCustomProps().then(() => {
 						this.getWebUrl().then((webUrl) => {
 							trimConnector

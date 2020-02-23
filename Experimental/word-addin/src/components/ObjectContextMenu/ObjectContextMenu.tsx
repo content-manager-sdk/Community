@@ -117,7 +117,11 @@ export class ObjectContextMenu extends React.Component<
 				});
 		} else {
 			if (item.key === "FileMore") {
-				appStore!.setDocumentInfo({ ...appStore.documentInfo, Uris: [] });
+				appStore!.PreservedUris = [...appStore.documentInfo.Uris];
+				appStore!.setDocumentInfo({
+					...appStore.documentInfo,
+					Uris: [],
+				});
 				this.callCommandComplete(item.key);
 			} else if (item.key === "pasteLink") {
 				const url = appStore.getWebClientUrl(record.Uri);

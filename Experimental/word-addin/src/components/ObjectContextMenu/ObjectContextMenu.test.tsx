@@ -38,6 +38,48 @@ describe("Object Context Menu", () => {
 		CommandDefs: [],
 	};
 
+	const appStore = {
+		moreToFile: () => {
+			return moreToFile;
+		},
+		isEmail: () => {
+			return isEmail;
+		},
+		setError: function(message: any) {
+			testError = message;
+		},
+		setErrorMessage: function(message) {
+			testError = message;
+		},
+		setDocumentInfo: (documentInfo) => {
+			updatedDocumentInfo = documentInfo;
+		},
+		openInCM: function(uri: number) {
+			testUri = uri;
+		},
+		setStatus: (status: string) => {},
+		setSpinning: () => {},
+		RecordUri: 7,
+		Id: "my id",
+		messages: {
+			web_Actions: "Actions",
+			web_Paste: "Paste",
+			web_Please_Select: "Please select",
+		},
+		getWebClientUrl: (uri: number) => {
+			return "link?uri=" + uri;
+		},
+
+		documentInfo: {
+			Enums: {
+				RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
+			},
+			CommandDefs: [],
+			Uris: [7, 9],
+		},
+		PreservedUris: [],
+	};
+
 	const makeWrapper = (
 		menuItemsEnabled: boolean = true,
 		isInList: boolean = false,
@@ -49,45 +91,7 @@ describe("Object Context Menu", () => {
 				onCommandComplete={(key: string) => {
 					completedCommand = key;
 				}}
-				appStore={{
-					moreToFile: () => {
-						return moreToFile;
-					},
-					isEmail: () => {
-						return isEmail;
-					},
-					setError: function(message: any) {
-						testError = message;
-					},
-					setErrorMessage: function(message) {
-						testError = message;
-					},
-					setDocumentInfo: (documentInfo) => {
-						updatedDocumentInfo = documentInfo;
-					},
-					openInCM: function(uri: number) {
-						testUri = uri;
-					},
-					setStatus: (status: string) => {},
-					setSpinning: () => {},
-					RecordUri: 7,
-					Id: "my id",
-					messages: {
-						web_Actions: "Actions",
-						web_Paste: "Paste",
-						web_Please_Select: "Please select",
-					},
-					getWebClientUrl: (uri: number) => {
-						return "link?uri=" + uri;
-					},
-
-					documentInfo: {
-						Enums: {
-							RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
-						},
-						CommandDefs: [],
-					},
-				}}
+				appStore={appStore}
 				trimConnector={trimConnector}
 				wordConnector={mockWordConnector}
 				record={{
@@ -737,6 +741,28 @@ describe("Object Context Menu", () => {
 				menuItem.onClick(null, menuItem);
 
 				expect(testUri).toEqual(7);
+				expect.assertions(1);
+				done();
+			} catch (e) {
+				done.fail(e);
+			}
+		});
+	});
+
+	it("updates document info when file more called", (done) => {
+		isEmail = true;
+		moreToFile = true;
+		const wrapper = makeWrapper(false);
+
+		setImmediate(() => {
+			try {
+				const menuItem = findMenu(wrapper).items.find((mi) => {
+					return mi.key === "FileMore";
+				});
+
+				menuItem.onClick(null, menuItem);
+
+				expect(appStore.PreservedUris).toEqual([7, 9]);
 				expect.assertions(1);
 				done();
 			} catch (e) {

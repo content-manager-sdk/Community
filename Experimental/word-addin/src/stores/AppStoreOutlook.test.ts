@@ -186,6 +186,10 @@ describe("Test basic setup from Trim", () => {
 		});
 	});
 
+	it("isEmail is true", () => {
+		expect(appStore.isEmail()).toBeTruthy();
+	});
+
 	test("no more to file", () => {
 		appStore.documentInfo.Uris = [1, 2];
 

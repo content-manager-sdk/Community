@@ -6,6 +6,7 @@ import {
 	ITrimConnector,
 	ITrimMainObject,
 	IDatabase,
+	IRecord,
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
@@ -26,6 +27,7 @@ export interface IAppStore {
 	fetchBaseSettingFromTrim: any;
 	FileName: string;
 	documentInfo: IDriveInformation;
+	PreservedUris: number[];
 	resetError(): void;
 	setError(error: any, module?: string): void;
 	setErrorMessage(message: string, ...args: string[]): void;
@@ -49,6 +51,8 @@ export interface IAppStore {
 	setFileName(fileName: string): void;
 	moreToFile(): boolean;
 	isEmail(): boolean;
+	clearUris(): void;
+	fetchFiledRecords(): Promise<IRecord[]>;
 }
 
 export class AppStoreBase implements IAppStore {
@@ -64,6 +68,7 @@ export class AppStoreBase implements IAppStore {
 		Options: { DefaultDocumentRecordType: 0 },
 		EmailPath: "",
 		URN: "",
+		PreservedUris: [],
 	};
 	@observable public me: ILocation;
 	@observable public messages: TrimMessages = new TrimMessages();
@@ -71,6 +76,7 @@ export class AppStoreBase implements IAppStore {
 	@observable public spinning: Boolean;
 	@observable public WebUrl: string;
 	@observable public FileName: string;
+	public PreservedUris: number[];
 
 	constructor(
 		protected trimConnector: ITrimConnector,
@@ -87,12 +93,49 @@ export class AppStoreBase implements IAppStore {
 		throw new Error("Method not implemented");
 	}
 
+	fetchFiledRecords(): Promise<IRecord[]> {
+		return new Promise<IRecord[]>((resolve) => {
+			const uris =
+				(this.PreservedUris || []).length > 0
+					? this.PreservedUris
+					: this.documentInfo.Uris || [];
+			if (uris.length > 1) {
+				this.setSpinning(true);
+				this.trimConnector
+					.search<IRecord>({
+						q: "unkUri:" + uris.join(","),
+						trimType: BaseObjectTypes.Record,
+						purpose: 0,
+						properties: "ToolTip,RecordMessageId,RecordESource",
+					})
+					.then((data) => {
+						this.setSpinning(false);
+						resolve(data.results as IRecord[]);
+					})
+					.catch((e) => {
+						this.setError(e);
+						resolve([]);
+					});
+			} else {
+				resolve([]);
+			}
+		});
+	}
+
 	public isEmail(): boolean {
 		return false;
 	}
 	public deferFetchDriveInfo = () => {
 		this._deferFetchDriveInfo = true;
 	};
+
+	public clearUris(): void {
+		this.PreservedUris = [...this.documentInfo.Uris];
+		this.setDocumentInfo({
+			...this.documentInfo,
+			Uris: [],
+		});
+	}
 
 	public moreToFile(): boolean {
 		return false;
@@ -105,6 +148,9 @@ export class AppStoreBase implements IAppStore {
 		if (!fromDialog) {
 			promisesToRun.push(this.wordConnector!.getWebUrl());
 		}
+
+		this.PreservedUris = [];
+
 		Promise.all(promisesToRun)
 			.then((values) => {
 				self.setMe(values[0]);

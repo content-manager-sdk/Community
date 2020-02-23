@@ -4,7 +4,6 @@ import { inject, observer } from "mobx-react";
 import {
 	ITrimConnector,
 	ITrimMainObject,
-	IRecord,
 } from "../../trim-coms/trim-connector";
 
 import { IOfficeConnector } from "../../office-coms/office-connector";
@@ -27,7 +26,6 @@ interface ViewTrimObjectsState {
 	records: ITrimMainObject[];
 	selectedUri: number;
 	spinning: Boolean;
-	itemNotYetFiled: Boolean;
 }
 
 export class ViewTrimObjects extends React.Component<
@@ -41,41 +39,21 @@ export class ViewTrimObjects extends React.Component<
 			records: [],
 			selectedUri: 0,
 			spinning: false,
-			itemNotYetFiled: false,
 		};
 	}
 
-	componentDidMount() {
-		const { trimConnector, trimType, appStore } = this.props;
-		if (appStore!.documentInfo.Uris.length > 1) {
-			appStore!.setSpinning(true);
-			trimConnector!
-				.search<IRecord>({
-					q: "unkUri:" + appStore!.documentInfo.Uris.join(","),
-					trimType,
-					purpose: 0,
-					properties: "ToolTip,RecordMessageId",
-				})
-				.then((data) => {
-					this.setState({
-						records: data.results,
-						itemNotYetFiled: !data.results.some((i) => {
-							return !!(
-								(i as IRecord).MessageId && (i as IRecord).MessageId.Value
-							);
-						}),
-					});
-					appStore!.setSpinning(false);
-				})
-				.catch((e) => {
-					appStore!.setError(e);
-				});
-		}
+	async componentDidMount() {
+		const { appStore } = this.props;
+		appStore!.PreservedUris = [];
+		const records = await appStore!.fetchFiledRecords();
+		this.setState({
+			records: records,
+		});
 	}
 
 	public render() {
 		const { trimType, appStore, className, onEdit } = this.props;
-		const { records, selectedUri, itemNotYetFiled } = this.state;
+		const { records, selectedUri } = this.state;
 
 		const selUri =
 			selectedUri > 0
@@ -107,9 +85,15 @@ export class ViewTrimObjects extends React.Component<
 						</li>
 					))}
 				</ul>
-				{itemNotYetFiled && (
-					<PrimaryButton className="trim-register">
-						{appStore!.messages.web_fileFullEmail}
+				{appStore!.moreToFile() && (
+					<PrimaryButton
+						className="trim-register"
+						onClick={() => {
+							const { appStore } = this.props;
+							appStore!.clearUris();
+						}}
+					>
+						{appStore!.messages.web_fileMore}
 					</PrimaryButton>
 				)}
 			</React.Fragment>

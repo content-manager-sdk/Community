@@ -20,6 +20,7 @@ interface INewRecordState {
 	checkinStyles: IDropdownOption[];
 	checkinUsingStyle: Boolean;
 	savedObject: ITrimMainObject | undefined;
+	showUI: boolean;
 }
 
 interface INewRecordProps {
@@ -52,6 +53,7 @@ export class NewRecord extends React.Component<
 			checkinUsingStyle: false,
 			saving: false,
 			savedObject: undefined,
+			showUI: false,
 		};
 	}
 
@@ -154,6 +156,7 @@ export class NewRecord extends React.Component<
 						this.doSave();
 					} else {
 						appStore!.setSpinning(false);
+						this.setState({ showUI: true });
 					}
 				})
 				.catch((e) => {
@@ -165,38 +168,41 @@ export class NewRecord extends React.Component<
 
 	private _onChange = (uri: number, isCheckinStyle: boolean) => {
 		const { validateRecordType, appStore } = this.props;
+		const { checkinUsingStyle } = this.state;
 
-		this.setState(
-			{ processing: true, checkinUsingStyle: isCheckinStyle },
-			() => {
-				if (isCheckinStyle) {
-					this.recordTypeUri = uri;
-
-					this.setPropertySheet();
-				} else {
-					const recordTypeUri = uri;
-
-					if (validateRecordType) {
-						validateRecordType(recordTypeUri).then((isValid) => {
-							if (isValid) {
-								this.recordTypeUri = recordTypeUri;
-
-								this.setPropertySheet();
-							} else {
-								appStore!.setError(
-									appStore!.messages.web_RecordTypeRequiresForm
-								);
-								this.setState({ processing: false });
-							}
-						});
-					} else {
-						this.recordTypeUri = recordTypeUri;
+		if (this.recordTypeUri !== uri || isCheckinStyle !== checkinUsingStyle) {
+			this.setState(
+				{ processing: true, checkinUsingStyle: isCheckinStyle },
+				() => {
+					if (isCheckinStyle) {
+						this.recordTypeUri = uri;
 
 						this.setPropertySheet();
+					} else {
+						const recordTypeUri = uri;
+
+						if (validateRecordType) {
+							validateRecordType(recordTypeUri).then((isValid) => {
+								if (isValid) {
+									this.recordTypeUri = recordTypeUri;
+
+									this.setPropertySheet();
+								} else {
+									appStore!.setError(
+										appStore!.messages.web_RecordTypeRequiresForm
+									);
+									this.setState({ processing: false });
+								}
+							});
+						} else {
+							this.recordTypeUri = recordTypeUri;
+
+							this.setPropertySheet();
+						}
 					}
 				}
-			}
-		);
+			);
+		}
 	};
 
 	private saveFinished = (saved: boolean, trimObject?: ITrimMainObject) => {
@@ -330,7 +336,7 @@ export class NewRecord extends React.Component<
 			processInBackgroundIfPossible,
 		} = this.props;
 
-		const { formDefinition, processing, saving } = this.state;
+		const { formDefinition, processing, saving, showUI } = this.state;
 
 		const computedProps = [];
 		if (trimType === BaseObjectTypes.CheckinStyle) {
@@ -364,7 +370,7 @@ export class NewRecord extends React.Component<
 				}
 				onSubmit={this._onClick}
 			>
-				{(!processInBackgroundIfPossible || this.showUI === true) && (
+				{(!processInBackgroundIfPossible || showUI === true) && (
 					<RecordTypePicker
 						trimType={trimType}
 						computedCheckinStyleName={computedCheckinStyleName!}
@@ -375,7 +381,7 @@ export class NewRecord extends React.Component<
 						defaultRecordType={defaultRecordType}
 					/>
 				)}
-				{(!processInBackgroundIfPossible || this.showUI === true) && (
+				{(!processInBackgroundIfPossible || showUI === true) && (
 					<div className={`new-record-body new-record-body-${trimType}`}>
 						<PropertySheet
 							formDefinition={formDefinition}

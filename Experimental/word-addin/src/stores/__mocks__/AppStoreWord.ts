@@ -9,6 +9,13 @@ import { IAppStore, IUserProfile } from "../AppStoreBase";
 import TrimMessages from "src/trim-coms/trim-messages";
 
 export class AppStoreWord implements IAppStore {
+	fetchFiledRecords(): Promise<any[]> {
+		throw new Error("Method not implemented.");
+	}
+	clearUris(): void {
+		throw new Error("Method not implemented.");
+	}
+	PreservedUris: number[];
 	isEmail(): boolean {
 		throw new Error("Method not implemented.");
 	}

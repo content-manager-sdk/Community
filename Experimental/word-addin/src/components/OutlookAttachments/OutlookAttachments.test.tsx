@@ -6,15 +6,22 @@ import {
 } from "../../office-coms/OutlookConnector";
 import { OutlookAttachments } from "./OutlookAttachments";
 import NewRecord from "../NewRecord";
-import { Checkbox, DefaultButton, PrimaryButton } from "office-ui-fabric-react";
+import {
+	Checkbox,
+	DefaultButton,
+	PrimaryButton,
+	Check,
+} from "office-ui-fabric-react";
 import TrimConnector, {
 	IDriveInformation,
+	IRecord,
 } from "../../trim-coms/trim-connector";
 
 import { AppStoreOutlook } from "../../stores/AppStoreOutlook";
 import RecordTypePicker from "../RecordTypePicker/RecordTypePicker";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { Text } from "office-ui-fabric-react/lib/Text";
+import * as flushPromises from "flush-promises";
 
 describe("Outlook attachments", function() {
 	let webUrlFound = "";
@@ -24,6 +31,7 @@ describe("Outlook attachments", function() {
 	let testRecordUrn;
 	let testPrefix;
 	let foundAttachments = [];
+	let filedRecords: IRecord[];
 
 	beforeEach(() => {
 		webUrlFound = "";
@@ -32,11 +40,12 @@ describe("Outlook attachments", function() {
 		attachmentNameFound2 = "";
 		testRecordUrn = "";
 		testPrefix = "";
+		filedRecords = [];
 		appStore.setStatus("WAITING");
 		appStore.setDocumentInfo(null);
 		appStore.setMessages({
 			core_mailAttachmentsCap: "Attachments",
-			core_completeEmail: "test",
+			core_completeEmail: "test {0}",
 		});
 		foundAttachments = [
 			{ Id: "a", Name: "A", IsAttachment: false },
@@ -72,6 +81,7 @@ describe("Outlook attachments", function() {
 			resolve({
 				EmailSubjectPrefix: "CM:",
 				CurrencySymbol: "",
+				Id: "N1",
 			});
 		});
 	}.bind(trimConnector);
@@ -99,7 +109,13 @@ describe("Outlook attachments", function() {
 
 	const appStore = new AppStoreOutlook(trimConnector, outlookConnector);
 
-	it("displays a list of check boxes", () => {
+	appStore.fetchFiledRecords = function() {
+		return new Promise<IRecord[]>((resolve) => {
+			resolve(filedRecords);
+		});
+	}.bind(appStore);
+
+	it("displays a list of check boxes", async () => {
 		const wrapper = shallow(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -107,10 +123,28 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		expect(wrapper.find(Checkbox).length).toEqual(4);
+		expect(
+			wrapper
+				.findWhere((c) => {
+					return c.props().label === "test A";
+				})
+				.exists()
+		).toBeTruthy();
+		expect(
+			wrapper
+				.findWhere((c) => {
+					return c.props().label === "B";
+				})
+				.exists()
+		).toBeTruthy();
 	});
 
-	it("displays a heading after the first item", () => {
+	it("display disabled checkboxes for already filed", async () => {
+		filedRecords = [
+			{ Uri: 1, MessageId: { Value: "" }, ESource: { Value: "test\\A" } },
+		];
 		const wrapper = shallow(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -118,10 +152,66 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
+		expect(wrapper.find(Checkbox).length).toEqual(4);
+		expect(
+			wrapper
+				.findWhere((c) => {
+					return c.props().label === "test A";
+				})
+				.props().disabled
+		).toBeTruthy();
+		expect(
+			wrapper
+				.findWhere((c) => {
+					return c.props().label === "B";
+				})
+				.props().disabled
+		).toBeFalsy();
+	});
+
+	it("display disabled checkboxes for already filed email item", async () => {
+		filedRecords = [
+			{ Uri: 1, MessageId: { Value: "test" }, ESource: { Value: "" } },
+		];
+		const wrapper = shallow(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+			/>
+		);
+
+		await flushPromises();
+		expect(wrapper.find(Checkbox).length).toEqual(4);
+		expect(
+			wrapper
+				.findWhere((c) => {
+					return c.props().label === "test A";
+				})
+				.props().disabled
+		).toBeTruthy();
+		expect(
+			wrapper
+				.findWhere((c) => {
+					return c.props().label === "B";
+				})
+				.props().disabled
+		).toBeFalsy();
+	});
+
+	it("displays a heading after the first item", async () => {
+		const wrapper = shallow(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+			/>
+		);
+
+		await flushPromises();
 		expect(wrapper.find(Text).exists()).toBeTruthy();
 	});
 
-	it("displays the record type picker only for zero attachments ", () => {
+	it("displays the record type picker only for zero attachments ", async () => {
 		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
 
 		const wrapper = shallow<OutlookAttachments>(
@@ -131,6 +221,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		expect(wrapper.find(Text).exists()).toBeFalsy();
 		expect(wrapper.find(RecordTypePicker).exists()).toBeTruthy();
 		expect(wrapper.find(Checkbox).exists()).toBeFalsy();
@@ -144,7 +235,8 @@ describe("Outlook attachments", function() {
 		]);
 	});
 
-	it("shows form on Record type selected when there are no attachments", (done) => {
+	it("shows form on Record type selected when there are no attachments", async () => {
+		appStore.setDocumentInfo({});
 		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
 
 		const wrapper = shallow<OutlookAttachments>(
@@ -154,30 +246,25 @@ describe("Outlook attachments", function() {
 				trimConnector={trimConnector}
 			/>
 		);
+		await flushPromises();
 
 		wrapper
 			.find(RecordTypePicker)
 			.props()
 			.onRecordTypeSelected(9, false);
 
-		setImmediate(() => {
-			try {
-				expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
-					Uri: 9,
-					TrimType: BaseObjectTypes.RecordType,
-				});
-
-				expect(webUrlFound).toEqual("id");
-				expect(attachmentNameFound).toBeUndefined();
-				expect(appStore.documentInfo).toEqual({ Id: "test" });
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+		expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
+			Uri: 9,
+			TrimType: BaseObjectTypes.RecordType,
 		});
+
+		expect(webUrlFound).toEqual("id");
+		expect(attachmentNameFound).toBeUndefined();
+		expect(appStore.documentInfo).toEqual({ Id: "test" });
 	});
 
-	it("selects an attachment", () => {
+	it("selects an attachment", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -185,6 +272,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.find(Checkbox)
 			.at(1)
@@ -195,7 +283,7 @@ describe("Outlook attachments", function() {
 		]);
 	});
 
-	it("removes a selected attachment", () => {
+	it("removes a selected attachment", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -203,6 +291,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.find(Checkbox)
 			.at(1)
@@ -223,7 +312,7 @@ describe("Outlook attachments", function() {
 		]);
 	});
 
-	it("selects all attachments", () => {
+	it("selects all attachments", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -231,6 +320,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.findWhere((n) => {
 				return n.key() === "all_select";
@@ -258,7 +348,10 @@ describe("Outlook attachments", function() {
 		).toBeTruthy();
 	});
 
-	it("selects no attachments", () => {
+	it("selects only non disabled attachments", async () => {
+		filedRecords = [
+			{ Uri: 1, MessageId: { Value: "test" }, ESource: { Value: "test\\A" } },
+		];
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -266,6 +359,28 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
+		wrapper
+			.findWhere((n) => {
+				return n.key() === "all_select";
+			})
+			.props()
+			.onChange();
+
+		expect(wrapper.state().selectedAttachments).toEqual([
+			{ Id: "b", Name: "B", IsAttachment: true },
+		]);
+	});
+
+	it("selects no attachments", async () => {
+		const wrapper = shallow<OutlookAttachments>(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+			/>
+		);
+
+		await flushPromises();
 		wrapper
 			.findWhere((n) => {
 				return n.key() === "all_select";
@@ -326,7 +441,7 @@ describe("Outlook attachments", function() {
 		).toBeTruthy();
 	});
 
-	it("disables next button", () => {
+	it("disables next button", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -334,6 +449,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.find(Checkbox)
 			.at(1)
@@ -357,7 +473,7 @@ describe("Outlook attachments", function() {
 		).toBeTruthy();
 	});
 
-	it("disables next button", () => {
+	it("disables next button", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -365,6 +481,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		expect(
 			wrapper
 				.find(PrimaryButton)
@@ -373,7 +490,7 @@ describe("Outlook attachments", function() {
 		).toBeTruthy();
 	});
 
-	it("enables next button", () => {
+	it("enables next button", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -381,6 +498,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.findWhere((n) => {
 				return n.key() === "all_select";
@@ -408,7 +526,7 @@ describe("Outlook attachments", function() {
 		).toBeFalsy();
 	});
 
-	it("shows Record Type Picker when checked", () => {
+	it("shows Record Type Picker when checked", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -416,6 +534,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.find(Checkbox)
 			.at(1)
@@ -427,7 +546,7 @@ describe("Outlook attachments", function() {
 		{ isCheckinStyle: false, expectedTrimType: BaseObjectTypes.RecordType },
 		{ isCheckinStyle: true, expectedTrimType: BaseObjectTypes.CheckinStyle },
 	].forEach((data) => {
-		it(`sets the Record Type on the selected attachment ${data.expectedTrimType}`, () => {
+		it(`sets the Record Type on the selected attachment ${data.expectedTrimType}`, async () => {
 			const wrapper = shallow<OutlookAttachments>(
 				<OutlookAttachments
 					wordConnector={outlookConnector}
@@ -435,6 +554,7 @@ describe("Outlook attachments", function() {
 				/>
 			);
 
+			await flushPromises();
 			wrapper
 				.find(Checkbox)
 				.at(1)
@@ -452,7 +572,8 @@ describe("Outlook attachments", function() {
 			});
 		});
 	});
-	it("get drive info on next (is attachment)", (done) => {
+	it("get drive info on next -is attachment", async () => {
+		appStore.setDocumentInfo({});
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -460,6 +581,8 @@ describe("Outlook attachments", function() {
 				trimConnector={trimConnector}
 			/>
 		);
+
+		await flushPromises();
 		wrapper.setState({ autoCreate: false });
 		wrapper
 			.find(Checkbox)
@@ -471,19 +594,15 @@ describe("Outlook attachments", function() {
 			.first()
 			.simulate("click");
 
-		setTimeout(() => {
-			try {
-				expect(webUrlFound).toEqual("id/attachments/b");
-				expect(attachmentNameFound).toEqual("B");
-				expect(appStore.documentInfo).toEqual({ Id: "test" });
-				done();
-			} catch (e) {
-				done.fail();
-			}
-		});
+		await flushPromises();
+
+		expect(webUrlFound).toEqual("id/attachments/b");
+		expect(attachmentNameFound).toEqual("B");
+		expect(appStore.documentInfo).toEqual({ Id: "test" });
 	});
 
-	it("get drive info on next (not attachment)", (done) => {
+	it("get drive info on next - not attachment", async () => {
+		appStore.setDocumentInfo({});
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -491,6 +610,8 @@ describe("Outlook attachments", function() {
 				trimConnector={trimConnector}
 			/>
 		);
+
+		await flushPromises();
 		wrapper.setState({ autoCreate: false });
 		wrapper
 			.findWhere((n) => {
@@ -504,19 +625,14 @@ describe("Outlook attachments", function() {
 			.first()
 			.simulate("click");
 
-		setTimeout(() => {
-			try {
-				expect(webUrlFound).toEqual("id");
-				expect(attachmentNameFound).toBeUndefined();
-				expect(appStore.documentInfo).toEqual({ Id: "test" });
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(webUrlFound).toEqual("id");
+		expect(attachmentNameFound).toBeUndefined();
+		expect(appStore.documentInfo).toEqual({ Id: "test" });
 	});
 
-	it("get drive info for all when auto create == true", (done) => {
+	it("get drive info for all when auto create == true", async () => {
+		appStore.setDocumentInfo({});
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -524,6 +640,8 @@ describe("Outlook attachments", function() {
 				trimConnector={trimConnector}
 			/>
 		);
+
+		await flushPromises();
 		wrapper.setState({ autoCreate: true });
 		wrapper
 			.findWhere((n) => {
@@ -537,28 +655,18 @@ describe("Outlook attachments", function() {
 			.first()
 			.simulate("click");
 
-		setTimeout(() => {
-			try {
-				wrapper
-					.find(NewRecord)
-					.props()
-					.onAfterSave({ Uri: 1 });
-				setTimeout(() => {
-					try {
-						expect(webUrlFound).toEqual("id");
-						expect(webUrlFound2).toEqual("id/attachments/b");
-						expect(attachmentNameFound).toBeUndefined();
-						expect(attachmentNameFound2).toEqual("B");
-						expect(appStore.documentInfo).toEqual({ Id: "test2" });
-						done();
-					} catch (e) {
-						done.fail(e);
-					}
-				});
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		wrapper
+			.find(NewRecord)
+			.props()
+			.onAfterSave({ Uri: 1 });
+
+		await flushPromises();
+		expect(webUrlFound).toEqual("id");
+		expect(webUrlFound2).toEqual("id/attachments/b");
+		expect(attachmentNameFound).toBeUndefined();
+		expect(attachmentNameFound2).toEqual("B");
+		expect(appStore.documentInfo).toEqual({ Id: "test2" });
 	});
 
 	it("displays a NewRecord component", () => {
@@ -574,7 +682,7 @@ describe("Outlook attachments", function() {
 		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
 	});
 
-	it(`sets default record type on the NewRecord`, () => {
+	it(`sets default record type on the NewRecord`, async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -582,6 +690,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.find(Checkbox)
 			.at(1)
@@ -596,14 +705,14 @@ describe("Outlook attachments", function() {
 		wrapper.setState({ showForm: true });
 
 		appStore.setDocumentInfo({ EmailPath: "ForUser\\9000000113\\c.png" });
-
+		await flushPromises();
 		expect(wrapper.find(NewRecord).props().defaultRecordType).toEqual({
 			Uri: 45,
 			TrimType: BaseObjectTypes.RecordType,
 		});
 	});
 
-	it("updates on document save", () => {
+	it("updates on document save", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -611,6 +720,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.findWhere((n) => {
 				return n.key() === "all_select";
@@ -642,7 +752,7 @@ describe("Outlook attachments", function() {
 		expect(wrapper.find(RecordTypePicker).length).toEqual(1);
 	});
 
-	it("sets auto open after all saved", (done) => {
+	it("sets auto open after all saved", async () => {
 		const wrapper = shallow<OutlookAttachments>(
 			<OutlookAttachments
 				wordConnector={outlookConnector}
@@ -651,6 +761,7 @@ describe("Outlook attachments", function() {
 			/>
 		);
 
+		await flushPromises();
 		wrapper
 			.findWhere((n) => {
 				return n.key() === "all_select";
@@ -669,21 +780,44 @@ describe("Outlook attachments", function() {
 
 		appStore.setDocumentInfo({ EmailPath: "ForUser\\9000000113\\c.png" });
 		wrapper.setState({ showForm: true });
-
+		await flushPromises();
 		wrapper
 			.find(NewRecord)
 			.first()
 			.props()
 			.onAfterSave({ Uri: 2, URN: "urn_2" });
+		await flushPromises();
+		expect(testRecordUrn).toEqual("urn_1;urn_2");
+		expect(testPrefix).toEqual("CM:");
+	});
 
-		setTimeout(() => {
-			try {
-				expect(testRecordUrn).toEqual("urn_1;urn_2");
-				expect(testPrefix).toEqual("CM:");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+	it("includes existing URIs in URN sent to Extended prop", async () => {
+		const wrapper = shallow<OutlookAttachments>(
+			<OutlookAttachments
+				wordConnector={outlookConnector}
+				appStore={appStore}
+				trimConnector={trimConnector}
+			/>
+		);
+		await flushPromises();
+		wrapper
+			.find(Checkbox)
+			.at(1)
+			.simulate("change", null, true);
+
+		appStore.PreservedUris = [99, 88];
+
+		wrapper.setState({ showForm: true });
+
+		wrapper
+			.find(NewRecord)
+			.first()
+			.props()
+			.onAfterSave({ Uri: 1, URN: "urn_1" });
+		await flushPromises();
+
+		expect(testRecordUrn).toEqual("trim:N1/rec/99;trim:N1/rec/88;urn_1");
+		expect(testPrefix).toEqual("CM:");
+		expect(appStore.documentInfo.Uris).toEqual([99, 88, 1]);
 	});
 });
