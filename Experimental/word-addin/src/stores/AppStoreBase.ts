@@ -99,7 +99,7 @@ export class AppStoreBase implements IAppStore {
 				(this.PreservedUris || []).length > 0
 					? this.PreservedUris
 					: this.documentInfo.Uris || [];
-			if (uris.length > 1) {
+			if (uris.length > 0) {
 				this.setSpinning(true);
 				this.trimConnector
 					.search<IRecord>({
