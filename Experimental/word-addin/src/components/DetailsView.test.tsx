@@ -10,6 +10,7 @@ import TrimConnector, {
 import { Label } from "office-ui-fabric-react/lib/Label";
 import { disconnect } from "cluster";
 import { ComboBox, DefaultButton, Icon } from "office-ui-fabric-react";
+import flushPromises = require("flush-promises");
 
 describe("Details View", function() {
 	beforeEach(() => {
@@ -298,7 +299,7 @@ describe("Details View", function() {
 		});
 	});
 
-	it("adds property to view pane", (done) => {
+	it("adds property to view pane", async () => {
 		let combo = wrapper.find(ComboBox);
 
 		wrapper.setState({
@@ -316,23 +317,45 @@ describe("Details View", function() {
 		const button = wrapper.find(DefaultButton);
 		button.props().onClick(null);
 
-		setImmediate(() => {
-			try {
-				expect(setUri).toEqual(5);
-				expect(setProperties).toEqual([
-					"RecordTitle",
-					"RecordNumber",
-					"RecordContainer",
-					"RecordAccessControl",
-					"SparkleLevel",
-					"CommandDefs",
-					"AField",
-				]);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+
+		expect(setUri).toEqual(5);
+		expect(setProperties).toEqual([
+			"RecordTitle",
+			"RecordNumber",
+			"RecordContainer",
+			"RecordAccessControl",
+			"SparkleLevel",
+			"CommandDefs",
+			"AField",
+		]);
+	});
+
+	it("disabled adds property button", async () => {
+		let combo = wrapper.find(ComboBox);
+
+		wrapper.setState({
+			propertyAndFieldDefinitions: [
+				{ Id: "RecordTitle", Caption: "Title" },
+				{ Id: "RecordNumber", Caption: "Number" },
+				{ Id: "RecordContainer", Caption: "Container" },
+				{ Id: "RecordAccessControl", Caption: "Acl" },
+				{ Id: "SparkleLevel", Caption: "SparkleLevel" },
+				{ Id: "AField", Caption: "" },
+			],
+			keysToAdd: ["AField"],
 		});
+
+		const button = wrapper.find(DefaultButton);
+		expect(wrapper.find(DefaultButton).props().disabled).toBeFalsy();
+		button.props().onClick(null);
+
+		expect(wrapper.find(DefaultButton).props().disabled).toBeTruthy();
+
+		await flushPromises();
+
+		expect(wrapper.find(DefaultButton).props().disabled).toBeTruthy();
+		expect(wrapper.state().keysToAdd.length).toEqual(0);
 	});
 
 	it("adds property to Checkin Place view pane", (done) => {

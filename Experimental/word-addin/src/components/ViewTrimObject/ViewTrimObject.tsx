@@ -100,7 +100,7 @@ export class ViewTrimObject extends React.Component<
 							<ObjectContextMenu
 								record={recordDetails.results[0]}
 								isInList={false}
-								trimType={BaseObjectTypes.CheckinStyle}
+								trimType={trimType}
 								onCommandComplete={(commandKey: string) => {
 									if (
 										commandKey === "getGlobalProperties" ||

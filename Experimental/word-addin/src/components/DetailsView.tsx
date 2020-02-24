@@ -37,6 +37,7 @@ export class DetailsView extends React.Component<
 		propertyAndFieldDefinitions: IPropertyOrFieldDef[];
 		keysToAdd: string[];
 		recordProperties: ITrimDetailsObject;
+		spinning: boolean;
 	}
 > {
 	constructor(props: IDetailsViewProps) {
@@ -50,6 +51,7 @@ export class DetailsView extends React.Component<
 			propertyAndFieldDefinitions: [],
 			keysToAdd: [],
 			recordProperties: defaultRecordDetails,
+			spinning: false,
 		};
 	}
 
@@ -125,7 +127,7 @@ export class DetailsView extends React.Component<
 	}
 
 	private addToViewPane = () => {
-		const { trimConnector } = this.props;
+		const { trimConnector, appStore } = this.props;
 		const {
 			propertyAndFieldDefinitions,
 			propertiesAndFields,
@@ -138,6 +140,7 @@ export class DetailsView extends React.Component<
 		});
 
 		if (propItems) {
+			this.setState({ spinning: true });
 			propertiesAndFields.push(...propItems);
 
 			trimConnector!
@@ -155,10 +158,13 @@ export class DetailsView extends React.Component<
 							this.setState({
 								propertiesAndFields: newProps,
 								recordProperties: recordDetails.results[0],
+								spinning: false,
+								keysToAdd: [],
 							});
 						});
-					//	return newProps;
-					//this.setState({ propertiesAndFields: newProps });
+				})
+				.catch((e) => {
+					appStore!.setError(e);
 				});
 		}
 	};
@@ -229,7 +235,7 @@ export class DetailsView extends React.Component<
 	private getTrimType = () => {
 		const { trimType } = this.props;
 
-		return BaseObjectTypes.CheckinPlace
+		return trimType === BaseObjectTypes.CheckinPlace
 			? BaseObjectTypes.CheckinStyle
 			: trimType;
 	};
@@ -268,6 +274,7 @@ export class DetailsView extends React.Component<
 			propertiesAndFields,
 			propertyAndFieldDefinitions,
 			keysToAdd,
+			spinning,
 		} = this.state;
 		const { appStore } = this.props;
 
@@ -278,7 +285,7 @@ export class DetailsView extends React.Component<
 					<div className="details-view ms-Grid" dir="ltr">
 						{propertiesAndFields
 							.filter((p) => {
-								return p.Id !== "CommandDefs";
+								return p.Id !== "CommandDefs" && p.Id !== "DeleteNow";
 							})
 							.map((propDef) => {
 								const includePaste =
@@ -380,6 +387,7 @@ export class DetailsView extends React.Component<
 							}
 						/>
 						<DefaultButton
+							disabled={spinning || keysToAdd.length === 0}
 							text={appStore.messages.web_Add}
 							onClick={this.addToViewPane}
 						/>
