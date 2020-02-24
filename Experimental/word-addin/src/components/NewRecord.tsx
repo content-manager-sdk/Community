@@ -92,7 +92,7 @@ export class NewRecord extends React.Component<
 	recordTypeUri: number = 0;
 	recordProps: any = {};
 	recordFields: any = {};
-	showUI: Boolean = false;
+	showUI: boolean = false;
 
 	private setPropertySheet = () => {
 		const {
@@ -144,20 +144,26 @@ export class NewRecord extends React.Component<
 						}
 					}
 
-					this.setState({ formDefinition: data.DataEntryFormDefinition });
-					this.setState({ processing: false });
-
 					this.showUI =
 						!processInBackgroundIfPossible || data.NeedsDataEntryForm === true;
-					if (!this.showUI) {
-						this.recordProps = {
-							DataEntryFormDefinition: data.DataEntryFormDefinition,
-						};
-						this.doSave();
-					} else {
-						appStore!.setSpinning(false);
-						this.setState({ showUI: true });
-					}
+
+					this.setState(
+						{
+							formDefinition: data.DataEntryFormDefinition,
+							processing: false,
+							showUI: this.showUI,
+						},
+						() => {
+							if (!this.showUI) {
+								this.recordProps = {
+									DataEntryFormDefinition: data.DataEntryFormDefinition,
+								};
+								this.doSave();
+							} else {
+								appStore!.setSpinning(false);
+							}
+						}
+					);
 				})
 				.catch((e) => {
 					appStore!.setSpinning(false);

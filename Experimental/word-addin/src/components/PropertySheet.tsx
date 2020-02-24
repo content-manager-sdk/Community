@@ -131,9 +131,12 @@ export class PropertySheet extends React.Component<
 			this.formValues = {};
 			this.formFields = {};
 
-			this.doValues();
+			this.fieldInit = [];
+			this.setState({ fieldValues: [] }, () => {
+				this.doValues();
+			});
 
-			this.setState({});
+			//	this.setState({});
 		}
 	}
 
@@ -164,14 +167,18 @@ export class PropertySheet extends React.Component<
 	private _onSelectObject = (prop: IPageItem) => (
 		trimObject: ITrimMainObject
 	) => {
-		this.preservedValues[prop.Name] = [trimObject];
+		this.preservedValues[prop.Name] = Array.isArray(trimObject)
+			? trimObject
+			: [trimObject];
 		this.doPropOrFieldChange(prop, trimObject.Uri);
 	};
 
 	private _onSelectLookupItem = (prop: IPageItem) => (
 		trimObject: ITrimMainObject
 	) => {
-		this.preservedValues[prop.Name] = [trimObject];
+		this.preservedValues[prop.Name] = Array.isArray(trimObject)
+			? trimObject
+			: [trimObject];
 		this.doPropOrFieldChange(prop, trimObject.NameString);
 	};
 
@@ -250,9 +257,9 @@ export class PropertySheet extends React.Component<
 
 		if (pageItem.Name in fieldValues) {
 			if (asArray) {
-				return [this.state.fieldValues[pageItem.Name]];
+				return [fieldValues[pageItem.Name]];
 			} else {
-				return this.state.fieldValues[pageItem.Name];
+				return fieldValues[pageItem.Name];
 			}
 		} else {
 			return getValue();

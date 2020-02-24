@@ -1,5 +1,5 @@
 import * as React from "react";
-import { shallow, mount, ReactWrapper } from "enzyme";
+import { shallow, mount, ReactWrapper, ShallowWrapper } from "enzyme";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { DatePicker } from "office-ui-fabric-react/lib/DatePicker";
 import TrimObjectPicker from "./TrimObjectPicker/TrimObjectPicker";
@@ -648,12 +648,42 @@ describe("Property Sheet", function() {
 
 	describe("Trim Object Properties", () => {
 		let onChangeForm;
-		const wrapper = shallow<PropertySheet>(
-			<PropertySheet
-				onChange={function(newForm) {
-					onChangeForm = newForm;
-				}}
-				formDefinition={{
+		let wrapper: ShallowWrapper<IPropertySheetProps, IPropertySheetState>;
+
+		beforeEach(() => {
+			wrapper = shallow<PropertySheet>(
+				<PropertySheet
+					onChange={function(newForm) {
+						onChangeForm = newForm;
+					}}
+					formDefinition={{
+						Pages: [
+							{
+								Caption: "General",
+								Type: "Normal",
+								PageItems: [
+									{
+										Format: "Object",
+										Name: "RecordContainer",
+										Caption: "Container",
+										ObjectType: "Record",
+										EditPurpose: 1,
+										EditPurposeExtra: 9000000500,
+										Value: {
+											Uri: 1,
+										},
+									},
+								],
+							},
+						],
+					}}
+				/>
+			);
+		});
+
+		it("clears value on change of data entry form", () => {
+			wrapper.setProps({
+				formDefinition: {
 					Pages: [
 						{
 							Caption: "General",
@@ -667,15 +697,19 @@ describe("Property Sheet", function() {
 									EditPurpose: 1,
 									EditPurposeExtra: 9000000500,
 									Value: {
-										Uri: 1,
+										Uri: 2,
 									},
 								},
 							],
 						},
 					],
-				}}
-			/>
-		);
+				},
+			});
+
+			expect(wrapper.state().fieldValues).toEqual({
+				RecordContainer: [{ Uri: 2 }],
+			});
+		});
 
 		it("adds a TrimObjectPicker to the property sheet", () => {
 			const objectPicker = wrapper.find(TrimObjectPicker).at(0);
