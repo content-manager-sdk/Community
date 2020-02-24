@@ -16,12 +16,15 @@ import {
 import { CommandBar } from "office-ui-fabric-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
+import AppStoreOutlook from "../../stores/AppStoreOutlook";
+import WordConnector from "../../office-coms/word-connector";
+import flushPromises = require("flush-promises");
 
 describe("Object Context Menu", () => {
 	let checkinUri = 0;
 	let favUri = 0;
 	let finalizeUri = 0;
-	let updatedDocumentInfo;
+
 	let insertedText = "";
 	let insertedUrl = "";
 	let testError = "";
@@ -38,47 +41,95 @@ describe("Object Context Menu", () => {
 		CommandDefs: [],
 	};
 
-	const appStore = {
-		moreToFile: () => {
-			return moreToFile;
-		},
-		isEmail: () => {
-			return isEmail;
-		},
-		setError: function(message: any) {
-			testError = message;
-		},
-		setErrorMessage: function(message) {
-			testError = message;
-		},
-		setDocumentInfo: (documentInfo) => {
-			updatedDocumentInfo = documentInfo;
-		},
-		openInCM: function(uri: number) {
-			testUri = uri;
-		},
-		setStatus: (status: string) => {},
-		setSpinning: () => {},
-		RecordUri: 7,
-		Id: "my id",
-		messages: {
-			web_Actions: "Actions",
-			web_Paste: "Paste",
-			web_Please_Select: "Please select",
-		},
-		getWebClientUrl: (uri: number) => {
-			return "link?uri=" + uri;
-		},
+	let trimConnector = new TrimConnector();
+	trimConnector.credentialsResolver = (callback) => {};
 
-		documentInfo: {
-			Enums: {
-				RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
-			},
-			CommandDefs: [],
-			Uris: [7, 9],
-		},
-		PreservedUris: [],
-	};
+	trimConnector.getEnum = function() {
+		return new Promise<IEnumDetails[]>(function(resolve) {
+			resolve([{ Name: "Copy", Caption: "Copy" }]);
+		});
+	}.bind(trimConnector);
+
+	trimConnector.getObjectDefinitions = function() {
+		return new Promise((resolve) => {
+			resolve([{ Id: "Record", Caption: "Record" }]);
+		});
+	}.bind(trimConnector);
+
+	trimConnector.getGlobalUserOptions = function(forOptionsSet) {
+		setForOptionsSet = forOptionsSet;
+
+		return new Promise((resolve) => {
+			resolve();
+		});
+	}.bind(trimConnector);
+
+	trimConnector.runAction = function(
+		commandId: CommandIds,
+		uri: number
+	): Promise<IDriveActionInformation> {
+		if (commandId === CommandIds.AddToFavorites) {
+			favUri = uri;
+		} else if (commandId === CommandIds.RecCheckIn) {
+			checkinUri = uri;
+		} else {
+			finalizeUri = uri;
+		}
+		return new Promise(function(resolve) {
+			resolve(returnedDocumentInfo);
+		});
+	}.bind(trimConnector);
+
+	const wordConnector = new WordConnector();
+	wordConnector.saveDocument = function(): Promise<void> {
+		saveDocumentCalled = true;
+		return new Promise(function(resolve) {
+			resolve();
+		});
+	}.bind(wordConnector);
+
+	wordConnector.getDocumentData = function(writeSlice: any): Promise<string> {
+		return new Promise(function(resolve) {
+			resolve("test");
+		});
+	}.bind(wordConnector);
+
+	wordConnector.getWebUrl = function() {
+		return "test-url";
+	}.bind(wordConnector);
+
+	wordConnector.insertText = function(textToInsert) {
+		insertedText = textToInsert;
+	}.bind(wordConnector);
+
+	wordConnector.insertLink = function(text, url) {
+		insertedText = text;
+		insertedUrl = url;
+	}.bind(wordConnector);
+
+	const appStore = new AppStoreOutlook(trimConnector, wordConnector);
+
+	appStore.isEmail = function() {
+		return isEmail;
+	}.bind(appStore);
+	appStore.moreToFile = function() {
+		return moreToFile;
+	}.bind(appStore);
+	// appStore.setError = function(message: any) {
+	// 	testError = message;
+	// }.bind(appStore);
+	// appStore.setErrorMessage = function(message: any) {
+	// 	testError = message;
+	// }.bind(appStore);
+
+	appStore.openInCM = function(uri: number) {
+		testUri = uri;
+	}.bind(appStore);
+	appStore.setSpinning = function() {}.bind(appStore);
+	appStore.setStatus = function() {}.bind(appStore);
+	appStore.getWebClientUrl = function(uri: number) {
+		return "link?uri=" + uri;
+	}.bind(appStore);
 
 	const makeWrapper = (
 		menuItemsEnabled: boolean = true,
@@ -87,13 +138,14 @@ describe("Object Context Menu", () => {
 	) => {
 		const wrapper = shallow<ObjectContextMenu>(
 			<ObjectContextMenu
+				trimType={BaseObjectTypes.Record}
 				isInList={isInList}
 				onCommandComplete={(key: string) => {
 					completedCommand = key;
 				}}
 				appStore={appStore}
 				trimConnector={trimConnector}
-				wordConnector={mockWordConnector}
+				wordConnector={wordConnector}
 				record={{
 					Uri: 7,
 					ToolTip: "test title",
@@ -146,7 +198,6 @@ describe("Object Context Menu", () => {
 		checkinUri = 0;
 		favUri = 0;
 		finalizeUri = 0;
-		updatedDocumentInfo = null;
 		insertedText = "";
 		insertedUrl = "";
 		testError = "";
@@ -156,70 +207,23 @@ describe("Object Context Menu", () => {
 		isEmail = false;
 		saveDocumentCalled = false;
 		moreToFile = false;
+
+		appStore.setDocumentInfo({
+			Id: "my id",
+			Enums: {
+				RecordRelationshipType: [{ Id: "Related", Caption: "Related" }],
+			},
+			CommandDefs: [],
+			Uris: [7, 9],
+		});
+
+		appStore.setMessages({
+			web_Actions: "Actions",
+			web_Paste: "Paste",
+			web_Please_Select: "Please select",
+			bob_needSelectedRow: "bob_needSelectedRow",
+		});
 	});
-
-	let trimConnector = new TrimConnector();
-	trimConnector.credentialsResolver = (callback) => {};
-
-	trimConnector.getEnum = function() {
-		return new Promise<IEnumDetails[]>(function(resolve) {
-			resolve([{ Name: "Copy", Caption: "Copy" }]);
-		});
-	}.bind(trimConnector);
-
-	trimConnector.getObjectDefinitions = function() {
-		return new Promise((resolve) => {
-			resolve([{ Id: "Record", Caption: "Record" }]);
-		});
-	}.bind(trimConnector);
-
-	trimConnector.getGlobalUserOptions = function(forOptionsSet) {
-		setForOptionsSet = forOptionsSet;
-
-		return new Promise((resolve) => {
-			resolve();
-		});
-	}.bind(trimConnector);
-
-	trimConnector.runAction = function(
-		commandId: CommandIds,
-		uri: number
-	): Promise<IDriveActionInformation> {
-		if (commandId === CommandIds.AddToFavorites) {
-			favUri = uri;
-		} else if (commandId === CommandIds.RecCheckIn) {
-			checkinUri = uri;
-		} else {
-			finalizeUri = uri;
-		}
-		return new Promise(function(resolve) {
-			resolve(returnedDocumentInfo);
-		});
-	}.bind(trimConnector);
-
-	const mockWordConnector = {
-		saveDocument(): Promise<void> {
-			saveDocumentCalled = true;
-			return new Promise(function(resolve) {
-				resolve();
-			});
-		},
-		getDocumentData(writeSlice: any): Promise<string> {
-			return new Promise(function(resolve) {
-				resolve("test");
-			});
-		},
-		getWebUrl() {
-			return "test-url";
-		},
-		insertText(textToInsert) {
-			insertedText = textToInsert;
-		},
-		insertLink(text, url) {
-			insertedText = text;
-			insertedUrl = url;
-		},
-	};
 
 	const findMenuItem = (
 		wrapper: shallow<ObjectContextMenu>,
@@ -233,7 +237,11 @@ describe("Object Context Menu", () => {
 		wrapper: shallow<ObjectContextMenu>,
 		getFirstItem?: boolean
 	): IContextualMenuProps => {
-		return findMenuItem(wrapper, getFirstItem).subMenuProps;
+		const farItems = wrapper.find(CommandBar).props().farItems;
+		const theMenu = farItems.find(function(mi) {
+			return mi.key === "moreActions";
+		});
+		return theMenu.subMenuProps;
 	};
 
 	it("contains an action button", function(this: any) {
@@ -272,22 +280,16 @@ describe("Object Context Menu", () => {
 		).toBeUndefined();
 	});
 
-	it("contains add relationship", (done) => {
+	it("contains add relationship", async () => {
 		expect.assertions(1);
 		const wrapper = makeWrapper(true, true);
 
-		setTimeout(() => {
-			try {
-				expect(
-					findMenu(wrapper, true).items.find((menuItem) => {
-						return menuItem.key === "addRelationshipto";
-					})
-				).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(
+			findMenu(wrapper, true).items.find((menuItem) => {
+				return menuItem.key === "addRelationshipto";
+			})
+		).toBeTruthy();
 	});
 
 	it("not contain add relationship", function(this: any) {
@@ -312,7 +314,7 @@ describe("Object Context Menu", () => {
 		).toBeUndefined();
 	});
 
-	it("error when record not selected", (done) => {
+	it("error when record not selected", async () => {
 		const wrapper = makeWrapper(true, false);
 		wrapper.setProps({
 			record: {
@@ -339,40 +341,29 @@ describe("Object Context Menu", () => {
 				return sm.key === "pasteTitle";
 			});
 		menuItem.onClick(null, menuItem);
-		setImmediate(() => {
-			try {
-				expect(testError).toEqual("bob_needSelectedRow");
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+
+		await flushPromises();
+		expect(appStore.errorMessage).toEqual("bob_needSelectedRow");
+		expect.assertions(1);
 	});
 
-	it("error on create relationship when record not selected", (done) => {
+	it("error on create relationship when record not selected", async () => {
 		const wrapper = makeWrapper(true, true);
 
 		wrapper.setProps({ record: { Uri: 0, TrimType: BaseObjectTypes.Record } });
-		setImmediate(() => {
-			const menuItem = findMenu(wrapper, true).items.find((mi) => {
-				return mi.key === "addRelationshipto";
-			}).subMenuProps.items[0];
+		await flushPromises();
+		const menuItem = findMenu(wrapper, true).items.find((mi) => {
+			return mi.key === "addRelationshipto";
+		}).subMenuProps.items[0];
 
-			menuItem.onClick(null, menuItem);
-			setImmediate(() => {
-				try {
-					expect(testError).toEqual("bob_needSelectedRow");
-					expect.assertions(1);
-					done();
-				} catch (e) {
-					done.fail(e);
-				}
-			});
-		});
+		await flushPromises();
+		menuItem.onClick(null, menuItem);
+		await flushPromises();
+		expect(appStore.errorMessage).toEqual("bob_needSelectedRow");
+		expect.assertions(1);
 	});
 
-	it("calls insert text when paste clicked", (done) => {
+	it("calls insert text when paste clicked", async () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(1);
@@ -386,17 +377,11 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(insertedText).toEqual("test title");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(insertedText).toEqual("test title");
 	});
 
-	it("fires event when New clicked", (done) => {
+	it("fires event when New clicked", async () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(2);
@@ -406,18 +391,12 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(completedCommand).toEqual("New");
-				expect(saveDocumentCalled).toBeFalsy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(completedCommand).toEqual("New");
+		expect(saveDocumentCalled).toBeFalsy();
 	});
 
-	it("calls insert text when paste number", (done) => {
+	it("calls insert text when paste number", async () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(1);
@@ -431,17 +410,11 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(insertedText).toEqual("REC_1");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(insertedText).toEqual("REC_1");
 	});
 
-	it("calls insert link when paste clicked", (done) => {
+	it("calls insert link when paste clicked", async () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(2);
@@ -455,18 +428,12 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(insertedText).toEqual("REC_1");
-				expect(insertedUrl).toEqual("link?uri=7");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(insertedText).toEqual("REC_1");
+		expect(insertedUrl).toEqual("link?uri=7");
 	});
 
-	it("calls favorite when checkin button clicked (from list)", async (done) => {
+	it("calls favorite when checkin button clicked (from list)", async () => {
 		const wrapper = makeWrapper(true, true);
 		wrapper.setProps({
 			record: {
@@ -489,19 +456,13 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(favUri).toEqual(8);
-				expect(checkinUri).toEqual(0);
-				expect(finalizeUri).toEqual(0);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(favUri).toEqual(8);
+		expect(checkinUri).toEqual(0);
+		expect(finalizeUri).toEqual(0);
 	});
 
-	it("calls checkin when checkin button clicked", async (done) => {
+	it("calls checkin when checkin button clicked", async () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
@@ -511,18 +472,12 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(checkinUri).toEqual(7);
-				expect(finalizeUri).toEqual(0);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(checkinUri).toEqual(7);
+		expect(finalizeUri).toEqual(0);
 	});
 
-	it("calls get global when get global button clicked", async (done) => {
+	it("calls get global when get global button clicked", async () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
@@ -532,18 +487,12 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(setForOptionsSet).toEqual("ViewPane");
-				expect(completedCommand).toEqual("getGlobalProperties");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(setForOptionsSet).toEqual("ViewPane");
+		expect(completedCommand).toEqual("getGlobalProperties");
 	});
 
-	it("calls edit when edit button clicked", (done) => {
+	it("calls edit when edit button clicked", async () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(1);
@@ -553,37 +502,24 @@ describe("Object Context Menu", () => {
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(completedCommand).toEqual("edit");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(completedCommand).toEqual("edit");
 	});
 
-	it("calls finalize when checkin button clicked", async (done) => {
+	it("calls finalize when checkin button clicked", async () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
-		setImmediate(() => {
-			const menuItem = findMenu(wrapper).items.find((mp) => {
-				return mp.key === "RecDocFinal";
-			});
-
-			menuItem.onClick(null, menuItem);
-
-			setImmediate(() => {
-				try {
-					expect(checkinUri).toEqual(0);
-					expect(finalizeUri).toEqual(7);
-					done();
-				} catch (e) {
-					done.fail(e);
-				}
-			});
+		await flushPromises();
+		const menuItem = findMenu(wrapper).items.find((mp) => {
+			return mp.key === "RecDocFinal";
 		});
+
+		menuItem.onClick(null, menuItem);
+
+		await flushPromises();
+		expect(checkinUri).toEqual(0);
+		expect(finalizeUri).toEqual(7);
 	});
 
 	it("disables Make Final when Record is already finalised", () => {
@@ -636,13 +572,9 @@ describe("Object Context Menu", () => {
 		expect.assertions(1);
 
 		expect(
-			wrapper
-				.find(CommandBar)
-				.props()
-				.farItems.pop()
-				.subMenuProps.items.find((mp) => {
-					return mp.key === "FileMore";
-				})
+			findMenu(wrapper).items.find((mp) => {
+				return mp.key === "FileMore";
+			})
 		).toBeTruthy();
 	});
 
@@ -667,13 +599,9 @@ describe("Object Context Menu", () => {
 		expect.assertions(1);
 
 		expect(
-			wrapper
-				.find(CommandBar)
-				.props()
-				.farItems.pop()
-				.subMenuProps.items.find((mp) => {
-					return mp.key === "RecCheckIn";
-				})
+			findMenu(wrapper).items.find((mp) => {
+				return mp.key === "RecCheckIn";
+			})
 		).toBeFalsy();
 	});
 
@@ -683,13 +611,9 @@ describe("Object Context Menu", () => {
 		expect.assertions(1);
 
 		expect(
-			wrapper
-				.find(CommandBar)
-				.props()
-				.farItems.pop()
-				.subMenuProps.items.find((mp) => {
-					return mp.key === "RecCheckInDelete";
-				})
+			findMenu(wrapper).items.find((mp) => {
+				return mp.key === "RecCheckInDelete";
+			})
 		).toBeFalsy();
 	});
 
@@ -707,92 +631,52 @@ describe("Object Context Menu", () => {
 		expect(findMenuItem(wrapper, true).disabled).toBeFalsy();
 	});
 
-	/*it("sets the state after an action", (done) => {
+	it("opens in CM", async () => {
 		const wrapper = makeWrapper();
 
-		expect.assertions(1);
-		const menuItem = findMenu(wrapper).items.find((mp) => {
-			return mp.key === "RecDocFinal";
+		await flushPromises();
+		const menuItem = findMenu(wrapper).items.find((mi) => {
+			return mi.key === "Properties";
 		});
 
 		menuItem.onClick(null, menuItem);
 
-		setImmediate(() => {
-			try {
-				expect(wrapper.state().commandDefs).toEqual(
-					returnedDocumentInfo.CommandDefs
-				);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
-	});*/
-
-	it("opens in CM", (done) => {
-		const wrapper = makeWrapper();
-
-		setImmediate(() => {
-			try {
-				const menuItem = findMenu(wrapper).items.find((mi) => {
-					return mi.key === "Properties";
-				});
-
-				menuItem.onClick(null, menuItem);
-
-				expect(testUri).toEqual(7);
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(testUri).toEqual(7);
+		expect.assertions(1);
 	});
 
-	it("updates document info when file more called", (done) => {
+	it("updates document info when file more called", async () => {
 		isEmail = true;
 		moreToFile = true;
 		const wrapper = makeWrapper(false);
 
-		setImmediate(() => {
-			try {
-				const menuItem = findMenu(wrapper).items.find((mi) => {
-					return mi.key === "FileMore";
-				});
-
-				menuItem.onClick(null, menuItem);
-
-				expect(appStore.PreservedUris).toEqual([7, 9]);
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+		const menuItem = findMenu(wrapper).items.find((mi) => {
+			return mi.key === "FileMore";
 		});
+
+		menuItem.onClick(null, menuItem);
+
+		expect(appStore.PreservedUris).toEqual([7, 9]);
+		expect.assertions(1);
 	});
 
-	it("not opens in CM for non Record in list", (done) => {
+	it("not opens in CM for non Record in list", async () => {
 		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
 
-		setImmediate(() => {
-			try {
-				const menuItem = findMenu(wrapper).items.find((mi) => {
-					return mi.key === "New";
-				});
-
-				menuItem.onClick(null, menuItem);
-
-				expect(testUri).toEqual(0);
-				expect(completedCommand).toEqual("New");
-				expect.assertions(2);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+		const menuItem = findMenu(wrapper).items.find((mi) => {
+			return mi.key === "New";
 		});
+
+		menuItem.onClick(null, menuItem);
+
+		expect(testUri).toEqual(0);
+		expect(completedCommand).toEqual("New");
+		expect.assertions(2);
 	});
 
-	it("document related commands not shown(from list)", async (done) => {
+	it("document related commands not shown(from list)", async () => {
 		const wrapper = makeWrapper(true, true);
 		wrapper.setProps({
 			record: {
@@ -815,24 +699,17 @@ describe("Object Context Menu", () => {
 		});
 		expect.assertions(2);
 
-		setImmediate(() => {
-			try {
-				expect(
-					findMenu(wrapper, true).items.find((mp) => {
-						return mp.key === "RecCheckIn";
-					})
-				).toBeFalsy();
+		await flushPromises();
+		expect(
+			findMenu(wrapper, true).items.find((mp) => {
+				return mp.key === "RecCheckIn";
+			})
+		).toBeFalsy();
 
-				expect(
-					findMenu(wrapper, true).items.find((mp) => {
-						return mp.key === "RecDocFinal";
-					})
-				).toBeFalsy();
-
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(
+			findMenu(wrapper, true).items.find((mp) => {
+				return mp.key === "RecDocFinal";
+			})
+		).toBeFalsy();
 	});
 });

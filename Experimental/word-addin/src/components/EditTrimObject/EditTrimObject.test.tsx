@@ -6,6 +6,7 @@ import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "../PropertySheet";
 import { ITrimMainObject } from "../../trim-coms/trim-connector";
 import { PrimaryButton } from "office-ui-fabric-react";
+import flushPromises = require("flush-promises");
 
 describe("EditTrimObject", () => {
 	let savedProperties = null;
@@ -51,42 +52,32 @@ describe("EditTrimObject", () => {
 		},
 	};
 
-	it("sets the formDefinition on load", (done) => {
+	it("sets the formDefinition on load", async () => {
 		const wrapper = shallow<EditTrimObject>(
 			<EditTrimObject trimConnector={mockTrimConnector}></EditTrimObject>
 		);
-		setTimeout(() => {
-			try {
-				expect(wrapper.state().formDefinition).toEqual(pageItemsWithTitle);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+
+		await flushPromises();
+		expect(wrapper.state().formDefinition).toEqual(pageItemsWithTitle);
 	});
 
-	it("saves the trim object", (done) => {
+	it("saves the trim object", async () => {
 		const wrapper = shallow<EditTrimObject>(
 			<EditTrimObject
 				recordUri={787}
 				trimConnector={mockTrimConnector}
+				appStore={{ setSpinning: function() {} }}
 			></EditTrimObject>
 		);
 
 		const button = wrapper.find("form");
 		button.simulate("submit");
 
-		setTimeout(() => {
-			try {
-				expect(savedProperties).toEqual({ Uri: 787 });
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(savedProperties).toEqual({ Uri: 787 });
 	});
 
-	it("fires on save", (done) => {
+	it("fires on save", async () => {
 		let saveCalled = false;
 		const wrapper = shallow<EditTrimObject>(
 			<EditTrimObject
@@ -95,19 +86,15 @@ describe("EditTrimObject", () => {
 				onSave={() => {
 					saveCalled = true;
 				}}
+				appStore={{ setSpinning: function() {} }}
 			></EditTrimObject>
 		);
 
 		const button = wrapper.find("form");
 		button.simulate("submit");
 
-		setTimeout(() => {
-			try {
-				expect(saveCalled).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+
+		expect(saveCalled).toBeTruthy();
 	});
 });

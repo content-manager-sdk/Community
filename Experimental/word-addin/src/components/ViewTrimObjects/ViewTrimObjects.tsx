@@ -12,12 +12,12 @@ import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import ViewTrimObject from "../ViewTrimObject/ViewTrimObject";
 import { IAppStore } from "src/stores/AppStoreBase";
 import { Link, PrimaryButton } from "office-ui-fabric-react";
+import EditTrimObject from "../EditTrimObject/EditTrimObject";
 
 interface ViewTrimObjectsProps {
 	appStore?: IAppStore;
 	trimConnector?: ITrimConnector;
 	wordConnector?: IOfficeConnector;
-	onEdit?: (uri: number) => void;
 	trimType: BaseObjectTypes;
 	className?: string;
 }
@@ -26,6 +26,7 @@ interface ViewTrimObjectsState {
 	records: ITrimMainObject[];
 	selectedUri: number;
 	spinning: Boolean;
+	editUri: number;
 }
 
 export class ViewTrimObjects extends React.Component<
@@ -39,6 +40,7 @@ export class ViewTrimObjects extends React.Component<
 			records: [],
 			selectedUri: 0,
 			spinning: false,
+			editUri: 0,
 		};
 	}
 
@@ -52,8 +54,8 @@ export class ViewTrimObjects extends React.Component<
 	}
 
 	public render() {
-		const { trimType, appStore, className, onEdit } = this.props;
-		const { records, selectedUri } = this.state;
+		const { trimType, appStore, className } = this.props;
+		const { records, selectedUri, editUri } = this.state;
 
 		const selUri =
 			selectedUri > 0
@@ -62,12 +64,29 @@ export class ViewTrimObjects extends React.Component<
 				? appStore!.documentInfo.Uris[0]
 				: 0;
 
-		return selUri > 0 || appStore!.documentInfo.Uris.length === 1 ? (
+		return editUri > 0 ? (
+			<EditTrimObject
+				trimType={BaseObjectTypes.Record}
+				className={className}
+				recordUri={editUri}
+				onSave={() => {
+					this.setState({ editUri: 0 });
+				}}
+				onClose={() => {
+					this.setState({ editUri: 0 });
+				}}
+			/>
+		) : selUri > 0 || appStore!.documentInfo.Uris.length === 1 ? (
 			<ViewTrimObject
 				trimType={trimType}
 				recordUri={selUri}
 				className={className}
-				onEdit={onEdit}
+				onEdit={() => {
+					this.setState({ editUri: selectedUri });
+				}}
+				onClose={() => {
+					this.setState({ selectedUri: 0 });
+				}}
 			/>
 		) : (
 			<React.Fragment>

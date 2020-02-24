@@ -7,6 +7,7 @@ import AppStoreOutlook from "../../stores/AppStoreOutlook";
 import { OutlookConnector } from "src/office-coms/OutlookConnector";
 import CheckinStyles from "../CheckinStyles/CheckinStyles";
 import { getQueryStringValue } from "../../utils/getQueryStringValue";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react";
 
 interface IBootStrapCheckinStylesState {
 	ready: boolean;
@@ -64,7 +65,7 @@ export class BootStrapCheckinStyles extends React.Component<
 	public render() {
 		const { ready } = this.state;
 		const { forServerProcessing } = this.props;
-
+		const appStore = this.appStore;
 		return (
 			<Provider
 				appStore={this.appStore}
@@ -72,6 +73,13 @@ export class BootStrapCheckinStyles extends React.Component<
 				wordConnector={this.outlookConnector}
 			>
 				<React.Fragment>
+					{appStore.spinning && appStore!.status !== "STARTING" && (
+						<Spinner
+							className="trim-top-spinner"
+							size={SpinnerSize.xSmall}
+							label={appStore.getSpinningLabel()}
+						/>
+					)}
 					{ready && <CheckinStyles forServerProcessing={forServerProcessing} />}
 				</React.Fragment>
 			</Provider>

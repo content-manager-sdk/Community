@@ -2,7 +2,6 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import ViewTrimObjects from "./ViewTrimObjects/ViewTrimObjects";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
-import EditTrimObject from "./EditTrimObject/EditTrimObject";
 import { IAppStore } from "src/stores/AppStoreBase";
 import OutlookAttachments from "./OutlookAttachments/OutlookAttachments";
 import NewRecord from "./NewRecord";
@@ -13,13 +12,10 @@ export class MainApp extends React.Component<
 > {
 	constructor(props: { appStore?: any; className?: string }) {
 		super(props);
-
-		this.state = { editUri: 0 };
 	}
 
 	public render() {
 		const { appStore, className } = this.props;
-		const { editUri } = this.state;
 
 		if (appStore.status === "STARTING") {
 			return null;
@@ -29,22 +25,10 @@ export class MainApp extends React.Component<
 			(appStore as IAppStore)!.documentInfo.Uris &&
 			(appStore as IAppStore)!.documentInfo.Uris.length > 0
 		) {
-			return editUri > 0 ? (
-				<EditTrimObject
-					trimType={BaseObjectTypes.Record}
-					className={className}
-					recordUri={editUri}
-					onSave={() => {
-						this.setState({ editUri: 0 });
-					}}
-				/>
-			) : (
+			return (
 				<ViewTrimObjects
 					className={className}
 					trimType={BaseObjectTypes.Record}
-					onEdit={(uri: number) => {
-						this.setState({ editUri: uri });
-					}}
 				/>
 			);
 		} else if (appStore!.status === "WAITING") {

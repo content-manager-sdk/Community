@@ -14,6 +14,7 @@ import TrimConnector, {
 import { Link, PrimaryButton } from "office-ui-fabric-react";
 import { exists } from "fs";
 import flushPromises = require("flush-promises");
+import EditTrimObject from "../EditTrimObject/EditTrimObject";
 
 describe("View Trim Objects", function() {
 	let resolveRecords;
@@ -195,5 +196,43 @@ describe("View Trim Objects", function() {
 				.first()
 				.props().recordUri
 		).toEqual(2);
+	});
+
+	it("Shows View Record component on edit", function() {
+		appStore.setDocumentInfo({ Uris: [1] });
+		const wrapper = shallow<ViewTrimObjects>(
+			<ViewTrimObjects
+				trimType={BaseObjectTypes.Record}
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+			/>
+		);
+		wrapper.setState({ selectedUri: 1 });
+		const viewer = wrapper.find(ViewTrimObject);
+		viewer.props().onEdit(1);
+
+		const editor = wrapper.find(EditTrimObject);
+		editor.props().onSave();
+
+		expect(wrapper.find(ViewTrimObject).exists()).toBeTruthy();
+		expect(wrapper.find(EditTrimObject).exists()).toBeFalsy();
+	});
+
+	it("Shows Edit Record component on edit", function(this: any) {
+		appStore.setDocumentInfo({ Uris: [1] });
+		const wrapper = shallow<ViewTrimObjects>(
+			<ViewTrimObjects
+				trimType={BaseObjectTypes.Record}
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+			/>
+		);
+		wrapper.setState({ selectedUri: 1 });
+
+		const viewer = wrapper.find(ViewTrimObject);
+		viewer.props().onEdit(1);
+
+		expect(wrapper.find(ViewTrimObject).exists()).toBeFalsy();
+		expect(wrapper.find(EditTrimObject).exists()).toBeTruthy();
 	});
 });

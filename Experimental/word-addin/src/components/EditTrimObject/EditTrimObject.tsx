@@ -1,16 +1,18 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
+import {
+	PrimaryButton,
+	DefaultButton,
+} from "office-ui-fabric-react/lib/Button";
 
 import { ITrimConnector } from "../../trim-coms/trim-connector";
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
 import PropertySheet from "../PropertySheet";
-import { Spinner, SpinnerSize } from "office-ui-fabric-react";
+import { Stack } from "office-ui-fabric-react";
 
 interface IEditTrimObjectState {
 	formDefinition: any;
 	processing: boolean;
-	saving: boolean;
 }
 
 interface IEditTrimObjectProps {
@@ -20,6 +22,7 @@ interface IEditTrimObjectProps {
 	trimType: BaseObjectTypes;
 	recordUri: number;
 	onSave?: () => void;
+	onClose?: () => void;
 }
 
 export class EditTrimObject extends React.Component<
@@ -32,7 +35,6 @@ export class EditTrimObject extends React.Component<
 		this.state = {
 			formDefinition: {},
 			processing: false,
-			saving: false,
 		};
 	}
 
@@ -52,12 +54,12 @@ export class EditTrimObject extends React.Component<
 	}
 
 	private _onClick = (event: React.MouseEvent<HTMLFormElement>) => {
-		this.setState({ saving: true });
 		if (event) {
 			event.preventDefault();
 		}
-		const { trimConnector, trimType, recordUri, onSave } = this.props;
+		const { trimConnector, trimType, recordUri, onSave, appStore } = this.props;
 		if (trimConnector) {
+			appStore!.setSpinning(true);
 			trimConnector
 				.saveToTrim(
 					trimType,
@@ -68,13 +70,13 @@ export class EditTrimObject extends React.Component<
 					this.recordFields
 				)
 				.then(() => {
-					this.setState({ saving: false });
+					appStore!.setSpinning(false);
 					if (onSave) {
 						onSave();
 					}
 				})
-				.catch(() => {
-					this.setState({ saving: false });
+				.catch((e) => {
+					appStore!.setError(e);
 				});
 		}
 	};
@@ -85,16 +87,12 @@ export class EditTrimObject extends React.Component<
 	};
 
 	public render() {
-		const { appStore, className, trimType } = this.props;
+		const { appStore, className, trimType, onClose } = this.props;
 
-		const { formDefinition, processing, saving } = this.state;
+		const { formDefinition, processing } = this.state;
 
 		return (
 			<React.Fragment>
-				{saving && (
-					<Spinner className="trim-edit-spinner" size={SpinnerSize.large} />
-				)}
-
 				<form
 					className={className + (processing === true ? " disabled" : "")}
 					onSubmit={this._onClick}
@@ -105,9 +103,18 @@ export class EditTrimObject extends React.Component<
 							onChange={this._onPropertySheetChange}
 						/>
 						{formDefinition.Pages && (
-							<PrimaryButton className="trim-register" type="submit">
-								{appStore.messages.web_save}
-							</PrimaryButton>
+							<Stack horizontal>
+								{onClose !== undefined && (
+									<DefaultButton
+										className="trim-register"
+										text={appStore.messages.web_cancel}
+										onClick={onClose}
+									/>
+								)}
+								<PrimaryButton className="trim-register" type="submit">
+									{appStore.messages.web_save}
+								</PrimaryButton>
+							</Stack>
 						)}
 					</div>
 				</form>

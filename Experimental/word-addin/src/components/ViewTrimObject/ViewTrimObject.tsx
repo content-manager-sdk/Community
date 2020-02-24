@@ -25,6 +25,7 @@ interface ViewTrimObjectProps {
 	className?: string;
 	recordUri: number;
 	onEdit?: (uri: number) => void;
+	onClose?: () => void;
 	trimType: BaseObjectTypes;
 }
 
@@ -76,7 +77,14 @@ export class ViewTrimObject extends React.Component<
 	};
 
 	public render() {
-		const { className, appStore, onEdit, trimType, recordUri } = this.props;
+		const {
+			className,
+			appStore,
+			onEdit,
+			trimType,
+			recordUri,
+			onClose,
+		} = this.props;
 
 		const { menuMessage, recordDetails } = this.state;
 
@@ -101,6 +109,7 @@ export class ViewTrimObject extends React.Component<
 								record={recordDetails.results[0]}
 								isInList={false}
 								trimType={trimType}
+								showCloseIcon={onClose !== undefined}
 								onCommandComplete={(commandKey: string) => {
 									if (
 										commandKey === "getGlobalProperties" ||
@@ -111,6 +120,10 @@ export class ViewTrimObject extends React.Component<
 										this.loadRecordDetails().then(() => {
 											appStore.setStatus("WAITING");
 										});
+									} else if (commandKey === "close") {
+										if (onClose) {
+											onClose();
+										}
 									} else if (commandKey === "edit" && onEdit) {
 										onEdit(recordUri);
 									}

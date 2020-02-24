@@ -1,6 +1,9 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
+import {
+	PrimaryButton,
+	DefaultButton,
+} from "office-ui-fabric-react/lib/Button";
 import { IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import {
 	ITrimConnector,
@@ -12,6 +15,7 @@ import PropertySheet from "./PropertySheet";
 import { IOfficeConnector } from "src/office-coms/office-connector";
 import RecordTypePicker from "./RecordTypePicker/RecordTypePicker";
 import { IAppStore } from "src/stores/AppStoreBase";
+import { Stack } from "office-ui-fabric-react";
 
 interface INewRecordState {
 	formDefinition: any;
@@ -30,6 +34,7 @@ interface INewRecordProps {
 	className?: string;
 	trimType: BaseObjectTypes;
 	onAfterSave?: (newObject?: ITrimMainObject) => void;
+	onClose?: () => void;
 	folderId?: string;
 	isLinkedFolder?: Boolean;
 	bypassUpdateEmailSubject?: Boolean;
@@ -340,6 +345,7 @@ export class NewRecord extends React.Component<
 			isLinkedFolder,
 			defaultRecordType,
 			processInBackgroundIfPossible,
+			onClose,
 		} = this.props;
 
 		const { formDefinition, processing, saving, showUI } = this.state;
@@ -394,11 +400,21 @@ export class NewRecord extends React.Component<
 							onChange={this._onPropertySheetChange}
 							computedProperties={computedProps}
 						/>
-						{formDefinition.Pages && (
-							<PrimaryButton className="trim-register" type="submit">
-								{appStore!.messages.web_Register}
-							</PrimaryButton>
-						)}
+
+						<Stack horizontal>
+							{onClose !== undefined && (
+								<DefaultButton
+									className="trim-register"
+									text={appStore!.messages.web_cancel}
+									onClick={onClose}
+								/>
+							)}
+							{formDefinition.Pages && (
+								<PrimaryButton className="trim-register" type="submit">
+									{appStore!.messages.web_Register}
+								</PrimaryButton>
+							)}
+						</Stack>
 					</div>
 				)}
 			</form>

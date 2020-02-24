@@ -31,6 +31,8 @@ export class TrimMessages {
 	public core_mailAttachmentsCap = ""; // tslint:disable-line
 	public core_completeEmail = ""; // tslint:disable-line
 	public web_fileMore = ""; // tslint:disable-line
+	public web_close = ""; // tslint:disable-line
+	public web_cancel = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

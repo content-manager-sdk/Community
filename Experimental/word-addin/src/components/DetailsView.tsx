@@ -280,7 +280,6 @@ export class DetailsView extends React.Component<
 
 		return (
 			<React.Fragment>
-				{/* <h3>Record Properties</h3> */}
 				<div className={"new-record-body " + this.getStyles()}>
 					<div className="details-view ms-Grid" dir="ltr">
 						{propertiesAndFields

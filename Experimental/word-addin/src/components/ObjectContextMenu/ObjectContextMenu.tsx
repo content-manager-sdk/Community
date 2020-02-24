@@ -25,6 +25,7 @@ interface IContextMenuProps {
 	isInList: boolean;
 	onCommandComplete?: (commandKey: string) => void;
 	trimType: BaseObjectTypes;
+	showCloseIcon?: boolean;
 }
 
 interface IContextMenuState {
@@ -249,7 +250,7 @@ export class ObjectContextMenu extends React.Component<
 	}
 
 	getFarItems = async (): Promise<void> => {
-		const { appStore, isInList, record, trimType } = this.props;
+		const { appStore, isInList, record, trimType, showCloseIcon } = this.props;
 		const { commandDefs } = this.state;
 
 		let checkinMenuItem: IContextualMenuItem | undefined;
@@ -399,6 +400,17 @@ export class ObjectContextMenu extends React.Component<
 			subMenuProps: { items: menuItems },
 		});
 
+		if (showCloseIcon) {
+			items.push({
+				key: "close",
+				name: appStore!.messages.web_Close,
+				iconOnly: true,
+				iconProps: {
+					iconName: "Cancel",
+				},
+				onClick: this._onActionClick,
+			});
+		}
 		this.setState({ items });
 
 		return Promise.resolve();

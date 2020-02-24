@@ -56,33 +56,6 @@ describe("MainApp", function() {
 		expect(wrapper.find(ViewTrimObjects).exists()).toBeTruthy();
 	});
 
-	it("Shows Edit Record component on edit", function(this: any) {
-		const wrapper = shallow<MainApp>(
-			<MainApp appStore={{ documentInfo: { Uris: [1] } }} />
-		);
-
-		const viewer = wrapper.find(ViewTrimObjects);
-		viewer.props().onEdit(1);
-
-		expect(wrapper.find(ViewTrimObjects).exists()).toBeFalsy();
-		expect(wrapper.find(EditTrimObject).exists()).toBeTruthy();
-	});
-
-	it("Shows View Record component on edit", function(this: any) {
-		const wrapper = shallow<MainApp>(
-			<MainApp appStore={{ documentInfo: { Uris: [1] } }} />
-		);
-
-		const viewer = wrapper.find(ViewTrimObjects);
-		viewer.props().onEdit(1);
-
-		const editor = wrapper.find(EditTrimObject);
-		editor.props().onSave();
-
-		expect(wrapper.find(ViewTrimObjects).exists()).toBeTruthy();
-		expect(wrapper.find(EditTrimObject).exists()).toBeFalsy();
-	});
-
 	it("Shows null when neither Uri or Id found (yet)", function(this: any) {
 		const wrapper = shallow<MainApp>(
 			<MainApp appStore={{ documentInfo: { Uris: [] } }} />

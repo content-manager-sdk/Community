@@ -68,6 +68,9 @@ export class CheckinStyles extends React.Component<
 									onSave={() => {
 										this.setState({ view: "Properties" });
 									}}
+									onClose={() => {
+										this.setState({ view: "List" });
+									}}
 								/>
 							);
 						case "Properties":
@@ -77,6 +80,9 @@ export class CheckinStyles extends React.Component<
 									trimType={BaseObjectTypes.CheckinStyle}
 									onEdit={() => {
 										this.setState({ view: "Edit" });
+									}}
+									onClose={() => {
+										this.setState({ view: "List" });
 									}}
 								/>
 							);
@@ -96,6 +102,9 @@ export class CheckinStyles extends React.Component<
 										folderId={folderId}
 										isLinkedFolder={forServerProcessing}
 										computedCheckinStyleName={folderName}
+										onClose={() => {
+											this.setState({ view: "List" });
+										}}
 										onAfterSave={(trimObject) => {
 											if (trimObject) {
 												if (forServerProcessing && folderId !== "cm_auto") {
