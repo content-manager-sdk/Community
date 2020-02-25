@@ -1492,5 +1492,24 @@ describe("Test fetch from TRIM", () => {
 
 			expect(count).toEqual(2);
 		});
+
+		it("suppress data entry form defaults to true", () => {
+			const suppress = trimConnector.suppressDataEntryForm();
+
+			expect(suppress).toEqual(true);
+		});
+
+		it("set changes suppress data entry form to false", () => {
+			const suppress = trimConnector.suppressDataEntryForm(false);
+
+			expect(suppress).toEqual(false);
+		});
+
+		it("caches change to false", () => {
+			trimConnector.suppressDataEntryForm(false);
+			const suppress = trimConnector.suppressDataEntryForm();
+
+			expect(suppress).toEqual(false);
+		});
 	});
 });

@@ -10,4 +10,5 @@ export enum CacheIds {
 	SearchFieldClauses = "SearchFieldClauses",
 	ViewpanePropDefs = "ViewpanePropDefs",
 	Messages = "Messages",
+	SuppressDataEntryForm = "SuppressDataEntryForm",
 }

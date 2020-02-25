@@ -281,6 +281,7 @@ export interface ITrimConnector {
 	getMenuItemsForList(trimType: BaseObjectTypes): Promise<ICommandDef[]>;
 	getUseCheckinStyles(): Boolean;
 	setUseCheckinStyles(use: boolean): void;
+	suppressDataEntryForm(suppress?: boolean): boolean;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -297,6 +298,18 @@ export class TrimConnector implements ITrimConnector {
 
 	public setUseCheckinStyles(use: boolean): void {
 		this.setCacheItem(CacheIds.UseCheckinStyles, use);
+	}
+
+	public suppressDataEntryForm(suppress?: boolean): boolean {
+		if (suppress !== undefined) {
+			this.setCacheItem(CacheIds.SuppressDataEntryForm, suppress);
+		}
+
+		const suppressForm = this.getItemFromCache(CacheIds.SuppressDataEntryForm);
+		if (suppressForm === null) {
+			this.setCacheItem(CacheIds.SuppressDataEntryForm, true);
+		}
+		return this.getItemFromCache(CacheIds.SuppressDataEntryForm);
 	}
 
 	public cancel(): void {

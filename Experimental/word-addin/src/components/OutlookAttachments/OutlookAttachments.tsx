@@ -46,7 +46,7 @@ export class OutlookAttachments extends React.Component<
 	}
 
 	async componentDidMount() {
-		const { wordConnector, appStore } = this.props;
+		const { wordConnector, appStore, trimConnector } = this.props;
 
 		const filedRecords = await appStore!.fetchFiledRecords();
 		const attachments = (wordConnector as OutlookConnector).getAttachments();
@@ -68,7 +68,8 @@ export class OutlookAttachments extends React.Component<
 
 		this.setState({
 			attachments,
-			autoCreate: attachments.length > 1,
+			autoCreate:
+				trimConnector!.suppressDataEntryForm() && attachments.length > 1,
 			selectedAttachments: attachments.length === 1 ? [attachments[0]] : [],
 		});
 	}
@@ -246,7 +247,9 @@ export class OutlookAttachments extends React.Component<
 
 	private _autoCreate = () => {
 		const { autoCreate } = this.state;
+		const { trimConnector } = this.props;
 
+		trimConnector!.suppressDataEntryForm(!autoCreate);
 		this.setState({ autoCreate: !autoCreate });
 	};
 
