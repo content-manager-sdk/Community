@@ -1,8 +1,8 @@
 (global as any).config = { BASE_URL: "" };
 
 import * as React from "react";
-import { mount, shallow } from "enzyme";
-import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
+import { shallow } from "enzyme";
+
 import {
 	TrimConnector,
 	ICheckinPlace,
@@ -14,7 +14,9 @@ import { IOfficeConnector } from "../../office-coms/office-connector";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { ComboBox } from "office-ui-fabric-react";
 import { RecordTypePicker } from "./RecordTypePicker";
-import { IGetRecordUriResponse } from "../../office-coms/word-connector";
+import WordConnector from "../../office-coms/word-connector";
+import AppStoreWord from "../../stores/AppStoreWord";
+import flushPromises = require("flush-promises");
 
 describe("Record Type Picker", function() {
 	let resolveCheckinStyles;
@@ -49,9 +51,9 @@ describe("Record Type Picker", function() {
 	) => {
 		const innerWrapper = shallow<RecordTypePicker>(
 			<RecordTypePicker
-				appStore={mockStore}
+				appStore={appStore}
 				trimConnector={mockTrimConnector}
-				wordConnector={new MockWordConnector()}
+				wordConnector={mockWordConnector}
 				trimType={trimType}
 				onRecordTypeSelected={(uri) => {
 					recordTypeUri = uri;
@@ -66,11 +68,24 @@ describe("Record Type Picker", function() {
 		return innerWrapper;
 	};
 
+	beforeEach(() => {
+		appStore.setDocumentInfo({
+			Uris: [],
+			Options: {},
+			URN: "test_urn",
+			EmailPath: null,
+		});
+		appStore.setMessages({
+			web_Register: "Register",
+			web_SelectRecordType: "Select a Record Type",
+			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
+		});
+	});
+
 	afterEach(() => {
 		registerProps = [];
 		populatePages = false;
 		rejectRegister = false;
-		mockStore.documentInfo.EmailPath = null;
 	});
 
 	let mockTrimConnector = new TrimConnector();
@@ -129,66 +144,14 @@ describe("Record Type Picker", function() {
 		});
 	};
 
-	const mockStore = {
-		RecordUri: 0,
-		RecordProps: {},
-		messages: {
-			web_Register: "Register",
-			web_SelectRecordType: "Select a Record Type",
-			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
-		},
-		documentInfo: { Options: {}, URN: "test_urn", EmailPath: null },
-		createRecord: (recordUri, recordProps) => {
-			mockStore.RecordUri = recordUri;
-			mockStore.RecordProps = recordProps;
+	const mockWordConnector = new WordConnector();
 
-			return new Promise(function(resolve) {
-				resolve();
-			});
-		},
-		FileName: "default title",
-		setError: (message: string) => {
-			errorMessage = message;
-		},
-	};
-
-	class MockWordConnector implements IOfficeConnector {
-		insertLink(textToInsert: string, url: string): void {
-			throw new Error("Method not implemented.");
-		}
-		saveDocument(): Promise<void> {
-			throw new Error("Method not implemented.");
-		}
-		getDocumentData(writeSlice: any): Promise<string> {
-			throw new Error("Method not implemented.");
-		}
-		setAutoOpen(
-			autoOpen: boolean,
-			recordUrn: string,
-			subjectPrefix: string
-		): void {
-			testRecordUrn = recordUrn;
-			testSubjectPrefix = subjectPrefix;
-		}
-		getAutoOpen(): boolean {
-			throw new Error("Method not implemented.");
-		}
-		insertText(textToInsert: string): void {
-			throw new Error("Method not implemented.");
-		}
-		getAccessToken(): Promise<string> {
-			throw new Error("Method not implemented.");
-		}
-		setUri(uri: number): Promise<IGetRecordUriResponse> {
-			throw new Error("Method not implemented.");
-		}
-		getWebUrl(): Promise<string> {
-			throw new Error("Method not implemented.");
-		}
-		getUri(): Promise<IGetRecordUriResponse> {
-			throw new Error("Method not implemented.");
-		}
-	}
+	const appStore = new AppStoreWord(mockTrimConnector, mockWordConnector);
+	appStore.createRecord = function(recordUri, recordProps) {
+		return new Promise(function(resolve) {
+			resolve();
+		});
+	}.bind(appStore);
 
 	it("contains a Record Type dropdown", (done) => {
 		const wrapper = makeWrapper(
@@ -343,12 +306,12 @@ describe("Record Type Picker", function() {
 		});
 	});
 
-	it("selects the default Record Type", (done) => {
+	it("selects the default Record Type", async () => {
 		const wrapper = shallow<RecordTypePicker>(
 			<RecordTypePicker
-				appStore={mockStore}
+				appStore={appStore}
 				trimConnector={mockTrimConnector}
-				wordConnector={new MockWordConnector()}
+				wordConnector={mockWordConnector}
 				trimType={BaseObjectTypes.Record}
 				onRecordTypeSelected={(uri) => {
 					recordTypeUri = uri;
@@ -357,22 +320,16 @@ describe("Record Type Picker", function() {
 				defaultRecordType={{ Uri: 5, TrimType: BaseObjectTypes.RecordType }}
 			/>
 		);
-		setTimeout(() => {
-			try {
-				expect(wrapper.state().recordTypes[1].selected).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.state().recordTypes[1].selected).toBeTruthy();
 	});
 
-	it("selects the default Checkin Style", (done) => {
+	it("selects the default Checkin Style", async () => {
 		const wrapper = shallow<RecordTypePicker>(
 			<RecordTypePicker
-				appStore={mockStore}
+				appStore={appStore}
 				trimConnector={mockTrimConnector}
-				wordConnector={new MockWordConnector()}
+				wordConnector={mockWordConnector}
 				trimType={BaseObjectTypes.Record}
 				onRecordTypeSelected={(uri) => {
 					recordTypeUri = uri;
@@ -392,13 +349,7 @@ describe("Record Type Picker", function() {
 			],
 		});
 
-		setTimeout(() => {
-			try {
-				expect(wrapper.state().checkinStyles[0].selected).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.state().checkinStyles[0].selected).toBeTruthy();
 	});
 });

@@ -1,5 +1,9 @@
 import { OfficeConnector, IOfficeConnector } from "./office-connector";
-import { ITrimConnector, ITrimMainObject } from "../trim-coms/trim-connector";
+import {
+	ITrimConnector,
+	ITrimMainObject,
+	IDatabase,
+} from "../trim-coms/trim-connector";
 import { IAppStore } from "../stores/AppStoreBase";
 import Axios from "axios";
 import { IGetRecordUriResponse } from "./word-connector";
@@ -41,19 +45,33 @@ export class OutlookConnector extends OfficeConnector
 				if (Office.context.mailbox.item) {
 					appStore.setStatus("STARTING");
 					appStore.PreservedUris = [];
-					this.loadCustomProps().then(() => {
-						this.getWebUrl().then((webUrl) => {
-							trimConnector
-								.getDriveId(webUrl, true, this.getRecordUri())
-								.then((driveInfo) => {
-									appStore.setDocumentInfo(driveInfo);
-									appStore.setStatus("WAITING");
-								})
-								.catch((error) => {
-									appStore.setError(error, "initialising Outlook");
+					trimConnector
+						.getDatabaseProperties()
+						.then((database: IDatabase) => {
+							this.getRecordUrisFromItem(database.Id).then((uris: number[]) => {
+								appStore.setDocumentInfo({
+									...appStore.documentInfo,
+									Uris: uris,
 								});
+								appStore.setStatus("WAITING");
+							});
+						})
+						.catch((error) => {
+							appStore.setError(error, "get mail items");
 						});
-					});
+					// this.loadCustomProps().then(() => {
+					// 	this.getWebUrl().then((webUrl) => {
+					// 		trimConnector
+					// 			.getDriveId(webUrl, true, this.getRecordUri())
+					// 			.then((driveInfo) => {
+					// 				appStore.setDocumentInfo(driveInfo);
+					// 				appStore.setStatus("WAITING");
+					// 			})
+					// 			.catch((error) => {
+					// 				appStore.setError(error, "initialising Outlook");
+					// 			});
+					// 	});
+					// });
 				}
 			};
 

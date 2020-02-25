@@ -109,6 +109,7 @@ export class RecordTypePicker extends React.Component<
 		this._mounted = true;
 
 		if (trimConnector) {
+			appStore.setSpinning(true);
 			this.setState({
 				checkinUsingStyle: trimConnector.getUseCheckinStyles(),
 			});
@@ -134,55 +135,62 @@ export class RecordTypePicker extends React.Component<
 				);
 			}
 
-			return Promise.all(promisesToRun).then((values) => {
-				const response = values[0] as ISearchResults<IRecordType>;
+			return Promise.all(promisesToRun)
+				.then((values) => {
+					const response = values[0] as ISearchResults<IRecordType>;
 
-				if (this._mounted) {
-					me.setRecordTypes(
-						response.results.map(function(o: IRecordType) {
-							return { key: o.Uri, text: o.NameString } as IDropdownOption;
-						})
-					);
-					if (values.length > 1) {
-						const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
-						this.setState({
-							checkinStyles: placesResponse.results.map(function(
-								o: ICheckinPlace
-							) {
-								let selected = false;
-								if (
-									defaultRecordType &&
-									defaultRecordType.TrimType == BaseObjectTypes.CheckinStyle &&
-									defaultRecordType.Uri === o.CheckinAs.Uri
+					if (this._mounted) {
+						me.setRecordTypes(
+							response.results.map(function(o: IRecordType) {
+								return { key: o.Uri, text: o.NameString } as IDropdownOption;
+							})
+						);
+						if (values.length > 1) {
+							const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
+							this.setState({
+								checkinStyles: placesResponse.results.map(function(
+									o: ICheckinPlace
 								) {
-									selected = true;
-								}
-								return {
-									key: o.CheckinAs.Uri,
-									text: o.NameString,
-									selected,
-								} as IDropdownOption;
-							}),
-						});
-					}
-					if (
-						defaultRecordType ||
-						appStore.documentInfo.Options.DefaultDocumentRecordType > 0
-					) {
-						me.recordTypeUri =
-							defaultRecordType!.Uri ||
-							appStore.documentInfo.Options.DefaultDocumentRecordType;
-						if (onRecordTypeSelected) {
-							onRecordTypeSelected(
-								me.recordTypeUri,
-								defaultRecordType
-									? defaultRecordType.TrimType === BaseObjectTypes.CheckinStyle
-									: false
-							);
+									let selected = false;
+									if (
+										defaultRecordType &&
+										defaultRecordType.TrimType ==
+											BaseObjectTypes.CheckinStyle &&
+										defaultRecordType.Uri === o.CheckinAs.Uri
+									) {
+										selected = true;
+									}
+									return {
+										key: o.CheckinAs.Uri,
+										text: o.NameString,
+										selected,
+									} as IDropdownOption;
+								}),
+							});
 						}
+						if (
+							defaultRecordType ||
+							appStore.documentInfo.Options.DefaultDocumentRecordType > 0
+						) {
+							me.recordTypeUri =
+								defaultRecordType!.Uri ||
+								appStore.documentInfo.Options.DefaultDocumentRecordType;
+							if (onRecordTypeSelected) {
+								onRecordTypeSelected(
+									me.recordTypeUri,
+									defaultRecordType
+										? defaultRecordType.TrimType ===
+												BaseObjectTypes.CheckinStyle
+										: false
+								);
+							}
+						}
+						appStore!.setSpinning(false);
 					}
-				}
-			});
+				})
+				.catch((e) => {
+					appStore!.setError(e);
+				});
 		} else {
 			return null;
 		}
