@@ -205,12 +205,12 @@ export class RecordTypePicker extends React.Component<
 		const { onRecordTypeSelected } = this.props;
 		const { checkinUsingStyle, checkinStyles, recordTypes } = this.state;
 
-		if (onRecordTypeSelected) {
+		if (onRecordTypeSelected && option) {
 			if (checkinUsingStyle && checkinStyles.length > 0) {
-				this.recordTypeUri = Number(checkinStyles[index!].key);
+				this.recordTypeUri = Number(option.key);
 				onRecordTypeSelected(this.recordTypeUri, true);
 			} else if (recordTypes.length > 0) {
-				const recordTypeUri = Number(recordTypes[index!].key);
+				const recordTypeUri = Number(option.key);
 				onRecordTypeSelected(recordTypeUri, false);
 			}
 		}
@@ -295,6 +295,9 @@ export class RecordTypePicker extends React.Component<
 						}
 						options={recordTypes}
 						placeholder={appStore.messages.web_SelectRecordType}
+						onResolveOptions={() => {
+							return [];
+						}}
 						onRenderLowerContent={() => {
 							return checkinStyles.length > 0 ? (
 								<DefaultButton

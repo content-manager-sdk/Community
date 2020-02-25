@@ -153,7 +153,7 @@ describe("Record Type Picker", function() {
 		});
 	}.bind(appStore);
 
-	it("contains a Record Type dropdown", (done) => {
+	it("contains a Record Type dropdown", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			null,
@@ -161,29 +161,23 @@ describe("Record Type Picker", function() {
 			null,
 			true
 		);
-		setImmediate(() => {
-			try {
-				expect(wrapper.find(ComboBox).props().placeholder).toEqual(
-					"Select a Record Type"
-				);
+		await flushPromises();
+		expect(wrapper.find(ComboBox).props().placeholder).toEqual(
+			"Select a Record Type"
+		);
 
-				expect(
-					wrapper
-						.update()
-						.find(ComboBox)
-						.props().options
-				).toEqual([
-					{ key: 1, text: "Document" },
-					{ key: 5, text: "Document 5" },
-				]);
-				done();
-			} catch (error) {
-				done.fail(error);
-			}
-		});
+		expect(
+			wrapper
+				.update()
+				.find(ComboBox)
+				.props().options
+		).toEqual([
+			{ key: 1, text: "Document" },
+			{ key: 5, text: "Document 5" },
+		]);
 	});
 
-	it("disables form when no folder Id set", (done) => {
+	it("disables form when no folder Id set", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			null,
@@ -192,17 +186,11 @@ describe("Record Type Picker", function() {
 			true
 		);
 
-		setImmediate(() => {
-			try {
-				expect(wrapper.find(ComboBox).props().disabled).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.find(ComboBox).props().disabled).toBeTruthy();
 	});
 
-	it("does not disable form when no folder Id set and not linked folder", (done) => {
+	it("does not disable form when no folder Id set and not linked folder", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			null,
@@ -211,31 +199,19 @@ describe("Record Type Picker", function() {
 			false
 		);
 
-		setImmediate(() => {
-			try {
-				expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
 	});
-	it("enables form when  folder Id set", (done) => {
+	it("enables form when  folder Id set", async () => {
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 
 		wrapper.setProps({ folderId: "fff" });
 
-		setImmediate(() => {
-			try {
-				expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.find(ComboBox).props().disabled).toBeFalsy();
 	});
 
-	it("checkin Style List populated", (done) => {
+	it("checkin Style List populated", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinPlace,
 			undefined,
@@ -255,20 +231,12 @@ describe("Record Type Picker", function() {
 			],
 		});
 
-		setTimeout(() => {
-			try {
-				expect(wrapper.state().checkinStyles.length).toEqual(1);
-				expect(wrapper.state().checkinStyles[0].text).toEqual(
-					"checkin style 1"
-				);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(wrapper.state().checkinStyles.length).toEqual(1);
+		expect(wrapper.state().checkinStyles[0].text).toEqual("checkin style 1");
 	});
 
-	it("selected checkin place", (done) => {
+	it("selected checkin place", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinPlace,
 			undefined,
@@ -290,20 +258,14 @@ describe("Record Type Picker", function() {
 
 		wrapper.setState({ checkinUsingStyle: true });
 
-		setTimeout(() => {
-			try {
-				wrapper
-					.update()
-					.find(ComboBox)
-					.props()
-					.onChange(null, null, 0);
+		await flushPromises();
+		wrapper
+			.update()
+			.find(ComboBox)
+			.props()
+			.onChange(null, { key: "111" }, 0);
 
-				expect(recordTypeUri).toEqual(111);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(recordTypeUri).toEqual(111);
 	});
 
 	it("selects the default Record Type", async () => {
