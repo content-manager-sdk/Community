@@ -410,7 +410,7 @@ export class TrimObjectSearchList extends React.Component<
 		return elReturn;
 	}
 
-	private _previousSelected: HTMLElement;
+	//private _previousSelected: HTMLElement;
 
 	private _onListClick = (
 		event: React.MouseEvent<HTMLDivElement>,
@@ -421,10 +421,17 @@ export class TrimObjectSearchList extends React.Component<
 		const target = event.nativeEvent.target as HTMLElement;
 		const el = this.findAncestor(target!);
 		if (el) {
-			if (this._previousSelected) {
-				this._previousSelected.classList.remove("trim-is-selected");
+			// if (this._previousSelected) {
+			// 	this._previousSelected.classList.remove("trim-is-selected");
+			// }
+
+			const prev = document.getElementsByClassName("trim-is-selected");
+
+			for (var i = prev.length - 1; i >= 0; i--) {
+				prev[i].classList.remove("trim-is-selected");
 			}
-			this._previousSelected = el;
+
+			//	this._previousSelected = el;
 			el.classList.toggle("trim-is-selected");
 			const uri = Number(el.getAttribute("data-trim-uri"));
 

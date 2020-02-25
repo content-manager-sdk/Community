@@ -68,8 +68,10 @@
 	cursor: pointer;
 }
 
-.trim-is-selected {
-	background-color: #f4f4f4;
+.trim-is-selected,
+.trim-is-selected:hover {
+	background-color: #c7e0f4;
+	cursor: default;
 }
 
 /* .trim-list-row > div {
