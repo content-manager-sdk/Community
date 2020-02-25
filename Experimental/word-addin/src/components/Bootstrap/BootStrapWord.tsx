@@ -4,7 +4,7 @@ import { IOfficeConnector } from "../../office-coms/office-connector";
 import WordConnector from "../../office-coms/word-connector";
 import AppStoreWord from "../../stores/AppStoreWord";
 
-export class BootStrapWord extends BootStrap {
+export class BootStrapWord extends BootStrap<{}> {
 	private appStore: IAppStore;
 	protected getAppStore(): IAppStore {
 		if (!this.appStore) {

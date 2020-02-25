@@ -1,89 +1,41 @@
 import * as React from "react";
-import { Provider /* inject, observer  */ } from "mobx-react";
-import TrimConnector from "../../trim-coms/trim-connector";
+import BootStrap from "./BootStrap";
 
+import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import AppStoreOutlook from "../../stores/AppStoreOutlook";
-
-import { OutlookConnector } from "src/office-coms/OutlookConnector";
+import { IOfficeConnector } from "../../office-coms/office-connector";
+import { IAppStore } from "../../stores/AppStoreBase";
 import CheckinStyles from "../CheckinStyles/CheckinStyles";
-import { getQueryStringValue } from "../../utils/getQueryStringValue";
-import { Spinner, SpinnerSize } from "office-ui-fabric-react";
 
-interface IBootStrapCheckinStylesState {
-	ready: boolean;
-}
-
-export class BootStrapCheckinStyles extends React.Component<
-	{ forServerProcessing: boolean },
-	IBootStrapCheckinStylesState
-> {
-	trimConnector = new TrimConnector();
-	outlookConnector = new OutlookConnector();
-	appStore = new AppStoreOutlook(this.trimConnector, this.outlookConnector);
-
-	constructor(props: { forServerProcessing: boolean }) {
-		super(props);
-
-		this.state = {
-			ready: false,
-		};
-
-		Office.initialize = (reason) => {
-			let getAccessToken: Promise<string>;
-
-			this.trimConnector.credentialsResolver = (callback) => {
-				const accessToken = getQueryStringValue("accessToken");
-				if (!getAccessToken) {
-					getAccessToken = this.outlookConnector!.getAccessToken();
-				}
-
-				if (accessToken) {
-					callback(accessToken, "");
-				} else {
-					getAccessToken
-						.then((token) => callback(token, ""))
-						.catch(function(error) {
-							callback("", error.message);
-						});
-				}
-			};
-			this.setState({ ready: true });
-			this.appStore.fetchBaseSettingFromTrim(false);
-
-			this.outlookConnector.initialize(this.trimConnector!, this.appStore!);
-		};
+export class BootStrapCheckinStyles extends BootStrap<{
+	forServerProcessing: boolean;
+}> {
+	private appStore: IAppStore;
+	protected getAppStore(): IAppStore {
+		if (!this.appStore) {
+			this.appStore = new AppStoreOutlook(
+				this.getTrimConnector(),
+				this.getOfficeConnector()
+			);
+			this.appStore.deferFetchDriveInfo();
+		}
+		return this.appStore;
 	}
 
-	componentDidMount() {
-		//	const { appStore, trimConnector, wordConnector } = this.props;
-
-		window.onbeforeunload = () => {
-			this.trimConnector!.clearCache();
-		};
+	private officeConnector: IOfficeConnector;
+	protected getOfficeConnector(): IOfficeConnector {
+		if (!this.officeConnector) {
+			this.officeConnector = new OutlookConnector();
+		}
+		return this.officeConnector;
 	}
 
-	public render() {
+	renderBody(appStore: IAppStore) {
 		const { ready } = this.state;
 		const { forServerProcessing } = this.props;
-		const appStore = this.appStore;
-		return (
-			<Provider
-				appStore={this.appStore}
-				trimConnector={this.trimConnector}
-				wordConnector={this.outlookConnector}
-			>
-				<React.Fragment>
-					{appStore.spinning && appStore!.status !== "STARTING" && (
-						<Spinner
-							className="trim-top-spinner"
-							size={SpinnerSize.xSmall}
-							label={appStore.getSpinningLabel()}
-						/>
-					)}
-					{ready && <CheckinStyles forServerProcessing={forServerProcessing} />}
-				</React.Fragment>
-			</Provider>
-		);
+		return ready ? (
+			<CheckinStyles forServerProcessing={forServerProcessing} />
+		) : null;
 	}
 }
 

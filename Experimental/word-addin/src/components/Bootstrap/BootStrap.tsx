@@ -13,7 +13,6 @@ import { getQueryStringValue } from "../../utils/getQueryStringValue";
 import { IOfficeConnector } from "../../office-coms/office-connector";
 import TrimConnector, { ITrimConnector } from "../../trim-coms/trim-connector";
 
-interface IProps {}
 interface IBootstrapState {
 	dialogName: string;
 	filter: string;
@@ -21,8 +20,8 @@ interface IBootstrapState {
 	ready: Boolean;
 }
 
-export class BootStrap extends React.Component<IProps, IBootstrapState> {
-	constructor(props: IProps) {
+export class BootStrap<P> extends React.Component<P, IBootstrapState> {
+	constructor(props: P) {
 		super(props);
 
 		let filter = "";
@@ -111,6 +110,32 @@ export class BootStrap extends React.Component<IProps, IBootstrapState> {
 		};
 	}
 
+	renderBody(appStore: IAppStore): JSX.Element | null {
+		const { dialogName } = this.state;
+
+		return (
+			<React.Fragment>
+				{dialogName === "/searchdialog" ? (
+					<TrimSearchDialog
+						trimType={BaseObjectTypes.Record}
+						trimConnector={this.trimConnector}
+						startPoint="RecentDocs"
+						appStore={appStore}
+						filterSearch={this.state.filter}
+						insertText={this.state.insertText}
+					/>
+				) : (
+					<React.Fragment>
+						{appStore!.status === "STARTING" && !appStore.spinning && (
+							<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
+						)}
+						<MainApp className="trim-main" />
+					</React.Fragment>
+				)}
+			</React.Fragment>
+		);
+	}
+
 	public render(): any {
 		const { ready } = this.state;
 
@@ -135,26 +160,7 @@ export class BootStrap extends React.Component<IProps, IBootstrapState> {
 						/>
 					)}
 
-					{this.state.dialogName === "/searchdialog" ? (
-						<TrimSearchDialog
-							trimType={BaseObjectTypes.Record}
-							trimConnector={this.trimConnector}
-							startPoint="RecentDocs"
-							appStore={appStore}
-							filterSearch={this.state.filter}
-							insertText={this.state.insertText}
-						/>
-					) : (
-						<React.Fragment>
-							{appStore!.status === "STARTING" && !appStore.spinning && (
-								<Spinner
-									className="trim-top-spinner"
-									size={SpinnerSize.large}
-								/>
-							)}
-							<MainApp className="trim-main" />
-						</React.Fragment>
-					)}
+					{this.renderBody(appStore)}
 				</div>
 			</Provider>
 		);

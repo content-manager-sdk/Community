@@ -5,7 +5,7 @@ import AppStoreOutlook from "../../stores/AppStoreOutlook";
 import { IOfficeConnector } from "../../office-coms/office-connector";
 import { IAppStore } from "../../stores/AppStoreBase";
 
-export class BootStrapOutlook extends BootStrap {
+export class BootStrapOutlook extends BootStrap<{}> {
 	private appStore: IAppStore;
 	protected getAppStore(): IAppStore {
 		if (!this.appStore) {

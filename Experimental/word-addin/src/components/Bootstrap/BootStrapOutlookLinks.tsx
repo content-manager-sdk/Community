@@ -6,7 +6,7 @@ import { IAppStore } from "../../stores/AppStoreBase";
 import * as React from "react";
 import { Provider } from "mobx-react";
 
-export class BootStrapOutlookLinks extends BootStrap {
+export class BootStrapOutlookLinks extends BootStrap<{}> {
 	private appStore: IAppStore;
 	protected getAppStore(): IAppStore {
 		if (!this.appStore) {
