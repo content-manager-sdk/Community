@@ -1423,4 +1423,74 @@ describe("Test fetch from TRIM", () => {
 			});
 		});
 	});
+
+	describe("Caching options", () => {
+		let count = 0;
+
+		beforeEach(() => {
+			count = 0;
+			(global as any).localStorage.clear();
+
+			mock.reset();
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/Database`)
+				.reply(function(config: any) {
+					count++;
+					return [
+						200,
+						{
+							Results: [
+								{
+									DatabaseCurrencySymbol: { Value: "$" },
+									DatabaseEmailSubjectPrefix: { Value: "CM:" },
+									DatabaseId: { Value: "N1" },
+									TrimType: "Database",
+									Uri: 1,
+								},
+							],
+							PropertiesAndFields: {},
+							TotalResults: 0,
+							MinimumCount: 0,
+							Count: 0,
+							HasMoreItems: false,
+							TrimType: "Unknown",
+							ResponseStatus: {},
+						},
+					];
+				});
+		});
+
+		it("gets default value", () => {
+			const data = trimConnector.getUseCheckinStyles();
+			expect(data).toEqual(false);
+		});
+
+		it("sets new value", () => {
+			trimConnector.setUseCheckinStyles(true);
+			const data = trimConnector.getUseCheckinStyles();
+			expect(data).toEqual(true);
+		});
+
+		it("cache value persisted when cache re-set", () => {
+			trimConnector.setUseCheckinStyles(true);
+			trimConnector.clearCache();
+			const data = trimConnector.getUseCheckinStyles();
+			expect(data).toEqual(true);
+		});
+
+		it("gets database options from cache", async () => {
+			const a = await trimConnector.getDatabaseProperties();
+			const b = await trimConnector.getDatabaseProperties();
+
+			expect(count).toEqual(1);
+		});
+
+		it("clears database options from cache", async () => {
+			await trimConnector.getDatabaseProperties();
+			trimConnector.clearCache();
+			await trimConnector.getDatabaseProperties();
+
+			expect(count).toEqual(2);
+		});
+	});
 });

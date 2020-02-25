@@ -2,6 +2,7 @@ import Axios, { AxiosRequestConfig } from "axios";
 import { BaseObjectTypes } from "./trim-baseobjecttypes";
 import { CommandIds } from "./trim-command-ids";
 import TrimMessages from "./trim-messages";
+import { CacheIds } from "./cache-ids";
 
 const config = (global as any).config;
 
@@ -286,16 +287,16 @@ export class TrimConnector implements ITrimConnector {
 	private CancelToken = Axios.CancelToken;
 	private source = this.CancelToken.source();
 
-	getUseCheckinStyles(): Boolean {
-		const useCheckinStyles = this.getFromCache("use-checkin-styles");
+	public getUseCheckinStyles(): Boolean {
+		const useCheckinStyles = this.getItemFromCache(CacheIds.UseCheckinStyles);
 		if (useCheckinStyles === null) {
-			this.setCache("use-checkin-styles", false);
+			this.setCacheItem(CacheIds.UseCheckinStyles, false);
 		}
-		return this.getFromCache("use-checkin-styles");
+		return this.getItemFromCache(CacheIds.UseCheckinStyles);
 	}
 
-	setUseCheckinStyles(use: boolean): void {
-		this.setCache("use-checkin-styles", use);
+	public setUseCheckinStyles(use: boolean): void {
+		this.setCacheItem(CacheIds.UseCheckinStyles, use);
 	}
 
 	public cancel(): void {
@@ -344,7 +345,6 @@ export class TrimConnector implements ITrimConnector {
 						};
 					});
 
-					this.setCache(`${trimType}-menu`, commandDefs);
 					return commandDefs;
 				}
 			);
@@ -368,17 +368,17 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public setLatestClause(trimType: BaseObjectTypes, queryName: string): void {
-		const cacheValue = this.getFromCache("latest-query") || {};
+		const cacheValue = this.getItemFromCache(CacheIds.LatestQuery) || {};
 		cacheValue[trimType] = queryName;
 
-		this.setCache("latest-query", cacheValue);
+		this.setCacheItem(CacheIds.LatestQuery, cacheValue);
 	}
 	public getLatestClause(trimType: BaseObjectTypes): string {
-		return (this.getFromCache("latest-query") || {})[trimType];
+		return (this.getItemFromCache(CacheIds.LatestQuery) || {})[trimType];
 	}
 
 	public getDatabaseProperties(): Promise<IDatabase> {
-		const cachedOptions = this.getFromCache("database-options");
+		const cachedOptions = this.getItemFromCache(CacheIds.DatabaseOptions);
 		if (cachedOptions) {
 			return new Promise((resolve) => {
 				resolve(cachedOptions);
@@ -404,7 +404,7 @@ export class TrimConnector implements ITrimConnector {
 							databaseProperties[key as string] = data.Results[0][key].Value;
 						}
 					}
-					this.setCache("database-options", databaseProperties);
+					this.setCacheItem(CacheIds.DatabaseOptions, databaseProperties);
 					return databaseProperties;
 				}
 			);
@@ -412,7 +412,7 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public getSearchOptions(): Promise<ISearchOptions> {
-		const cachedOptions = this.getFromCache("search-options");
+		const cachedOptions = this.getItemFromCache(CacheIds.SearchOptions);
 		if (cachedOptions) {
 			return new Promise((resolve) => {
 				resolve(cachedOptions);
@@ -431,27 +431,34 @@ export class TrimConnector implements ITrimConnector {
 							searchOptionsCache[key as string] = data.UserOptions[key].Value;
 						}
 					}
-					this.setCache("search-options", searchOptionsCache);
+					this.setCacheItem(CacheIds.SearchOptions, searchOptionsCache);
 					return searchOptionsCache as ISearchOptions;
 				}
 			);
 		}
 	}
 
-	private getFromCache(key: string): any {
-		const cacheItem = localStorage.getItem(key);
+	cacheIdsToPersist = [CacheIds.UseCheckinStyles, CacheIds.LatestQuery];
+
+	private getItemFromCache(id: CacheIds): any {
+		const cacheItem = localStorage.getItem(id);
 		if (cacheItem) {
 			return JSON.parse(cacheItem);
 		}
 		return null;
 	}
 
-	private setCache(key: string, cacheData: any) {
-		localStorage.setItem(key, JSON.stringify(cacheData));
+	private setCacheItem(id: CacheIds, cacheData: any) {
+		localStorage.setItem(id, JSON.stringify(cacheData));
 	}
 
 	public clearCache(): void {
-		localStorage.clear();
+		for (let counter = 0; counter < localStorage.length; counter++) {
+			const key = localStorage.key(counter);
+			if (key && !this.cacheIdsToPersist.includes(key as CacheIds)) {
+				localStorage.removeItem(key);
+			}
+		}
 	}
 
 	public getObjectCaption(trimType: BaseObjectTypes): Promise<string> {
@@ -474,7 +481,7 @@ export class TrimConnector implements ITrimConnector {
 			ObjectType: "Main",
 		};
 
-		let cachedResults = this.getFromCache("object-definitions");
+		let cachedResults = this.getItemFromCache(CacheIds.ObjectDef);
 
 		if (cachedResults) {
 			return new Promise((resolve) => {
@@ -485,7 +492,7 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "ObjectDef", method: "get", data: params },
 				(data: any) => {
 					cachedResults = data.ObjectDefs;
-					this.setCache("ObjectDef", cachedResults);
+					this.setCacheItem(CacheIds.ObjectDef, cachedResults);
 
 					return data.ObjectDefs;
 				}
@@ -499,7 +506,7 @@ export class TrimConnector implements ITrimConnector {
 			ExcludeUneditedCustomValues: true,
 		};
 
-		const cachedResults = this.getFromCache("enum-details") || {};
+		const cachedResults = this.getItemFromCache(CacheIds.EnumDetails) || {};
 
 		if (cachedResults[enumId]) {
 			return new Promise((resolve) => {
@@ -510,7 +517,7 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "EnumItem", method: "get", data: params },
 				(data: any) => {
 					cachedResults[enumId] = data.EnumItems[enumId];
-					this.setCache("enum-details", cachedResults);
+					this.setCacheItem(CacheIds.EnumDetails, cachedResults);
 					return data.EnumItems[enumId];
 				}
 			);
@@ -524,7 +531,7 @@ export class TrimConnector implements ITrimConnector {
 			TrimType: trimType,
 		};
 
-		const cachedResults = this.getFromCache("search-clauses") || {};
+		const cachedResults = this.getItemFromCache(CacheIds.SearchClauses) || {};
 
 		if (cachedResults[trimType]) {
 			return new Promise((resolve) => {
@@ -535,7 +542,7 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "SearchClauseDef", method: "get", data: params },
 				(data: any) => {
 					cachedResults[trimType] = data.SearchClauseDefs;
-					this.setCache("search-clauses", cachedResults);
+					this.setCacheItem(CacheIds.SearchClauses, cachedResults);
 					//this._searchClauseCache[trimType] = data.SearchClauseDefs;
 					return data.SearchClauseDefs;
 				}
@@ -550,7 +557,8 @@ export class TrimConnector implements ITrimConnector {
 			TrimType: trimType,
 		};
 
-		const cachedResults = this.getFromCache("search-field-clauses") || {};
+		const cachedResults =
+			this.getItemFromCache(CacheIds.SearchFieldClauses) || {};
 
 		if (cachedResults[trimType]) {
 			return new Promise((resolve) => {
@@ -561,7 +569,7 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "SearchClauseOrFieldDef", method: "get", data: params },
 				(data: any) => {
 					cachedResults[trimType] = data.SearchClauseOrFieldDefs;
-					this.setCache("search-field-clauses", cachedResults);
+					this.setCacheItem(CacheIds.SearchFieldClauses, cachedResults);
 					//this._searchClauseCache[trimType] = data.SearchClauseDefs;
 					return data.SearchClauseOrFieldDefs;
 				}
@@ -620,7 +628,8 @@ export class TrimConnector implements ITrimConnector {
 	public getViewPanePropertyDefs(
 		trimType: BaseObjectTypes
 	): Promise<IPropertyOrFieldDef[]> {
-		const cachedResults = this.getFromCache("viewpane-prop-defs") || {};
+		const cachedResults =
+			this.getItemFromCache(CacheIds.ViewpanePropDefs) || {};
 
 		if (cachedResults[trimType]) {
 			return new Promise((resolve) => {
@@ -639,7 +648,7 @@ export class TrimConnector implements ITrimConnector {
 				{ path, method: "get", data: params },
 				(data: any) => {
 					cachedResults[trimType] = data.PropertiesAndFields;
-					this.setCache("viewpane-prop-defs", cachedResults);
+					this.setCacheItem(CacheIds.ViewpanePropDefs, cachedResults);
 					return data.PropertiesAndFields;
 				}
 			);
@@ -849,7 +858,7 @@ export class TrimConnector implements ITrimConnector {
 			MatchMessages: Object.keys(new TrimMessages()).join("|"),
 		};
 
-		const messageCache = this.getFromCache("messages");
+		const messageCache = this.getItemFromCache(CacheIds.Messages);
 
 		if (messageCache) {
 			return new Promise((resolve) => {
@@ -911,7 +920,7 @@ export class TrimConnector implements ITrimConnector {
 						"There are no attachments on this item.  Please use 'Record' to create or view this item in Content Manager.";
 					data.Messages.core_completeEmail = "Complete email ({0})";
 					data.Messages.web_fileMore = "File more";
-					this.setCache("messages", data.Messages);
+					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;
 
