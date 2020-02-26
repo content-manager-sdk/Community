@@ -138,7 +138,7 @@ export class ObjectContextMenu extends React.Component<
 			} else if (item.key === "getGlobalProperties") {
 				appStore.setSpinning(true);
 
-				trimConnector!.getGlobalUserOptions("ViewPane").then((data) => {
+				trimConnector!.setGlobalUserOptions("ViewPane").then((data) => {
 					this.callCommandComplete(item.key);
 					appStore.setSpinning(false);
 				});

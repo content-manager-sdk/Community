@@ -24,6 +24,7 @@ describe("Record Type Picker", function() {
 	let populatePages = false;
 	let rejectRegister = false;
 	let recordTypeUri = 0;
+	let testRecordTypes;
 
 	const pageItemsWithTitle = {
 		Pages: [
@@ -55,8 +56,8 @@ describe("Record Type Picker", function() {
 				trimConnector={mockTrimConnector}
 				wordConnector={mockWordConnector}
 				trimType={trimType}
-				onRecordTypeSelected={(uri) => {
-					recordTypeUri = uri;
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
 				}}
 				folderId={folderId}
 				computedCheckinStyleName={folderName}
@@ -80,6 +81,11 @@ describe("Record Type Picker", function() {
 			web_SelectRecordType: "Select a Record Type",
 			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 		});
+
+		testRecordTypes = [
+			{ Uri: 1, NameString: "Document" } as T,
+			{ Uri: 5, NameString: "Document 5" } as T,
+		];
 	});
 
 	afterEach(() => {
@@ -114,10 +120,7 @@ describe("Record Type Picker", function() {
 				resolveCheckinStyles = resolve;
 			} else {
 				resolve({
-					results: [
-						{ Uri: 1, NameString: "Document" } as T,
-						{ Uri: 5, NameString: "Document 5" } as T,
-					],
+					results: testRecordTypes,
 					hasMoreItems: false,
 				});
 			}
@@ -161,6 +164,12 @@ describe("Record Type Picker", function() {
 			null,
 			true
 		);
+
+		wrapper
+			.find(ComboBox)
+			.props()
+			.onMenuOpen();
+
 		await flushPromises();
 		expect(wrapper.find(ComboBox).props().placeholder).toEqual(
 			"Select a Record Type"
@@ -220,7 +229,12 @@ describe("Record Type Picker", function() {
 			undefined,
 			true
 		);
-
+		wrapper.setState({ checkinUsingStyle: true });
+		wrapper
+			.find(ComboBox)
+			.props()
+			.onMenuOpen();
+		await flushPromises();
 		resolveCheckinStyles({
 			results: [
 				{
@@ -246,6 +260,12 @@ describe("Record Type Picker", function() {
 			true
 		);
 
+		wrapper.setState({ checkinUsingStyle: true });
+		wrapper
+			.find(ComboBox)
+			.props()
+			.onMenuOpen();
+		await flushPromises();
 		resolveCheckinStyles({
 			results: [
 				{
@@ -255,9 +275,6 @@ describe("Record Type Picker", function() {
 				} as ICheckinPlace,
 			],
 		});
-
-		wrapper.setState({ checkinUsingStyle: true });
-
 		await flushPromises();
 		wrapper
 			.update()
@@ -275,15 +292,48 @@ describe("Record Type Picker", function() {
 				trimConnector={mockTrimConnector}
 				wordConnector={mockWordConnector}
 				trimType={BaseObjectTypes.Record}
-				onRecordTypeSelected={(uri) => {
-					recordTypeUri = uri;
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
 				}}
 				includeCheckinStyles={false}
 				defaultRecordType={{ Uri: 5, TrimType: BaseObjectTypes.RecordType }}
 			/>
 		);
+
+		wrapper
+			.find(ComboBox)
+			.props()
+			.onMenuOpen();
+
 		await flushPromises();
 		expect(wrapper.state().recordTypes[1].selected).toBeTruthy();
+	});
+
+	it("selects the default Record Type", async () => {
+		testRecordTypes = [];
+		const wrapper = shallow<RecordTypePicker>(
+			<RecordTypePicker
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={mockWordConnector}
+				trimType={BaseObjectTypes.Record}
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
+				}}
+				includeCheckinStyles={false}
+				defaultRecordType={{
+					NameString: "doc 5",
+					Uri: 5,
+					TrimType: BaseObjectTypes.RecordType,
+				}}
+			/>
+		);
+
+		await flushPromises();
+		expect(wrapper.state().recordTypes[0].selected).toBeTruthy();
+		expect(wrapper.find(ComboBox).props().options).toEqual([
+			{ key: 5, selected: true, text: "doc 5" },
+		]);
 	});
 
 	it("selects the default Checkin Style", async () => {
@@ -293,14 +343,20 @@ describe("Record Type Picker", function() {
 				trimConnector={mockTrimConnector}
 				wordConnector={mockWordConnector}
 				trimType={BaseObjectTypes.Record}
-				onRecordTypeSelected={(uri) => {
-					recordTypeUri = uri;
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
 				}}
 				includeCheckinStyles={true}
 				defaultRecordType={{ Uri: 1, TrimType: BaseObjectTypes.CheckinStyle }}
 			/>
 		);
 
+		wrapper.setState({ checkinUsingStyle: true });
+		wrapper
+			.find(ComboBox)
+			.props()
+			.onMenuOpen();
+		await flushPromises();
 		resolveCheckinStyles({
 			results: [
 				{

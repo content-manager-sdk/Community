@@ -807,7 +807,7 @@ describe("Test fetch from TRIM", () => {
 
 		expect.assertions(3);
 
-		return trimConnector.getGlobalUserOptions("ViewPane").then((data) => {
+		return trimConnector.setGlobalUserOptions("ViewPane").then((data) => {
 			expect(postConfig.data).toEqual(
 				JSON.stringify({
 					LoadFromGlobalSetting: true,
@@ -1304,6 +1304,29 @@ describe("Test fetch from TRIM", () => {
 			expect(data.StartPointForLocations).toEqual("Favorites");
 			expect(data.ContentsInReverseDateOrder).toBe(true);
 		});
+
+		[
+			{ json: "droppedfilesDefaultRTNitInOffice", expected: null },
+			{
+				json: "droppedfiles",
+				expected: {
+					NameString: "Infringement",
+					TrimType: "RecordType",
+					Uri: 9000000000,
+				},
+			},
+		].forEach((data) => {
+			it(`gets the default record type ${data.json}`, async () => {
+				var json = require(`./testdata/${data.json}.json`);
+
+				mock.onGet().reply(function(config: any) {
+					return [200, json];
+				});
+
+				const recordType: IRecordType = await trimConnector.getDefaultRecordType();
+				expect(recordType).toEqual(data.expected);
+			});
+		});
 	});
 
 	it("sends request for NeedsDataEntryForm", (done) => {
@@ -1369,6 +1392,7 @@ describe("Test fetch from TRIM", () => {
 	].forEach((testData) => {
 		it("gets the commands for the Check in Style list", (done) => {
 			let postConfig: any;
+			mock.reset();
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/CommandDef`)
 				.reply(function(config: any) {

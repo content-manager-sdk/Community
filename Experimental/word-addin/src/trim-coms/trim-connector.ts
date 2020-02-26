@@ -276,7 +276,8 @@ export interface ITrimConnector {
 		trimType: BaseObjectTypes
 	): Promise<IPropertyOrFieldDef[]>;
 
-	getGlobalUserOptions(forUserOptionSet: string): Promise<void>;
+	setGlobalUserOptions(forUserOptionSet: string): Promise<void>;
+	getDefaultRecordType(): Promise<IRecordType>;
 	isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean>;
 	getMenuItemsForList(trimType: BaseObjectTypes): Promise<ICommandDef[]>;
 	getUseCheckinStyles(): Boolean;
@@ -1044,7 +1045,42 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public getGlobalUserOptions(forUserOptionSet: string): Promise<void> {
+	public getDefaultRecordType(): Promise<IRecordType> {
+		const defaultRecordType = this.getItemFromCache(CacheIds.DefaultRecordType);
+
+		if (defaultRecordType) {
+			return new Promise((resolve) => {
+				resolve(defaultRecordType);
+			});
+		} else {
+			return this.makeRequest(
+				{ path: `UserOptions/DroppedFiles`, method: "get" },
+				(data: any) => {
+					if (data.UserOptions) {
+						const optionsOn =
+							data.UserOptions
+								.DroppedFilesUserOptionsUseDefaultRecordTypeInOffice;
+						if (optionsOn) {
+							if (optionsOn.Value === true) {
+								const rt = data.UserOptions.DroppedFilesUserOptionsRecordType;
+								const newDefault = {
+									NameString: rt.RecordTypeName.Value,
+									TrimType: BaseObjectTypes.RecordType,
+									Uri: rt.Uri,
+								};
+								this.setCacheItem(CacheIds.DefaultRecordType, newDefault);
+								return newDefault;
+							}
+						}
+					}
+					this.setCacheItem(CacheIds.DefaultRecordType, null);
+					return null;
+				}
+			);
+		}
+	}
+
+	public setGlobalUserOptions(forUserOptionSet: string): Promise<void> {
 		const body = {
 			LoadFromGlobalSetting: true,
 		};

@@ -66,7 +66,7 @@ export class NewRecord extends React.Component<
 		const { defaultRecordType, processInBackgroundIfPossible } = this.props;
 
 		if (defaultRecordType && processInBackgroundIfPossible) {
-			this._onChange(defaultRecordType.Uri, false);
+			this._onChange(defaultRecordType);
 		}
 	}
 
@@ -177,20 +177,24 @@ export class NewRecord extends React.Component<
 		}
 	};
 
-	private _onChange = (uri: number, isCheckinStyle: boolean) => {
+	private _onChange = (recordType: ITrimMainObject) => {
 		const { validateRecordType, appStore } = this.props;
 		const { checkinUsingStyle } = this.state;
+		const isCheckinStyle = recordType.TrimType === BaseObjectTypes.CheckinStyle;
 
-		if (this.recordTypeUri !== uri || isCheckinStyle !== checkinUsingStyle) {
+		if (
+			this.recordTypeUri !== recordType.Uri ||
+			isCheckinStyle !== checkinUsingStyle
+		) {
 			this.setState(
 				{ processing: true, checkinUsingStyle: isCheckinStyle },
 				() => {
 					if (isCheckinStyle) {
-						this.recordTypeUri = uri;
+						this.recordTypeUri = recordType.Uri;
 
 						this.setPropertySheet();
 					} else {
-						const recordTypeUri = uri;
+						const recordTypeUri = recordType.Uri;
 
 						if (validateRecordType) {
 							validateRecordType(recordTypeUri).then((isValid) => {

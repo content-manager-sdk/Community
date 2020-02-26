@@ -31,7 +31,8 @@ interface IRecordTypePickerProps {
 	trimConnector?: ITrimConnector;
 	wordConnector?: IOfficeConnector;
 	trimType?: BaseObjectTypes;
-	onRecordTypeSelected: (uri: number, isCheckinStyle: boolean) => void;
+	//onRecordTypeSelected: (recordType: IRecordType) => void;
+	onRecordTypeSelected: (recordType: ITrimMainObject) => void;
 	folderId?: string;
 	isLinkedFolder?: Boolean;
 	computedCheckinStyleName?: string;
@@ -59,7 +60,7 @@ export class RecordTypePicker extends React.Component<
 	recordFields: any = {};
 	_mounted: Boolean;
 
-	setRecordTypes(recTypes: IDropdownOption[]) {
+	setRecordTypes(recTypes: IDropdownOption[]): IDropdownOption[] {
 		const { defaultRecordType, appStore } = this.props;
 
 		const newRecTypes = [...recTypes];
@@ -77,9 +78,8 @@ export class RecordTypePicker extends React.Component<
 				rt.selected = true;
 			}
 		});
-
-		this.setState({ recordTypes: newRecTypes });
 		this.recordTypeUri = 0;
+		return newRecTypes;
 	}
 
 	private getStyles(): string {
@@ -100,41 +100,58 @@ export class RecordTypePicker extends React.Component<
 	componentDidMount() {
 		const {
 			trimConnector,
-			appStore,
-			onRecordTypeSelected,
-			includeCheckinStyles,
 			defaultRecordType,
+			onRecordTypeSelected,
 		} = this.props;
 
 		this._mounted = true;
 
 		if (trimConnector) {
-			appStore.setSpinning(true);
 			this.setState({
 				checkinUsingStyle: trimConnector.getUseCheckinStyles(),
 			});
-			let me = this;
 
-			const promisesToRun = [
-				trimConnector.search<IRecordType>({
-					trimType: BaseObjectTypes.RecordType,
-					q: "unkAll",
-					filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
-					purpose: 3,
-				}),
-			];
-
-			if (includeCheckinStyles) {
-				promisesToRun.push(
-					trimConnector.search<ITrimMainObject>({
-						trimType: BaseObjectTypes.CheckinPlace,
-						q: "cipType:MailForClientProcessing",
-						properties: "CheckinPlaceCheckinAs,NameString",
-						purpose: 0,
-					})
-				);
+			if (defaultRecordType) {
+				this.setState({
+					recordTypes: [
+						{
+							key: defaultRecordType.Uri,
+							text: defaultRecordType.NameString,
+							selected: true,
+						} as IDropdownOption,
+					],
+				});
 			}
 
+			if (defaultRecordType) {
+				this.recordTypeUri = defaultRecordType!.Uri;
+				if (onRecordTypeSelected) {
+					onRecordTypeSelected(defaultRecordType);
+				}
+			}
+
+			//let me = this;
+
+			// const promisesToRun = [
+			// 	trimConnector.search<IRecordType>({
+			// 		trimType: BaseObjectTypes.RecordType,
+			// 		q: "unkAll",
+			// 		filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
+			// 		purpose: 3,
+			// 	}),
+			// ];
+
+			// if (includeCheckinStyles) {
+			// 	promisesToRun.push(
+			// 		trimConnector.search<ITrimMainObject>({
+			// 			trimType: BaseObjectTypes.CheckinPlace,
+			// 			q: "cipType:MailForClientProcessing",
+			// 			properties: "CheckinPlaceCheckinAs,NameString",
+			// 			purpose: 0,
+			// 		})
+			// 	);
+			// }
+			/*
 			return Promise.all(promisesToRun)
 				.then((values) => {
 					const response = values[0] as ISearchResults<IRecordType>;
@@ -191,10 +208,77 @@ export class RecordTypePicker extends React.Component<
 				.catch((e) => {
 					appStore!.setError(e);
 				});
+
+				*/
 		} else {
 			return null;
 		}
+		return null;
 	}
+
+	private getOptions = (): void => {
+		const { trimConnector, defaultRecordType, appStore } = this.props;
+		const { checkinUsingStyle } = this.state;
+
+		appStore!.setSpinning(true);
+		if (checkinUsingStyle) {
+			trimConnector!
+				.search<ITrimMainObject>({
+					trimType: BaseObjectTypes.CheckinPlace,
+					q: "cipType:MailForClientProcessing",
+					properties: "CheckinPlaceCheckinAs,NameString",
+					purpose: 0,
+				})
+				.then((placesResponse: ISearchResults<ICheckinPlace>) => {
+					this.setState(
+						{
+							checkinStyles: placesResponse.results.map(function(
+								o: ICheckinPlace
+							) {
+								let selected = false;
+								if (
+									defaultRecordType &&
+									defaultRecordType.TrimType == BaseObjectTypes.CheckinStyle &&
+									defaultRecordType.Uri === o.CheckinAs.Uri
+								) {
+									selected = true;
+								}
+								return {
+									key: o.CheckinAs.Uri,
+									text: o.NameString,
+									selected,
+								} as IDropdownOption;
+							}),
+						},
+						function() {
+							appStore!.setSpinning(false);
+						}
+					);
+				});
+		} else {
+			trimConnector!
+				.search<IRecordType>({
+					trimType: BaseObjectTypes.RecordType,
+					q: "unkAll",
+					filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
+					purpose: 3,
+				})
+				.then((response: ISearchResults<IRecordType>) => {
+					this.setState(
+						{
+							recordTypes: this.setRecordTypes(
+								response.results.map(function(o: IRecordType) {
+									return { key: o.Uri, text: o.NameString } as IDropdownOption;
+								})
+							),
+						},
+						function() {
+							appStore!.setSpinning(false);
+						}
+					);
+				});
+		}
+	};
 
 	private _onChange = (
 		event: React.FormEvent<IComboBox>,
@@ -208,10 +292,17 @@ export class RecordTypePicker extends React.Component<
 		if (onRecordTypeSelected && option) {
 			if (checkinUsingStyle && checkinStyles.length > 0) {
 				this.recordTypeUri = Number(option.key);
-				onRecordTypeSelected(this.recordTypeUri, true);
+				onRecordTypeSelected({
+					Uri: Number(option.key),
+					NameString: option.text,
+					TrimType: BaseObjectTypes.RecordType,
+				});
 			} else if (recordTypes.length > 0) {
-				const recordTypeUri = Number(option.key);
-				onRecordTypeSelected(recordTypeUri, false);
+				onRecordTypeSelected({
+					Uri: Number(option.key),
+					NameString: option.text,
+					TrimType: BaseObjectTypes.CheckinStyle,
+				});
 			}
 		}
 	};
@@ -225,6 +316,7 @@ export class RecordTypePicker extends React.Component<
 			computedCheckinStyleName,
 			isLinkedFolder,
 			disabled,
+			defaultRecordType,
 		} = this.props;
 
 		const { checkinStyles, checkinUsingStyle, recordTypes } = this.state;
@@ -265,27 +357,30 @@ export class RecordTypePicker extends React.Component<
 
 		return (
 			<React.Fragment>
-				{checkinUsingStyle && checkinStyles ? (
+				{checkinUsingStyle ? (
 					<ComboBox
 						{...comboProps}
 						options={checkinStyles}
+						onMenuOpen={this.getOptions}
 						placeholder={appStore.messages.web_SelectCheckinStyle}
 						onRenderLowerContent={() => {
-							return checkinStyles.length > 0 ? (
+							return (
 								<DefaultButton
 									style={{
 										width: "100%",
 									}}
 									text={appStore.messages.web_UseRecordTypes}
 									onClick={() => {
-										this.setState({ checkinUsingStyle: false });
+										this.setState({ checkinUsingStyle: false }, () => {
+											this.getOptions();
+										});
 										trimConnector!.setUseCheckinStyles(false);
 									}}
 								/>
-							) : null;
+							);
 						}}
 					/>
-				) : recordTypes && recordTypes.length > 0 ? (
+				) : (
 					<ComboBox
 						{...comboProps}
 						disabled={
@@ -293,27 +388,31 @@ export class RecordTypePicker extends React.Component<
 							!folderId &&
 							isLinkedFolder === true
 						}
+						placeholder={
+							defaultRecordType && defaultRecordType.NameString
+								? defaultRecordType.NameString
+								: appStore.messages.web_SelectRecordType
+						}
 						options={recordTypes}
-						placeholder={appStore.messages.web_SelectRecordType}
-						onResolveOptions={() => {
-							return [];
-						}}
+						onMenuOpen={this.getOptions}
 						onRenderLowerContent={() => {
-							return checkinStyles.length > 0 ? (
+							return (
 								<DefaultButton
 									style={{
 										width: "100%",
 									}}
 									text={appStore.messages.web_UseCheckinStyles}
 									onClick={() => {
-										this.setState({ checkinUsingStyle: true });
+										this.setState({ checkinUsingStyle: true }, () => {
+											this.getOptions();
+										});
 										trimConnector!.setUseCheckinStyles(true);
 									}}
 								/>
-							) : null;
+							);
 						}}
 					/>
-				) : null}
+				)}
 			</React.Fragment>
 		);
 	}

@@ -286,7 +286,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(1, false);
+			.onRecordTypeSelected({ Uri: 1, TrimType: BaseObjectTypes.RecordType });
 
 		expect(wrapper.instance().recordTypeUri).toEqual(1);
 
@@ -294,7 +294,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		expect(wrapper.instance().recordTypeUri).toEqual(5);
 	});
@@ -304,7 +304,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(1, false);
+			.onRecordTypeSelected({ Uri: 1, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.update()
@@ -322,7 +322,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.find("form")
@@ -387,7 +387,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.update()
@@ -417,7 +417,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.update()
@@ -452,7 +452,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.update()
@@ -486,7 +486,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.update()
@@ -520,7 +520,7 @@ describe("New Record layout", function() {
 				.find(RecordTypePicker)
 				.first()
 				.props()
-				.onRecordTypeSelected(1, false);
+				.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 			const propertySheet = wrapper.find(PropertySheet);
 			expect(propertySheet.props().computedProperties).toEqual([
@@ -625,7 +625,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		setImmediate(() => {
 			try {
@@ -656,7 +656,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 		setImmediate(() => {
 			try {
@@ -685,7 +685,7 @@ describe("New Record layout", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(5, false);
+			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 		setImmediate(() => {
 			try {
 				expect(
@@ -732,7 +732,7 @@ describe("New Record layout", function() {
 				.find(RecordTypePicker)
 				.first()
 				.props()
-				.onRecordTypeSelected(5, false);
+				.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
 			setTimeout(() => {
 				try {
