@@ -11,4 +11,5 @@ export enum CacheIds {
 	ViewpanePropDefs = "ViewpanePropDefs",
 	Messages = "Messages",
 	SuppressDataEntryForm = "SuppressDataEntryForm",
+	DefaultRecordType = "DefaultRecordType",
 }

@@ -56,7 +56,7 @@ describe("Object Context Menu", () => {
 		});
 	}.bind(trimConnector);
 
-	trimConnector.getGlobalUserOptions = function(forOptionsSet) {
+	trimConnector.setGlobalUserOptions = function(forOptionsSet) {
 		setForOptionsSet = forOptionsSet;
 
 		return new Promise((resolve) => {

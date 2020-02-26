@@ -86,7 +86,7 @@ class MockTrimConnector implements ITrimConnector {
 	): Promise<import("../trim-coms/trim-connector").IPropertyOrFieldDef[]> {
 		throw new Error("Method not implemented.");
 	}
-	getGlobalUserOptions(forUserOptionSet: string): Promise<void> {
+	setGlobalUserOptions(forUserOptionSet: string): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
 	getRecordAsText(recordUri: number): Promise<string> {

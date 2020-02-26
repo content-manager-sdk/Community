@@ -55,6 +55,11 @@ describe("Outlook attachments", function() {
 
 	let trimConnector = new TrimConnector();
 
+	trimConnector.getDefaultRecordType = function() {
+		return new Promise(function(resolve) {
+			resolve(null);
+		});
+	}.bind(trimConnector);
 	trimConnector.getDriveId = function(
 		webUrl: string,
 		isEmail: boolean,
@@ -231,7 +236,7 @@ describe("Outlook attachments", function() {
 		wrapper
 			.find(RecordTypePicker)
 			.props()
-			.onRecordTypeSelected(9, false);
+			.onRecordTypeSelected({ Uri: 9, TrimType: BaseObjectTypes.RecordType });
 
 		await flushPromises();
 		expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
@@ -408,7 +413,7 @@ describe("Outlook attachments", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(1, false);
+			.onRecordTypeSelected({ Uri: 1, TrimType: BaseObjectTypes.RecordType });
 
 		expect(
 			wrapper
@@ -445,13 +450,13 @@ describe("Outlook attachments", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(1, false);
+			.onRecordTypeSelected({ Uri: 2, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper
 			.find(RecordTypePicker)
 			.at(1)
 			.props()
-			.onRecordTypeSelected(1, false);
+			.onRecordTypeSelected({ Uri: 2, TrimType: BaseObjectTypes.RecordType });
 
 		expect(
 			wrapper
@@ -489,7 +494,12 @@ describe("Outlook attachments", function() {
 				.find(RecordTypePicker)
 				.first()
 				.props()
-				.onRecordTypeSelected(45, data.isCheckinStyle);
+				.onRecordTypeSelected({
+					Uri: 45,
+					TrimType: data.isCheckinStyle
+						? BaseObjectTypes.CheckinStyle
+						: BaseObjectTypes.RecordType,
+				});
 
 			expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
 				Uri: 45,
@@ -597,7 +607,7 @@ describe("Outlook attachments", function() {
 			.find(RecordTypePicker)
 			.first()
 			.props()
-			.onRecordTypeSelected(45, false);
+			.onRecordTypeSelected({ Uri: 45, TrimType: BaseObjectTypes.RecordType });
 
 		wrapper.setState({ showForm: true });
 

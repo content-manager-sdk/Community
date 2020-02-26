@@ -374,14 +374,14 @@ namespace OneDriveAuthPlugin
 
 
 
-			DroppedFilesUserOptions fileOptions = new DroppedFilesUserOptions(this.Database);
-			var options = new TrimOptions();
-			if (fileOptions.UseDefaultRecordTypeInOffice == true)
-			{
-				options.DefaultDocumentRecordType = fileOptions.RecordType.Uri;
-			}
+			//DroppedFilesUserOptions fileOptions = new DroppedFilesUserOptions(this.Database);
+			//var options = new TrimOptions();
+			//if (fileOptions.UseDefaultRecordTypeInOffice == true)
+			//{
+			//	options.DefaultDocumentRecordType = fileOptions.RecordType.Uri;
+			//}
 
-			registeredFile.Options = options;
+			//registeredFile.Options = options;
 
 			var enumItems = new List<MyEnumItem>();
 
