@@ -17,6 +17,7 @@ import AppStoreWord from "../stores/AppStoreWord";
 
 import RecordTypePicker from "../components/RecordTypePicker/RecordTypePicker";
 import { IGetRecordUriResponse } from "../office-coms/word-connector";
+import flushPromises = require("flush-promises");
 
 describe("New Record layout", function() {
 	let testRecordUrn = "";
@@ -315,7 +316,7 @@ describe("New Record layout", function() {
 		expect(recordUriTest).toEqual(1);
 	});
 
-	it("calls register in TRIM for non Record object", (done) => {
+	it("calls register in TRIM for non Record object", async () => {
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 
 		wrapper
@@ -328,20 +329,13 @@ describe("New Record layout", function() {
 			.find("form")
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
-		setTimeout(() => {
-			try {
-				expect(registerType1).toEqual(BaseObjectTypes.CheckinStyle);
-				expect(registerType2).toEqual(BaseObjectTypes.CheckinPlace);
-
-				expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(registerType1).toEqual(BaseObjectTypes.CheckinStyle);
+		expect(registerType2).toEqual(BaseObjectTypes.CheckinPlace);
+		expect(registerProps[0]).toEqual({ CheckinStyleRecordType: 5 });
 	});
 
-	it("calls create record automatically when data entry form not required", (done) => {
+	it("calls create record automatically when data entry form not required", async () => {
 		noFormNeeded = true;
 		const wrapper = shallow<NewRecord>(
 			<NewRecord
@@ -350,19 +344,13 @@ describe("New Record layout", function() {
 				wordConnector={new MockWordConnector()}
 				trimType={BaseObjectTypes.Record}
 				processInBackgroundIfPossible={true}
-				defaultRecordType={{ Uri: 4, TrimType: BaseObjectTypes.RecordType }}
+				selectedRecordType={{ Uri: 4, TrimType: BaseObjectTypes.RecordType }}
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				expect(recordUriTest).toEqual(4);
-				expect(recordPropsTest["DataEntryFormDefinition"]).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(recordUriTest).toEqual(4);
+		expect(recordPropsTest["DataEntryFormDefinition"]).toBeTruthy();
 	});
 
 	it("sets default record type on picker", () => {
@@ -379,7 +367,7 @@ describe("New Record layout", function() {
 		).toEqual({ Uri: 66, TrimType: BaseObjectTypes.RecordType });
 	});
 
-	it("sets error on register non Record object", (done) => {
+	it("sets error on register non Record object", async () => {
 		rejectRegister = true;
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 
@@ -394,17 +382,11 @@ describe("New Record layout", function() {
 			.find("form")
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
-		setTimeout(() => {
-			try {
-				expect(errorMessage).toEqual("create error");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(errorMessage).toEqual("create error");
 	});
 
-	it("create a linked folder checkin place for a Check in Style", (done) => {
+	it("create a linked folder checkin place for a Check in Style", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			() => {},
@@ -425,21 +407,15 @@ describe("New Record layout", function() {
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		setTimeout(() => {
-			try {
-				expect(registerProps[1]).toEqual({
-					CheckinPlacePlaceId: "123",
-					CheckinPlaceCheckinAs: 456,
-					CheckinPlacePlaceType: "MailForServerProcessing",
-				});
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+		expect(registerProps[1]).toEqual({
+			CheckinPlacePlaceId: "123",
+			CheckinPlaceCheckinAs: 456,
+			CheckinPlacePlaceType: "MailForServerProcessing",
 		});
 	});
 
-	it("create checkin place for a Check in Style", (done) => {
+	it("create checkin place for a Check in Style", async () => {
 		const wrapper = makeWrapper(
 			BaseObjectTypes.CheckinStyle,
 			() => {},
@@ -460,20 +436,14 @@ describe("New Record layout", function() {
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		setTimeout(() => {
-			try {
-				expect(registerProps[1]).toEqual({
-					CheckinPlaceCheckinAs: 456,
-					CheckinPlacePlaceType: "MailForClientProcessing",
-				});
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+		expect(registerProps[1]).toEqual({
+			CheckinPlaceCheckinAs: 456,
+			CheckinPlacePlaceType: "MailForClientProcessing",
 		});
 	});
 
-	it("calls on created event", (done) => {
+	it("calls on created event", async () => {
 		let eventCalled = false;
 		let createdObject;
 
@@ -494,15 +464,9 @@ describe("New Record layout", function() {
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		setTimeout(() => {
-			try {
-				expect(eventCalled).toBeTruthy();
-				expect(createdObject).toEqual({ Uri: 456 });
-			} catch (e) {
-				done.fail(e);
-			}
-			done();
-		});
+		await flushPromises();
+		expect(eventCalled).toBeTruthy();
+		expect(createdObject).toEqual({ Uri: 456 });
 	});
 
 	[
@@ -555,41 +519,29 @@ describe("New Record layout", function() {
 		expect(recordPropsTest).toEqual({ RecordTypedTitle: "test title" });
 	});
 
-	it("sends record URN to auto open", (done) => {
+	it("sends record URN to auto open", async () => {
 		wrapper
 			.update()
 			.find("form")
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		setTimeout(() => {
-			try {
-				expect(testRecordUrn).toEqual("test_urn");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(testRecordUrn).toEqual("test_urn");
 	});
 
-	it("sends the email prefix", (done) => {
+	it("sends the email prefix", async () => {
 		wrapper
 			.update()
 			.find("form")
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		setTimeout(() => {
-			try {
-				expect(testSubjectPrefix).toEqual("CM:");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(testSubjectPrefix).toEqual("CM:");
 	});
 
-	it("does not call auto open for an attachment", (done) => {
+	it("does not call auto open for an attachment", async () => {
 		wrapper.setProps({ bypassUpdateEmailSubject: true });
 
 		wrapper
@@ -598,17 +550,11 @@ describe("New Record layout", function() {
 			.first()
 			.simulate("submit", { preventDefault: function() {} });
 
-		setTimeout(() => {
-			try {
-				expect(testRecordUrn).toBeFalsy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(testRecordUrn).toBeFalsy();
 	});
 
-	it("displays a property sheet when Record Type is set", (done) => {
+	it("displays a property sheet when Record Type is set", async () => {
 		const shallowWrapper = shallow<NewRecord>(
 			<NewRecord
 				appStore={mockStore}
@@ -627,22 +573,16 @@ describe("New Record layout", function() {
 			.props()
 			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
-		setImmediate(() => {
-			try {
-				// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
-				expect(shallowWrapper.state().formDefinition).toEqual({
-					Pages: [{ PageItems: [] }],
-				});
-				expect(
-					shallowWrapper.find(PropertySheet).props().formDefinition
-				).toEqual({ Pages: [{ PageItems: [] }] });
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+		await flushPromises();
+		// 	//expect(wrapper.find(PropertySheet).exists()).toBeTruthy();
+		expect(shallowWrapper.state().formDefinition).toEqual({
+			Pages: [{ PageItems: [] }],
+		});
+		expect(shallowWrapper.find(PropertySheet).props().formDefinition).toEqual({
+			Pages: [{ PageItems: [] }],
 		});
 	});
-	it("sends the correct trimType to getPropertysheet", (done) => {
+	it("sends the correct trimType to getPropertysheet", async () => {
 		const shallowWrapper = shallow<NewRecord>(
 			<NewRecord
 				appStore={mockStore}
@@ -658,18 +598,11 @@ describe("New Record layout", function() {
 			.props()
 			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
-		setImmediate(() => {
-			try {
-				expect(propertySheetTrimType).toEqual(BaseObjectTypes.CheckinStyle);
-
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(propertySheetTrimType).toEqual(BaseObjectTypes.CheckinStyle);
 	});
 
-	it("displays a property sheet with default record title", (done) => {
+	it("displays a property sheet with default record title", async () => {
 		populatePages = true;
 
 		const shallowWrapper = shallow<NewRecord>(
@@ -686,30 +619,22 @@ describe("New Record layout", function() {
 			.first()
 			.props()
 			.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
-		setImmediate(() => {
-			try {
-				expect(
-					shallowWrapper.find(PropertySheet).props().formDefinition
-				).toEqual({
-					Pages: [
+		await flushPromises();
+		expect(shallowWrapper.find(PropertySheet).props().formDefinition).toEqual({
+			Pages: [
+				{
+					Caption: "General",
+					Type: "Normal",
+					PageItems: [
 						{
-							Caption: "General",
-							Type: "Normal",
-							PageItems: [
-								{
-									Format: "String",
-									Name: "RecordTypedTitle",
-									Caption: "Title (Free Text Part)",
-									Value: "default title",
-								},
-							],
+							Format: "String",
+							Name: "RecordTypedTitle",
+							Caption: "Title (Free Text Part)",
+							Value: "default title",
 						},
 					],
-				});
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
+				},
+			],
 		});
 	});
 
@@ -717,7 +642,7 @@ describe("New Record layout", function() {
 		{ valid: true, message: undefined },
 		{ valid: false, message: "NeedsDataEntryForm" },
 	].forEach((testData) => {
-		it(`Sets an error if the Record Type requires a data entry form - ${testData.valid} `, (done) => {
+		it(`Sets an error if the Record Type requires a data entry form - ${testData.valid} `, async () => {
 			const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 
 			wrapper.setProps({
@@ -734,14 +659,8 @@ describe("New Record layout", function() {
 				.props()
 				.onRecordTypeSelected({ Uri: 5, TrimType: BaseObjectTypes.RecordType });
 
-			setTimeout(() => {
-				try {
-					expect(errorMessage).toEqual(testData.message);
-					done();
-				} catch (e) {
-					done.fail(e);
-				}
-			});
+			await flushPromises();
+			expect(errorMessage).toEqual(testData.message);
 		});
 	});
 

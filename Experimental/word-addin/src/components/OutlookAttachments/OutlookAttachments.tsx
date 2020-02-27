@@ -287,9 +287,8 @@ export class OutlookAttachments extends React.Component<
 			<NewRecord
 				trimType={BaseObjectTypes.Record}
 				onAfterSave={this._trimObjectCreated}
-				defaultRecordType={
-					attachment ? attachment.FileUsing : userOptionsRecordType
-				}
+				defaultRecordType={userOptionsRecordType}
+				selectedRecordType={attachment ? attachment.FileUsing : undefined}
 				processInBackgroundIfPossible={autoCreate}
 				bypassUpdateEmailSubject={true}
 			/>

@@ -594,7 +594,7 @@ describe("Outlook attachments", function() {
 		expect(wrapper.find(NewRecord).exists()).toBeTruthy();
 	});
 
-	it(`sets default record type on the NewRecord`, async () => {
+	it(`sets selected record type on the NewRecord`, async () => {
 		const wrapper = getWrapper();
 
 		await flushPromises();
@@ -613,7 +613,7 @@ describe("Outlook attachments", function() {
 
 		appStore.setDocumentInfo({ EmailPath: "ForUser\\9000000113\\c.png" });
 		await flushPromises();
-		expect(wrapper.find(NewRecord).props().defaultRecordType).toEqual({
+		expect(wrapper.find(NewRecord).props().selectedRecordType).toEqual({
 			Uri: 45,
 			TrimType: BaseObjectTypes.RecordType,
 		});

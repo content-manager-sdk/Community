@@ -41,6 +41,7 @@ interface INewRecordProps {
 	validateRecordType?: (recordTypeUri: number) => Promise<Boolean>;
 	computedCheckinStyleName?: string;
 	defaultRecordType?: ITrimMainObject;
+	selectedRecordType?: ITrimMainObject;
 	processInBackgroundIfPossible?: Boolean;
 }
 
@@ -63,10 +64,10 @@ export class NewRecord extends React.Component<
 	}
 
 	componentDidMount() {
-		const { defaultRecordType, processInBackgroundIfPossible } = this.props;
+		const { processInBackgroundIfPossible, selectedRecordType } = this.props;
 
-		if (defaultRecordType && processInBackgroundIfPossible) {
-			this._onChange(defaultRecordType);
+		if (selectedRecordType && processInBackgroundIfPossible) {
+			this._onChange(selectedRecordType);
 		}
 	}
 
