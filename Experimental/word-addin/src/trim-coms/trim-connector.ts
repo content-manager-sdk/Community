@@ -280,7 +280,7 @@ export interface ITrimConnector {
 	getDefaultRecordType(): Promise<IRecordType>;
 	isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean>;
 	getMenuItemsForList(trimType: BaseObjectTypes): Promise<ICommandDef[]>;
-	getUseCheckinStyles(): Boolean;
+	getUseCheckinStyles(): boolean;
 	setUseCheckinStyles(use: boolean): void;
 	suppressDataEntryForm(suppress?: boolean): boolean;
 }
@@ -289,7 +289,7 @@ export class TrimConnector implements ITrimConnector {
 	private CancelToken = Axios.CancelToken;
 	private source = this.CancelToken.source();
 
-	public getUseCheckinStyles(): Boolean {
+	public getUseCheckinStyles(): boolean {
 		const useCheckinStyles = this.getItemFromCache(CacheIds.UseCheckinStyles);
 		if (useCheckinStyles === null) {
 			this.setCacheItem(CacheIds.UseCheckinStyles, false);
@@ -934,6 +934,7 @@ export class TrimConnector implements ITrimConnector {
 						"There are no attachments on this item.  Please use 'Record' to create or view this item in Content Manager.";
 					data.Messages.core_completeEmail = "Complete email ({0})";
 					data.Messages.web_fileMore = "File more";
+					data.Messages.web_proceed = "File email";
 					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;

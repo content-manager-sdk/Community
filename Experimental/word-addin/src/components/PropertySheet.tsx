@@ -466,16 +466,14 @@ export class PropertySheet extends React.Component<
 							});
 						}}
 					>
-						{formDefinition.Pages.map((page: any) => {
-							if (page.Type === "Normal") {
-								return (
-									<PivotItem headerText={page.Caption} key={pageID++}>
-										{this.makePageItems(page.PageItems)}
-									</PivotItem>
-								);
-							} else {
-								return null;
-							}
+						{formDefinition.Pages.filter((p: any) => {
+							return p.Type === "Normal";
+						}).map((page: any) => {
+							return (
+								<PivotItem headerText={page.Caption} key={pageID++}>
+									{this.makePageItems(page.PageItems)}
+								</PivotItem>
+							);
 						})}
 					</Pivot>
 				</div>

@@ -349,6 +349,7 @@ export class NewRecord extends React.Component<
 			computedCheckinStyleName,
 			isLinkedFolder,
 			defaultRecordType,
+			selectedRecordType,
 			processInBackgroundIfPossible,
 			onClose,
 		} = this.props;
@@ -396,6 +397,7 @@ export class NewRecord extends React.Component<
 						onRecordTypeSelected={this._onChange}
 						includeCheckinStyles={!!appStore!.documentInfo.EmailPath}
 						defaultRecordType={defaultRecordType}
+						selectedRecordType={selectedRecordType}
 					/>
 				)}
 				{(!processInBackgroundIfPossible || showUI === true) && (

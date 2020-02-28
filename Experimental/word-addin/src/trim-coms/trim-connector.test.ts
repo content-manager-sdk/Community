@@ -12,6 +12,7 @@ import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
 import CommandIds from "./trim-command-ids";
 import { AssertionError } from "assert";
+import flushPromises = require("flush-promises");
 
 //import * as fetchMock from "fetch-mock";
 
@@ -818,7 +819,7 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
-	it("cancelled the request", (done) => {
+	it("cancelled the request", async () => {
 		let postConfig: any;
 		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
 			postConfig = config;
@@ -845,10 +846,8 @@ describe("Test fetch from TRIM", () => {
 			});
 		trimConnector.cancel();
 
-		setTimeout(() => {
-			expect(completed).toBe(false);
-			done();
-		});
+		await flushPromises();
+		expect(completed).toBe(false);
 	});
 
 	it("sends the token with a request", () => {
@@ -1329,7 +1328,7 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
-	it("sends request for NeedsDataEntryForm", (done) => {
+	it("sends request for NeedsDataEntryForm", async () => {
 		let postConfig: any;
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/${BaseObjectTypes.Record}`)
@@ -1348,30 +1347,17 @@ describe("Test fetch from TRIM", () => {
 					},
 				];
 			});
-		setTimeout(() => {
-			try {
-				trimConnector
-					.isDataEntryFormNeeded(1)
-					.then((isNeeded) => {
-						expect(isNeeded).toBeTruthy();
-						expect(postConfig.data).toEqual(
-							JSON.stringify({
-								RecordRecordType: 1,
-								properties: "RecordNeedsDataEntryForm",
-								ByPassSave: true,
-								RecordTitle: "test",
-							})
-						);
-
-						done();
-					})
-					.catch((e) => {
-						done.fail(e);
-					});
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		const isNeeded = await trimConnector.isDataEntryFormNeeded(1);
+		expect(isNeeded).toBeTruthy();
+		expect(postConfig.data).toEqual(
+			JSON.stringify({
+				RecordRecordType: 1,
+				properties: "RecordNeedsDataEntryForm",
+				ByPassSave: true,
+				RecordTitle: "test",
+			})
+		);
 	});
 
 	[
@@ -1390,7 +1376,7 @@ describe("Test fetch from TRIM", () => {
 		},
 		{ trimType: BaseObjectTypes.Record, expected: [] },
 	].forEach((testData) => {
-		it("gets the commands for the Check in Style list", (done) => {
+		it("gets the commands for the Check in Style list", async () => {
 			let postConfig: any;
 			mock.reset();
 			mock
@@ -1417,34 +1403,21 @@ describe("Test fetch from TRIM", () => {
 						},
 					];
 				});
-			setTimeout(() => {
-				try {
-					trimConnector
-						.getMenuItemsForList(testData.trimType)
-						.then((commandDefs) => {
-							expect(commandDefs.length).toEqual(testData.expected.length);
-							expect(commandDefs).toEqual(
-								expect.arrayContaining(testData.expected)
-							);
 
-							if (testData.trimType === BaseObjectTypes.CheckinStyle) {
-								expect(postConfig.params).toEqual(
-									expect.objectContaining({
-										TrimType: testData.trimType,
-										CommandIds: "New",
-									})
-								);
-							}
+			const commandDefs = await trimConnector.getMenuItemsForList(
+				testData.trimType
+			);
+			expect(commandDefs.length).toEqual(testData.expected.length);
+			expect(commandDefs).toEqual(expect.arrayContaining(testData.expected));
 
-							done();
-						})
-						.catch((e) => {
-							done.fail(e);
-						});
-				} catch (e) {
-					done.fail(e);
-				}
-			});
+			if (testData.trimType === BaseObjectTypes.CheckinStyle) {
+				expect(postConfig.params).toEqual(
+					expect.objectContaining({
+						TrimType: testData.trimType,
+						CommandIds: "New",
+					})
+				);
+			}
 		});
 	});
 

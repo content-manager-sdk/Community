@@ -33,6 +33,7 @@ export class TrimMessages {
 	public web_fileMore = ""; // tslint:disable-line
 	public web_close = ""; // tslint:disable-line
 	public web_cancel = ""; // tslint:disable-line
+	public web_proceed = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

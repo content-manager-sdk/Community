@@ -10,7 +10,7 @@ import {
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import { IOutlookAttachment } from "../../office-coms/OutlookConnector";
 import { IOfficeConnector } from "../../office-coms/office-connector";
-import { Checkbox, PrimaryButton } from "office-ui-fabric-react";
+import { Checkbox, PrimaryButton, Stack } from "office-ui-fabric-react";
 import NewRecord from "../NewRecord";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import RecordTypePicker from "../RecordTypePicker/RecordTypePicker";
@@ -29,6 +29,7 @@ interface IOutlookAttachmentsState {
 	showForm: Boolean;
 	attachments: IOutlookAttachment[];
 	userOptionsRecordType?: IRecordType;
+	currentPickerIsRecordType: boolean;
 }
 
 export class OutlookAttachments extends React.Component<
@@ -45,12 +46,12 @@ export class OutlookAttachments extends React.Component<
 			showForm: false,
 			attachments: [],
 			userOptionsRecordType: undefined,
+			currentPickerIsRecordType: false,
 		};
 	}
 
 	async componentDidMount() {
 		const { wordConnector, appStore, trimConnector } = this.props;
-
 		const userOptionsRecordType = await trimConnector!.getDefaultRecordType();
 		const filedRecords = await appStore!.fetchFiledRecords();
 		const attachments = (wordConnector as OutlookConnector).getAttachments();
@@ -79,25 +80,53 @@ export class OutlookAttachments extends React.Component<
 		});
 	}
 
+	private _firstTimeChanged = true;
 	private _onRecordTypeSelected = (
 		attachmentId: string,
 		recordType: ITrimMainObject
 	) => {
-		const { selectedAttachments, attachments } = this.state;
+		const {
+			selectedAttachments,
+			attachments,
+			userOptionsRecordType,
+			currentPickerIsRecordType,
+		} = this.state;
+		const { appStore } = this.props;
 
-		selectedAttachments.forEach((selectedAttachment) => {
-			if (selectedAttachment.Id === attachmentId) {
-				selectedAttachment.FileUsing = recordType;
-			}
-		});
+		const newState: any = {};
 
-		this.setState({
-			selectedAttachments: [...selectedAttachments],
-		});
+		const newCurrentPickerIsRecordType =
+			recordType.TrimType === BaseObjectTypes.RecordType;
 
-		if (attachments.length === 1) {
-			this._nextClick();
+		if (currentPickerIsRecordType !== newCurrentPickerIsRecordType) {
+			newState.currentPickerIsRecordType = newCurrentPickerIsRecordType;
 		}
+
+		if (
+			this._firstTimeChanged === false ||
+			!appStore!.isEmail() ||
+			!userOptionsRecordType
+		) {
+			selectedAttachments.forEach((selectedAttachment) => {
+				if (selectedAttachment.Id === attachmentId) {
+					selectedAttachment.FileUsing = recordType;
+				}
+			});
+
+			newState.selectedAttachments = [...selectedAttachments];
+
+			this.setState(newState);
+
+			if (attachments.length === 1) {
+				this._nextClick();
+			}
+		} else {
+			if (Object.keys(newState).length > 0) {
+				this.setState(newState);
+			}
+		}
+
+		this._firstTimeChanged = false;
 	};
 
 	private allChecked = false;
@@ -105,9 +134,12 @@ export class OutlookAttachments extends React.Component<
 		attachment: IOutlookAttachment,
 		checked: Boolean | undefined
 	) => {
-		const { selectedAttachments } = this.state;
+		const { selectedAttachments, userOptionsRecordType } = this.state;
 
 		if (checked) {
+			if (userOptionsRecordType) {
+				attachment.FileUsing = userOptionsRecordType;
+			}
 			this.setState({
 				selectedAttachments: [...selectedAttachments, attachment],
 			});
@@ -197,7 +229,7 @@ export class OutlookAttachments extends React.Component<
 
 	private _trimObjectCreated = (c: ITrimMainObject) => {
 		const { appStore, wordConnector, trimConnector } = this.props;
-		const { selectedAttachments, autoCreate } = this.state;
+		const { selectedAttachments } = this.state;
 		if (c) {
 			this.setState({ showForm: false });
 			appStore!.setDocumentInfo({
@@ -237,9 +269,9 @@ export class OutlookAttachments extends React.Component<
 				});
 			} else {
 				this.setState({ showForm: false });
-				if (autoCreate) {
-					this._nextClick();
-				}
+				//	if (autoCreate) {
+				this._nextClick();
+				//	}
 			}
 		}
 	};
@@ -279,21 +311,33 @@ export class OutlookAttachments extends React.Component<
 			showForm,
 			attachments,
 			userOptionsRecordType,
+			currentPickerIsRecordType,
 		} = this.state;
 
 		const attachment = selectedAttachments.find((a) => a.Filed !== true);
+		const selectedRecordType = attachment ? attachment.FileUsing : undefined;
 
 		return showForm === true ? (
 			<NewRecord
 				trimType={BaseObjectTypes.Record}
 				onAfterSave={this._trimObjectCreated}
 				defaultRecordType={userOptionsRecordType}
-				selectedRecordType={attachment ? attachment.FileUsing : undefined}
+				selectedRecordType={selectedRecordType}
 				processInBackgroundIfPossible={autoCreate}
 				bypassUpdateEmailSubject={true}
 			/>
 		) : attachments.length === 1 ? (
-			this.renderPicker(attachments[0], attachments[0])
+			<Stack>
+				{this.renderPicker(attachments[0], attachments[0])}
+				{currentPickerIsRecordType &&
+					userOptionsRecordType &&
+					!selectedRecordType && (
+						<PrimaryButton
+							text={appStore!.messages.web_proceed}
+							onClick={this._nextClick}
+						></PrimaryButton>
+					)}
+			</Stack>
 		) : (
 			!spinning && (
 				<div>

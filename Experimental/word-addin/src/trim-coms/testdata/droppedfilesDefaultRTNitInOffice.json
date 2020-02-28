@@ -1,0 +1,58 @@
+{
+	"UserOptions": {
+		"__type": "HP.HPTRIM.ServiceModel.DroppedFilesUserOptions, HP.HPTRIM.ServiceAPI.Model",
+		"DroppedFilesUserOptionsAddAllDocstoRecent": {
+			"Value": false,
+			"StringValue": "No"
+		},
+		"DroppedFilesUserOptionsAutoViewDocuments": {
+			"Value": false,
+			"StringValue": "No"
+		},
+		"DroppedFilesUserOptionsConfirmCheckIn": {
+			"Value": false,
+			"StringValue": "No"
+		},
+		"DroppedFilesUserOptionsContainer": {
+			"TrimType": "Record",
+			"Uri": 0,
+			"StringValue": "0"
+		},
+		"DroppedFilesUserOptionsDeleteFromDisk": {
+			"Value": false,
+			"StringValue": "No"
+		},
+		"DroppedFilesUserOptionsDisplayDataEntryForm": {
+			"Value": false,
+			"StringValue": "No"
+		},
+		"DroppedFilesUserOptionsEmailUpdateStyle": {
+			"Value": "NoAction",
+			"StringValue": "Leave the email message as it is"
+		},
+		"DroppedFilesUserOptionsRecordType": {
+			"RecordTypeName": { "Value": "Infringement" },
+			"TrimType": "RecordType",
+			"Uri": 9000000000,
+			"Icon": {
+				"IsFileTypeIcon": false,
+				"IsInternalIcon": true,
+				"IsValid": true,
+				"FileType": "",
+				"Id": "BlackDoc"
+			},
+			"StringValue": "9000000000"
+		},
+		"DroppedFilesUserOptionsRemoveEmptyOfflineFolder": {
+			"Value": false,
+			"StringValue": "No"
+		},
+		"DroppedFilesUserOptionsUseDefaultRecordTypeInOffice": {
+			"Value": false,
+			"StringValue": "Yes"
+		},
+		"LoadFromGlobalSetting": false,
+		"SaveAsGlobalSetting": false
+	},
+	"ResponseStatus": {}
+}

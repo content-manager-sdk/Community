@@ -22,6 +22,7 @@ import RecordTypePicker from "../RecordTypePicker/RecordTypePicker";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { Text } from "office-ui-fabric-react/lib/Text";
 import * as flushPromises from "flush-promises";
+import { Provider } from "mobx-react";
 
 describe("Outlook attachments", function() {
 	let webUrlFound = "";
@@ -32,8 +33,13 @@ describe("Outlook attachments", function() {
 	let testPrefix;
 	let foundAttachments = [];
 	let filedRecords: IRecord[];
+	let getWebUrlCalled = false;
+	let defaultRecordType = null;
+	let useCheckinStyles = false;
 
 	beforeEach(() => {
+		defaultRecordType = null;
+		getWebUrlCalled = false;
 		webUrlFound = "";
 		webUrlFound2 = "";
 		attachmentNameFound = undefined;
@@ -41,11 +47,13 @@ describe("Outlook attachments", function() {
 		testRecordUrn = "";
 		testPrefix = "";
 		filedRecords = [];
+		useCheckinStyles = false;
 		appStore.setStatus("WAITING");
 		appStore.setDocumentInfo(null);
 		appStore.setMessages({
 			core_mailAttachmentsCap: "Attachments",
 			core_completeEmail: "test {0}",
+			web_proceed: "proceed",
 		});
 		foundAttachments = [
 			{ Id: "a", Name: "A", IsAttachment: false },
@@ -57,9 +65,14 @@ describe("Outlook attachments", function() {
 
 	trimConnector.getDefaultRecordType = function() {
 		return new Promise(function(resolve) {
-			resolve(null);
+			resolve(defaultRecordType);
 		});
 	}.bind(trimConnector);
+
+	trimConnector.getUseCheckinStyles = function() {
+		return useCheckinStyles;
+	}.bind(trimConnector);
+
 	trimConnector.getDriveId = function(
 		webUrl: string,
 		isEmail: boolean,
@@ -98,6 +111,7 @@ describe("Outlook attachments", function() {
 	}.bind(outlookConnector);
 
 	outlookConnector.getWebUrl = function() {
+		getWebUrlCalled = true;
 		return new Promise((resolve) => {
 			resolve("id");
 		});
@@ -225,6 +239,79 @@ describe("Outlook attachments", function() {
 		]);
 	});
 
+	it("show 'proceed' button for Record Type", async () => {
+		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
+		defaultRecordType = { Uri: 456, TrimType: BaseObjectTypes.RecordType };
+		const wrapper = mount<OutlookAttachments>(
+			<Provider
+				wordConnector={outlookConnector}
+				appStore={appStore}
+				trimConnector={trimConnector}
+			>
+				<OutlookAttachments
+					wordConnector={outlookConnector}
+					appStore={appStore}
+					trimConnector={trimConnector}
+				/>
+			</Provider>
+		);
+
+		await flushPromises();
+		wrapper.update();
+
+		expect(
+			wrapper
+				.findWhere((p) => {
+					return p.props().text === "proceed";
+				})
+				.exists()
+		).toBeTruthy();
+	});
+
+	it("does not show 'proceed' button when default selection is Check in Style", async () => {
+		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
+		defaultRecordType = { Uri: 456, TrimType: BaseObjectTypes.RecordType };
+		useCheckinStyles = true;
+		const wrapper = mount<OutlookAttachments>(
+			<Provider
+				wordConnector={outlookConnector}
+				appStore={appStore}
+				trimConnector={trimConnector}
+			>
+				<OutlookAttachments
+					wordConnector={outlookConnector}
+					appStore={appStore}
+					trimConnector={trimConnector}
+				/>
+			</Provider>
+		);
+
+		await flushPromises();
+		wrapper.update();
+		expect(
+			wrapper
+				.findWhere((p) => {
+					return p.text() === "proceed";
+				})
+				.exists()
+		).toBeFalsy();
+	});
+
+	it("does not auto fetch when there is default record type", async () => {
+		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
+		defaultRecordType = { Uri: 456, TrimType: BaseObjectTypes.RecordType };
+
+		const wrapper = getWrapper();
+
+		await flushPromises();
+		wrapper
+			.find(RecordTypePicker)
+			.props()
+			.onRecordTypeSelected({ Uri: 456, TrimType: BaseObjectTypes.RecordType });
+
+		expect(getWebUrlCalled).toBeFalsy();
+	});
+
 	it("shows form on Record type selected when there are no attachments", async () => {
 		appStore.setDocumentInfo({});
 		foundAttachments = [{ Id: "a", Name: "A", IsAttachment: false }];
@@ -261,6 +348,22 @@ describe("Outlook attachments", function() {
 		expect(wrapper.state().selectedAttachments).toEqual([
 			{ Id: "a", Name: "A", IsAttachment: false },
 		]);
+	});
+
+	it("sets the default Record Type on the selected attachment", async () => {
+		defaultRecordType = { Uri: 78, TrimType: BaseObjectTypes.RecordType };
+		const wrapper = getWrapper();
+
+		await flushPromises();
+		wrapper
+			.find(Checkbox)
+			.at(1)
+			.simulate("change", null, true);
+
+		expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
+			Uri: 78,
+			TrimType: BaseObjectTypes.RecordType,
+		});
 	});
 
 	it("removes a selected attachment", async () => {

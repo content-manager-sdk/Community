@@ -18,11 +18,12 @@ import AppStoreWord from "../stores/AppStoreWord";
 import RecordTypePicker from "../components/RecordTypePicker/RecordTypePicker";
 import { IGetRecordUriResponse } from "../office-coms/word-connector";
 import flushPromises = require("flush-promises");
+import { Provider } from "mobx-react";
 
 describe("New Record layout", function() {
 	let testRecordUrn = "";
 	let testSubjectPrefix = "";
-	let propertySheetTrimType = BaseObjectTypes.Location;
+	let propertySheetTrimType;
 	let wrapper;
 	let registerProps = [];
 
@@ -34,6 +35,7 @@ describe("New Record layout", function() {
 	let noFormNeeded = false;
 	let recordPropsTest;
 	let recordUriTest = 0;
+	let isEmail = false;
 
 	const pageItemsWithTitle = {
 		NeedsDataEntryForm: true,
@@ -100,12 +102,13 @@ describe("New Record layout", function() {
 
 	beforeEach(() => {
 		wrapper = makeWrapper(BaseObjectTypes.Record);
+		isEmail = false;
 	});
 
 	afterEach(() => {
 		testRecordUrn = "";
 		testSubjectPrefix = "";
-		propertySheetTrimType = BaseObjectTypes.Location;
+		propertySheetTrimType = undefined;
 		registerProps = [];
 		registerType1 = undefined;
 		registerType2 = undefined;
@@ -205,6 +208,9 @@ describe("New Record layout", function() {
 	// };
 
 	let mockStore = new AppStoreWord(null, null);
+	mockStore.isEmail = function() {
+		return isEmail;
+	}.bind(mockStore);
 	mockStore.setDocumentInfo({ Uris: [], URN: "test_urn" });
 	mockStore.messages = {
 		web_Register: "Register",
@@ -353,6 +359,60 @@ describe("New Record layout", function() {
 		expect(recordPropsTest["DataEntryFormDefinition"]).toBeTruthy();
 	});
 
+	/*
+	[
+		{ isEmail: true, expected: undefined },
+		{ isEmail: false, expected: BaseObjectTypes.Record },
+	].forEach((element) => {
+		it(`shows form yes or no when default Record Type set for is email == ${element.isEmail}`, async () => {
+			isEmail = element.isEmail;
+			mount<NewRecord>(
+				<Provider
+					appStore={mockStore}
+					trimConnector={mockTrimConnector}
+					wordConnector={new MockWordConnector()}
+				>
+					<NewRecord
+						appStore={mockStore}
+						trimConnector={mockTrimConnector}
+						wordConnector={new MockWordConnector()}
+						trimType={BaseObjectTypes.Record}
+						defaultRecordType={{ Uri: 4, TrimType: BaseObjectTypes.RecordType }}
+					/>
+				</Provider>
+			);
+
+			await flushPromises();
+			expect(propertySheetTrimType).toBe(element.expected);
+		});
+	});*/
+
+	it(`shows form when Record Type changed after default set`, async () => {
+		isEmail = true;
+		const wrapper = mount<NewRecord>(
+			<Provider
+				appStore={mockStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={new MockWordConnector()}
+			>
+				<NewRecord
+					appStore={mockStore}
+					trimConnector={mockTrimConnector}
+					wordConnector={new MockWordConnector()}
+					trimType={BaseObjectTypes.Record}
+					defaultRecordType={{ Uri: 4, TrimType: BaseObjectTypes.RecordType }}
+				/>
+			</Provider>
+		);
+
+		await flushPromises();
+
+		wrapper
+			.find(RecordTypePicker)
+			.props()
+			.onRecordTypeSelected({ Uri: 55, TrimType: BaseObjectTypes.RecordType });
+		expect(propertySheetTrimType).toBe(BaseObjectTypes.Record);
+	});
 	it("sets default record type on picker", () => {
 		const wrapper = makeWrapper(BaseObjectTypes.CheckinStyle);
 		wrapper.setProps({

@@ -31,13 +31,13 @@ interface IRecordTypePickerProps {
 	trimConnector?: ITrimConnector;
 	wordConnector?: IOfficeConnector;
 	trimType?: BaseObjectTypes;
-	//onRecordTypeSelected: (recordType: IRecordType) => void;
 	onRecordTypeSelected: (recordType: ITrimMainObject) => void;
 	folderId?: string;
 	isLinkedFolder?: Boolean;
 	computedCheckinStyleName?: string;
 	includeCheckinStyles: boolean;
 	defaultRecordType?: ITrimMainObject;
+	selectedRecordType?: ITrimMainObject;
 	disabled?: boolean;
 }
 
@@ -61,10 +61,10 @@ export class RecordTypePicker extends React.Component<
 	_mounted: Boolean;
 
 	setRecordTypes(recTypes: IDropdownOption[]): IDropdownOption[] {
-		const { defaultRecordType, appStore } = this.props;
+		const { defaultRecordType } = this.props;
 
 		const newRecTypes = [...recTypes];
-		let defaultUri = appStore.documentInfo.Options.DefaultDocumentRecordType;
+		let defaultUri = 0;
 
 		if (
 			defaultRecordType &&
@@ -102,118 +102,40 @@ export class RecordTypePicker extends React.Component<
 			trimConnector,
 			defaultRecordType,
 			onRecordTypeSelected,
+			selectedRecordType,
 		} = this.props;
 
 		this._mounted = true;
 
 		if (trimConnector) {
-			this.setState({
-				checkinUsingStyle: trimConnector.getUseCheckinStyles(),
-			});
+			const newStyle: any = {};
+			let checkinUsingStyle = false;
+			if (!selectedRecordType) {
+				checkinUsingStyle = trimConnector.getUseCheckinStyles();
 
-			if (defaultRecordType) {
-				this.setState({
-					recordTypes: [
-						{
-							key: defaultRecordType.Uri,
-							text: defaultRecordType.NameString,
-							selected: true,
-						} as IDropdownOption,
-					],
-				});
+				newStyle.checkinUsingStyle = checkinUsingStyle;
+			}
+			const startingRecordType = selectedRecordType || defaultRecordType;
+
+			if (!checkinUsingStyle && startingRecordType) {
+				newStyle.recordTypes = [
+					{
+						key: startingRecordType.Uri,
+						text: startingRecordType.NameString,
+						selected: true,
+					} as IDropdownOption,
+				];
 			}
 
-			if (defaultRecordType) {
-				this.recordTypeUri = defaultRecordType!.Uri;
-				if (onRecordTypeSelected) {
-					onRecordTypeSelected(defaultRecordType);
-				}
-			}
-
-			//let me = this;
-
-			// const promisesToRun = [
-			// 	trimConnector.search<IRecordType>({
-			// 		trimType: BaseObjectTypes.RecordType,
-			// 		q: "unkAll",
-			// 		filter: "unkUsable rtyBehaviour:1 hasElecDocSupport unkActive",
-			// 		purpose: 3,
-			// 	}),
-			// ];
-
-			// if (includeCheckinStyles) {
-			// 	promisesToRun.push(
-			// 		trimConnector.search<ITrimMainObject>({
-			// 			trimType: BaseObjectTypes.CheckinPlace,
-			// 			q: "cipType:MailForClientProcessing",
-			// 			properties: "CheckinPlaceCheckinAs,NameString",
-			// 			purpose: 0,
-			// 		})
-			// 	);
-			// }
-			/*
-			return Promise.all(promisesToRun)
-				.then((values) => {
-					const response = values[0] as ISearchResults<IRecordType>;
-
-					if (this._mounted) {
-						me.setRecordTypes(
-							response.results.map(function(o: IRecordType) {
-								return { key: o.Uri, text: o.NameString } as IDropdownOption;
-							})
-						);
-						if (values.length > 1) {
-							const placesResponse = values[1] as ISearchResults<ICheckinPlace>;
-							this.setState({
-								checkinStyles: placesResponse.results.map(function(
-									o: ICheckinPlace
-								) {
-									let selected = false;
-									if (
-										defaultRecordType &&
-										defaultRecordType.TrimType ==
-											BaseObjectTypes.CheckinStyle &&
-										defaultRecordType.Uri === o.CheckinAs.Uri
-									) {
-										selected = true;
-									}
-									return {
-										key: o.CheckinAs.Uri,
-										text: o.NameString,
-										selected,
-									} as IDropdownOption;
-								}),
-							});
-						}
-						if (
-							defaultRecordType ||
-							appStore.documentInfo.Options.DefaultDocumentRecordType > 0
-						) {
-							me.recordTypeUri =
-								defaultRecordType!.Uri ||
-								appStore.documentInfo.Options.DefaultDocumentRecordType;
-							if (onRecordTypeSelected) {
-								onRecordTypeSelected(
-									me.recordTypeUri,
-									defaultRecordType
-										? defaultRecordType.TrimType ===
-												BaseObjectTypes.CheckinStyle
-										: false
-								);
-							}
-						}
-						appStore!.setSpinning(false);
+			this.setState(newStyle, () => {
+				if (!checkinUsingStyle && startingRecordType) {
+					this.recordTypeUri = startingRecordType!.Uri;
+					if (onRecordTypeSelected) {
+						onRecordTypeSelected(startingRecordType);
 					}
-				})
-				.catch((e) => {
-					appStore!.setError(e);
-				});
-
-				*/
-		} else {
-			return null;
+				}
+			});
 		}
-		return null;
 	}
 
 	private getOptions = (): void => {
@@ -295,13 +217,13 @@ export class RecordTypePicker extends React.Component<
 				onRecordTypeSelected({
 					Uri: Number(option.key),
 					NameString: option.text,
-					TrimType: BaseObjectTypes.RecordType,
+					TrimType: BaseObjectTypes.CheckinStyle,
 				});
 			} else if (recordTypes.length > 0) {
 				onRecordTypeSelected({
 					Uri: Number(option.key),
 					NameString: option.text,
-					TrimType: BaseObjectTypes.CheckinStyle,
+					TrimType: BaseObjectTypes.RecordType,
 				});
 			}
 		}

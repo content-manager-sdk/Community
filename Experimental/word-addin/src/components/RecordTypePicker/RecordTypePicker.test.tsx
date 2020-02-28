@@ -25,6 +25,7 @@ describe("Record Type Picker", function() {
 	let rejectRegister = false;
 	let recordTypeUri = 0;
 	let testRecordTypes;
+	let useCheckinStyles;
 
 	const pageItemsWithTitle = {
 		Pages: [
@@ -70,6 +71,8 @@ describe("Record Type Picker", function() {
 	};
 
 	beforeEach(() => {
+		useCheckinStyles = false;
+		recordTypeUri = 0;
 		appStore.setDocumentInfo({
 			Uris: [],
 			Options: {},
@@ -95,6 +98,9 @@ describe("Record Type Picker", function() {
 	});
 
 	let mockTrimConnector = new TrimConnector();
+	mockTrimConnector.getUseCheckinStyles = function() {
+		return useCheckinStyles;
+	}.bind(mockTrimConnector);
 
 	mockTrimConnector.saveToTrim = (
 		trimType: BaseObjectTypes,
@@ -309,6 +315,65 @@ describe("Record Type Picker", function() {
 		expect(wrapper.state().recordTypes[1].selected).toBeTruthy();
 	});
 
+	it("onRecordTypeSelected fires on mount", async () => {
+		const wrapper = shallow<RecordTypePicker>(
+			<RecordTypePicker
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={mockWordConnector}
+				trimType={BaseObjectTypes.Record}
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
+				}}
+				includeCheckinStyles={true}
+				defaultRecordType={{ Uri: 5, TrimType: BaseObjectTypes.RecordType }}
+			/>
+		);
+		//useCheckinStyles
+		await flushPromises();
+		expect(recordTypeUri).toEqual(5);
+	});
+
+	it("onRecordTypeSelected does not fire on mount for Check in Styles", async () => {
+		useCheckinStyles = true;
+		const wrapper = shallow<RecordTypePicker>(
+			<RecordTypePicker
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={mockWordConnector}
+				trimType={BaseObjectTypes.Record}
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
+				}}
+				includeCheckinStyles={true}
+				defaultRecordType={{ Uri: 5, TrimType: BaseObjectTypes.RecordType }}
+			/>
+		);
+
+		await flushPromises();
+		expect(recordTypeUri).toEqual(0);
+	});
+
+	it("check in using style is false if there is a selectedRecordType", async () => {
+		useCheckinStyles = true;
+		const wrapper = shallow<RecordTypePicker>(
+			<RecordTypePicker
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={mockWordConnector}
+				trimType={BaseObjectTypes.Record}
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
+				}}
+				includeCheckinStyles={true}
+				selectedRecordType={{ Uri: 5, TrimType: BaseObjectTypes.RecordType }}
+			/>
+		);
+
+		await flushPromises();
+		expect(wrapper.state().checkinUsingStyle).toBeFalsy();
+	});
+
 	it("selects the default Record Type", async () => {
 		testRecordTypes = [];
 		const wrapper = shallow<RecordTypePicker>(
@@ -333,6 +398,38 @@ describe("Record Type Picker", function() {
 		expect(wrapper.state().recordTypes[0].selected).toBeTruthy();
 		expect(wrapper.find(ComboBox).props().options).toEqual([
 			{ key: 5, selected: true, text: "doc 5" },
+		]);
+	});
+
+	it("selects the selected Record Type", async () => {
+		testRecordTypes = [];
+		const wrapper = shallow<RecordTypePicker>(
+			<RecordTypePicker
+				appStore={appStore}
+				trimConnector={mockTrimConnector}
+				wordConnector={mockWordConnector}
+				trimType={BaseObjectTypes.Record}
+				onRecordTypeSelected={(recordType) => {
+					recordTypeUri = recordType.Uri;
+				}}
+				includeCheckinStyles={false}
+				defaultRecordType={{
+					NameString: "doc 5",
+					Uri: 5,
+					TrimType: BaseObjectTypes.RecordType,
+				}}
+				selectedRecordType={{
+					NameString: "doc 6",
+					Uri: 6,
+					TrimType: BaseObjectTypes.RecordType,
+				}}
+			/>
+		);
+
+		await flushPromises();
+		expect(wrapper.state().recordTypes[0].selected).toBeTruthy();
+		expect(wrapper.find(ComboBox).props().options).toEqual([
+			{ key: 6, selected: true, text: "doc 6" },
 		]);
 	});
 
