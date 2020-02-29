@@ -295,7 +295,7 @@ export class AppStoreBase implements IAppStore {
 						resolve(newRecord);
 					})
 					.catch((error) => {
-						this.setError(error, "create record");
+						this.setError(error);
 						reject();
 					});
 			});
@@ -352,7 +352,7 @@ export class AppStoreBase implements IAppStore {
 	};
 
 	@action.bound
-	public setError = (error: any, module?: string) => {
+	public setError = (error: any, module?: string, setStatus = true) => {
 		let message;
 		if (typeof error === "string" || error instanceof String) {
 			message = error;
@@ -363,7 +363,9 @@ export class AppStoreBase implements IAppStore {
 		this.errorMessage = module ? message + " (" + module + ")" : message;
 
 		this.errorBody = error;
-		this.status = "ERROR";
+		if (setStatus) {
+			this.status = "ERROR";
+		}
 		this.spinning = false;
 	};
 

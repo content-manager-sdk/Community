@@ -53,7 +53,7 @@ export class MainApp extends React.Component<IMainAppProps, IMainAppState> {
 					trimType={BaseObjectTypes.Record}
 				/>
 			);
-		} else if (appStore!.status === "WAITING") {
+		} else {
 			return appStore!.isEmail() ? (
 				<OutlookAttachments />
 			) : (
@@ -63,8 +63,6 @@ export class MainApp extends React.Component<IMainAppProps, IMainAppState> {
 					defaultRecordType={defaultRecordType}
 				/>
 			);
-		} else {
-			return null;
 		}
 	}
 }

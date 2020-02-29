@@ -9,6 +9,9 @@ import { IAppStore, IUserProfile } from "../AppStoreBase";
 import TrimMessages from "src/trim-coms/trim-messages";
 
 export class AppStoreWord implements IAppStore {
+	showError(error: any, module?: string | undefined): void {
+		throw new Error("Method not implemented.");
+	}
 	fetchFiledRecords(): Promise<any[]> {
 		throw new Error("Method not implemented.");
 	}
