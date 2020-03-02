@@ -321,9 +321,16 @@ export class AppStoreBase implements IAppStore {
 		open(url, "_blank");
 	}
 
+	private _spinningCount = 0;
+
 	@action.bound
 	public setSpinning = (on: Boolean, label?: string) => {
-		this.spinning = on;
+		if (on) {
+			this._spinningCount++;
+		} else {
+			this._spinningCount--;
+		}
+		this.spinning = this._spinningCount > 0;
 		this.spinningLabel = label;
 	};
 

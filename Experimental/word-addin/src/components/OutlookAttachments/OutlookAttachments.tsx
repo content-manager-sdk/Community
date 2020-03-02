@@ -154,12 +154,15 @@ export class OutlookAttachments extends React.Component<
 	};
 
 	private _setAttachments = (attachments: IOutlookAttachment[]) => {
-		const { selectedAttachments } = this.state;
+		const { selectedAttachments, userOptionsRecordType } = this.state;
 		const selAttachments = [...selectedAttachments];
 
 		if (attachments.length > 0) {
 			attachments.forEach((a) => {
 				if (selAttachments.filter((sa) => sa.Id === a.Id).length === 0) {
+					if (userOptionsRecordType) {
+						a.FileUsing = userOptionsRecordType;
+					}
 					selAttachments.push(a);
 				}
 			});

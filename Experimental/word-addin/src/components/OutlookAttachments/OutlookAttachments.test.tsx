@@ -421,6 +421,28 @@ describe("Outlook attachments", function() {
 		).toBeTruthy();
 	});
 
+	it("selects all attachments and sets the default Record Type", async () => {
+		defaultRecordType = { Uri: 78, TrimType: BaseObjectTypes.RecordType };
+		const wrapper = getWrapper();
+
+		await flushPromises();
+		wrapper
+			.findWhere((n) => {
+				return n.key() === "all_select";
+			})
+			.props()
+			.onChange();
+
+		expect(wrapper.state().selectedAttachments[0].FileUsing).toEqual({
+			Uri: 78,
+			TrimType: BaseObjectTypes.RecordType,
+		});
+		expect(wrapper.state().selectedAttachments[1].FileUsing).toEqual({
+			Uri: 78,
+			TrimType: BaseObjectTypes.RecordType,
+		});
+	});
+
 	it("selects only non disabled attachments", async () => {
 		filedRecords = [
 			{ Uri: 1, MessageId: { Value: "test" }, ESource: { Value: "test\\A" } },
