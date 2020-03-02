@@ -452,7 +452,11 @@ export class TrimConnector implements ITrimConnector {
 		}
 	}
 
-	cacheIdsToPersist = [CacheIds.UseCheckinStyles, CacheIds.LatestQuery];
+	cacheIdsToPersist = [
+		CacheIds.UseCheckinStyles,
+		CacheIds.LatestQuery,
+		CacheIds.SuppressDataEntryForm,
+	];
 
 	private getItemFromCache(id: CacheIds): any {
 		const cacheItem = localStorage.getItem(id);
