@@ -286,7 +286,7 @@ export class ObjectContextMenu extends React.Component<
 				return menuItem;
 			});
 
-		if (record.TrimType === BaseObjectTypes.Record) {
+		if (record.TrimType === BaseObjectTypes.Record && !appStore.isEmail()) {
 			menuItems.unshift(
 				{
 					key: "paste",
