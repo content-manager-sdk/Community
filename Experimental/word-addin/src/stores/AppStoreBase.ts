@@ -191,10 +191,13 @@ export class AppStoreBase implements IAppStore {
 									.then((uris: number[]) => {
 										self.setDocumentInfo({ ...this.documentInfo, Uris: uris });
 										self.setStatus("WAITING");
+									})
+									.catch((error) => {
+										self.setError(error, "get mail items");
 									});
 							})
 							.catch((error) => {
-								self.setError(error, "get mail items");
+								self.setError(error, "get mail items - get database");
 							});
 						//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
 					}

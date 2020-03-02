@@ -39,7 +39,7 @@ export class MainApp extends React.Component<IMainAppProps, IMainAppState> {
 		const { appStore, className } = this.props;
 		const { defaultRecordType } = this.state;
 
-		if (appStore.status === "STARTING") {
+		if (appStore.status === "STARTING" || appStore.status === "PAUSE") {
 			return null;
 		}
 

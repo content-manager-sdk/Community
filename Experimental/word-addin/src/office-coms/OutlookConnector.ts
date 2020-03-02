@@ -42,41 +42,43 @@ export class OutlookConnector extends OfficeConnector
 	public initialize(trimConnector: ITrimConnector, appStore: IAppStore): void {
 		this.loadCustomProps().then(() => {
 			const handlerFN = () => {
+				try {
+					this.getItemId();
+				} catch {
+					appStore.setStatus("PAUSE");
+					return;
+				}
+
 				if (Office.context.mailbox.item) {
 					appStore.setStatus("STARTING");
 					appStore.PreservedUris = [];
 					trimConnector
 						.getDatabaseProperties()
 						.then((database: IDatabase) => {
-							this.getRecordUrisFromItem(database.Id).then((uris: number[]) => {
-								appStore.setDocumentInfo({
-									...appStore.documentInfo,
-									Uris: uris,
+							this.getRecordUrisFromItem(database.Id)
+								.then((uris: number[]) => {
+									appStore.setDocumentInfo({
+										...appStore.documentInfo,
+										Uris: uris,
+									});
+									appStore.setStatus("WAITING");
+								})
+								.catch((error) => {
+									appStore.setError(error, "get mail items");
 								});
-								appStore.setStatus("WAITING");
-							});
 						})
 						.catch((error) => {
 							appStore.setError(error, "get mail items");
 						});
-					// this.loadCustomProps().then(() => {
-					// 	this.getWebUrl().then((webUrl) => {
-					// 		trimConnector
-					// 			.getDriveId(webUrl, true, this.getRecordUri())
-					// 			.then((driveInfo) => {
-					// 				appStore.setDocumentInfo(driveInfo);
-					// 				appStore.setStatus("WAITING");
-					// 			})
-					// 			.catch((error) => {
-					// 				appStore.setError(error, "initialising Outlook");
-					// 			});
-					// 	});
-					// });
 				}
 			};
 
 			Office.context.mailbox.addHandlerAsync(
 				Office.EventType.ItemChanged,
+				handlerFN
+			);
+			Office.context.mailbox.addHandlerAsync(
+				Office.EventType.ActiveViewChanged,
 				handlerFN
 			);
 		});
@@ -92,18 +94,11 @@ export class OutlookConnector extends OfficeConnector
 		}
 	}
 	public getWebUrl(): Promise<string> {
-		return new Promise<string>(function(resolve) {
-			if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
-				// itemId is already REST-formatted.
-				resolve(Office.context.mailbox.item.itemId);
-			} else {
-				// Convert to an item ID for API v2.0.
-				resolve(
-					Office.context.mailbox.convertToRestId(
-						Office.context.mailbox.item.itemId,
-						Office.MailboxEnums.RestVersion.v2_0
-					)
-				);
+		return new Promise<string>((resolve, reject) => {
+			try {
+				resolve(this.getItemId());
+			} catch (e) {
+				reject(e);
 			}
 		});
 	}
@@ -530,7 +525,6 @@ export class OutlookConnector extends OfficeConnector
 
 	private getItemId(): string {
 		if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
-			// itemId is already REST-formatted.
 			return Office.context.mailbox.item.itemId;
 		} else {
 			// Convert to an item ID for API v2.0.
