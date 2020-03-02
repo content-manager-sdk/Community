@@ -118,6 +118,9 @@ describe("Details View", function() {
 				RecordUri: 0,
 				Id: "my id",
 				messages: { web_Add: "Add" },
+				isEmail: function() {
+					return false;
+				},
 			}}
 			trimConnector={trimConnector}
 			wordConnector={mockWordConnector}

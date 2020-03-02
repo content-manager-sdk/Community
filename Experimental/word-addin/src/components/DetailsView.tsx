@@ -288,8 +288,9 @@ export class DetailsView extends React.Component<
 							})
 							.map((propDef) => {
 								const includePaste =
-									propDef.Id === "RecordNumber" ||
-									propDef.Id === "RecordContainer";
+									(propDef.Id === "RecordNumber" ||
+										propDef.Id === "RecordContainer") &&
+									!appStore.isEmail();
 
 								const pasteEl = (
 									<span className="ms-Grid-col ms-sm1 ms-md1 ms-lg1">
