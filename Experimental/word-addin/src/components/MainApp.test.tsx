@@ -55,12 +55,4 @@ describe("MainApp", function() {
 
 		expect(wrapper.find(ViewTrimObjects).exists()).toBeTruthy();
 	});
-
-	it("Shows null when neither Uri or Id found (yet)", function(this: any) {
-		const wrapper = shallow<MainApp>(
-			<MainApp appStore={{ documentInfo: { Uris: [] } }} />
-		);
-
-		expect(wrapper.children()).toHaveLength(0);
-	});
 });

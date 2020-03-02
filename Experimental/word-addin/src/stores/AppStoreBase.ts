@@ -295,7 +295,7 @@ export class AppStoreBase implements IAppStore {
 						resolve(newRecord);
 					})
 					.catch((error) => {
-						this.setError(error);
+						this.setError(error, "create record");
 						reject();
 					});
 			});

@@ -81,8 +81,8 @@ export class ViewTrimObjects extends React.Component<
 				trimType={trimType}
 				recordUri={selUri}
 				className={className}
-				onEdit={() => {
-					this.setState({ editUri: selectedUri });
+				onEdit={(uri) => {
+					this.setState({ editUri: uri });
 				}}
 				onClose={() => {
 					this.setState({ selectedUri: 0 });
