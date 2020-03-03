@@ -12,6 +12,7 @@ import { IAppStore } from "../../stores/AppStoreBase";
 import { getQueryStringValue } from "../../utils/getQueryStringValue";
 import { IOfficeConnector } from "../../office-coms/office-connector";
 import TrimConnector, { ITrimConnector } from "../../trim-coms/trim-connector";
+import OutlookUserOptions from "../OutlookUserOptions/OutlookUserOptions";
 
 interface IBootstrapState {
 	dialogName: string;
@@ -35,9 +36,16 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 
 		if (window.location.search.indexOf("searchdialog") > -1) {
 			this.state = {
-				dialogName: "/searchdialog",
+				dialogName: "searchdialog",
 				filter: filter,
 				insertText: insertText,
+				ready: false,
+			};
+		} else if (window.location.search.indexOf("UserOptions") > -1) {
+			this.state = {
+				dialogName: "useroptions",
+				filter: filter,
+				insertText: false,
 				ready: false,
 			};
 		} else {
@@ -98,7 +106,7 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 
 		const { dialogName } = this.state;
 		Office.initialize = (reason) => {
-			appStore.fetchBaseSettingFromTrim(dialogName === "/searchdialog");
+			appStore.fetchBaseSettingFromTrim(dialogName === "searchdialog");
 
 			wordConnector.initialize(trimConnector, appStore);
 
@@ -113,9 +121,11 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 	renderBody(appStore: IAppStore): JSX.Element | null {
 		const { dialogName } = this.state;
 
-		return (
-			<React.Fragment>
-				{dialogName === "/searchdialog" ? (
+		switch (dialogName) {
+			case "useroptions":
+				return <OutlookUserOptions />;
+			case "searchdialog":
+				return (
 					<TrimSearchDialog
 						trimType={BaseObjectTypes.Record}
 						trimConnector={this.trimConnector}
@@ -124,16 +134,10 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 						filterSearch={this.state.filter}
 						insertText={this.state.insertText}
 					/>
-				) : (
-					<React.Fragment>
-						{appStore!.status === "STARTING" && !appStore.spinning && (
-							<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
-						)}
-						<MainApp className="trim-main" />
-					</React.Fragment>
-				)}
-			</React.Fragment>
-		);
+				);
+			default:
+				return <MainApp className="trim-main" />;
+		}
 	}
 
 	public render(): any {
@@ -159,8 +163,12 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 							label={appStore.getSpinningLabel()}
 						/>
 					)}
-
-					{this.renderBody(appStore)}
+					<React.Fragment>
+						{appStore!.status === "STARTING" && !appStore.spinning && (
+							<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
+						)}
+						{this.renderBody(appStore)}
+					</React.Fragment>
 				</div>
 			</Provider>
 		);

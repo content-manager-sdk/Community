@@ -2,7 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import ViewTrimObjects from "./ViewTrimObjects/ViewTrimObjects";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
-import { IAppStore } from "src/stores/AppStoreBase";
+import { IAppStore } from "../stores/AppStoreBase";
 import OutlookAttachments from "./OutlookAttachments/OutlookAttachments";
 import NewRecord from "./NewRecord";
 import { ITrimConnector, IRecordType } from "src/trim-coms/trim-connector";

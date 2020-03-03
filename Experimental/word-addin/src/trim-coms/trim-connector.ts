@@ -137,6 +137,12 @@ export interface IRecordType extends ITrimMainObject {}
 export interface ICheckinPlace extends ITrimMainObject {
 	CheckinAs: ITrimMainObject;
 }
+
+export interface IOutlookUserOptions {
+	defaultRecordType?: IRecordType;
+	useDefaultRecordType: boolean;
+}
+
 export interface ICommandDef {
 	CommandId: string;
 	MenuEntryString: string;
@@ -197,7 +203,7 @@ export interface IDataEntryForm {
 }
 
 export interface ITrimConnector {
-	clearCache: () => void;
+	clearCache: (forId?: CacheIds) => void;
 	cancel: () => void;
 	credentialsResolver: (callback: ITokenCallback) => void;
 	getMe(): Promise<ILocation>;
@@ -277,12 +283,16 @@ export interface ITrimConnector {
 	): Promise<IPropertyOrFieldDef[]>;
 
 	setGlobalUserOptions(forUserOptionSet: string): Promise<void>;
-	getDefaultRecordType(): Promise<IRecordType>;
+	getDefaultRecordType(): Promise<IRecordType | undefined>;
 	isDataEntryFormNeeded(recordTypeUri: number): Promise<Boolean>;
 	getMenuItemsForList(trimType: BaseObjectTypes): Promise<ICommandDef[]>;
 	getUseCheckinStyles(): boolean;
 	setUseCheckinStyles(use: boolean): void;
 	suppressDataEntryForm(suppress?: boolean): boolean;
+	getOutlookUserOptions(): Promise<IOutlookUserOptions>;
+	setOutlookUserOptions(
+		options: IOutlookUserOptions
+	): Promise<IOutlookUserOptions>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -470,10 +480,14 @@ export class TrimConnector implements ITrimConnector {
 		localStorage.setItem(id, JSON.stringify(cacheData));
 	}
 
-	public clearCache(): void {
+	public clearCache(forId?: CacheIds): void {
 		for (let counter = 0; counter < localStorage.length; counter++) {
 			const key = localStorage.key(counter);
-			if (key && !this.cacheIdsToPersist.includes(key as CacheIds)) {
+			if (
+				key &&
+				!this.cacheIdsToPersist.includes(key as CacheIds) &&
+				(!forId || key === forId)
+			) {
 				localStorage.removeItem(key);
 			}
 		}
@@ -939,6 +953,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.core_completeEmail = "Complete email ({0})";
 					data.Messages.web_fileMore = "File more";
 					data.Messages.web_proceed = "File email";
+					data.Messages.web_useDefaultRecordType = "Use default Record Type";
+					data.Messages.web_Save = "Save";
 					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;
@@ -1050,7 +1066,60 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
-	public getDefaultRecordType(): Promise<IRecordType> {
+	private parseUserOptions(data: any): IOutlookUserOptions | undefined {
+		if (data.UserOptions) {
+			const userOptions: IOutlookUserOptions = {
+				useDefaultRecordType: false,
+			};
+
+			const optionsOn =
+				data.UserOptions.DroppedFilesUserOptionsUseDefaultRecordTypeInOffice;
+			if (optionsOn) {
+				if (optionsOn.Value === true) {
+					userOptions.useDefaultRecordType = true;
+				}
+			}
+			const rt = data.UserOptions.DroppedFilesUserOptionsRecordType;
+			if (rt) {
+			}
+
+			userOptions.defaultRecordType = {
+				NameString: rt.RecordTypeName.Value,
+				TrimType: BaseObjectTypes.RecordType,
+				Uri: rt.Uri,
+			};
+			return userOptions;
+		}
+		return undefined;
+	}
+	public setOutlookUserOptions(
+		options: IOutlookUserOptions
+	): Promise<IOutlookUserOptions> {
+		const data = {
+			DroppedFilesUserOptionsUseDefaultRecordTypeInOffice:
+				options.useDefaultRecordType,
+			DroppedFilesUserOptionsRecordType: {
+				TrimType: "RecordType",
+				Uri: options.defaultRecordType ? options.defaultRecordType.Uri : 0,
+			},
+		};
+		return this.makeRequest(
+			{ path: `UserOptions/DroppedFiles`, method: "post", data },
+			(data: any) => {
+				return this.parseUserOptions(data);
+			}
+		);
+	}
+	public getOutlookUserOptions(): Promise<IOutlookUserOptions> {
+		return this.makeRequest(
+			{ path: `UserOptions/DroppedFiles`, method: "get" },
+			(data: any) => {
+				return this.parseUserOptions(data);
+			}
+		);
+	}
+
+	public getDefaultRecordType(): Promise<IRecordType | undefined> {
 		const defaultRecordType = this.getItemFromCache(CacheIds.DefaultRecordType);
 
 		if (defaultRecordType) {
@@ -1058,30 +1127,24 @@ export class TrimConnector implements ITrimConnector {
 				resolve(defaultRecordType);
 			});
 		} else {
-			return this.makeRequest(
-				{ path: `UserOptions/DroppedFiles`, method: "get" },
-				(data: any) => {
-					if (data.UserOptions) {
-						const optionsOn =
-							data.UserOptions
-								.DroppedFilesUserOptionsUseDefaultRecordTypeInOffice;
-						if (optionsOn) {
-							if (optionsOn.Value === true) {
-								const rt = data.UserOptions.DroppedFilesUserOptionsRecordType;
-								const newDefault = {
-									NameString: rt.RecordTypeName.Value,
-									TrimType: BaseObjectTypes.RecordType,
-									Uri: rt.Uri,
-								};
-								this.setCacheItem(CacheIds.DefaultRecordType, newDefault);
-								return newDefault;
-							}
+			return new Promise((resolve, reject) => {
+				this.getOutlookUserOptions()
+					.then((options) => {
+						if (options.useDefaultRecordType) {
+							this.setCacheItem(
+								CacheIds.DefaultRecordType,
+								options.defaultRecordType
+							);
+							resolve(options.defaultRecordType);
+						} else {
+							this.setCacheItem(CacheIds.DefaultRecordType, undefined);
+							resolve(undefined);
 						}
-					}
-					this.setCacheItem(CacheIds.DefaultRecordType, null);
-					return null;
-				}
-			);
+					})
+					.catch(function(e) {
+						reject(e);
+					});
+			});
 		}
 	}
 

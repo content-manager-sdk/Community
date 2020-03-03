@@ -59,7 +59,7 @@ describe("Trim object search list", function() {
 	): any => {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
-				appStore={{}}
+				appStore={{ setSpinning: function() {} }}
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				purpose={5}
@@ -397,7 +397,7 @@ describe("Trim object search list", function() {
 	) {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
-				appStore={{}}
+				appStore={{ setSpinning: function() {} }}
 				trimConnector={trimConnector}
 				trimType={spec.trimType}
 				purpose={5}

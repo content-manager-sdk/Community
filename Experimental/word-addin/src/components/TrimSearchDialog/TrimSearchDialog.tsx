@@ -16,7 +16,6 @@ import {
 import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { debounce } from "throttle-debounce";
-import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 import SearchBar from "../SearchBar/SearchBar";
 import { Checkbox, Stack } from "office-ui-fabric-react";
 
@@ -121,46 +120,43 @@ export class TrimSearchDialog
 
 		return (
 			<div className="dialog-top">
-				{isRunning === true ? (
-					<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
-				) : (
-					<React.Fragment>
-						<SearchBar
-							trimType={navTrimType}
-							onQueryChange={this.changeQuery}
-							includeShortCuts={false}
-							wideDisplay={true}
-						/>
-						<div className="trim-list-clear-float" />
-						{startSearchAt && (
-							<FocusTrapZone
-								isClickableOutsideFocusTrap={true}
-								className="dialog-list"
-								data-is-scrollable="true"
-							>
-								<TrimObjectSearchList
-									componentRef={this._searchList}
-									trimType={trimType}
-									onTrimObjectSelected={this._trimObjectSelected}
-									q={startSearchAt}
-									purpose={purpose}
-									purposeExtra={purposeExtra}
-									filter={filter}
-									filterSearch={myFilterSearch}
-									includeAlternateWhenShowingFolderContents={
-										includeAlternateWhenShowingFolderContents
-									}
-									contentsInReverseDateOrder={contentsInReverseDateOrder}
-									advancedSearch={true}
-									dialogDisplay={true}
-									onTrimTypeChanged={(newTrimType) => {
-										this.setState({ navTrimType: newTrimType });
-									}}
-								/>
-							</FocusTrapZone>
-						)}
-					</React.Fragment>
-				)}
+				<React.Fragment>
+					<SearchBar
+						trimType={navTrimType}
+						onQueryChange={this.changeQuery}
+						includeShortCuts={false}
+						wideDisplay={true}
+					/>
+					<div className="trim-list-clear-float" />
+					{startSearchAt && (
+						<FocusTrapZone
+							isClickableOutsideFocusTrap={true}
+							className="dialog-list"
+							data-is-scrollable="true"
+						>
+							<TrimObjectSearchList
+								componentRef={this._searchList}
+								trimType={trimType}
+								onTrimObjectSelected={this._trimObjectSelected}
+								q={startSearchAt}
+								purpose={purpose}
+								purposeExtra={purposeExtra}
+								filter={filter}
+								filterSearch={myFilterSearch}
+								includeAlternateWhenShowingFolderContents={
+									includeAlternateWhenShowingFolderContents
+								}
+								contentsInReverseDateOrder={contentsInReverseDateOrder}
+								advancedSearch={true}
+								dialogDisplay={true}
+								onTrimTypeChanged={(newTrimType) => {
+									this.setState({ navTrimType: newTrimType });
+								}}
+							/>
+						</FocusTrapZone>
+					)}
+				</React.Fragment>
+				)
 				<div className="dialog-footer">
 					<Stack horizontal>
 						{filterSearch && !isRunning ? (

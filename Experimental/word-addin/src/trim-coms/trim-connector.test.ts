@@ -7,6 +7,7 @@ import {
 	IClassification,
 	ITrimMainObject,
 	ICheckinPlace,
+	IOutlookUserOptions,
 } from "./trim-connector";
 import MockAdapter from "axios-mock-adapter";
 import TrimMessages from "./trim-messages";
@@ -1305,7 +1306,7 @@ describe("Test fetch from TRIM", () => {
 		});
 
 		[
-			{ json: "droppedfilesDefaultRTNitInOffice", expected: null },
+			{ json: "droppedfilesDefaultRTNitInOffice", expected: undefined },
 			{
 				json: "droppedfiles",
 				expected: {
@@ -1326,8 +1327,103 @@ describe("Test fetch from TRIM", () => {
 				expect(recordType).toEqual(data.expected);
 			});
 		});
+
+		[
+			{
+				json: "droppedfilesDefaultRTNitInOffice",
+				expected: {
+					defaultRecordType: {
+						NameString: "Infringement2",
+						TrimType: "RecordType",
+						Uri: 9000000000,
+					},
+					useDefaultRecordType: false,
+				},
+			},
+			{
+				json: "droppedfiles",
+				expected: {
+					defaultRecordType: {
+						NameString: "Infringement",
+						TrimType: "RecordType",
+						Uri: 9000000000,
+					},
+					useDefaultRecordType: true,
+				},
+			},
+		].forEach((data) => {
+			it(`gets outlook user options ${data.json}`, async () => {
+				var json = require(`./testdata/${data.json}.json`);
+
+				mock.onGet().reply(function(config: any) {
+					return [200, json];
+				});
+
+				const options: IOutlookUserOptions = await trimConnector.getOutlookUserOptions();
+				expect(options).toEqual(data.expected);
+			});
+		});
 	});
 
+	it("sets the outlook user options", async () => {
+		let postConfig: any;
+		mock.reset();
+		mock
+			.onPost(`${SERVICEAPI_BASE_URI}/UserOptions/DroppedFiles`)
+			.reply(function(config: any) {
+				postConfig = config;
+				return [
+					200,
+					{
+						UserOptions: {
+							__type:
+								"HP.HPTRIM.ServiceModel.DroppedFilesUserOptions, HP.HPTRIM.ServiceAPI.Model",
+
+							DroppedFilesUserOptionsRecordType: {
+								RecordTypeName: {
+									Value: "Document",
+								},
+								TrimType: "RecordType",
+								Uri: 2,
+								Icon: {
+									IsFileTypeIcon: false,
+									IsInternalIcon: true,
+									IsValid: true,
+									FileType: "",
+									Id: "YellowDoc",
+								},
+								StringValue: "2",
+							},
+
+							DroppedFilesUserOptionsUseDefaultRecordTypeInOffice: {
+								Value: true,
+								StringValue: "Yes",
+							},
+							LoadFromGlobalSetting: false,
+							SaveAsGlobalSetting: false,
+						},
+						ResponseStatus: {},
+					},
+				];
+			});
+		await trimConnector.setOutlookUserOptions({
+			defaultRecordType: {
+				NameString: "Infringement",
+				TrimType: BaseObjectTypes.RecordType,
+				Uri: 9000000000,
+			},
+			useDefaultRecordType: true,
+		});
+		expect(postConfig.data).toEqual(
+			JSON.stringify({
+				DroppedFilesUserOptionsUseDefaultRecordTypeInOffice: true,
+				DroppedFilesUserOptionsRecordType: {
+					TrimType: "RecordType",
+					Uri: 9000000000,
+				},
+			})
+		);
+	});
 	it("sends request for NeedsDataEntryForm", async () => {
 		let postConfig: any;
 		mock

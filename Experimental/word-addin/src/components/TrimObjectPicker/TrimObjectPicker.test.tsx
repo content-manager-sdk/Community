@@ -61,7 +61,10 @@ describe("TrimObjectPicker", function() {
 
 	const mountObjectPicker = (props: any) => {
 		const wrapper = mount(
-			<Provider trimConnector={trimConnector} appStore={{}}>
+			<Provider
+				trimConnector={trimConnector}
+				appStore={{ setSpinning: function() {} }}
+			>
 				<TrimObjectPicker
 					{...props}
 					trimType={BaseObjectTypes.Record}

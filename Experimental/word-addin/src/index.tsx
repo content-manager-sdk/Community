@@ -46,7 +46,11 @@ const root = () => {
 		return <BootStrapCheckinStyles forServerProcessing={false} />;
 	} else if (window.location.href.indexOf("LinkedFolders") > -1) {
 		return <BootStrapCheckinStyles forServerProcessing={true} />;
-	} else if (window.location.href.indexOf("Outlook") > -1) {
+	} else if (
+		["Outlook", "UserOptions"].some(function(a) {
+			return window.location.href.indexOf(a) > -1;
+		})
+	) {
 		return <BootStrapOutlook />;
 	} else {
 		return <BootStrapWord />;

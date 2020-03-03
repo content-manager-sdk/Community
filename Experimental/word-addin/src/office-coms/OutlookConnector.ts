@@ -77,10 +77,6 @@ export class OutlookConnector extends OfficeConnector
 				Office.EventType.ItemChanged,
 				handlerFN
 			);
-			Office.context.mailbox.addHandlerAsync(
-				Office.EventType.ActiveViewChanged,
-				handlerFN
-			);
 		});
 	}
 

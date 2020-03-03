@@ -31,7 +31,7 @@
 			"StringValue": "Leave the email message as it is"
 		},
 		"DroppedFilesUserOptionsRecordType": {
-			"RecordTypeName": { "Value": "Infringement" },
+			"RecordTypeName": { "Value": "Infringement2" },
 			"TrimType": "RecordType",
 			"Uri": 9000000000,
 			"Icon": {

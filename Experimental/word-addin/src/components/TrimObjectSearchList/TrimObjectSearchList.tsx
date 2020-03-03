@@ -17,7 +17,6 @@ import {
 	IBreadcrumbItem,
 } from "office-ui-fabric-react/lib/Breadcrumb";
 
-import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
 import { getId } from "office-ui-fabric-react/lib/Utilities";
 
 export interface ITrimObjectSearchListState {
@@ -28,7 +27,7 @@ export interface ITrimObjectSearchListState {
 	scrollDirection: string;
 	searchShortCuts: any;
 	selectedUri: number;
-	isRunning: boolean;
+
 	trimType: BaseObjectTypes;
 }
 
@@ -112,17 +111,6 @@ export class TrimObjectSearchList extends React.Component<
 		navTrimType: BaseObjectTypes = BaseObjectTypes.Unknown,
 		navFilter: string = ""
 	): void {
-		if (start < 2) {
-			this._hasMore = true;
-			this.setState((prevState) => ({
-				isRunning: true,
-			}));
-		}
-
-		if (/*this._searchRunning === true || */ this._hasMore === false) {
-			return;
-		}
-
 		const {
 			trimConnector,
 			q,
@@ -133,6 +121,15 @@ export class TrimObjectSearchList extends React.Component<
 			onTrimTypeChanged,
 			appStore,
 		} = this.props;
+
+		if (start < 2) {
+			this._hasMore = true;
+			appStore!.setSpinning(true);
+		}
+
+		if (/*this._searchRunning === true || */ this._hasMore === false) {
+			return;
+		}
 
 		let { trimType, selectedUri } = this.state;
 
@@ -180,21 +177,20 @@ export class TrimObjectSearchList extends React.Component<
 					if (start > 1) {
 						this.setState((prevState) => ({
 							items: [...prevState.items, ...response.results],
-							isRunning: false,
 						}));
 					} else {
-						this.setState({ items: response.results, isRunning: false });
+						this.setState({ items: response.results });
 					}
+					appStore!.setSpinning(false);
 					if (selectedUri < 1 && response.results.length > 0) {
 						this._onTrimObjectSelected(response.results[0].Uri, false);
 					}
 				})
 				.catch((error) => {
-					this.setState({ isRunning: false });
 					appStore!.setError(error, "Search");
 				});
 		} else {
-			this.setState({ isRunning: false });
+			appStore!.setSpinning(false);
 		}
 	}
 
@@ -302,7 +298,7 @@ export class TrimObjectSearchList extends React.Component<
 			excludeShortCuts,
 			singleClickActAsDouble,
 		} = this.props;
-		const { searchShortCuts, items, ancestors, isRunning } = this.state;
+		const { searchShortCuts, items, ancestors } = this.state;
 
 		return (
 			<div className="trim-search-list">
@@ -380,21 +376,18 @@ export class TrimObjectSearchList extends React.Component<
 								})}
 							/>
 						)}
-						{isRunning === true ? (
-							<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
-						) : (
-							<List
-								items={items}
-								onRenderCell={this._onRenderCell}
-								onShouldVirtualize={this._onVirtualize}
-								onClick={(evt: React.MouseEvent<HTMLDivElement>) => {
-									this._onListClick(evt, singleClickActAsDouble || false);
-								}}
-								onDoubleClick={(evt: React.MouseEvent<HTMLDivElement>) => {
-									this._onListClick(evt, true);
-								}}
-							/>
-						)}
+
+						<List
+							items={items}
+							onRenderCell={this._onRenderCell}
+							onShouldVirtualize={this._onVirtualize}
+							onClick={(evt: React.MouseEvent<HTMLDivElement>) => {
+								this._onListClick(evt, singleClickActAsDouble || false);
+							}}
+							onDoubleClick={(evt: React.MouseEvent<HTMLDivElement>) => {
+								this._onListClick(evt, true);
+							}}
+						/>
 					</div>
 				</div>
 			</div>
@@ -525,7 +518,7 @@ export class TrimObjectSearchList extends React.Component<
 			lastScrollPos: 0,
 			scrollDirection: "",
 			selectedUri: 0,
-			isRunning: false,
+
 			searchShortCuts: {
 				[BaseObjectTypes.Record]: {
 					RecordMyContainers: {
@@ -565,6 +558,9 @@ export class TrimObjectSearchList extends React.Component<
 					Top: { src: "navContents", q: "unkTop" },
 					All: { src: "fpplans", q: "unkAll" },
 					Owner: { src: "fpplans", q: "plnOwner:me" },
+				},
+				[BaseObjectTypes.RecordType]: {
+					All: { src: "rtyrecordtype", q: "unkAll" },
 				},
 				[BaseObjectTypes.LookupItem]: {
 					Top: { src: "navContents", q: "unkTop" },

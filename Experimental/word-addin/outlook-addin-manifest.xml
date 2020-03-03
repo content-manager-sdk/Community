@@ -147,7 +147,6 @@
 											<SupportsPinning>true</SupportsPinning>
 										</Action>
 									</Control>
-
 									<Control xsi:type="Button" id="msgCheckinStylesFunctionButton">
 										<Label resid="funcCheckinStylesButtonLabel" />
 										<Supertip>
@@ -179,6 +178,23 @@
 											<SourceLocation resid="linkedFolderTaskPaneUrl" />
 										</Action>
 									</Control>
+
+									<Control xsi:type="Button" id="optionsFunctionButton">
+										<Label resid="optionsButtonLabel" />
+										<Supertip>
+											<Title resid="optionsSuperTipTitle" />
+											<Description resid="optionsSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="options-icon-16" />
+											<bt:Image size="32" resid="options-icon-32" />
+											<bt:Image size="80" resid="options-icon-80" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="optionsTaskPaneUrl" />
+										</Action>
+									</Control>
+
 									<!-- Menu (dropdown) button -->
 									<!-- <Control xsi:type="Menu" id="msgReadMenuButton">
                     <Label resid="menuReadButtonLabel" />
@@ -306,6 +322,10 @@
 					<bt:Image id="folder-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/folder_x32.png"/>
 					<bt:Image id="folder-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/folder_x80.png"/>
 
+					<bt:Image id="options-icon-16" DefaultValue="https://desktop-39dgcn3:3000/Assets/options_x16.png"/>
+					<bt:Image id="options-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/options_x32.png"/>
+					<bt:Image id="options-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/options_x80.png"/>
+
 					<bt:Image id="attachments-icon-16" DefaultValue="https://desktop-39dgcn3:3000/Assets/checkinattachmentonly_x16.png"/>
 					<bt:Image id="attachments-icon-32" DefaultValue="https://desktop-39dgcn3:3000/Assets/checkinattachmentonly_x32.png"/>
 					<bt:Image id="attachments-icon-80" DefaultValue="https://desktop-39dgcn3:3000/Assets/checkinattachmentonly_x80.png"/>
@@ -327,7 +347,7 @@
 					<bt:Url id="linksTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?OutlookLinks=1"/>
 					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?CheckinStyles=1"/>
 					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?LinkedFolders=1"/>
-
+					<bt:Url id="optionsTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000?UserOptions=1"/>
 
 					<bt:Url id="restMobileTaskPaneUrl" DefaultValue="https://desktop-39dgcn3:3000/RestCaller/mobile/RestCallerMobile.html"/>
 				</bt:Urls>
@@ -353,6 +373,7 @@
 
 					<bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles"/>
 					<bt:String id="linkedFoldersButtonLabel" DefaultValue="Linked Folders"/>
+					<bt:String id="optionsButtonLabel" DefaultValue="User Options"/>
 					<bt:String id="residExtensionPointLabel" DefaultValue="Content Manager"/>
 					<bt:String id="residGroupLabel" DefaultValue="Support"/>
 					<bt:String id="residChangeToAssociateLabel" DefaultValue="Checkin Styles"/>
@@ -368,6 +389,7 @@
 					<bt:String id="funcAttachmentsSuperTipTitle" DefaultValue="Checks the attachments into Content Manager"/>
 					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles"/>
 					<bt:String id="linkedFoldersSuperTipTitle" DefaultValue="Create linked folders"/>
+					<bt:String id="optionsSuperTipTitle" DefaultValue="Update Content Manager user options"/>
 					<bt:String id="menuReadSuperTipTitle" DefaultValue="Choose a property to get"/>
 					<bt:String id="paneReadSuperTipTitle" DefaultValue="Get all properties"/>
 					<bt:String id="restpaneReadSuperTipTitle" DefaultValue="Open REST Test pane"/>
@@ -393,6 +415,7 @@
 
 					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles."/>
 					<bt:String id="linkedFolderSuperTipDescription" DefaultValue="Edit linked folders."/>
+					<bt:String id="optionsSuperTipDescription" DefaultValue="Update Content Manager options."/>
 					<bt:String id="menuReadSuperTipDescription" DefaultValue="Gets the selected property of the message or appointment and displays it in the info bar. This is an example of a drop-down menu button."/>
 					<bt:String id="paneReadSuperTipDescriptionf" DefaultValue="Opens a pane displaying all available properties of the message or appointment. This is an example of a button that opens a task pane."/>
 					<bt:String id="restpaneReadSuperTipDescription" DefaultValue="Opens a pane allowing you to test various REST API calls using the access token returned by the server."/>
