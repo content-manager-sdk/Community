@@ -111,7 +111,7 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 						if (++slicesReceived == sliceCount) {
 							// All slices have been received.
 							file.closeAsync();
-
+							console.log("closed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 							const { onData } = args;
 							onData(args.fileName);
 

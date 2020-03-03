@@ -185,6 +185,7 @@ hr.trim-menu-sep {
 	left: calc(50% - 55px);
 	padding-top: 10px;
 	justify-content: start;
+	z-index: 9999999;
 }
 
 .trim-top-spinner > ms-Spinner-circle {

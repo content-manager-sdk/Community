@@ -16,7 +16,6 @@ import TrimConnector, {
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
-import { CommandIds } from "../trim-coms/trim-command-ids";
 
 let Mock_Action = "";
 
