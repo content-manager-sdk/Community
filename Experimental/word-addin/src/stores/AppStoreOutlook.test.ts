@@ -171,19 +171,13 @@ describe("Test basic setup from Trim", () => {
 		});
 	});
 
-	it("does not get DriveInfo for attachments", (done) => {
+	it("does not get DriveInfo for attachments", async () => {
 		appStore.setDocumentInfo(null);
 		appStore.deferFetchDriveInfo();
-		appStore.fetchBaseSettingFromTrim(false);
-		setTimeout(() => {
-			try {
-				expect(appStore.documentInfo).toEqual({ Uris: [] });
-				expect(appStore.status).toEqual("WAITING");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await appStore.fetchBaseSettingFromTrim(false);
+
+		expect(appStore.documentInfo).toEqual({ Uris: [] });
+		expect(appStore.status).toEqual("WAITING");
 	});
 
 	it("isEmail is true", () => {

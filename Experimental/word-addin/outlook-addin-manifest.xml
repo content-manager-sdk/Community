@@ -123,7 +123,64 @@
 					<DesktopFormFactor>
 						<FunctionFile resid="functionFile" />
 
+						<ExtensionPoint xsi:type="MessageComposeCommandSurface">
+							<CustomTab id="Trim.Compose.Tab1">
+								<Group id="msgComposeoGroup">
+									<Label resid="groupLabel" />
+									<!-- Function (UI-less) button -->
 
+									<Control xsi:type="Button" id="cmpCheckinStylesFunctionButton">
+										<Label resid="funcCheckinStylesButtonLabel" />
+										<Supertip>
+											<Title resid="funcCheckinStylesSuperTipTitle" />
+											<Description resid="Cs_SuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="cs-icon-16" />
+											<bt:Image size="32" resid="cs-icon-32" />
+											<bt:Image size="80" resid="cs-icon-80" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="checkinStyleTaskPaneUrl" />
+										</Action>
+									</Control>
+
+									<Control xsi:type="Button" id="cmpLinkedFoldersFunctionButton">
+										<Label resid="linkedFoldersButtonLabel" />
+										<Supertip>
+											<Title resid="linkedFoldersSuperTipTitle" />
+											<Description resid="linkedFolderSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="folder-icon-16" />
+											<bt:Image size="32" resid="folder-icon-32" />
+											<bt:Image size="80" resid="folder-icon-80" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="linkedFolderTaskPaneUrl" />
+										</Action>
+									</Control>
+
+									<Control xsi:type="Button" id="cmpoptionsFunctionButton">
+										<Label resid="optionsButtonLabel" />
+										<Supertip>
+											<Title resid="optionsSuperTipTitle" />
+											<Description resid="optionsSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="options-icon-16" />
+											<bt:Image size="32" resid="options-icon-32" />
+											<bt:Image size="80" resid="options-icon-80" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="optionsTaskPaneUrl" />
+										</Action>
+									</Control>
+
+								</Group>
+								<Label resid="Trim.TabLabel" />
+							</CustomTab>
+						</ExtensionPoint>
 
 						<!-- Message read form -->
 						<ExtensionPoint xsi:type="MessageReadCommandSurface">
@@ -195,99 +252,6 @@
 										</Action>
 									</Control>
 
-									<!-- Menu (dropdown) button -->
-									<!-- <Control xsi:type="Menu" id="msgReadMenuButton">
-                    <Label resid="menuReadButtonLabel" />
-                    <Supertip>
-                      <Title resid="menuReadSuperTipTitle" />
-                      <Description resid="menuReadSuperTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="red-icon-16" />
-                      <bt:Image size="32" resid="red-icon-32" />
-                      <bt:Image size="80" resid="red-icon-80" />
-                    </Icon>
-                    <Items>
-                      <Item id="msgReadMenuItem1">
-                        <Label resid="menuItem1ReadLabel" />
-                        <Supertip>
-                          <Title resid="menuItem1ReadLabel" />
-                          <Description resid="menuItem1ReadTip" />
-                        </Supertip>
-                        <Icon>
-                          <bt:Image size="16" resid="red-icon-16" />
-                          <bt:Image size="32" resid="red-icon-32" />
-                          <bt:Image size="80" resid="red-icon-80" />
-                        </Icon>
-                        <Action xsi:type="ExecuteFunction">
-                          <FunctionName>getItemClass</FunctionName>
-                        </Action>
-                      </Item>
-                      <Item id="msgReadMenuItem2">
-                        <Label resid="menuItem2ReadLabel" />
-                        <Supertip>
-                          <Title resid="menuItem2ReadLabel" />
-                          <Description resid="menuItem2ReadTip" />
-                        </Supertip>
-                        <Icon>
-                          <bt:Image size="16" resid="red-icon-16" />
-                          <bt:Image size="32" resid="red-icon-32" />
-                          <bt:Image size="80" resid="red-icon-80" />
-                        </Icon>
-                        <Action xsi:type="ExecuteFunction">
-                          <FunctionName>getDateTimeCreated</FunctionName>
-                        </Action>
-                      </Item>
-                      <Item id="msgReadMenuItem3">
-                        <Label resid="menuItem3ReadLabel" />
-                        <Supertip>
-                          <Title resid="menuItem3ReadLabel" />
-                          <Description resid="menuItem3ReadTip" />
-                        </Supertip>
-                        <Icon>
-                          <bt:Image size="16" resid="red-icon-16" />
-                          <bt:Image size="32" resid="red-icon-32" />
-                          <bt:Image size="80" resid="red-icon-80" />
-                        </Icon>
-                        <Action xsi:type="ExecuteFunction">
-                          <FunctionName>getItemID</FunctionName>
-                        </Action>
-                      </Item>
-                    </Items>
-                  </Control> -->
-									<!-- Task pane button -->
-									<!-- <Control xsi:type="Button" id="msgReadOpenPaneButton">
-                    <Label resid="paneReadButtonLabel" />
-                    <Supertip>
-                      <Title resid="paneReadSuperTipTitle" />
-                      <Description resid="paneReadSuperTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="green-icon-16" />
-                      <bt:Image size="32" resid="green-icon-32" />
-                      <bt:Image size="80" resid="green-icon-80" />
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="readTaskPaneUrl" />
-                      <SupportsPinning>true</SupportsPinning>
-                    </Action>
-                  </Control> -->
-
-									<!-- <Control xsi:type="Button" id="msgReadRestPaneButton">
-                    <Label resid="restpaneReadButtonLabel" />
-                    <Supertip>
-                      <Title resid="restpaneReadSuperTipTitle" />
-                      <Description resid="restpaneReadSuperTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="green-icon-16" />
-                      <bt:Image size="32" resid="green-icon-32" />
-                      <bt:Image size="80" resid="green-icon-80" />
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="restTaskPaneUrl" />
-                    </Action>
-                  </Control> -->
 								</Group>
 								<Label resid="Trim.TabLabel" />
 							</CustomTab>

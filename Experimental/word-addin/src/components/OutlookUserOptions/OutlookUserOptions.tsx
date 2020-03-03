@@ -5,11 +5,12 @@ import {
 	ITrimConnector,
 	IRecordType,
 	IOutlookUserOptions,
+	ITrimMainObject,
 } from "../../trim-coms/trim-connector";
 import TrimObjectPicker from "../TrimObjectPicker/TrimObjectPicker";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { Checkbox, PrimaryButton } from "office-ui-fabric-react";
-import { CacheIds } from "src/trim-coms/cache-ids";
+import { CacheIds } from "../../trim-coms/cache-ids";
 
 interface IOutlookUserOptionsProps {
 	appStore?: IAppStore;
@@ -53,10 +54,10 @@ export class OutlookUserOptions extends React.Component<
 		const { defaultRecordType, useDefaultRecordType } = this.state;
 		const { appStore } = this.props;
 
-		const val = [];
+		let val: ITrimMainObject[] = [];
 
 		if (defaultRecordType) {
-			val.push(defaultRecordType);
+			val = [defaultRecordType as ITrimMainObject];
 		}
 
 		return (

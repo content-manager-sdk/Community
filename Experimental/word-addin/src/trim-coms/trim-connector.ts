@@ -1137,7 +1137,7 @@ export class TrimConnector implements ITrimConnector {
 							);
 							resolve(options.defaultRecordType);
 						} else {
-							this.setCacheItem(CacheIds.DefaultRecordType, undefined);
+							this.setCacheItem(CacheIds.DefaultRecordType, null);
 							resolve(undefined);
 						}
 					})

@@ -2,6 +2,9 @@
 (global as any).Office = {
 	context: {
 		ui: { messageParent: function() {} },
+		mailbox: {
+			item: {},
+		},
 	},
 };
 

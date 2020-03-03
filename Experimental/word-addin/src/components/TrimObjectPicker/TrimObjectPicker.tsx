@@ -279,20 +279,24 @@ export class TrimObjectPicker
 					}}
 				/>
 				<div className="trim-object-pills">
-					{selectedItems.map((selectedItem) => {
-						return (
-							<div className="trim-pill-container" key={selectedItem.Uri}>
-								<div className="trim-pill-content">
-									{selectedItem.NameString}
+					{selectedItems
+						.filter((i) => {
+							return i.Uri > 0;
+						})
+						.map((selectedItem) => {
+							return (
+								<div className="trim-pill-container" key={selectedItem.Uri}>
+									<div className="trim-pill-content">
+										{selectedItem.NameString}
+									</div>
+									<IconButton
+										className="ms-fontSize-sPlus remove-item"
+										iconProps={{ iconName: "Cancel" }}
+										onClick={this._removeSelectedItem}
+									/>
 								</div>
-								<IconButton
-									className="ms-fontSize-sPlus remove-item"
-									iconProps={{ iconName: "Cancel" }}
-									onClick={this._removeSelectedItem}
-								/>
-							</div>
-						);
-					})}
+							);
+						})}
 				</div>
 			</React.Fragment>
 		);

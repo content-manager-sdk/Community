@@ -3,8 +3,10 @@ import AppStoreBase from "./AppStoreBase";
 export class AppStoreWord extends AppStoreBase {
 	protected getFileName(): Promise<string> {
 		return new Promise<string>((resolve) => {
-			const tokens = this.WebUrl.split("/");
-			resolve(tokens[tokens.length - 1].split(".")[0]);
+			this.wordConnector!.getWebUrl().then((webUrl) => {
+				const tokens = webUrl.split("/");
+				resolve(tokens[tokens.length - 1].split(".")[0]);
+			});
 		});
 	}
 

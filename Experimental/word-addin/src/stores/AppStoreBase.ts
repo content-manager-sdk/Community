@@ -5,7 +5,6 @@ import {
 	ILocation,
 	ITrimConnector,
 	ITrimMainObject,
-	IDatabase,
 	IRecord,
 } from "../trim-coms/trim-connector";
 import TrimMessages from "../trim-coms/trim-messages";
@@ -74,7 +73,6 @@ export class AppStoreBase implements IAppStore {
 	@observable public messages: TrimMessages = new TrimMessages();
 	@observable public status: string = "STARTING";
 	@observable public spinning: Boolean;
-	@observable public WebUrl: string;
 	@observable public FileName: string;
 	public PreservedUris: number[];
 
@@ -83,6 +81,18 @@ export class AppStoreBase implements IAppStore {
 		protected wordConnector?: IWordUrl
 	) {
 		configure({ enforceActions: "observed" });
+	}
+
+	private canConnectToOffice(): Promise<boolean> {
+		return new Promise<boolean>((resolve) => {
+			this.wordConnector!.getWebUrl()
+				.then(function() {
+					resolve(true);
+				})
+				.catch(function() {
+					resolve(false);
+				});
+		});
 	}
 
 	protected getFileName(): Promise<string> {
@@ -140,74 +150,114 @@ export class AppStoreBase implements IAppStore {
 	public moreToFile(): boolean {
 		return false;
 	}
-	public fetchBaseSettingFromTrim = (fromDialog: boolean) => {
+	public fetchBaseSettingFromTrim = async (fromDialog: boolean) => {
 		const tc = this.trimConnector;
-		const self = this;
-
-		const promisesToRun = [tc.getMe(), tc.getMessages()];
-		if (!fromDialog) {
-			promisesToRun.push(this.wordConnector!.getWebUrl());
-		}
 
 		this.PreservedUris = [];
 
-		Promise.all(promisesToRun)
-			.then((values) => {
-				self.setMe(values[0]);
-				self.setMessages(values[1]);
+		try {
+			this.setMe(await tc.getMe());
+			this.setMessages(await tc.getMessages());
 
-				if (!fromDialog) {
-					self.WebUrl = values[2];
+			if (!fromDialog) {
+				const fn = await this.getFileName();
 
-					tc.getSearchClauseOrFieldDefinitions(
-						BaseObjectTypes.Record
-					).then(() => {});
+				this.setFileName(fn);
 
-					tc.getSearchOptions().then(() => {});
-
-					self.getFileName().then((fileName) => {
-						self.setFileName(fileName);
-					});
-
-					if (this._deferFetchDriveInfo === false) {
-						tc.getDriveId(
-							self.WebUrl,
+				if (this._deferFetchDriveInfo === false) {
+					try {
+						const webUrl = await this.wordConnector!.getWebUrl();
+						const driveInfo = await tc.getDriveId(
+							webUrl,
 							this.isEmail(),
 							this.wordConnector!.getRecordUri()
-						)
-							.then((driveInfo) => {
-								self.setDocumentInfo(driveInfo);
-								self.setStatus("WAITING");
-							})
-							.catch((error) => {
-								self.setError(error, "fetch base settings for dialog");
-							});
-					} else {
-						this.trimConnector
-							.getDatabaseProperties()
-							.then((database: IDatabase) => {
-								(this.wordConnector as OutlookConnector)
-									.getRecordUrisFromItem(database.Id)
-									.then((uris: number[]) => {
-										self.setDocumentInfo({ ...this.documentInfo, Uris: uris });
-										self.setStatus("WAITING");
-									})
-									.catch((error) => {
-										self.setError(error, "get mail items");
-									});
-							})
-							.catch((error) => {
-								self.setError(error, "get mail items - get database");
-							});
-						//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
+						);
+
+						this.setDocumentInfo(driveInfo);
+						this.setStatus("WAITING");
+					} catch (error) {
+						this.setError(error, "fetch base settings for dialog");
 					}
 				} else {
-					self.setStatus("WAITING");
+					try {
+						if (await this.canConnectToOffice()) {
+							const database = await this.trimConnector.getDatabaseProperties();
+							const uris = await (this
+								.wordConnector as OutlookConnector).getRecordUrisFromItem(
+								database.Id
+							);
+
+							this.setDocumentInfo({ ...this.documentInfo, Uris: uris });
+						}
+						this.setStatus("WAITING");
+					} catch (error) {
+						this.setError(error, "get mail items - get database");
+					}
 				}
-			})
-			.catch((error) => {
-				self.setError(error, "fetch base settings");
-			});
+			} else {
+				this.setStatus("WAITING");
+			}
+		} catch (error) {
+			this.setError(error, "fetch base settings");
+		}
+
+		// Promise.all(promisesToRun)
+		// 	.then((values) => {
+		// 		self.setMe(values[0]);
+		// 		self.setMessages(values[1]);
+
+		// 		if (!fromDialog) {
+		// 			const webUrl = values[2];
+
+		// 			tc.getSearchClauseOrFieldDefinitions(
+		// 				BaseObjectTypes.Record
+		// 			).then(() => {});
+
+		// 			tc.getSearchOptions().then(() => {});
+
+		// 			self.getFileName().then((fileName) => {
+		// 				self.setFileName(fileName);
+		// 			});
+
+		// 			if (this._deferFetchDriveInfo === false) {
+		// 				tc.getDriveId(
+		// 					webUrl,
+		// 					this.isEmail(),
+		// 					this.wordConnector!.getRecordUri()
+		// 				)
+		// 					.then((driveInfo) => {
+		// 						self.setDocumentInfo(driveInfo);
+		// 						self.setStatus("WAITING");
+		// 					})
+		// 					.catch((error) => {
+		// 						self.setError(error, "fetch base settings for dialog");
+		// 					});
+		// 			} else {
+		// 				this.trimConnector
+		// 					.getDatabaseProperties()
+		// 					.then((database: IDatabase) => {
+		// 						(this.wordConnector as OutlookConnector)
+		// 							.getRecordUrisFromItem(database.Id)
+		// 							.then((uris: number[]) => {
+		// 								self.setDocumentInfo({ ...this.documentInfo, Uris: uris });
+		// 								self.setStatus("WAITING");
+		// 							})
+		// 							.catch((error) => {
+		// 								self.setError(error, "get mail items");
+		// 							});
+		// 					})
+		// 					.catch((error) => {
+		// 						self.setError(error, "get mail items - get database");
+		// 					});
+		// 				//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
+		// 			}
+		// 		} else {
+		// 			self.setStatus("WAITING");
+		// 		}
+		// 	})
+		// 	.catch((error) => {
+		// 		self.setError(error, "fetch base settings");
+		// 	});
 	};
 
 	@computed
