@@ -59,13 +59,11 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 	}
 
 	private trimConnector = this.getTrimConnector();
-
+	private getAccessToken: Promise<string>;
 	protected getTrimConnector(): ITrimConnector {
 		if (!this.trimConnector) {
 			this.trimConnector = new TrimConnector();
 		}
-
-		let getAccessToken: Promise<string>;
 
 		this.trimConnector.credentialsResolver = (callback) => {
 			const accessToken = getQueryStringValue("accessToken");
@@ -73,10 +71,10 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 			if (accessToken) {
 				callback(accessToken, "");
 			} else {
-				if (!getAccessToken) {
-					getAccessToken = this.getOfficeConnector()!.getAccessToken();
+				if (!this.getAccessToken) {
+					this.getAccessToken = this.getOfficeConnector()!.getAccessToken();
 				}
-				getAccessToken
+				this.getAccessToken
 					.then((token) => callback(token, ""))
 					.catch(function(error) {
 						callback("", error.message);

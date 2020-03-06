@@ -19,10 +19,14 @@ export class AppStoreOutlook extends AppStoreBase {
 	}
 
 	public moreToFile(): boolean {
-		return (
-			this.documentInfo.Uris.length <
-			(this.wordConnector as OutlookConnector).getAttachments().length
-		);
+		try {
+			return (
+				this.documentInfo.Uris.length <
+				(this.wordConnector as OutlookConnector).getAttachments().length
+			);
+		} catch {
+			return false;
+		}
 	}
 }
 

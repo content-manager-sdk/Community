@@ -60,7 +60,13 @@ export class ContextList extends React.Component<
 
 	public render() {
 		const { searchQuery, selectRecord } = this.state;
-		const { trimType, hideSearchBar, searchString, onCommand } = this.props;
+		const {
+			trimType,
+			hideSearchBar,
+			searchString,
+			onCommand,
+			appStore,
+		} = this.props;
 
 		return (
 			<div>
@@ -80,6 +86,13 @@ export class ContextList extends React.Component<
 						}
 					}}
 					trimType={trimType}
+					pageTitle={
+						trimType === BaseObjectTypes.CheckinPlace
+							? appStore.messages.web_LinkedFolders
+							: trimType === BaseObjectTypes.CheckinStyle
+							? appStore.messages.web_CheckinSyles
+							: undefined
+					}
 				/>
 				{!hideSearchBar && (
 					<SearchBar

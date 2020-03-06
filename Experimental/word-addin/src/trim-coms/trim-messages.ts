@@ -36,6 +36,8 @@ export class TrimMessages {
 	public web_proceed = ""; // tslint:disable-line
 	public web_useDefaultRecordType = ""; // tslint:disable-line
 	public web_Save = ""; // tslint:disable-line
+	public web_CheckinStyles = ""; // tslint:disable-line
+	public web_LinkedFolders = ""; // tslint:disable-line
 }
 
 export default TrimMessages;

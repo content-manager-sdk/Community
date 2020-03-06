@@ -955,6 +955,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_proceed = "File email";
 					data.Messages.web_useDefaultRecordType = "Use default Record Type";
 					data.Messages.web_Save = "Save";
+					data.Messages.web_LinkedFolders = "Linked Folders";
+					data.Messages.web_CheckinStyles = "Checkin Styles";
 					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;
@@ -1080,14 +1082,13 @@ export class TrimConnector implements ITrimConnector {
 				}
 			}
 			const rt = data.UserOptions.DroppedFilesUserOptionsRecordType;
-			if (rt) {
+			if (rt && rt.Uri > 0) {
+				userOptions.defaultRecordType = {
+					NameString: rt.RecordTypeName.Value,
+					TrimType: BaseObjectTypes.RecordType,
+					Uri: rt.Uri,
+				};
 			}
-
-			userOptions.defaultRecordType = {
-				NameString: rt.RecordTypeName.Value,
-				TrimType: BaseObjectTypes.RecordType,
-				Uri: rt.Uri,
-			};
 			return userOptions;
 		}
 		return undefined;

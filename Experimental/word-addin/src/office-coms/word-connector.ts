@@ -6,6 +6,15 @@ export interface IGetRecordUriResponse {
 	message?: string;
 }
 
+interface IFileState {
+	file: any;
+	counter: number;
+	sliceCount: number;
+	writeSlice: any;
+	onData: any;
+	fileName?: string;
+}
+
 export class WordConnector extends OfficeConnector implements IOfficeConnector {
 	getRecordUri(): number {
 		return 0;
@@ -17,15 +26,15 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 				resolve(fileName);
 			};
 
-			const onError = (error: any) => {
-				reject(error);
-			};
-
-			this.getDocumentAsCompressed({
-				onData: onData,
-				writeSlice,
-				onError: onError,
-			});
+			// const onError = (error: any) => {
+			// 	reject(error);
+			// };
+			this.sendFile(writeSlice, onData);
+			// this.getDocumentAsCompressed({
+			// 	onData: onData,
+			// 	writeSlice,
+			// 	onError: onError,
+			// });
 		});
 	}
 	setAutoOpen(autoOpen: boolean): void {
@@ -43,15 +52,123 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 		return autoOpen;
 	}
 
+	private sendFile(writeSlice: any, onData: any) {
+		Office.context.document.getFileAsync(
+			Office.FileType.Compressed,
+			{ sliceSize: 100000 },
+			(result: any) => {
+				if (result.status == Office.AsyncResultStatus.Succeeded) {
+					// Get the File object from the result.
+					var myFile = result.value;
+					var state = {
+						file: myFile,
+						counter: 0,
+						sliceCount: myFile.sliceCount,
+						writeSlice,
+						onData,
+					};
+
+					console.log("Getting file of " + myFile.size + " bytes");
+					this.getSlice(state);
+				} else {
+					console.log(result.status);
+				}
+			}
+		);
+	}
+
+	private getSlice(state: IFileState) {
+		state.file.getSliceAsync(state.counter, (result: any) => {
+			if (result.status == Office.AsyncResultStatus.Succeeded) {
+				console.log(
+					"Sending piece " + (state.counter + 1) + " of " + state.sliceCount
+				);
+				this.sendSlice(result.value, state);
+			} else {
+				console.log(result.status);
+			}
+		});
+	}
+
+	private sendSlice(slice: any, state: IFileState) {
+		var data = slice.data;
+
+		// If the slice contains data, create an HTTP request.
+		if (data) {
+			// Encode the slice data, a byte array, as a Base64 string.
+			// NOTE: The implementation of myEncodeBase64(input) function isn't
+			// included with this example. For information about Base64 encoding with
+			// JavaScript, see https://developer.mozilla.org/docs/Web/JavaScript/Base64_encoding_and_decoding.
+			//var fileData = myEncodeBase64(data);
+
+			// Create a new HTTP request. You need to send the request
+			// to a webpage that can receive a post.
+			// var request = new XMLHttpRequest();
+
+			// // Create a handler function to update the status
+			// // when the request has been sent.
+			// request.onreadystatechange = () => {
+			// 	if (request.readyState == 4) {
+			// 		console.log("Sent " + slice.size + " bytes.");
+			// 		state.counter++;
+
+			// 		if (state.counter < state.sliceCount) {
+			// 			this.getSlice(state);
+			// 		} else {
+			// 			this.closeFile(state);
+
+			// 			state.onData();
+			// 		}
+			// 	}
+			// };
+			state.writeSlice(data, state.fileName).then((result: string) => {
+				state.fileName = result;
+				console.log("Sent " + slice.size + " bytes.");
+				state.counter++;
+
+				if (state.counter < state.sliceCount) {
+					this.getSlice(state);
+				} else {
+					this.closeFile(state);
+
+					state.onData(state.fileName);
+				}
+			});
+
+			//	request.open("POST", "[Your receiving page or service]");
+			//	request.setRequestHeader("Slice-Number", slice.index);
+
+			// Send the file as the body of an HTTP POST
+			// request to the web server.
+			//	request.send(fileData);
+		}
+	}
+
+	private closeFile(state: IFileState) {
+		// Close the file when you're done with it.
+		state.file.closeAsync(function(result: any) {
+			// If the result returns as a success, the
+			// file has been successfully closed.
+			if (result.status == "succeeded") {
+				console.log("File closed.");
+			} else {
+				console.log("File couldn't be closed.");
+			}
+		});
+	}
+	/*
 	private getDocumentAsCompressed(args: any) {
 		const me = this;
+		console.log("getDocumentAsCompressed");
 
 		Office.context.document.getFileAsync(
 			Office.FileType.Compressed,
 			{
-				sliceSize: 65536 * 8 /*64 KB*/,
+				sliceSize: 65536 * 2 
 			},
 			function(result: any) {
+				console.log("callback");
+				console.log(result);
 				if (result.status === "succeeded") {
 					// If the getFileAsync call succeeded, then
 					// result.value will return a valid File Object.
@@ -74,7 +191,8 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 					);
 				} else {
 					// showNotification("Error:", result.error.message);
-
+					console.log("error error");
+					console.log(result.error);
 					const { onError } = args;
 					onError(result.error.message);
 				}
@@ -91,6 +209,7 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 		slicesReceived: any,
 		args: any
 	) {
+		console.log("getSliceAsync");
 		const me = this;
 		file.getSliceAsync(nextSlice, function(sliceResult: any) {
 			if (sliceResult.status == "succeeded") {
@@ -110,7 +229,14 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 						args.fileName = result;
 						if (++slicesReceived == sliceCount) {
 							// All slices have been received.
-							file.closeAsync();
+							console.log("file.closeAsync()");
+							file.closeAsync(function(result: any) {
+								if (result.status == "succeeded") {
+									console.log("File closed.");
+								} else {
+									console.log("File couldn't be closed.");
+								}
+							});
 							console.log("closed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 							const { onData } = args;
 							onData(args.fileName);
@@ -138,7 +264,7 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 			}
 		});
 	}
-
+*/
 	// private onGotAllSlices(docdataSlices: [], args: any) {
 	// 	var docdata: number[] = [];
 	// 	for (var i = 0; i < docdataSlices.length; i++) {

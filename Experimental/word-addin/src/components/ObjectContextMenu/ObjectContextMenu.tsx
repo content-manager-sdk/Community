@@ -26,6 +26,7 @@ interface IContextMenuProps {
 	onCommandComplete?: (commandKey: string) => void;
 	trimType: BaseObjectTypes;
 	showCloseIcon?: boolean;
+	pageTitle?: string;
 }
 
 interface IContextMenuState {
@@ -416,10 +417,36 @@ export class ObjectContextMenu extends React.Component<
 		return Promise.resolve();
 	};
 
+	private renderTitle(item: any): React.ReactNode {
+		return (
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					height: "100%",
+				}}
+			>
+				<div className="ms-fontWeight-semibold">{item.text}</div>
+			</div>
+		);
+	}
+
 	public render() {
 		const { items } = this.state;
+		const { pageTitle } = this.props;
 
-		return <CommandBar items={[]} farItems={items} />;
+		const titleItems = [];
+
+		if (pageTitle) {
+			titleItems.push({
+				key: "title",
+				text: pageTitle,
+				onRender: this.renderTitle,
+			});
+		}
+
+		return <CommandBar items={titleItems} farItems={items} />;
 	}
 }
 
