@@ -19,9 +19,7 @@ namespace StreamSearch
 
 			TrimMainObjectSearch search = new TrimMainObjectSearch(database, BaseObjectTypes.Record);
 
-			search.SetSearchString("speed>0");
-			search.SetSortString("recNumber");
-			search.LimitOnRowsReturned = 1;
+			search.SetSearchString("recElectronic");
 
 			TrimSearchDataStream searchStream = search.GetDataStream(new PropertyOrFieldDefList() {
 				new PropertyOrFieldDef(PropertyIds.RecordOwnerLocation, database),
