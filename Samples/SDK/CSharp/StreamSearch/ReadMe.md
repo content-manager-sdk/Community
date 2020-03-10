@@ -6,38 +6,30 @@ Searching via the TrimMainObject search constructs a sophisticated map of depend
 The TrimSearchDataStream class does a search that bypasses the pre-fetch stored procedures in the database and also bypasses the caching in the SDK.  The benefit is a much faster response for your search, the cost is reduced functionality.  The most significant limitation is that the search results are returned not as objects but as a JSON string.
 
 ### Sample JSON response
-A list of timezones supported on the web server can be retrieved using TrimApplication.GetTimeZones().
+The JSON response is in the same format as you would expect if this was a ServiceAPI search, as seen here.
 
-```.cs
-var timeZones = TrimApplication.GetTimeZones();
-
-foreach (string tz in timeZones)
+```.json
 {
-	Console.WriteLine(tz);
+        "TrimType": "Record",
+        "Uri": 9000000222,
+        "RecordOwnerLocation":
+        {
+                "TrimType": "Location",
+                "Uri": 9000000056,
+                "NameString": "Europe",
+                "ToolTip": "Europe"
+        },
+        "RecordTitle":
+        {
+                "Value": "my record title"
+        },
+        "Fields":
+        {
+                "Speed":
+                {
+                        "__type": "HP.HPTRIM.ServiceModel.TrimProperty`1[[System.Int32, mscorlib]], HP.HPTRIM.ServiceAPI.Model",
+                        "Value": 60
+                }
+        }
 }
 ```
-
-### Saving the user's time zone.
-You can preserve the user's selected time zone in the web client user options as seen in the code below.
-
-```.cs
-TrimUserOptionSet webclientOption = new TrimUserOptionSet(database, UserOptionSetIds.WebClient);
-webclientOption.SetPropertyString(PropertyIds.WebClientUserOptionsTimezone, "(UTC + 02:00) Tripoli");
-webclientOption.Save();
-```
-
-### When a user makes a request of your web service you can set the time zone on the database object from their user options.
-
-```.cs
-TrimUserOptionSet webclientOption = new TrimUserOptionSet(database, UserOptionSetIds.WebClient);
-string timeZone = webclientOption.GetPropertyString(PropertyIds.WebClientUserOptionsTimezone);
-
-database.SetTimezoneString(timeZone);
-```
-
-## Setting the value of DateTime properties
-Given that the TrimDateTime object operates in the time zone local to the machine, not the time zone set on the Database, it can cause incorrect results.  The best approach is to convert the DateTime to a the local time as per the user's database before setting it on a property.  The class DateTimeConvert in this sample does this in the method ToLocalTime.
-
-
-## Getting UTC
-As of CM 9.4 the method TrimDatetime.ToDateTimeUTC() can return an incorrect result, to avoid this use DateTimeComvert.ToUtc().
