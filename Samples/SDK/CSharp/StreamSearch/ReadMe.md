@@ -6,7 +6,7 @@ Searching via the TrimMainObject search constructs a sophisticated map of depend
 The TrimSearchDataStream class does a search that bypasses the pre-fetch stored procedures in the database and also bypasses the caching in the SDK.  The benefit is a much faster response for your search, the cost is reduced functionality.  The most significant limitation is that the search results are returned not as objects but as a JSON string.
 
 ### Sample JSON response
-The JSON response is in the same format as you would expect if this was a ServiceAPI search, as seen here.
+The JSON response is in the same format you would expect if this was a ServiceAPI search, as seen here.
 
 ```.json
 {
