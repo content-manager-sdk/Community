@@ -18,7 +18,6 @@ namespace StreamSearch
 		{
 
 			TrimMainObjectSearch search = new TrimMainObjectSearch(database, BaseObjectTypes.Record);
-
 			search.SetSearchString("recElectronic");
 
 			TrimSearchDataStream searchStream = search.GetDataStream(new PropertyOrFieldDefList() {
@@ -35,16 +34,29 @@ namespace StreamSearch
 
 		}
 
+		private static string getField(FieldDefinition fieldDef, Record record)
+		{
+			try
+			{
+				return record.GetFieldValueAsString(fieldDef, StringDisplayType.Default, false);
+			}
+			catch
+			{
+				return string.Empty;
+			}
+		}
+
 		private static void TestSearch(Database database)
 		{
 
 			TrimMainObjectSearch search = new TrimMainObjectSearch(database, BaseObjectTypes.Record);
-
 			search.SetSearchString("recElectronic");
+
+			FieldDefinition speadField = new FieldDefinition(database, "Speed");
 
 			foreach (Record record in search)
 			{
-				Console.WriteLine($"Uri: {record.Uri}, Owner: {record.OwnerLocation.NameString}");
+				Console.WriteLine($"Uri: {record.Uri}, Title: {record.Title}, Owner: {record.OwnerLocation.NameString}, Speed: {getField(speadField, record)}");
 			}
 
 		}

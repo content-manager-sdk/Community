@@ -33,3 +33,6 @@ The JSON response is in the same format you would expect if this was a ServiceAP
         }
 }
 ```
+
+### Sample Code
+The code in this sample does two simple searches, one using a standard search and one using the TrimSearchDataStream.  Although there is a timer the difference in speed should be evident with the naked eye.
