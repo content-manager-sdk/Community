@@ -16,6 +16,7 @@ import { IOfficeConnector } from "src/office-coms/office-connector";
 import RecordTypePicker from "./RecordTypePicker/RecordTypePicker";
 import { IAppStore } from "src/stores/AppStoreBase";
 import { Stack } from "office-ui-fabric-react";
+import WordConnector from "src/office-coms/word-connector";
 
 interface INewRecordState {
 	formDefinition: any;
@@ -274,13 +275,17 @@ export class NewRecord extends React.Component<
 					}
 				})
 				.then((item: IDatabase) => {
-					wordConnector!.setAutoOpen(
-						true,
-						appStore!.documentInfo.URN,
-						item.EmailSubjectPrefix
-					);
-
-					this.saveFinished(true, newTrimObject);
+					wordConnector!
+						.setAutoOpen(
+							true,
+							appStore!.documentInfo.URN,
+							item.EmailSubjectPrefix
+						)
+						.then(() => {
+							(wordConnector as WordConnector)!.saveDocument().then(() => {
+								this.saveFinished(true, newTrimObject);
+							});
+						});
 				})
 				.catch((value) => {
 					this.saveFinished(value === "saved", newTrimObject);

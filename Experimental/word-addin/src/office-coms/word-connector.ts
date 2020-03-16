@@ -37,12 +37,16 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 			// });
 		});
 	}
-	setAutoOpen(autoOpen: boolean): void {
-		Office.context.document.settings.set(
-			"Office.AutoShowTaskpaneWithDocument",
-			autoOpen
-		);
-		Office.context.document.settings.saveAsync();
+	setAutoOpen(autoOpen: boolean): Promise<void> {
+		return new Promise<void>((resolve) => {
+			Office.context.document.settings.set(
+				"Office.AutoShowTaskpaneWithDocument",
+				autoOpen
+			);
+			Office.context.document.settings.saveAsync({}, function() {
+				resolve();
+			});
+		});
 	}
 	getAutoOpen(): boolean {
 		const autoOpen = Office.context.document.settings.get(
@@ -55,7 +59,7 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 	private sendFile(writeSlice: any, onData: any) {
 		Office.context.document.getFileAsync(
 			Office.FileType.Compressed,
-			{ sliceSize: 100000 },
+			{ sliceSize: 1048576 },
 			(result: any) => {
 				if (result.status == Office.AsyncResultStatus.Succeeded) {
 					// Get the File object from the result.
@@ -288,14 +292,20 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 
 	public getWebUrl(): Promise<string> {
 		return new Promise((resolve, reject) => {
-			Office.context.document.getFilePropertiesAsync({}, (asyncResult) => {
-				var fileUrl = asyncResult.value.url;
-				if (fileUrl == "") {
-					reject("The file hasn't been saved yet. Save the file and try again");
-				} else {
-					resolve(fileUrl);
-				}
-			});
+			try {
+				Office.context.document.getFilePropertiesAsync({}, (asyncResult) => {
+					var fileUrl = asyncResult.value.url;
+					if (fileUrl == "") {
+						reject(
+							"The file hasn't been saved yet. Save the file and try again"
+						);
+					} else {
+						resolve(fileUrl);
+					}
+				});
+			} catch (e) {
+				reject(e);
+			}
 		});
 	}
 
@@ -343,6 +353,24 @@ export class WordConnector extends OfficeConnector implements IOfficeConnector {
 			if (error instanceof OfficeExtension.Error) {
 				console.log("Debug info: " + JSON.stringify(error.debugInfo));
 			}
+		});
+	}
+
+	public isSaved(): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			Word.run((context) => {
+				const thisDocument = context.document;
+
+				context.load(thisDocument, "saved");
+				return context
+					.sync()
+					.then(() => {
+						resolve(thisDocument.saved);
+					})
+					.catch(() => {
+						resolve(false);
+					});
+			});
 		});
 	}
 

@@ -6,6 +6,7 @@ export interface IWordUrl {
 	getWebUrl(): Promise<string>;
 	getDocumentData(writeSlice: any): Promise<string>;
 	getRecordUri(): number;
+	isSaved(): Promise<boolean>;
 }
 
 export interface IOfficeConnector extends IWordUrl {
@@ -19,7 +20,7 @@ export interface IOfficeConnector extends IWordUrl {
 		autoOpen: boolean,
 		recordUrn?: string,
 		subjectPrefix?: string
-	): void;
+	): Promise<void>;
 	getAutoOpen(): boolean;
 	saveDocument(): Promise<void>;
 	initialize(trimConnector: ITrimConnector, appStore: IAppStore): void;

@@ -535,66 +535,74 @@ export class OutlookConnector extends OfficeConnector
 		autoOpen: boolean,
 		recordUrn?: string,
 		subjectPrefix?: string
-	): void {
-		Office.context.mailbox.getCallbackTokenAsync(
-			{ isRest: true },
-			(result: any) => {
-				if (result.status === "succeeded") {
-					var accessToken = result.value;
-					const itemId = this.getItemId();
+	): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			Office.context.mailbox.getCallbackTokenAsync(
+				{ isRest: true },
+				(result: any) => {
+					if (result.status === "succeeded") {
+						var accessToken = result.value;
+						const itemId = this.getItemId();
 
-					const getMessageUrl =
-						Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
-					const uris: string[] = [];
-					let dbid;
-					recordUrn!.split(";").forEach((urn) => {
-						let idTokens = urn!.split("/");
-						uris.push(idTokens.pop()!);
-						dbid = idTokens[0].split(":").pop();
-					});
+						const getMessageUrl =
+							Office.context.mailbox.restUrl + "/v2.0/me/messages/" + itemId;
+						const uris: string[] = [];
+						let dbid;
+						recordUrn!.split(";").forEach((urn) => {
+							let idTokens = urn!.split("/");
+							uris.push(idTokens.pop()!);
+							dbid = idTokens[0].split(":").pop();
+						});
 
-					let data: any = {
-						SingleValueExtendedProperties: [
-							{
-								PropertyId:
-									"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
-								Value: recordUrn,
-							},
-							{
-								PropertyId:
-									"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
-								Value: uris.join(","),
-							},
-							{
-								PropertyId:
-									"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
-								Value: dbid,
-							},
-						],
-					};
+						let data: any = {
+							SingleValueExtendedProperties: [
+								{
+									PropertyId:
+										"String {0708434C-2E95-41C8-992F-8EE34B796FEC} Name HPRM_RECORD_URN",
+									Value: recordUrn,
+								},
+								{
+									PropertyId:
+										"String {00020386-0000-0000-C000-000000000046} Name HPTrimRecordUri",
+									Value: uris.join(","),
+								},
+								{
+									PropertyId:
+										"String {00020386-0000-0000-C000-000000000046} Name HPTrimDataset",
+									Value: dbid,
+								},
+							],
+						};
 
-					if (subjectPrefix) {
-						data.Subject = `${Office.context.mailbox.item.subject}`;
-						if (!data.Subject.startsWith(subjectPrefix!)) {
-							data.Subject = `${subjectPrefix} ${data.Subject}`;
+						if (subjectPrefix) {
+							data.Subject = `${Office.context.mailbox.item.subject}`;
+							if (!data.Subject.startsWith(subjectPrefix!)) {
+								data.Subject = `${subjectPrefix} ${data.Subject}`;
+							}
 						}
-					}
 
-					const options = {
-						headers: {
-							Accept: "application/json",
-							Authorization: `Bearer ${accessToken}`,
-						},
-						method: "PATCH",
-						url: getMessageUrl,
-						data,
-					};
-					Axios(options);
-				} else {
-					// Handle the error.
+						const options = {
+							headers: {
+								Accept: "application/json",
+								Authorization: `Bearer ${accessToken}`,
+							},
+							method: "PATCH",
+							url: getMessageUrl,
+							data,
+						};
+						Axios(options)
+							.then(() => {
+								resolve();
+							})
+							.catch(() => {
+								reject();
+							});
+					} else {
+						reject();
+					}
 				}
-			}
-		);
+			);
+		});
 	}
 	getAutoOpen(): boolean {
 		return false;
@@ -607,5 +615,9 @@ export class OutlookConnector extends OfficeConnector
 
 	getDocumentData(writeSlice: any): Promise<string> {
 		throw new Error("Method not implemented.");
+	}
+
+	public isSaved(): Promise<boolean> {
+		return Promise.resolve(true);
 	}
 }

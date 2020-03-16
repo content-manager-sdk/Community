@@ -10,6 +10,7 @@ import {
 import TrimMessages from "../trim-coms/trim-messages";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import { OutlookConnector } from "src/office-coms/OutlookConnector";
+import WordConnector from "src/office-coms/word-connector";
 
 const config = (global as any).config;
 
@@ -160,38 +161,43 @@ export class AppStoreBase implements IAppStore {
 			this.setMessages(await tc.getMessages());
 
 			if (!fromDialog) {
-				const fn = await this.getFileName();
+				const isSaved = await (this.wordConnector as WordConnector)!.isSaved();
 
-				this.setFileName(fn);
-
-				if (this._deferFetchDriveInfo === false) {
-					try {
-						const webUrl = await this.wordConnector!.getWebUrl();
-						const driveInfo = await tc.getDriveId(
-							webUrl,
-							this.isEmail(),
-							this.wordConnector!.getRecordUri()
-						);
-
-						this.setDocumentInfo(driveInfo);
-						this.setStatus("WAITING");
-					} catch (error) {
-						this.setError(error, "fetch base settings for dialog");
-					}
+				if (!isSaved) {
+					this.setStatus("WAITING");
 				} else {
-					try {
-						if (await this.canConnectToOffice()) {
-							const database = await this.trimConnector.getDatabaseProperties();
-							const uris = await (this
-								.wordConnector as OutlookConnector).getRecordUrisFromItem(
-								database.Id
+					const fn = await this.getFileName();
+					this.setFileName(fn);
+
+					if (this._deferFetchDriveInfo === false) {
+						try {
+							const webUrl = await this.wordConnector!.getWebUrl();
+							const driveInfo = await tc.getDriveId(
+								webUrl,
+								this.isEmail(),
+								this.wordConnector!.getRecordUri()
 							);
 
-							this.setDocumentInfo({ ...this.documentInfo, Uris: uris });
+							this.setDocumentInfo(driveInfo);
+							this.setStatus("WAITING");
+						} catch (error) {
+							this.setError(error, "fetch base settings for dialog");
 						}
-						this.setStatus("WAITING");
-					} catch (error) {
-						this.setError(error, "get mail items - get database");
+					} else {
+						try {
+							if (await this.canConnectToOffice()) {
+								const database = await this.trimConnector.getDatabaseProperties();
+								const uris = await (this
+									.wordConnector as OutlookConnector).getRecordUrisFromItem(
+									database.Id
+								);
+
+								this.setDocumentInfo({ ...this.documentInfo, Uris: uris });
+							}
+							this.setStatus("WAITING");
+						} catch (error) {
+							this.setError(error, "get mail items - get database");
+						}
 					}
 				}
 			} else {
@@ -200,64 +206,6 @@ export class AppStoreBase implements IAppStore {
 		} catch (error) {
 			this.setError(error, "fetch base settings");
 		}
-
-		// Promise.all(promisesToRun)
-		// 	.then((values) => {
-		// 		self.setMe(values[0]);
-		// 		self.setMessages(values[1]);
-
-		// 		if (!fromDialog) {
-		// 			const webUrl = values[2];
-
-		// 			tc.getSearchClauseOrFieldDefinitions(
-		// 				BaseObjectTypes.Record
-		// 			).then(() => {});
-
-		// 			tc.getSearchOptions().then(() => {});
-
-		// 			self.getFileName().then((fileName) => {
-		// 				self.setFileName(fileName);
-		// 			});
-
-		// 			if (this._deferFetchDriveInfo === false) {
-		// 				tc.getDriveId(
-		// 					webUrl,
-		// 					this.isEmail(),
-		// 					this.wordConnector!.getRecordUri()
-		// 				)
-		// 					.then((driveInfo) => {
-		// 						self.setDocumentInfo(driveInfo);
-		// 						self.setStatus("WAITING");
-		// 					})
-		// 					.catch((error) => {
-		// 						self.setError(error, "fetch base settings for dialog");
-		// 					});
-		// 			} else {
-		// 				this.trimConnector
-		// 					.getDatabaseProperties()
-		// 					.then((database: IDatabase) => {
-		// 						(this.wordConnector as OutlookConnector)
-		// 							.getRecordUrisFromItem(database.Id)
-		// 							.then((uris: number[]) => {
-		// 								self.setDocumentInfo({ ...this.documentInfo, Uris: uris });
-		// 								self.setStatus("WAITING");
-		// 							})
-		// 							.catch((error) => {
-		// 								self.setError(error, "get mail items");
-		// 							});
-		// 					})
-		// 					.catch((error) => {
-		// 						self.setError(error, "get mail items - get database");
-		// 					});
-		// 				//(this.wordConnector as OutlookConnector).getRecordUrisFromItem();
-		// 			}
-		// 		} else {
-		// 			self.setStatus("WAITING");
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		self.setError(error, "fetch base settings");
-		// 	});
 	};
 
 	@computed
@@ -422,7 +370,9 @@ export class AppStoreBase implements IAppStore {
 
 		this.errorMessage = module ? message + " (" + module + ")" : message;
 
-		this.errorBody = error;
+		if (typeof error !== "string" && !(error instanceof String)) {
+			this.errorBody = error;
+		}
 		if (setStatus) {
 			this.status = "ERROR";
 		}

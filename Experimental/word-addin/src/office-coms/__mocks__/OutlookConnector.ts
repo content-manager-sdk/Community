@@ -12,6 +12,9 @@ export interface IOutlookFolder {
 
 export class OutlookConnector extends OfficeConnector
 	implements IOfficeConnector {
+	isSaved(): Promise<boolean> {
+		return Promise.resolve(true);
+	}
 	_customProps: Office.CustomProperties;
 
 	public initialize(trimConnector: ITrimConnector, appStore: IAppStore): void {}
@@ -47,7 +50,11 @@ export class OutlookConnector extends OfficeConnector
 		autoOpen: boolean,
 		recordUrn?: string,
 		subjectPrefix?: string
-	): void {}
+	): Promise<void> {
+		return new Promise<void>((resolve) => {
+			resolve();
+		});
+	}
 	getAutoOpen(): boolean {
 		return false;
 	}

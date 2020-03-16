@@ -31,7 +31,7 @@ namespace OneDriveAuthPlugin
 			string userFolder = Path.Combine("ForUser", this.Database.CurrentUser.Uri.ToString());
 
 			string fullUserFolder = Path.Combine(this.ServiceDefaults.UploadBasePath, userFolder);
-			string fileName = $"{Guid.NewGuid()}.docx";
+			string fileName = !string.IsNullOrWhiteSpace(request.FileName) ? request.FileName.Split('\\').Last() : $"{Guid.NewGuid()}.docx";
 
 			if (!Directory.Exists(fullUserFolder))
 			{

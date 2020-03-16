@@ -39,6 +39,10 @@ class MockWordConnector implements IWordUrl {
 	getRecordUri(): number {
 		return 0;
 	}
+
+	isSaved(): Promise<boolean> {
+		return Promise.resolve(true);
+	}
 }
 
 let postedFields: any;
