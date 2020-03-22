@@ -10,7 +10,6 @@ import {
 import TrimMessages from "../trim-coms/trim-messages";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import { OutlookConnector } from "src/office-coms/OutlookConnector";
-import WordConnector from "src/office-coms/word-connector";
 
 const config = (global as any).config;
 
@@ -161,7 +160,13 @@ export class AppStoreBase implements IAppStore {
 			this.setMessages(await tc.getMessages());
 
 			if (!fromDialog) {
-				const isSaved = await (this.wordConnector as WordConnector)!.isSaved();
+				let isSaved = true;
+
+				try {
+					await this.wordConnector!.getWebUrl();
+				} catch {
+					isSaved = false;
+				}
 
 				if (!isSaved) {
 					this.setStatus("WAITING");
@@ -267,39 +272,74 @@ export class AppStoreBase implements IAppStore {
 		properties: any,
 		fields?: any
 	): Promise<ITrimMainObject> => {
-		return new Promise((resolve, reject) => {
-			this.getFileToSave().then((fileName) => {
-				fields = fields || {};
-				fields.DriveID = this.documentInfo.Id;
+		return new Promise(async (resolve, reject) => {
+			const fileName = await this.getFileToSave();
 
-				return this.trimConnector
-					.saveToTrim(
-						BaseObjectTypes.Record,
-						{
-							...properties,
-							RecordFilePath: fileName,
-						},
-						fields
-					)
-					.then((newRecord: ITrimMainObject) => {
-						if (newRecord.Uri > 0) {
-							this.setDocumentInfo({
-								Uris: [],
-								//CommandDefs: newRecord.CommandDefs!,
-								Id: this.documentInfo.Id,
-								Options: this.documentInfo.Options,
-								EmailPath: this.documentInfo.EmailPath,
-								URN: newRecord.URN!,
-							});
-						}
-						this.setStatus("WAITING");
-						resolve(newRecord);
-					})
-					.catch((error) => {
-						this.setError(error, "create record");
-						reject();
+			fields = fields || {};
+			fields.DriveID = this.documentInfo.Id;
+
+			if (!fields.DriveID) {
+				fields.DriveID = await this.wordConnector!.getWebUrl();
+			}
+
+			try {
+				const newRecord = await this.trimConnector.saveToTrim(
+					BaseObjectTypes.Record,
+					{
+						...properties,
+						RecordFilePath: fileName,
+					},
+					fields
+				);
+
+				if (newRecord.Uri > 0) {
+					this.setDocumentInfo({
+						Uris: [],
+						//CommandDefs: newRecord.CommandDefs!,
+						Id: this.documentInfo.Id,
+						Options: this.documentInfo.Options,
+						EmailPath: this.documentInfo.EmailPath,
+						URN: newRecord.URN!,
 					});
-			});
+				}
+				this.setStatus("WAITING");
+				resolve(newRecord);
+			} catch (error) {
+				this.setError(error, "create record");
+				reject();
+			}
+			// this.getFileToSave().then((fileName) => {
+			// 	fields = fields || {};
+			// 	fields.DriveID = this.documentInfo.Id;
+
+			// 	return this.trimConnector
+			// 		.saveToTrim(
+			// 			BaseObjectTypes.Record,
+			// 			{
+			// 				...properties,
+			// 				RecordFilePath: fileName,
+			// 			},
+			// 			fields
+			// 		)
+			// 		.then((newRecord: ITrimMainObject) => {
+			// 			if (newRecord.Uri > 0) {
+			// 				this.setDocumentInfo({
+			// 					Uris: [],
+			// 					//CommandDefs: newRecord.CommandDefs!,
+			// 					Id: this.documentInfo.Id,
+			// 					Options: this.documentInfo.Options,
+			// 					EmailPath: this.documentInfo.EmailPath,
+			// 					URN: newRecord.URN!,
+			// 				});
+			// 			}
+			// 			this.setStatus("WAITING");
+			// 			resolve(newRecord);
+			// 		})
+			// 		.catch((error) => {
+			// 			this.setError(error, "create record");
+			// 			reject();
+			// 		});
+			// });
 		});
 	};
 

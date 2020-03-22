@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="HP.HPTRIM.SDK">
+      <HintPath>D:\trunk\x64\Debug\HP.HPTRIM.SDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

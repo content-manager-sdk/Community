@@ -1,0 +1,69 @@
+﻿@page "/fetchdata"
+@implements IDisposable
+
+@using BlazorApp.Data
+@using HP.HPTRIM.SDK
+@inject TrimService TrimRecordService
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime;
+
+<h1>Record Search </h1>
+
+<input @bind="SearchQuery" />
+<button class="btn btn-primary" @onclick="DoSearch">
+    Do Search
+</button>
+
+@if (records != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in records)
+            {
+                <tr>
+                    <td>@record.Title</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="GetMore">
+        More
+    </button>
+}
+
+@code {
+    private RecordSearch records;
+
+
+    private string SearchQuery { get; set; } = "electronic";
+    private async void DoSearch(MouseEventArgs e)
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        records = await TrimRecordService.GetRecordSearchAsync(user.Identity.Name, SearchQuery);
+    }
+
+
+
+    private void GetMore(MouseEventArgs e)
+    {
+        records.NextPage();
+    }
+
+    void IDisposable.Dispose()
+    {
+        if (records != null)
+        {
+            records.Dispose();
+        }
+    }
+}
+

@@ -134,7 +134,7 @@ namespace OneDriveAuthPlugin
 
 				var registeredFile = new RegisterdFileResponse() { Id = driveId };
 
-		
+
 				request.Action = request.Action ?? "";
 
 				if (request.Action.IndexOf("AddToFavorites", StringComparison.InvariantCultureIgnoreCase) > -1)
@@ -355,12 +355,14 @@ namespace OneDriveAuthPlugin
 				else if (!string.IsNullOrWhiteSpace(request.WebUrl) && new string[] { "https://", "http://" }
 			  .Any(s => request.WebUrl.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
 				{
-
-					log.Debug("GetItem");
-					var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveShareUrl(request.WebUrl);
-					log.Debug("Got URL");
-					fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, token, null);
-					log.Debug("GotItem");
+					if (request.WebUrl.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+					{
+						log.Debug("GetItem");
+						var fullOneDriveItemsUrl = GraphApiHelper.GetOneDriveShareUrl(request.WebUrl);
+						log.Debug("Got URL");
+						fileResult = await ODataHelper.GetItem<OneDriveItem>(fullOneDriveItemsUrl, token, null);
+						log.Debug("GotItem");
+					}
 				}
 				else if (!string.IsNullOrWhiteSpace(driveId) && !request.IsEmail)
 				{
@@ -420,7 +422,24 @@ namespace OneDriveAuthPlugin
 				registeredFile.Uri = recordUris;
 
 			}
+			else if (!string.IsNullOrWhiteSpace(request.WebUrl) && !request.WebUrl.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+			{
+				TrimMainObjectSearch search = new TrimMainObjectSearch(this.Database, BaseObjectTypes.Record);
 
+				search.AddSearchClause(request.WebUrl.GetDriveIdSearchClause(this.Database));
+
+				TrimSearchClause checkedInByClause = new TrimSearchClause(this.Database, BaseObjectTypes.Record, SearchClauseIds.RecordCheckedInBy);
+				checkedInByClause.SetCriteriaFromObject(this.Database.CurrentUser);
+				search.AddSearchClause(checkedInByClause);
+				search.And();
+
+				var uris = search.GetResultAsUriArray(2);
+
+				if (uris.Count == 1)
+				{
+					registeredFile.Uri = uris;
+				}
+			}
 			response.Results = new List<RegisterdFileResponse>() { registeredFile };
 
 			log.Debug("Finished");
