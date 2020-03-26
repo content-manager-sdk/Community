@@ -145,7 +145,10 @@ export class NewRecord extends React.Component<
 							) {
 								const pageItem = page.PageItems[itemCounter];
 								if (pageItem.Name === "RecordTypedTitle") {
-									pageItem.Value = pageItem.Value || appStore!.FileName;
+									const fn = (appStore!.FileName || "").split("\\");
+
+									pageItem.Value =
+										pageItem.Value || fn[fn.length > 0 ? fn.length - 1 : 0];
 								}
 							}
 						}

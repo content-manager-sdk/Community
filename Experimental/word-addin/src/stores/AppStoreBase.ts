@@ -277,12 +277,13 @@ export class AppStoreBase implements IAppStore {
 
 			fields = fields || {};
 			fields.DriveID = this.documentInfo.Id;
-
-			if (!fields.DriveID) {
-				fields.DriveID = await this.wordConnector!.getWebUrl();
-			}
-
 			try {
+				let isLocal = false;
+				if (!fields.DriveID) {
+					fields.DriveID = await this.wordConnector!.getWebUrl();
+					isLocal = true;
+				}
+
 				const newRecord = await this.trimConnector.saveToTrim(
 					BaseObjectTypes.Record,
 					{
@@ -291,6 +292,13 @@ export class AppStoreBase implements IAppStore {
 					},
 					fields
 				);
+
+				if (isLocal) {
+					await this.trimConnector.saveToTrim(BaseObjectTypes.Record, {
+						Uri: newRecord.Uri,
+						Checkout: { CheckoutSaveCheckoutPathAs: fields.DriveID },
+					});
+				}
 
 				if (newRecord.Uri > 0) {
 					this.setDocumentInfo({
