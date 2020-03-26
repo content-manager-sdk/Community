@@ -293,7 +293,7 @@ export class AppStoreBase implements IAppStore {
 					fields
 				);
 
-				if (isLocal) {
+				if (!this.isEmail && isLocal) {
 					await this.trimConnector.saveToTrim(BaseObjectTypes.Record, {
 						Uri: newRecord.Uri,
 						Checkout: { CheckoutSaveCheckoutPathAs: fields.DriveID },

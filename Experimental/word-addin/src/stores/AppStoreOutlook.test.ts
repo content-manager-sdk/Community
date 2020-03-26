@@ -16,6 +16,7 @@ import TrimConnector, {
 } from "../trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
+import flushPromises = require("flush-promises");
 
 let Mock_Action = "";
 
@@ -136,38 +137,27 @@ beforeEach(() => {
 });
 
 describe("Test basic setup from Trim", () => {
-	test("Create record from email", (done) => {
+	test("Create record from email", async () => {
 		appStore.documentInfo.EmailPath = "test.eml";
 
 		appStore.createRecord(1, {});
 
-		setTimeout(function() {
-			try {
-				expect(postedFields.RecordFilePath).toBe("test.eml");
+		await flushPromises();
 
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(postedFields.RecordFilePath).toBe("test.eml");
+
+		expect.assertions(1);
 	});
 
-	test("URN sent to autoOpen", (done) => {
+	test("URN sent to autoOpen", async () => {
 		appStore.documentInfo.EmailPath = "test.eml";
 
 		appStore.createRecord(1, {});
 
-		setTimeout(function() {
-			try {
-				expect(appStore.documentInfo.URN).toBe("trim:567");
+		await flushPromises();
+		expect(appStore.documentInfo.URN).toBe("trim:567");
 
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect.assertions(1);
 	});
 
 	it("does not get DriveInfo for attachments", async () => {
