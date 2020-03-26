@@ -103,6 +103,8 @@ export class RecordTypePicker extends React.Component<
 			defaultRecordType,
 			onRecordTypeSelected,
 			selectedRecordType,
+			appStore,
+			includeCheckinStyles,
 		} = this.props;
 
 		this._mounted = true;
@@ -111,7 +113,10 @@ export class RecordTypePicker extends React.Component<
 			const newStyle: any = {};
 			let checkinUsingStyle = false;
 			if (!selectedRecordType) {
-				checkinUsingStyle = trimConnector.getUseCheckinStyles();
+				checkinUsingStyle =
+					trimConnector.getUseCheckinStyles() &&
+					appStore!.isEmail() &&
+					includeCheckinStyles;
 
 				newStyle.checkinUsingStyle = checkinUsingStyle;
 			}
@@ -318,7 +323,7 @@ export class RecordTypePicker extends React.Component<
 						options={recordTypes}
 						onMenuOpen={this.getOptions}
 						onRenderLowerContent={() => {
-							return (
+							return !appStore!.isEmail() ? null : (
 								<DefaultButton
 									style={{
 										width: "100%",
