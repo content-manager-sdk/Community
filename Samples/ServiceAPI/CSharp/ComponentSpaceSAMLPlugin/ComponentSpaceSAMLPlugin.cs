@@ -6,8 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ServiceStack;
 using ServiceStack.Auth;
-using ComponentSpace.SAML2;
-using ComponentSpace.SAML2.Data;
+
 using ServiceStack.Web;
 using System.Web;
 
@@ -31,19 +30,11 @@ namespace ComponentSpaceSAMLPlugin
                 samlLogin = "~/auth/saml";
             }
 
-            SAMLController.SSOSessionStore = new InMemorySSOSessionStore()
-            {
-                SessionIDDelegate = delegate ()
-                {
-                    IHttpRequest request = HttpContext.Current.ToRequest();
-                    return request.GetSessionId();
-                }
-            };
 
-            HostContext.Config.WebHostUrl = appSettings.GetString("saml.WebHostUrl");
+           // HostContext.Config.WebHostUrl = appSettings.GetString("saml.WebHostUrl");
 
-            appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
-                        new SamlAuthProvider(appSettings),
+            appHost.Plugins.Add(new AuthFeature(() => new SamlUserSession(), new IAuthProvider[] {
+                        new jitbitSamlAuthProvider(appSettings),
                     }, samlLogin));
 
 

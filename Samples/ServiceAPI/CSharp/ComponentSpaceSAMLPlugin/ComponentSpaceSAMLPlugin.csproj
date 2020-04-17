@@ -52,9 +52,6 @@
     <Reference Include="ServiceStack.Interfaces">
       <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ComponentSpace.SAML2">
-      <HintPath>..\..\lib\ComponentSpace.SAML2.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.Text, Version=4.5.12.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\ServiceStack.Text.dll</HintPath>
@@ -73,9 +70,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SamlAuthProvider.cs" />
+    <Compile Include="jitbitSamlAuthProvider.cs" />
+    <Compile Include="saml.cs" />
     <Compile Include="ComponentSpaceSAMLPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SamlUserSession.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -85,15 +84,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\bin\*.*
-copy $(ProjectDir)saml.config C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\*.*
-copy $(TargetDir)ComponentSpace.SAML2.dll C:\trunk\trim\CSharp\HP.HPTRIM.WebDrawer\bin\*.*
-
-copy "$(TargetPath)" C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-copy $(TargetDir)ComponentSpace.SAML2.dll C:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-
-copy "$(TargetPath)" C:\9.1\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-copy $(TargetDir)ComponentSpace.SAML2.dll C:\9.1\trim\Phoenix\HP.HPTRIM.Web\bin\*.*
-copy $(ProjectDir)saml.config C:\9.1\trim\Phoenix\HP.HPTRIM.Web\*.*</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -87,6 +87,9 @@
     <Reference Include="ServiceStack.Authentication.OAuth2, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Authentication.OAuth2.4.5.14\lib\net45\ServiceStack.Authentication.OAuth2.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Authentication.OpenId">
+      <HintPath>..\packages\ServiceStack.Authentication.OpenId.4.5.14\lib\net45\ServiceStack.Authentication.OpenId.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Client, Version=4.5.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Client.4.5.14\lib\net45\ServiceStack.Client.dll</HintPath>
     </Reference>
@@ -132,6 +135,7 @@
   <ItemGroup>
     <Compile Include="AadAuthProvider.cs" />
     <Compile Include="AddInSsoToken.cs" />
+    <Compile Include="AuthResponse.cs" />
     <Compile Include="AzureTableTokenCache.cs" />
     <Compile Include="BaseFileService.cs" />
     <Compile Include="BaseOneDriveService.cs" />
@@ -141,6 +145,7 @@
     <Compile Include="GetFileService.cs" />
     <Compile Include="MyCommandDef.cs" />
     <Compile Include="MyEnumItem.cs" />
+    <Compile Include="MyOpenIdProvider.cs" />
     <Compile Include="OneDriveAuthPlugin.cs" />
     <Compile Include="PreviewFileService.cs" />
     <Compile Include="TrimOptions.cs" />
@@ -193,6 +198,7 @@ copy $(TargetDir)DocumentFormat.OpenXml.dll D:\trunk\trim\CSharp\HP.HPTRIM.Servi
 copy $(TargetDir)OneDriveConnector.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.WindowsAzure.Storage.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 copy $(TargetDir)Microsoft.IdentityModel.Clients.ActiveDirectory.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
+copy $(TargetDir)ServiceStack.Authentication.OpenId.dll D:\trunk\trim\CSharp\HP.HPTRIM.ServiceAPI\bin\*.*
 
 
 copy $(TargetPath) D:\trunk\trim\Phoenix\HP.HPTRIM.Web\bin\*.*

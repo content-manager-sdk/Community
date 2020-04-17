@@ -63,7 +63,7 @@ namespace ComponentSpaceSAMLPlugin
                 string partnerIdP = WebConfigurationManager.AppSettings[PartnerIdP];
                 SAMLServiceProvider.InitiateSSO(HttpContext.Current.Response, null, partnerIdP);
 
-                (HttpContext.Current.ToResponse() as AspNetResponse).End();
+              //  (HttpContext.Current.ToResponse() as AspNetResponse).End();
                 return null;
             } else
             {

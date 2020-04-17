@@ -2,6 +2,7 @@
 using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Authentication.OAuth2;
+using ServiceStack.Authentication.OpenId;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Services;
@@ -51,11 +52,13 @@ namespace OneDriveAuthPlugin
 					}
 				});
 
-				appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
-					new TokenAuthProvider(),
-					new AadAuthProvider(appSettings)
+				appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] { new MyOpenIdOAuthProvider(appSettings, "OpenId", "aad") }, "~/auth/openid"));
 
-				}, "~/auth/aad"));
+				//appHost.Plugins.Add(new AuthFeature(() => new AuthUserSession(), new IAuthProvider[] {
+				//	new TokenAuthProvider(),
+				//	new AadAuthProvider(appSettings)
+
+				//}, "~/auth/aad"));
 
 				appHost.Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization,Accept", allowedOrigins: "https://desktop-39dgcn3:3000", allowCredentials: true));
 			}
