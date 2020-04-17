@@ -162,12 +162,12 @@ namespace OpenIdConnectPlugin
 					return this.Logout(authService, request);
 				}
 
-
-
 				string redirectTo = authService.Request.GetAbsoluteUrl($"~/");
 
 
 				string stateId = httpRequest.GetParam("state");
+
+				log.Debug($"stateId: {stateId}");
 				if (!string.IsNullOrWhiteSpace(stateId))
 				{
 					Guid stateGuid;
@@ -178,6 +178,7 @@ namespace OpenIdConnectPlugin
 							if (!string.IsNullOrWhiteSpace(redirectUrls[stateGuid]))
 							{
 								redirectTo = redirectUrls[stateGuid];
+								log.Debug($"redirectTo: {redirectTo}");
 								redirectUrls.Remove(stateGuid);
 							}
 						}
@@ -198,8 +199,10 @@ namespace OpenIdConnectPlugin
 			}
 			else
 			{
+
+				log.Debug($"referrer: {session.ReferrerUrl}");
 				Guid stateId = Guid.NewGuid();
-				redirectUrls[stateId] = cleanSiteUrl(httpRequest.GetParam("redirect"));
+				redirectUrls[stateId] = cleanSiteUrl(session.ReferrerUrl);
 
 				var maxAge = httpRequest.GetParam("max_age");
 				if (!string.IsNullOrWhiteSpace(maxAge))
@@ -230,6 +233,9 @@ namespace OpenIdConnectPlugin
 
 		private string cleanSiteUrl(string url)
 		{
+			ServiceStack.Logging.ILog log = ServiceStack.Logging.LogManager.GetLogger(typeof(OpenIDConnectProvider));
+			log.Debug("cleanSiteUrl");
+			log.Debug(url);
 			string redirUrl = url;
 			if (AppHostConfig.Instance.IsInWebClient && url.IndexOf("openidinfo", StringComparison.InvariantCultureIgnoreCase) < 0)
 			{
@@ -237,7 +243,12 @@ namespace OpenIdConnectPlugin
 				{
 					Uri uri = new Uri(url);
 
+
+
 					int lastpartStart = uri.AbsolutePath.TrimEnd('/').LastIndexOf('/');
+
+					log.Debug(lastpartStart);
+					log.Debug(uri.AbsolutePath.Substring(0, lastpartStart));
 					redirUrl = uri.Scheme + "://" + uri.Host + uri.AbsolutePath.Substring(0, lastpartStart) + uri.Query;
 				}
 			}

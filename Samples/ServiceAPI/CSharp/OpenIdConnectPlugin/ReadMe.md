@@ -37,6 +37,7 @@ Edit the file hprmServiceAPI.config and add the folliwng (as a child of the root
  When you create the application in you IdP ensure that you set the redirect uri to look like this
   * for the Web Client https://[MyWebServer]/contentmanager/serviceapi/auth/openid
   * for WebDrawer https://[MyWebServer]/WebDrawer/auth/openid
+NOTE: The redirect URI must be all lower case.
 
  ### Edit web.config
 Below is a sample of the config to enter, you will need to get the well-known uri, secret and client Id from your IdP.
