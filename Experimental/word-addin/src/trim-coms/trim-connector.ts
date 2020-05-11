@@ -250,6 +250,8 @@ export interface ITrimConnector {
 		attachmentName?: string,
 		getFile?: boolean
 	): Promise<IDriveInformation>;
+
+	fetchEML(itemId: string, attachmentName?: string): Promise<string>;
 	getObjectDetails(
 		trimType: BaseObjectTypes,
 		uri: number
@@ -757,6 +759,19 @@ export class TrimConnector implements ITrimConnector {
 		);
 	}
 
+	public fetchEML(itemId: string, attachmentName?: string): Promise<string> {
+		return this.makeRequest(
+			{
+				path: "ExchangeItem",
+				method: "get",
+				data: { itemId, attachmentName },
+			},
+			(data: any) => {
+				return data;
+			}
+		);
+	}
+
 	public getDriveId(
 		webUrl: string,
 		isEmail: boolean,
@@ -1142,7 +1157,7 @@ export class TrimConnector implements ITrimConnector {
 							resolve(undefined);
 						}
 					})
-					.catch(function(e) {
+					.catch(function (e) {
 						reject(e);
 					});
 			});
@@ -1211,7 +1226,8 @@ export class TrimConnector implements ITrimConnector {
 							response.data.Results ||
 							response.data.FileName ||
 							response.data.File ||
-							response.data.PropertiesAndFields
+							response.data.PropertiesAndFields ||
+							typeof response.data === "string"
 						) {
 							resolve(parseCallback(response.data));
 						} else {

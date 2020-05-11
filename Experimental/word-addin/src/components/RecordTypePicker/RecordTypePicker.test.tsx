@@ -18,7 +18,7 @@ import WordConnector from "../../office-coms/word-connector";
 import AppStoreWord from "../../stores/AppStoreWord";
 import flushPromises = require("flush-promises");
 
-describe("Record Type Picker", function() {
+describe("Record Type Picker", function () {
 	let resolveCheckinStyles;
 	let registerProps = [];
 	let populatePages = false;
@@ -98,7 +98,7 @@ describe("Record Type Picker", function() {
 	});
 
 	let mockTrimConnector = new TrimConnector();
-	mockTrimConnector.getUseCheckinStyles = function() {
+	mockTrimConnector.getUseCheckinStyles = function () {
 		return useCheckinStyles;
 	}.bind(mockTrimConnector);
 
@@ -109,7 +109,7 @@ describe("Record Type Picker", function() {
 	) => {
 		registerProps.push(properties);
 
-		return new Promise<ITrimMainObject>(function(resolve, reject) {
+		return new Promise<ITrimMainObject>(function (resolve, reject) {
 			if (rejectRegister) {
 				reject("create error");
 			} else {
@@ -118,10 +118,10 @@ describe("Record Type Picker", function() {
 		});
 	};
 
-	const doSearch = function<T extends ITrimMainObject>(
+	const doSearch = function <T extends ITrimMainObject>(
 		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			if (options.trimType === BaseObjectTypes.CheckinPlace) {
 				resolveCheckinStyles = resolve;
 			} else {
@@ -137,7 +137,7 @@ describe("Record Type Picker", function() {
 
 	mockTrimConnector.getPropertySheet = (trimType: BaseObjectTypes) => {
 		propertySheetTrimType = trimType;
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve(
 				populatePages ? pageItemsWithTitle : { Pages: [{ PageItems: [] }] }
 			);
@@ -145,7 +145,7 @@ describe("Record Type Picker", function() {
 	};
 
 	mockTrimConnector.getDatabaseProperties = () => {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve({
 				EmailSubjectPrefix: "CM:",
 				CurrencySymbol: "",
@@ -156,10 +156,14 @@ describe("Record Type Picker", function() {
 	const mockWordConnector = new WordConnector();
 
 	const appStore = new AppStoreWord(mockTrimConnector, mockWordConnector);
-	appStore.createRecord = function(recordUri, recordProps) {
-		return new Promise(function(resolve) {
+	appStore.createRecord = function (recordUri, recordProps) {
+		return new Promise(function (resolve) {
 			resolve();
 		});
+	}.bind(appStore);
+
+	appStore.isEmail = function () {
+		return true;
 	}.bind(appStore);
 
 	it("contains a Record Type dropdown", async () => {
@@ -171,22 +175,14 @@ describe("Record Type Picker", function() {
 			true
 		);
 
-		wrapper
-			.find(ComboBox)
-			.props()
-			.onMenuOpen();
+		wrapper.find(ComboBox).props().onMenuOpen();
 
 		await flushPromises();
 		expect(wrapper.find(ComboBox).props().placeholder).toEqual(
 			"Select a Record Type"
 		);
 
-		expect(
-			wrapper
-				.update()
-				.find(ComboBox)
-				.props().options
-		).toEqual([
+		expect(wrapper.update().find(ComboBox).props().options).toEqual([
 			{ key: 1, text: "Document" },
 			{ key: 5, text: "Document 5" },
 		]);
@@ -236,10 +232,7 @@ describe("Record Type Picker", function() {
 			true
 		);
 		wrapper.setState({ checkinUsingStyle: true });
-		wrapper
-			.find(ComboBox)
-			.props()
-			.onMenuOpen();
+		wrapper.find(ComboBox).props().onMenuOpen();
 		await flushPromises();
 		resolveCheckinStyles({
 			results: [
@@ -267,10 +260,7 @@ describe("Record Type Picker", function() {
 		);
 
 		wrapper.setState({ checkinUsingStyle: true });
-		wrapper
-			.find(ComboBox)
-			.props()
-			.onMenuOpen();
+		wrapper.find(ComboBox).props().onMenuOpen();
 		await flushPromises();
 		resolveCheckinStyles({
 			results: [
@@ -282,11 +272,7 @@ describe("Record Type Picker", function() {
 			],
 		});
 		await flushPromises();
-		wrapper
-			.update()
-			.find(ComboBox)
-			.props()
-			.onChange(null, { key: "111" }, 0);
+		wrapper.update().find(ComboBox).props().onChange(null, { key: "111" }, 0);
 
 		expect(recordTypeUri).toEqual(111);
 	});
@@ -306,10 +292,7 @@ describe("Record Type Picker", function() {
 			/>
 		);
 
-		wrapper
-			.find(ComboBox)
-			.props()
-			.onMenuOpen();
+		wrapper.find(ComboBox).props().onMenuOpen();
 
 		await flushPromises();
 		expect(wrapper.state().recordTypes[1].selected).toBeTruthy();
@@ -449,10 +432,7 @@ describe("Record Type Picker", function() {
 		);
 
 		wrapper.setState({ checkinUsingStyle: true });
-		wrapper
-			.find(ComboBox)
-			.props()
-			.onMenuOpen();
+		wrapper.find(ComboBox).props().onMenuOpen();
 		await flushPromises();
 		resolveCheckinStyles({
 			results: [

@@ -86,10 +86,10 @@ export class AppStoreBase implements IAppStore {
 	private canConnectToOffice(): Promise<boolean> {
 		return new Promise<boolean>((resolve) => {
 			this.wordConnector!.getWebUrl()
-				.then(function() {
+				.then(function () {
 					resolve(true);
 				})
-				.catch(function() {
+				.catch(function () {
 					resolve(false);
 				});
 		});
@@ -184,6 +184,7 @@ export class AppStoreBase implements IAppStore {
 							);
 
 							this.setDocumentInfo(driveInfo);
+
 							this.setStatus("WAITING");
 						} catch (error) {
 							this.setError(error, "fetch base settings for dialog");

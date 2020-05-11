@@ -55,9 +55,10 @@ export class OutlookAttachments extends React.Component<
 		const userOptionsRecordType = await trimConnector!.getDefaultRecordType();
 		const filedRecords = await appStore!.fetchFiledRecords();
 		const attachments = (wordConnector as OutlookConnector).getAttachments();
-		attachments.forEach(function(attachment) {
+
+		attachments.forEach(function (attachment) {
 			if (
-				filedRecords.some(function(filedRecord) {
+				filedRecords.some(function (filedRecord) {
 					return (
 						(!attachment.IsAttachment &&
 							filedRecord.MessageId &&
@@ -199,20 +200,19 @@ export class OutlookAttachments extends React.Component<
 			.getWebUrl()
 			.then((webUrl) => {
 				trimConnector!
-					.getDriveId(
+					.fetchEML(
 						attachment.IsAttachment
 							? `${webUrl}/attachments/${attachment.Id}`
 							: webUrl,
-						true,
-						0,
-						attachment.IsAttachment ? attachment.Name : undefined,
-						true
+
+						attachment.IsAttachment ? attachment.Name : undefined
 					)
-					.then((driveInfo) => {
+					.then((emailPath) => {
 						appStore!.setDocumentInfo({
-							...driveInfo,
-							Uris: appStore!.documentInfo.Uris,
+							...appStore!.documentInfo,
+							EmailPath: emailPath,
 						});
+
 						this.setState({ showForm: true });
 						appStore!.setSpinning(false);
 					})
@@ -353,7 +353,7 @@ export class OutlookAttachments extends React.Component<
 									this._setAttachments([]);
 								} else {
 									this._setAttachments(
-										attachments.filter(function(attachment) {
+										attachments.filter(function (attachment) {
 											return !attachment.Filed;
 										})
 									);

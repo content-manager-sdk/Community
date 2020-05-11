@@ -26,15 +26,15 @@ export namespace Office {
 			item: {
 				subject: "test_subject",
 				attachments: [
-					{ attachmentType: "file", id: "a-id", name: "name" },
+					{ attachmentType: "file", id: "a-id/1/2", name: "name" },
 					{ attachmentType: "item", id: "item-id", name: "item-name" },
 					{ attachmentType: "cloud", id: "cloud-id", name: "cloud" },
 				],
 			},
-			makeEwsRequestAsync: function(url, callback) {
+			makeEwsRequestAsync: function (url, callback) {
 				callback({
 					status: "succeeded",
-					value: (function() {
+					value: (function () {
 						switch (responseType) {
 							case "changeKeyError":
 								return '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><h:ServerVersionInfo MajorVersion="15" MinorVersion="20" MajorBuildNumber="2686" MinorBuildNumber="32" Version="V2018_01_08" xmlns:h="http://schemas.microsoft.com/exchange/services/2006/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/></s:Header><s:Body><m:GetFolderResponse xmlns:m="http://schemas.microsoft.com/exchange/services/2006/messages" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types"><m:ResponseMessages><m:GetFolderResponseMessage ResponseClass="Error"><m:MessageText>Id is malformed.</m:MessageText><m:ResponseCode>ErrorInvalidIdMalformed</m:ResponseCode><m:DescriptiveLinkKey>0</m:DescriptiveLinkKey><m:Folders/></m:GetFolderResponseMessage></m:ResponseMessages></m:GetFolderResponse></s:Body></s:Envelope>';
@@ -78,7 +78,7 @@ describe("Outlook connector tests", () => {
 		it(`gets Uris from Email Link extended property ${data.json}`, async () => {
 			var json = require(`./${data.json}.json`);
 
-			mock.onGet().reply(function(config: any) {
+			mock.onGet().reply(function (config: any) {
 				return [200, json];
 			});
 
@@ -109,7 +109,7 @@ describe("Outlook connector tests", () => {
 			let postConfig;
 			mock
 				.onPatch(`rest_url/v2.0/me/messages/rest_id`)
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					postConfig = config;
 
 					return [200, {}];
@@ -157,7 +157,7 @@ describe("Outlook connector tests", () => {
 		let postConfig;
 		mock
 			.onPatch(`rest_url/v2.0/me/messages/rest_id`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [200, {}];
@@ -201,7 +201,7 @@ describe("Outlook connector tests", () => {
 		let postConfig;
 		mock
 			.onPatch(`rest_url/v2.0/me/messages/rest_id`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [200, {}];
@@ -426,5 +426,6 @@ describe("Outlook connector tests", () => {
 		expect(attachments[0].IsAttachment).toBeFalsy();
 		expect(attachments[0].Name).toEqual("test_subject");
 		expect(attachments[1].IsAttachment).toBeTruthy();
+		expect(attachments[1].Id).toEqual("a-id-1-2");
 	});
 });

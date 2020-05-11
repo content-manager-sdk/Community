@@ -112,6 +112,7 @@ export class RecordTypePicker extends React.Component<
 		if (trimConnector) {
 			const newStyle: any = {};
 			let checkinUsingStyle = false;
+
 			if (!selectedRecordType) {
 				checkinUsingStyle =
 					trimConnector.getUseCheckinStyles() &&
@@ -159,7 +160,7 @@ export class RecordTypePicker extends React.Component<
 				.then((placesResponse: ISearchResults<ICheckinPlace>) => {
 					this.setState(
 						{
-							checkinStyles: placesResponse.results.map(function(
+							checkinStyles: placesResponse.results.map(function (
 								o: ICheckinPlace
 							) {
 								let selected = false;
@@ -177,7 +178,7 @@ export class RecordTypePicker extends React.Component<
 								} as IDropdownOption;
 							}),
 						},
-						function() {
+						function () {
 							appStore!.setSpinning(false);
 						}
 					);
@@ -194,12 +195,12 @@ export class RecordTypePicker extends React.Component<
 					this.setState(
 						{
 							recordTypes: this.setRecordTypes(
-								response.results.map(function(o: IRecordType) {
+								response.results.map(function (o: IRecordType) {
 									return { key: o.Uri, text: o.NameString } as IDropdownOption;
 								})
 							),
 						},
-						function() {
+						function () {
 							appStore!.setSpinning(false);
 						}
 					);

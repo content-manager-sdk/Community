@@ -127,7 +127,7 @@ export class OutlookConnector extends OfficeConnector
 				const attachment = item.attachments[i];
 				if (attachment.attachmentType === "file") {
 					attachments.push({
-						Id: attachment.id.replace("/", "-"),
+						Id: attachment.id.split("/").join("-"),
 						Name: attachment.name,
 						IsAttachment: true,
 					});

@@ -96,7 +96,7 @@ describe("Test fetch from TRIM", () => {
 					HideCustomRecordTypes: true,
 				},
 			})
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				props = config.params.properties;
 
 				return [
@@ -134,7 +134,7 @@ describe("Test fetch from TRIM", () => {
 					ApplyDefaults: true,
 				},
 			})
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				props = config.params.properties;
 
 				return [
@@ -162,7 +162,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("passes sort to search", () => {
 		let sortBy: string = "";
-		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			sortBy = config.params.sortBy;
 
 			return [
@@ -188,7 +188,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("passes filter to search", () => {
 		let filter: string = "";
-		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			filter = config.params.filter;
 
 			return [
@@ -215,7 +215,7 @@ describe("Test fetch from TRIM", () => {
 	it("passes properties", () => {
 		let properties: string = "";
 		let selectedIds: string = "";
-		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			properties = config.params.properties;
 			selectedIds = config.params.cid_SelectedIds;
 
@@ -257,7 +257,7 @@ describe("Test fetch from TRIM", () => {
 					HideCustomRecordTypes: true,
 				},
 			})
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				return [
 					200,
 					{
@@ -334,7 +334,7 @@ describe("Test fetch from TRIM", () => {
 		let body = {};
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/Location/me`)
-			.replyOnce(function(config: any) {
+			.replyOnce(function (config: any) {
 				body = config.data;
 
 				return [
@@ -354,7 +354,7 @@ describe("Test fetch from TRIM", () => {
 
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/Localisation`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				messageMatch = config.params.MatchMessages;
 				return [
 					200,
@@ -373,7 +373,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("Property sheet requested from Record Type", () => {
 		let postConfig: any;
-		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			postConfig = config;
 
 			return [
@@ -406,7 +406,7 @@ describe("Test fetch from TRIM", () => {
 	it("Property sheet with document", () => {
 		let postConfig: any;
 		mock.reset();
-		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			postConfig = config;
 			return [
 				200,
@@ -439,7 +439,7 @@ describe("Test fetch from TRIM", () => {
 		let postConfig: any;
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/CheckinStyle`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [
@@ -475,7 +475,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("Property sheet requested for Record based on Checkin Style", () => {
 		let postConfig: any;
-		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			postConfig = config;
 			return [
 				200,
@@ -563,7 +563,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("has posted a new Record", () => {
 		let postConfig: any;
-		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			postConfig = config;
 
 			return [
@@ -603,7 +603,7 @@ describe("Test fetch from TRIM", () => {
 		let postConfig: any;
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/CheckinStyle`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [
@@ -639,7 +639,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("has posted a new Record with field values", () => {
 		let postConfig: any;
-		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			postConfig = config;
 
 			return [
@@ -684,7 +684,7 @@ describe("Test fetch from TRIM", () => {
 
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/PropertyDef`)
-			.replyOnce(function(config: any) {
+			.replyOnce(function (config: any) {
 				postConfig = config;
 
 				return [
@@ -733,7 +733,7 @@ describe("Test fetch from TRIM", () => {
 		let postConfig: any;
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/PropertyDef`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [
@@ -790,7 +790,7 @@ describe("Test fetch from TRIM", () => {
 		let postConfig: any;
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/UserOptions/ViewPane`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [
@@ -822,7 +822,7 @@ describe("Test fetch from TRIM", () => {
 
 	it("cancelled the request", async () => {
 		let postConfig: any;
-		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function(config: any) {
+		mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
 			postConfig = config;
 			setTimeout(() => {}, 10);
 			return [
@@ -856,7 +856,7 @@ describe("Test fetch from TRIM", () => {
 		let webUrl = "";
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				token = config.headers["Authorization"];
 				webUrl = config.params["webUrl"];
 
@@ -876,7 +876,7 @@ describe("Test fetch from TRIM", () => {
 		let attachmentName = "";
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				attachmentName = config.params["attachmentName"];
 
 				return [200, { Results: [{ Id: "0123", Uri: [567] }] }];
@@ -887,10 +887,33 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
+	it("fetch EML", async () => {
+		let token = "";
+		let itemId = "";
+		let attachmentName = "";
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/ExchangeItem`)
+			.reply(function (config: any) {
+				token = config.headers["Authorization"];
+				itemId = config.params["itemId"];
+				attachmentName = config.params["attachmentName"];
+
+				return [200, "FilePath"];
+			});
+
+		expect.assertions(4);
+		return trimConnector.fetchEML("abc", "a.name").then((data) => {
+			expect(itemId).toEqual("abc");
+			expect(token).toEqual("Bearer token123");
+			expect(attachmentName).toEqual("a.name");
+			expect(data).toEqual("FilePath");
+		});
+	});
+
 	it("gets the record text", () => {
 		let token = "";
 		let uri = 0;
-		mock.onGet(`${SERVICEAPI_BASE_URI}/GetFile`).reply(function(config: any) {
+		mock.onGet(`${SERVICEAPI_BASE_URI}/GetFile`).reply(function (config: any) {
 			token = config.headers["Authorization"];
 			uri = config.params["uri"];
 
@@ -919,7 +942,7 @@ describe("Test fetch from TRIM", () => {
 
 		mock
 			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				return [
 					200,
 					{ Results: [{ Id: "0123", Uri: [567], CommandDefs: replyValue }] },
@@ -1110,7 +1133,7 @@ describe("Test fetch from TRIM", () => {
 		it("returns the search clause definitions", async () => {
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/SearchClauseDef`)
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					return [
 						200,
 						{
@@ -1145,7 +1168,7 @@ describe("Test fetch from TRIM", () => {
 						ObjectType: "Main",
 					},
 				})
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					return [
 						200,
 						{
@@ -1181,7 +1204,7 @@ describe("Test fetch from TRIM", () => {
 						ObjectType: "Main",
 					},
 				})
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					return [
 						200,
 						{
@@ -1222,7 +1245,7 @@ describe("Test fetch from TRIM", () => {
 							"DatabaseCurrencySymbol,DatabaseEmailSubjectPrefix,DatabaseId",
 					},
 				})
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					return [
 						200,
 						{
@@ -1258,7 +1281,7 @@ describe("Test fetch from TRIM", () => {
 		it("returns the search user options", async () => {
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/UserOptions/Search`)
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					return [
 						200,
 						{
@@ -1319,7 +1342,7 @@ describe("Test fetch from TRIM", () => {
 			it(`gets the default record type ${data.json}`, async () => {
 				var json = require(`./testdata/${data.json}.json`);
 
-				mock.onGet().reply(function(config: any) {
+				mock.onGet().reply(function (config: any) {
 					return [200, json];
 				});
 
@@ -1355,7 +1378,7 @@ describe("Test fetch from TRIM", () => {
 			it(`gets outlook user options ${data.json}`, async () => {
 				var json = require(`./testdata/${data.json}.json`);
 
-				mock.onGet().reply(function(config: any) {
+				mock.onGet().reply(function (config: any) {
 					return [200, json];
 				});
 
@@ -1370,7 +1393,7 @@ describe("Test fetch from TRIM", () => {
 		mock.reset();
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/UserOptions/DroppedFiles`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 				return [
 					200,
@@ -1428,7 +1451,7 @@ describe("Test fetch from TRIM", () => {
 		let postConfig: any;
 		mock
 			.onPost(`${SERVICEAPI_BASE_URI}/${BaseObjectTypes.Record}`)
-			.reply(function(config: any) {
+			.reply(function (config: any) {
 				postConfig = config;
 
 				return [
@@ -1477,7 +1500,7 @@ describe("Test fetch from TRIM", () => {
 			mock.reset();
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/CommandDef`)
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					postConfig = config;
 					return [
 						200,
@@ -1527,7 +1550,7 @@ describe("Test fetch from TRIM", () => {
 			mock.reset();
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/Database`)
-				.reply(function(config: any) {
+				.reply(function (config: any) {
 					count++;
 					return [
 						200,
