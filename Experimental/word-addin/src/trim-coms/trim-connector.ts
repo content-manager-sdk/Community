@@ -473,7 +473,9 @@ export class TrimConnector implements ITrimConnector {
 	private getItemFromCache(id: CacheIds): any {
 		const cacheItem = localStorage.getItem(id);
 		if (cacheItem) {
-			return JSON.parse(cacheItem);
+			try {
+				return JSON.parse(cacheItem);
+			} catch {}
 		}
 		return null;
 	}
