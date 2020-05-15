@@ -16,7 +16,6 @@ var searchData=
   ['webserverworkpath',['WebServerWorkPath',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#a21b2e0410e1147931159c2ad3cd6be81',1,'HP::HPTRIM::SDK::TrimApplication']]],
   ['webservicecache',['WebServiceCache',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a75f8c0341416e2b5a12c30e784bb4bd3',1,'HP::HPTRIM::SDK::Database']]],
   ['webserviceunlimitedglobalcache',['WebServiceUnlimitedGlobalCache',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#ac719a9522f816b756fe47c5164f5caad',1,'HP::HPTRIM::SDK::Database']]],
-  ['webserviceurl',['WebServiceURL',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_policy_centre_user_options.html#a5a075ed7d4d455b689450697319551a8',1,'HP::HPTRIM::SDK::PolicyCentreUserOptions']]],
   ['weburl',['WebURL',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object.html#a86d74dde6fd2a595ff8311e282dad34a',1,'HP.HPTRIM.SDK.TrimMainObject.WebURL()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#af7bb4b4711af04945e2d5ca49fe0d283',1,'HP.HPTRIM.SDK.TrimMainObjectSearch.WebURL()']]],
   ['wgsaffinity',['WgsAffinity',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a19140d110999485cb833d2b355415758',1,'HP::HPTRIM::SDK::ElectronicStore']]],
   ['wgsmethod',['WgsMethod',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#a28c0078946a3ef71feeca7d9729df7db',1,'HP::HPTRIM::SDK::WgsProgressInfo']]],

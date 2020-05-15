@@ -11,7 +11,6 @@ var NAVTREE =
     ] ],
     [ "Release Notes", "release_notes.html", [
       [ "Content Manager 9.4", "release_notes.html#rn_94", [
-        [ "BREAKING CHANGE - History.EventType changed enum type", "release_notes.html#rn_94_History_Event_Type", null ],
         [ "Hide records and record types for customized SDK applications - doesn't work", "release_notes.html#rn_94_CR_68013", null ],
         [ "Unrestricted File Upload Vulnerability", "release_notes.html#rn_94_CR_68008", null ],
         [ "Refine a search to returned the current or latest version of documents", "release_notes.html#rn_94_CR_40696", null ],
@@ -99,7 +98,8 @@ var NAVTREE =
       [ "Introduction", "programming_guide.html#programming_in", [
         [ "The main objects", "programming_guide.html#main_objects", null ],
         [ "Using the Trim Application object", "programming_guide.html#application_object", null ],
-        [ "Using the Database object", "programming_guide.html#database_object", null ]
+        [ "Using the Database object", "programming_guide.html#database_object", null ],
+        [ "Database pooling", "programming_guide.html#database_pooling", null ]
       ] ],
       [ "Creating and modifying Records", "programming_guide.html#creating_records", [
         [ "Creating new Records", "programming_guide.html#new_record", null ],
@@ -731,32 +731,32 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "advanced_topics.html",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_agenda_item.html#a7e26e3d2663f769a28e18de2e16b4ae6",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_census.html#aca10504449fabbfa9b62b7225b8066aa",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_communication_detail.html#a3116aa2e9e23b1f16699528741ab7f72",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a5f4d59f20a007ee396de459e985dd05a",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_document_queue.html#a0912630988c79fc36d15e81804a817ce",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_enum_item_list.html#acbd62a020c15b4cc58d2f0a5ab7b7a77",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_field_definition.html#a3cb3850242551988972bd3c6455d6ecf",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_int_list.html#a4dc11c037555bd7fe5ebeda616455356",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_location_e_address.html#a2cafa2ca44ec44ca45d02c7d1eac179d",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_meeting_type_usual_participants.html",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_offline_record.html#ae15172b7339f7ede8f47c2b17427d351",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_def.html#a7db50241594dee8cc97e7bfb7494613c",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a1c62b8a03f879bd3039ae6ec0f6fc466",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#ac9b09ba276a98fbb77ecf9677f34a543",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_relationships.html#a28a734cf25b678b898a151561e5a34ff",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_type.html#af7555f1b498e2537dbfa41ccad2c28e3",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_scheduled_task.html#ae2a591c99d383ed9b2cc69297664ac16",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_security_guide_list.html#aa92f592b1ccd36e875d87c3a49d31bb6",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#ae9058ede18402de2e0a2679ece086517",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a2a1c5af21d993cf6bf7b6ed3ecb3f10d",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_property_set.html#a38d8b57fd75afb3774fe916ff1afefa1",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_u_r_i.html#a05b4adde1996684f4869105e735855c7",
-"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_workflow_template.html#ab465e1c3978ab525bad76aea864cfdaf",
-"enum_metadata.html#enum_help_pathTypes",
-"interface_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_i_trim_user_fields.html#ac0ec88609e6f4c22848ae29148e0dd2f",
-"release_notes.html#rn_93_database"
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_agenda_item.html#a71b954837759b28ce93b124860495cda",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_census.html#aa5ff509a305a358085fb0e5d9bf68314",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_communication_detail.html#a2b929a7668becfd6394173bb14be0b05",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_database.html#a5ee38c3044cbd52e50c7d4b94b272439",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_document_queue.html#a03e3a337181feb9bdb96fbf5d17bc3b1",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_enum_item_list.html#abc48f4e02b397686d5732d535b3dd907",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_field_definition.html#a36b5b1fad8b510f02c27c0f34dba85ae",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_int_list.html#a4cbfdab27de272cbd4524e3508942cee",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_location_e_address.html#a26bc46650972db75469a97868e14e651",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_meeting_type_usual_participant.html#ac7f7930911fce0c9ad4f95253d45b9e1",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_offline_record.html#adbb3805db7ccd396dfbfc73bbccf2f1e",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_property_def.html#a7d52ce233c055c2bcf102d42f62b567b",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a1aae8091e68563c9328fa86baf3662ea",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#ac971b98f027aa5e78c39d431ebd7ea4d",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_relationships.html",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_type.html#af4ecbd3cafcfb4982ddea4ac89a37a96",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_scheduled_task.html#ae102ee70fd382f07019d7685ddd50770",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_security_guide_list.html#aa792e4d023669276891852d312112a06",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#acdd9bab960d40da3f292193665499718",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a2789febc959424577dc7033536b6cefb",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_property_set.html#a28b2661df48b06c9ed649389422aaa16",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_u_r_i.html",
+"class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_workflow_template.html#aae28d3d57175ed07b8380be34dc9cc9d",
+"enum_metadata.html#enum_help_outputPathTypes",
+"interface_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_i_trim_user_fields.html#aa03a8969804dc9af9ee304be0f2bf0c7",
+"release_notes.html#rn_93_audits"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -85,7 +85,6 @@ var searchData=
   ['primaryrecord',['PrimaryRecord',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_agenda_item.html#ac7c188a2a82c10f40653e354f0b86974',1,'HP::HPTRIM::SDK::AgendaItem']]],
   ['primordialsecurity',['PrimordialSecurity',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_classified_security.html#ac860eb1f11f4538eac2fa789cbfb3a6b',1,'HP::HPTRIM::SDK::ClassifiedSecurity']]],
   ['priority',['Priority',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a294d54d6d9eff1740906b87800926138',1,'HP.HPTRIM.SDK.Record.Priority()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_request.html#a318d2f9e708be1fb39fea217ac778acb',1,'HP.HPTRIM.SDK.Request.Priority()']]],
-  ['privatekey',['PrivateKey',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_policy_centre_user_options.html#ae7f74ea6d0e64173ec2c3f214c9a7814',1,'HP::HPTRIM::SDK::PolicyCentreUserOptions']]],
   ['procedure',['Procedure',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_action.html#a6948b207b18875c71202a3b9436f264b',1,'HP::HPTRIM::SDK::RecordAction']]],
   ['productfeature',['ProductFeature',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_object_def.html#aa0025c39a87f5c58e694b01b9368b1a1',1,'HP::HPTRIM::SDK::ObjectDef']]],
   ['projectteam',['ProjectTeam',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_location.html#a17ca84bc4cfa5cb1fe80b7552ba981c7',1,'HP::HPTRIM::SDK::Location']]],

@@ -26,6 +26,7 @@ var searchData=
   ['historyconnectionipaddress',['HistoryConnectionIPAddress',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586af7ce26b7f065b974b8d1be7758963d3c',1,'HP::HPTRIM::SDK']]],
   ['historycontentrecord',['HistoryContentRecord',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586a7ae76240f846c0dd054d8c3c486e3b86',1,'HP::HPTRIM::SDK']]],
   ['historydate',['HistoryDate',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#aaea0586882a820c16f4140677ee8f11bafaa9b3b80a060e363a77cda2b81cda1f',1,'HP::HPTRIM::SDK']]],
+  ['historydetails',['HistoryDetails',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#aaea0586882a820c16f4140677ee8f11baaacd98b6cc8582075a0cd344891efe19',1,'HP::HPTRIM::SDK']]],
   ['historydoneon',['HistoryDoneOn',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586ad5670dda301a5e989c41b00f9557726a',1,'HP::HPTRIM::SDK']]],
   ['historydoneongmt',['HistoryDoneOnGMT',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586ac7cf9a16eab49569b23376a63ca4aaa9',1,'HP::HPTRIM::SDK']]],
   ['historydoneonlocal',['HistoryDoneOnLocal',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586a43659dda216dda3f3b65ad7eb45f2a9b',1,'HP::HPTRIM::SDK']]],

@@ -182,7 +182,6 @@ var searchData=
   ['documenttype',['DocumentType',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_meeting_document.html#a9d7e74c9c8f58e8eaed083f40a15a9a2',1,'HP.HPTRIM.SDK.MeetingDocument.DocumentType()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#af18c9f7cfab6db9d63c064134350b110',1,'HP.HPTRIM.SDK.Record.DocumentType()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_revision.html#a3c12bc80aa7fc817e294a5bce1f2c55b',1,'HP.HPTRIM.SDK.RecordRevision.DocumentType()']]],
   ['documenttypefilter',['DocumentTypeFilter',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_dropped_folders_user_options.html#a550884e10444e8813bfb3954cf01a98d',1,'HP::HPTRIM::SDK::DroppedFoldersUserOptions']]],
   ['documentupdatestyle',['DocumentUpdateStyle',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_document_queue.html#a5beb48a088e78f610cc44b60d7be04b8',1,'HP::HPTRIM::SDK::DocumentQueue']]],
-  ['domain',['Domain',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_policy_centre_user_options.html#ad13c3529df74fbdc31163ec55912b9eb',1,'HP::HPTRIM::SDK::PolicyCentreUserOptions']]],
   ['done',['Done',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record_action.html#ae5d566fb6e7e07b754bdfe797393f249',1,'HP::HPTRIM::SDK::RecordAction']]],
   ['doneon',['DoneOn',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_history.html#a6d3a273d949fa2e2f2c13e7e8d9910f3',1,'HP::HPTRIM::SDK::History']]],
   ['doneongmt',['DoneOnGMT',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_history.html#abd804a8b1a85d754ef05ac29b1a9147d',1,'HP::HPTRIM::SDK::History']]],

@@ -75,6 +75,7 @@ var searchData=
   ['historyconnectionipaddress',['HistoryConnectionIPAddress',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586af7ce26b7f065b974b8d1be7758963d3c',1,'HP::HPTRIM::SDK']]],
   ['historycontentrecord',['HistoryContentRecord',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586a7ae76240f846c0dd054d8c3c486e3b86',1,'HP::HPTRIM::SDK']]],
   ['historydate',['HistoryDate',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#aaea0586882a820c16f4140677ee8f11bafaa9b3b80a060e363a77cda2b81cda1f',1,'HP::HPTRIM::SDK']]],
+  ['historydetails',['HistoryDetails',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#aaea0586882a820c16f4140677ee8f11baaacd98b6cc8582075a0cd344891efe19',1,'HP::HPTRIM::SDK']]],
   ['historydoneon',['HistoryDoneOn',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586ad5670dda301a5e989c41b00f9557726a',1,'HP::HPTRIM::SDK']]],
   ['historydoneongmt',['HistoryDoneOnGMT',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586ac7cf9a16eab49569b23376a63ca4aaa9',1,'HP::HPTRIM::SDK']]],
   ['historydoneonlocal',['HistoryDoneOnLocal',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586a43659dda216dda3f3b65ad7eb45f2a9b',1,'HP::HPTRIM::SDK']]],
@@ -148,8 +149,8 @@ var searchData=
   ['html',['Html',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#ac3b136293d2055552b92555d1f158b36a3135f4019bee015e2d1ae7f77f9f3f64',1,'HP.HPTRIM.SDK.Html()'],['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#ab9e5b6706dabb74ee4bf7abc32f2dfdfa3135f4019bee015e2d1ae7f77f9f3f64',1,'HP.HPTRIM.SDK.Html()']]],
   ['htmlfooter',['HTMLFooter',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_extract_document.html#a4f17a7afc94a2cd82f031cb21ed66cf0',1,'HP::HPTRIM::SDK::ExtractDocument']]],
   ['htmlheader',['HTMLHeader',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_extract_document.html#aa192ae3e0c322cab401395bbdb962413',1,'HP::HPTRIM::SDK::ExtractDocument']]],
-  ['htmllayout',['HtmlLayout',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html#a8f673c07d841b814f061c4f8529459c5',1,'HP.HPTRIM.SDK.HtmlLayout.HtmlLayout(Database database, TrimURI uri)'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html#a06abf7fd2425980ce6ff5e357c2a7506',1,'HP.HPTRIM.SDK.HtmlLayout.HtmlLayout(Database database, string name)'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html#a1eb79f1eabef8c7176d82ed500fb909d',1,'HP.HPTRIM.SDK.HtmlLayout.HtmlLayout(Database database)'],['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a0dc503af5a604d44f6c97f781fcc4212a7b09b35d9ffd0c4f1b7c63dc0206b714',1,'HP.HPTRIM.SDK.HtmlLayout()']]],
   ['htmllayout',['HtmlLayout',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html',1,'HP::HPTRIM::SDK']]],
+  ['htmllayout',['HtmlLayout',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html#a8f673c07d841b814f061c4f8529459c5',1,'HP.HPTRIM.SDK.HtmlLayout.HtmlLayout(Database database, TrimURI uri)'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html#a06abf7fd2425980ce6ff5e357c2a7506',1,'HP.HPTRIM.SDK.HtmlLayout.HtmlLayout(Database database, string name)'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_html_layout.html#a1eb79f1eabef8c7176d82ed500fb909d',1,'HP.HPTRIM.SDK.HtmlLayout.HtmlLayout(Database database)'],['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a0dc503af5a604d44f6c97f781fcc4212a7b09b35d9ffd0c4f1b7c63dc0206b714',1,'HP.HPTRIM.SDK.HtmlLayout()']]],
   ['htmllayoutextension',['HtmlLayoutExtension',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586adf076eb2a2dd036c5b6b9999ebf8b309',1,'HP::HPTRIM::SDK']]],
   ['htmllayoutfortype',['HtmlLayoutForType',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586a2ef84d2516abece39f707ddec896c150',1,'HP::HPTRIM::SDK']]],
   ['htmllayoutname',['HtmlLayoutName',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a42b30f289efa9bf64150279dbb479586a0a786c5f0c830ad7808a9f61fc83352e',1,'HP.HPTRIM.SDK.HtmlLayoutName()'],['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#aaea0586882a820c16f4140677ee8f11ba0a786c5f0c830ad7808a9f61fc83352e',1,'HP.HPTRIM.SDK.HtmlLayoutName()']]],
@@ -158,8 +159,8 @@ var searchData=
   ['htmlrepresentation',['HtmlRepresentation',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#abf63ecba4a4c8aa3911a36a659f8986ca443a054aeb695d0fad0ee88df21775a0',1,'HP::HPTRIM::SDK']]],
   ['http',['Http',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#ab42466c97f5f96338d22cf743e235793a9d4d43de68f0b3555d5a5ef5dc05bb95',1,'HP::HPTRIM::SDK']]],
   ['https',['Https',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#ab42466c97f5f96338d22cf743e235793a2badb7fa3e862298a650909d45c5066b',1,'HP::HPTRIM::SDK']]],
-  ['hwnd',['Hwnd',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hwnd.html',1,'HP::HPTRIM::SDK']]],
   ['hwnd',['Hwnd',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hwnd.html#a28def07e5a3088643b586c517084b086',1,'HP.HPTRIM.SDK.Hwnd.Hwnd()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hwnd.html#ab18fddc8102ef3ef5d9dd62bff302f31',1,'HP.HPTRIM.SDK.Hwnd.Hwnd(global::System.IntPtr parentHWND)']]],
+  ['hwnd',['Hwnd',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_hwnd.html',1,'HP::HPTRIM::SDK']]],
   ['hyperlink',['Hyperlink',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a49ac42e8e87bbb5cac5c6a8d5ed5f937a79cd387280b73179eee47b96dadafc7b',1,'HP::HPTRIM::SDK']]],
   ['sdk',['SDK',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html',1,'HP::HPTRIM']]]
 ];

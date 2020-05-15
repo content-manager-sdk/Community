@@ -83,6 +83,7 @@ var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity =
     [ "RequiresAuthorization", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#a9873ac9b7c74812adb4ea37b60ed9453", null ],
     [ "Result", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#a9d73c8d8cdbfbb9949b7e7a742556185", null ],
     [ "ScheduledDuration", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#a23e9231a707ef226245fae98c0900e0f", null ],
+    [ "SingleResultOnly", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#a1b8e8c0494f1272c5394cd06d4b2abec", null ],
     [ "State", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#a2a8387b759f35493d7b1765d9816b1f2", null ],
     [ "SubActivityCount", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#a11563714452b1fa9825bd7a27e64b65d", null ],
     [ "Supervisor", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_activity.html#ac69d67b89d2c4af80af73fa3871cbca9", null ],
