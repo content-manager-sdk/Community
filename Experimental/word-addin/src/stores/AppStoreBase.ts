@@ -63,8 +63,6 @@ export class AppStoreBase implements IAppStore {
 	@observable public documentInfo: IDriveInformation = {
 		Id: "",
 		Uris: [],
-
-		Options: { DefaultDocumentRecordType: 0 },
 		EmailPath: "",
 		URN: "",
 		PreservedUris: [],
@@ -304,9 +302,7 @@ export class AppStoreBase implements IAppStore {
 				if (newRecord.Uri > 0) {
 					this.setDocumentInfo({
 						Uris: [],
-						//CommandDefs: newRecord.CommandDefs!,
 						Id: this.documentInfo.Id,
-						Options: this.documentInfo.Options,
 						EmailPath: this.documentInfo.EmailPath,
 						URN: newRecord.URN!,
 					});

@@ -71,7 +71,6 @@ export interface IEnums {
 export interface IDriveInformation {
 	Id: string;
 	Uris: number[];
-	Options: ITrimOptions;
 	EmailPath: string;
 	URN: string;
 	PreservedUris?: number[];

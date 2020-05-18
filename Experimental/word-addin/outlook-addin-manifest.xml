@@ -25,9 +25,6 @@
 	<FormSettings>
 		<Form xsi:type="ItemRead">
 			<DesktopSettings>
-				<!-- NOTE: Just reusing the read taskpane page that is invoked by the button
-             on the ribbon in clients that support add-in commands. You can
-             use a completely different page if desired -->
 				<SourceLocation DefaultValue="https://desktop-39dgcn3:3000/Outlook"/>
 				<RequestedHeight>450</RequestedHeight>
 			</DesktopSettings>
