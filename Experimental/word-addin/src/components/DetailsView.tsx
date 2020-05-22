@@ -116,7 +116,7 @@ export class DetailsView extends React.Component<
 					}
 					return `${prop}`;
 				} else {
-					const fld = recordProperties.Fields![propId];
+					const fld = (recordProperties.Fields || {})[propId];
 					if (fld) {
 						return fld.StringValue;
 					}
