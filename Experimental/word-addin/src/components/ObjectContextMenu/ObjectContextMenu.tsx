@@ -53,22 +53,33 @@ export class ObjectContextMenu extends React.Component<
 		}
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.loadMenu();
 	}
 
-	componentDidUpdate(
+	async componentDidUpdate(
 		prevProps: IContextMenuProps,
 		prevState: IContextMenuState
 	) {
 		this.loadMenu(prevProps, prevState);
 	}
 
-	private loadMenu(
+	private updateIsEnabled(
+		enabledCommandIds: string[],
+		menuItems: ICommandDef[]
+	) {
+		menuItems.forEach((menuItem) => {
+			menuItem.IsEnabled = (enabledCommandIds || []).includes(
+				menuItem.CommandId
+			);
+		});
+	}
+
+	private async loadMenu(
 		prevProps?: IContextMenuProps,
 		prevState?: IContextMenuState
 	) {
-		const { record } = this.props;
+		const { record, trimConnector } = this.props;
 		const { commandDefs } = this.state;
 
 		if (record) {
@@ -77,7 +88,13 @@ export class ObjectContextMenu extends React.Component<
 				!prevProps.record ||
 				prevProps.record.Uri != record.Uri
 			) {
-				this.setState({ commandDefs: record.CommandDefs! });
+				const menuItems = await trimConnector!.getMenuItemsForList(
+					record.TrimType!
+				);
+
+				this.updateIsEnabled(record.EnabledCommandIds!, menuItems);
+
+				this.setState({ commandDefs: menuItems });
 			}
 
 			if (
@@ -108,6 +125,8 @@ export class ObjectContextMenu extends React.Component<
 			record,
 			isInList,
 		} = this.props;
+		const { commandDefs } = this.state;
+
 		if (record.Uri < 1 && item.key !== "New") {
 			trimConnector!
 				.getObjectCaption(BaseObjectTypes.Record)
@@ -156,11 +175,17 @@ export class ObjectContextMenu extends React.Component<
 								appStore!.WebUrl
 							)
 							.then((data) => {
-								me.setState({
-									menuMessage: `Action completed successfully '${item.text}'.`,
-									commandDefs: data.CommandDefs,
-								});
-								setTimeout(function() {
+								this.updateIsEnabled(data.EnabledCommandIds!, commandDefs);
+								me.setState(
+									{
+										menuMessage: `Action completed successfully '${item.text}'.`,
+										commandDefs: [...commandDefs],
+									},
+									() => {
+										this.getFarItems();
+									}
+								);
+								setTimeout(function () {
 									me._dismissMessage();
 								}, 3000);
 								this.callCommandComplete(item.key);
@@ -324,12 +349,14 @@ export class ObjectContextMenu extends React.Component<
 		} else {
 			const checkinItem = menuItems.find((mi) => mi.key === "RecCheckIn");
 
-			const msgText = record.DeleteNow
-				? "Disable check in and delete on close"
-				: "Enable check in and delete on close";
+			const msgText = record.ExternalEditingComplete
+				? appStore.messages.web_disableCheckinOnClose
+				: appStore.messages.web_checkinOnClose;
 			if (checkinItem) {
 				let checkinDelete = { ...checkinItem };
-				checkinDelete.key = "RecCheckInDelete";
+				checkinDelete.key = record.ExternalEditingComplete
+					? CommandIds.RecUndoCheckInDelete
+					: CommandIds.RecCheckInDelete;
 				checkinDelete.text = msgText;
 				menuItems.splice(menuItems.indexOf(checkinItem) + 1, 0, checkinDelete);
 			}
@@ -368,12 +395,14 @@ export class ObjectContextMenu extends React.Component<
 
 				items.push({
 					iconProps: {
-						iconName: record.DeleteNow ? "OpenFile" : "FileBug",
+						iconName: record.ExternalEditingComplete ? "OpenFile" : "FileBug",
 					},
-					key: "RecCheckInDelete",
-					name: record.DeleteNow
-						? "Disable check in and delete on close"
-						: "Enable check in and delete on close",
+					key: record.ExternalEditingComplete
+						? CommandIds.RecUndoCheckInDelete
+						: CommandIds.RecCheckInDelete,
+					name: record.ExternalEditingComplete
+						? appStore.messages.web_disableCheckinOnClose
+						: appStore.messages.web_checkinOnClose,
 					iconOnly: true,
 					data: { NeedsAnObject: true },
 					disabled: checkinMenuItem.disabled,
@@ -412,6 +441,7 @@ export class ObjectContextMenu extends React.Component<
 				onClick: this._onActionClick,
 			});
 		}
+
 		this.setState({ items });
 
 		return Promise.resolve();

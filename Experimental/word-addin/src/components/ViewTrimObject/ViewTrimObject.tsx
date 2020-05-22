@@ -17,6 +17,7 @@ import {
 import ContextList from "../ContextList/ContextList";
 import ObjectContextMenu from "../ObjectContextMenu/ObjectContextMenu";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
+import CommandIds from "src/trim-coms/trim-command-ids";
 
 interface ViewTrimObjectProps {
 	appStore?: any;
@@ -90,10 +91,10 @@ export class ViewTrimObject extends React.Component<
 
 		if (
 			recordDetails.results.length > 0 &&
-			recordDetails.results[0].Fields!.DeleteNow
+			recordDetails.results[0].RecordExternalEditingComplete
 		) {
-			recordDetails.results[0].DeleteNow = (recordDetails.results[0].Fields!
-				.DeleteNow as ITrimBooleanField).Value;
+			recordDetails.results[0].ExternalEditingComplete = (recordDetails
+				.results[0].RecordExternalEditingComplete as ITrimBooleanField).Value;
 		}
 
 		return (
@@ -113,7 +114,8 @@ export class ViewTrimObject extends React.Component<
 								onCommandComplete={(commandKey: string) => {
 									if (
 										commandKey === "getGlobalProperties" ||
-										commandKey === "RecCheckInDelete"
+										commandKey === CommandIds.RecUndoCheckInDelete ||
+										commandKey === CommandIds.RecCheckInDelete
 									) {
 										const { appStore } = this.props;
 										appStore.setStatus("STARTING");

@@ -284,7 +284,10 @@ export class DetailsView extends React.Component<
 					<div className="details-view ms-Grid" dir="ltr">
 						{propertiesAndFields
 							.filter((p) => {
-								return p.Id !== "CommandDefs" && p.Id !== "DeleteNow";
+								return (
+									p.Id !== "CommandDefs" &&
+									p.Id !== "RecordExternalEditingComplete"
+								);
 							})
 							.map((propDef) => {
 								const includePaste =

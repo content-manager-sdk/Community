@@ -177,7 +177,6 @@ export class AppStoreBase implements IAppStore {
 							const webUrl = await this.wordConnector!.getWebUrl();
 							const driveInfo = await tc.getDriveId(
 								webUrl,
-								this.isEmail(),
 								this.wordConnector!.getRecordUri()
 							);
 
@@ -275,11 +274,11 @@ export class AppStoreBase implements IAppStore {
 			const fileName = await this.getFileToSave();
 
 			fields = fields || {};
-			fields.DriveID = this.documentInfo.Id;
+			properties.RecordExternalEditorId = this.documentInfo.Id;
 			try {
 				let isLocal = false;
-				if (!fields.DriveID) {
-					fields.DriveID = await this.wordConnector!.getWebUrl();
+				if (!properties.RecordExternalEditorId) {
+					properties.RecordExternalEditorId = await this.wordConnector!.getWebUrl();
 					isLocal = true;
 				}
 
@@ -295,7 +294,9 @@ export class AppStoreBase implements IAppStore {
 				if (!this.isEmail && isLocal) {
 					await this.trimConnector.saveToTrim(BaseObjectTypes.Record, {
 						Uri: newRecord.Uri,
-						Checkout: { CheckoutSaveCheckoutPathAs: fields.DriveID },
+						Checkout: {
+							CheckoutSaveCheckoutPathAs: properties.RecordExternalEditorId,
+						},
 					});
 				}
 
@@ -313,38 +314,6 @@ export class AppStoreBase implements IAppStore {
 				this.setError(error, "create record");
 				reject();
 			}
-			// this.getFileToSave().then((fileName) => {
-			// 	fields = fields || {};
-			// 	fields.DriveID = this.documentInfo.Id;
-
-			// 	return this.trimConnector
-			// 		.saveToTrim(
-			// 			BaseObjectTypes.Record,
-			// 			{
-			// 				...properties,
-			// 				RecordFilePath: fileName,
-			// 			},
-			// 			fields
-			// 		)
-			// 		.then((newRecord: ITrimMainObject) => {
-			// 			if (newRecord.Uri > 0) {
-			// 				this.setDocumentInfo({
-			// 					Uris: [],
-			// 					//CommandDefs: newRecord.CommandDefs!,
-			// 					Id: this.documentInfo.Id,
-			// 					Options: this.documentInfo.Options,
-			// 					EmailPath: this.documentInfo.EmailPath,
-			// 					URN: newRecord.URN!,
-			// 				});
-			// 			}
-			// 			this.setStatus("WAITING");
-			// 			resolve(newRecord);
-			// 		})
-			// 		.catch((error) => {
-			// 			this.setError(error, "create record");
-			// 			reject();
-			// 		});
-			// });
 		});
 	};
 

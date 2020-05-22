@@ -27,12 +27,12 @@ let testSearchResults;
 
 class MockWordConnector implements IWordUrl {
 	getDocumentData(writeSlice: any): Promise<string> {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			resolve("test");
 		});
 	}
 	getWebUrl(): Promise<string> {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			resolve("My.Url");
 		});
 	}
@@ -46,6 +46,7 @@ class MockWordConnector implements IWordUrl {
 }
 
 let postedFields: any;
+let postedProperties: any;
 let Mock_Trim_Action = "";
 let foundOptions;
 
@@ -55,7 +56,7 @@ class MockTrimConnector implements ITrimConnector {
 	getSearchClauseOrFieldDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseOrFieldDef[]> {
-		return new Promise(function(resolve, reject) {});
+		return new Promise(function (resolve, reject) {});
 	}
 	getObjectDefinitions(): Promise<
 		import("../trim-coms/trim-connector").IObjectDef[]
@@ -111,18 +112,18 @@ class MockTrimConnector implements ITrimConnector {
 		throw new Error("Method not implemented.");
 	}
 	getSearchOptions(): Promise<ISearchOptions> {
-		return new Promise(function(resolve, reject) {});
+		return new Promise(function (resolve, reject) {});
 	}
 	getSearchClauseDefinitions(
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {
-		return new Promise(function(resolve, reject) {});
+		return new Promise(function (resolve, reject) {});
 	}
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>> {
 		foundOptions = options;
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			resolve(testSearchResults);
 		});
 	}
@@ -139,7 +140,7 @@ class MockTrimConnector implements ITrimConnector {
 	}
 
 	getDriveId(webUrl: string): Promise<IDriveInformation> {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			if (Mock_Action == "NOT_FOUND") {
 				resolve({ Uris: [], Id: "abc", CommandDefs: [] });
 			} else if (Mock_Action == "ERROR") {
@@ -159,8 +160,9 @@ class MockTrimConnector implements ITrimConnector {
 		fields: any
 	): Promise<ITrimMainObject> {
 		postedFields = fields;
+		postedProperties = properties;
 
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			if (Mock_Trim_Action === "ERROR") {
 				reject({ message: "error" });
 			} else {
@@ -175,7 +177,7 @@ class MockTrimConnector implements ITrimConnector {
 		throw new Error("Method not implemented.");
 	}
 	getMessages(): Promise<any> {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			resolve({
 				web_HPRM: "Content Manager",
 				bob_needSelectedRow:
@@ -185,7 +187,7 @@ class MockTrimConnector implements ITrimConnector {
 		});
 	}
 	getMe(): Promise<ILocation> {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			if (Mock_Trim_Action === "ERROR") {
 				reject({ message: "error" });
 			} else {
@@ -320,7 +322,7 @@ describe("Test basic setup from Trim", () => {
 
 		appStore.createRecord(1, {});
 
-		setTimeout(function() {
+		setTimeout(function () {
 			try {
 				expect(appStore.errorMessage).toBe("error (create record)");
 
@@ -362,7 +364,7 @@ describe("Test basic setup from Trim", () => {
 
 		appStore.setDocumentInfo({ Id: "abc", Uris: [], CommandDefs: [] });
 		appStore.createRecord(2, {}).then(() => {
-			expect(postedFields["DriveID"]).toBe("abc");
+			expect(postedProperties["RecordExternalEditorId"]).toBe("abc");
 			done();
 		});
 	});
@@ -426,7 +428,7 @@ describe("Test basic setup from Trim", () => {
 });
 
 describe("Test operation", () => {
-	it("get a record URL", function() {
+	it("get a record URL", function () {
 		appStore.errorMessage = "test";
 		appStore.status = "ERROR";
 
@@ -435,7 +437,7 @@ describe("Test operation", () => {
 		expect(url).toEqual("/cm?uri=5");
 	});
 
-	it("get a container URL", function() {
+	it("get a container URL", function () {
 		appStore.errorMessage = "test";
 		appStore.status = "ERROR";
 
@@ -444,7 +446,7 @@ describe("Test operation", () => {
 		expect(url).toEqual("/cm?q=recContainerEx:[unkUri:5]&t=Record");
 	});
 
-	it("clears the error when reset called", function() {
+	it("clears the error when reset called", function () {
 		appStore.errorMessage = "test";
 		appStore.status = "ERROR";
 
@@ -454,7 +456,7 @@ describe("Test operation", () => {
 		expect(appStore.status).toEqual("WAITING");
 	});
 
-	it("sets the error", function() {
+	it("sets the error", function () {
 		appStore.errorMessage = "";
 		appStore.status = "WAITING";
 

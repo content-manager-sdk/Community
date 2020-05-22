@@ -89,27 +89,6 @@ describe("Outlook attachments", function () {
 		}
 	}.bind(trimConnector);
 
-	// trimConnector.getDriveId = function(
-	// 	webUrl: string,
-	// 	isEmail: boolean,
-	// 	recordUri: number,
-	// 	attachmentName: string
-	// ) {
-	// 	if (webUrlFound) {
-	// 		webUrlFound2 = webUrl;
-	// 		attachmentNameFound2 = attachmentName;
-	// 		return new Promise((resolve) => {
-	// 			resolve({ Id: "test2" });
-	// 		});
-	// 	} else {
-	// 		webUrlFound = webUrl;
-	// 		attachmentNameFound = attachmentName;
-	// 		return new Promise((resolve) => {
-	// 			resolve({ Id: "test" });
-	// 		});
-	// 	}
-	// }.bind(trimConnector);
-
 	trimConnector.getDatabaseProperties = function () {
 		return new Promise(function (resolve) {
 			resolve({

@@ -660,16 +660,21 @@ describe("Test fetch from TRIM", () => {
 		return trimConnector
 			.saveToTrim(
 				BaseObjectTypes.Record,
-				{ RecordTypedTitle: "test", RecordRecordType: 1 },
-				{ DriveId: "test" }
+				{
+					RecordTypedTitle: "test",
+					RecordRecordType: 1,
+					RecordExternalEditorId: "test",
+				},
+				{}
 			)
 			.then((data) => {
 				expect(postConfig.data).toEqual(
 					JSON.stringify({
 						RecordTypedTitle: "test",
 						RecordRecordType: 1,
+						RecordExternalEditorId: "test",
 						properties: "CommandDefs,URN",
-						Fields: { DriveId: "test" },
+						Fields: {},
 					})
 				);
 				expect(postConfig.headers!["Accept"]).toEqual("application/json");
@@ -855,16 +860,16 @@ describe("Test fetch from TRIM", () => {
 		let token = "";
 		let webUrl = "";
 		mock
-			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
+			.onGet(`${SERVICEAPI_BASE_URI}/DriveItem`)
 			.reply(function (config: any) {
 				token = config.headers["Authorization"];
-				webUrl = config.params["webUrl"];
+				webUrl = config.params["Url"];
 
-				return [200, { Results: [{ Id: "0123", Uri: [567] }] }];
+				return [200, { DriveItems: [{ Id: "0123", Uris: [567] }] }];
 			});
 
 		expect.assertions(4);
-		return trimConnector.getDriveId("abc", false, 0).then((data) => {
+		return trimConnector.getDriveId("abc", 0).then((data) => {
 			expect(webUrl).toEqual("abc");
 			expect(data.Id).toEqual("0123");
 			expect(data.Uris).toEqual([567]);
@@ -875,14 +880,14 @@ describe("Test fetch from TRIM", () => {
 	it("sends the attachment name", () => {
 		let attachmentName = "";
 		mock
-			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
+			.onGet(`${SERVICEAPI_BASE_URI}/DriveItem`)
 			.reply(function (config: any) {
 				attachmentName = config.params["attachmentName"];
 
-				return [200, { Results: [{ Id: "0123", Uri: [567] }] }];
+				return [200, { DriveItems: [{ Id: "0123", Uris: [567] }] }];
 			});
 
-		return trimConnector.getDriveId("abc", true, 0, "a.name").then((data) => {
+		return trimConnector.getDriveId("abc", 0, "a.name").then((data) => {
 			expect(attachmentName).toEqual("a.name");
 		});
 	});
@@ -929,38 +934,25 @@ describe("Test fetch from TRIM", () => {
 		});
 	});
 
-	it("gets command def details", async () => {
-		const replyValue = [
-			{
-				CommandId: "RecDocFinal",
-				MenuEntryString: "Final",
-				Tooltip: "Make Final",
-				StatusBarMessage: "Make Final",
-				IsEnabled: true,
-			},
-		];
-
+	it("gets Record Uris", async () => {
 		mock
-			.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`)
+			.onGet(`${SERVICEAPI_BASE_URI}/DriveItem`)
 			.reply(function (config: any) {
-				return [
-					200,
-					{ Results: [{ Id: "0123", Uri: [567], CommandDefs: replyValue }] },
-				];
+				return [200, { DriveItems: [{ Id: "0123", Uris: [567] }] }];
 			});
 
 		expect.assertions(1);
-		const data = await trimConnector.getDriveId("test", false, 0);
+		const data = await trimConnector.getDriveId("test", 0);
 		expect(data.Uris).toEqual([567]);
 	});
 
 	it("handles an error response without a body", async () => {
-		mock.onGet(`${SERVICEAPI_BASE_URI}/RegisterFile`).networkError();
+		mock.onGet(`${SERVICEAPI_BASE_URI}/DriveItem`).networkError();
 
 		expect.assertions(1);
 
 		try {
-			await trimConnector.getDriveId("");
+			await trimConnector.getDriveId("", 0);
 		} catch (error) {
 			expect(error.message).toEqual("Network Error");
 		}
@@ -975,7 +967,8 @@ describe("Test fetch from TRIM", () => {
 						propertyValue: "Both",
 						stringDisplayType: "ViewPane",
 						includePropertyDefs: true,
-						properties: "ToolTip,NameString,DeleteNow,CommandDefs",
+						properties:
+							"ToolTip,NameString,RecordExternalEditingComplete,EnabledCommandIds",
 						descendantProperties: "RecordNumber",
 					},
 				})
@@ -1042,39 +1035,31 @@ describe("Test fetch from TRIM", () => {
 		beforeEach(() => {
 			mock.reset();
 			postBody = null;
-			mock.onPost(`${SERVICEAPI_BASE_URI}/DriveFile`).reply((config) => {
+			mock.onPost(`${SERVICEAPI_BASE_URI}/Record`).reply((config) => {
 				postBody = config.data;
 				return [200, { Results: [{}] }];
 			});
 		});
 
 		it("sends a Uri for the Check in", async () => {
-			await trimConnector.runAction(CommandIds.RecCheckIn, 786, "", "");
-			expect(postBody).toEqual(
-				JSON.stringify({
-					uri: 786,
-					Action: "checkin",
-					fileName: "",
-					webUrl: "",
+			await trimConnector.runAction(CommandIds.RecCheckIn, 786, "file.doc", "");
+			expect(JSON.parse(postBody)).toEqual(
+				expect.objectContaining({
+					Uri: 786,
+					RecordFilePath: "file.doc",
+					properties: "EnabledCommandIds",
 				})
 			);
-		});
-
-		it("sends an action the Set as Final", async () => {
-			const expectedResponse = {
-				Action: "finalize",
-				uri: 999,
-			};
-
-			await trimConnector.runAction(CommandIds.RecDocFinal, 999, "", "");
-			expect(postBody).toEqual(JSON.stringify(expectedResponse));
 		});
 
 		it("sends an action for add to favourites", async () => {
 			expect.assertions(1);
 			const expectedResponse = {
-				Action: "AddToFavorites",
-				uri: 9000000001,
+				Uri: 9000000001,
+				SetUserLabel: {
+					SetUserLabelFavoriteType: "Favorites",
+				},
+				properties: "EnabledCommandIds",
 			};
 
 			await trimConnector.runAction(
@@ -1083,14 +1068,60 @@ describe("Test fetch from TRIM", () => {
 				"",
 				""
 			);
-			expect(postBody).toEqual(JSON.stringify(expectedResponse));
+
+			expect(JSON.parse(postBody)).toEqual(
+				expect.objectContaining(expectedResponse)
+			);
+		});
+
+		it("sets Editor Complete on RecCheckinDelete", async () => {
+			expect.assertions(1);
+			const expectedResponse = {
+				Uri: 9000000001,
+				RecordExternalEditingComplete: true,
+				properties: "EnabledCommandIds",
+			};
+
+			await trimConnector.runAction(
+				CommandIds.RecCheckInDelete,
+				9000000001,
+				"",
+				""
+			);
+
+			expect(JSON.parse(postBody)).toEqual(
+				expect.objectContaining(expectedResponse)
+			);
+		});
+
+		it("sets Editor Complete on RecUndoCheckinDelete", async () => {
+			expect.assertions(1);
+			const expectedResponse = {
+				Uri: 9000000001,
+				RecordExternalEditingComplete: false,
+				properties: "EnabledCommandIds",
+			};
+
+			await trimConnector.runAction(
+				CommandIds.RecUndoCheckInDelete,
+				9000000001,
+				"",
+				""
+			);
+
+			expect(JSON.parse(postBody)).toEqual(
+				expect.objectContaining(expectedResponse)
+			);
 		});
 
 		it("sends an action for remove from favourites", async () => {
 			expect.assertions(1);
 			const expectedResponse = {
-				Action: "RemoveFromFavorites",
-				uri: 9000000001,
+				Uri: 9000000001,
+				RemoveUserLabel: {
+					RemoveUserLabelFavoriteType: "Favorites",
+				},
+				properties: "EnabledCommandIds",
 			};
 
 			await trimConnector.runAction(
@@ -1099,7 +1130,9 @@ describe("Test fetch from TRIM", () => {
 				"",
 				""
 			);
-			expect(postBody).toEqual(JSON.stringify(expectedResponse));
+			expect(JSON.parse(postBody)).toEqual(
+				expect.objectContaining(expectedResponse)
+			);
 		});
 	});
 	describe("TRIM child collections", () => {
@@ -1482,61 +1515,170 @@ describe("Test fetch from TRIM", () => {
 	[
 		{
 			trimType: BaseObjectTypes.CheckinPlace,
+			commandIds: "Remove,Properties",
 			expected: [
 				{
-					CommandId: "New",
-					MenuEntryString: "New Check In Style",
-					Tooltip: "New Check In Style",
-					StatusBarMessage: "New Check In Style",
-					IsEnabled: true,
-					NeedsAnObject: false,
+					CommandId: "Properties",
+					MenuEntryString: "Properties",
+					Tooltip: "Display Properties",
+					StatusBarMessage: "Display Properties",
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "Remove",
+					MenuEntryString: "Delete",
+					Tooltip: "Delete Check In Place",
+					StatusBarMessage: "Delete Check In Place",
+					NeedsAnObject: true,
 				},
 			],
 		},
-		{ trimType: BaseObjectTypes.Record, expected: [] },
+		{
+			trimType: BaseObjectTypes.Record,
+			expected: [
+				{
+					CommandId: "Properties",
+					MenuEntryString: "Properties",
+					Tooltip: "Display Properties",
+					StatusBarMessage: "Display Properties",
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "RecCheckIn",
+					MenuEntryString: "Check In",
+					Tooltip: "Check In an Electronic Document",
+					StatusBarMessage: "Check In an Electronic Document",
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "AddToFavorites",
+					MenuEntryString: "Favorites",
+					Tooltip: "Add To Favorites",
+					StatusBarMessage: "Add To Favorites",
+					NeedsAnObject: true,
+				},
+				{
+					CommandId: "RemoveFromFavorites",
+					MenuEntryString: "Remove from Favorites",
+					Tooltip: "Remove from Favorites",
+					StatusBarMessage: "Remove from Favorites",
+					NeedsAnObject: true,
+				},
+			],
+			commandIds: "Properties,RecCheckIn,AddToFavorites,RemoveFromFavorites",
+		},
 	].forEach((testData) => {
-		it("gets the commands for the Check in Style list", async () => {
+		it(`gets the commands for the ${testData.trimType} list`, async () => {
 			let postConfig: any;
 			mock.reset();
 			mock
 				.onGet(`${SERVICEAPI_BASE_URI}/CommandDef`)
 				.reply(function (config: any) {
 					postConfig = config;
-					return [
-						200,
-						{
-							CommandDefs: [
-								{
-									RefreshStyle: "Add",
-									IsListCommand: true,
-									IsNavigationCommand: false,
-									NeedsAnObject: false,
-									CommandId: "New",
-									MenuEntryString: "New Check In Style",
-									Tooltip: "New Check In Style",
-									StatusBarMessage: "New Check In Style",
-									Icon: "Unknown",
-									MenuItemType: "MenuItemCommand",
-								},
-							],
-						},
-					];
+					if (config.params.TrimType == BaseObjectTypes.Record) {
+						return [
+							200,
+							{
+								CommandDefs: [
+									{
+										RefreshStyle: "CurrentAndParent",
+										IsListCommand: false,
+										IsNavigationCommand: false,
+										NeedsAnObject: true,
+										CommandId: "Properties",
+										MenuEntryString: "Properties",
+										Tooltip: "Display Properties",
+										StatusBarMessage: "Display Properties",
+										Icon: "Properties",
+										MenuItemType: "MenuItemCommand",
+									},
+									{
+										RefreshStyle: "Current",
+										IsListCommand: false,
+										IsNavigationCommand: false,
+										NeedsAnObject: true,
+										CommandId: "RecCheckIn",
+										MenuEntryString: "Check In",
+										Tooltip: "Check In an Electronic Document",
+										StatusBarMessage: "Check In an Electronic Document",
+										Icon: "RecCheckin",
+										MenuItemType: "MenuItemCommand",
+									},
+									{
+										RefreshStyle: "None",
+										IsListCommand: false,
+										IsNavigationCommand: false,
+										NeedsAnObject: true,
+										CommandId: "AddToFavorites",
+										MenuEntryString: "Favorites",
+										Tooltip: "Add To Favorites",
+										StatusBarMessage: "Add To Favorites",
+										Icon: "AddToFavorites",
+										MenuItemType: "MenuItemCommand",
+									},
+									{
+										RefreshStyle: "None",
+										IsListCommand: false,
+										IsNavigationCommand: false,
+										NeedsAnObject: true,
+										CommandId: "RemoveFromFavorites",
+										MenuEntryString: "Remove from Favorites",
+										Tooltip: "Remove from Favorites",
+										StatusBarMessage: "Remove from Favorites",
+										Icon: "AddToFavorites",
+										MenuItemType: "MenuItemCommand",
+									},
+								],
+							},
+						];
+					} else {
+						return [
+							200,
+							{
+								CommandDefs: [
+									{
+										RefreshStyle: "CurrentAndParent",
+										IsListCommand: false,
+										IsNavigationCommand: false,
+										NeedsAnObject: true,
+										CommandId: "Properties",
+										MenuEntryString: "Properties",
+										Tooltip: "Display Properties",
+										StatusBarMessage: "Display Properties",
+										Icon: "Properties",
+										MenuItemType: "MenuItemCommand",
+									},
+									{
+										RefreshStyle: "Delete",
+										IsListCommand: false,
+										IsNavigationCommand: false,
+										NeedsAnObject: true,
+										CommandId: "Remove",
+										MenuEntryString: "Delete",
+										Tooltip: "Delete Check In Place",
+										StatusBarMessage: "Delete Check In Place",
+										Icon: "Cross",
+										MenuItemType: "MenuItemCommand",
+									},
+								],
+							},
+						];
+					}
 				});
 
+			await flushPromises();
 			const commandDefs = await trimConnector.getMenuItemsForList(
 				testData.trimType
 			);
 			expect(commandDefs.length).toEqual(testData.expected.length);
 			expect(commandDefs).toEqual(expect.arrayContaining(testData.expected));
 
-			if (testData.trimType === BaseObjectTypes.CheckinStyle) {
-				expect(postConfig.params).toEqual(
-					expect.objectContaining({
-						TrimType: testData.trimType,
-						CommandIds: "New",
-					})
-				);
-			}
+			expect(postConfig.params).toEqual(
+				expect.objectContaining({
+					TrimType: testData.trimType,
+					CommandIds: testData.commandIds,
+				})
+			);
 		});
 	});
 

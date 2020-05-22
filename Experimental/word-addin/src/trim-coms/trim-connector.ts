@@ -80,7 +80,7 @@ export interface IDriveActionInformation {
 	Id: string;
 	Uris: number[];
 	RecordType: string;
-	CommandDefs: ICommandDef[];
+	EnabledCommandIds: string[];
 	Options: ITrimOptions;
 	Enums: IEnums;
 	EmailPath: string;
@@ -96,12 +96,12 @@ export interface ITrimMainObject {
 	Icon?: IIcon;
 	Uri: number;
 	NameString?: string;
-	CommandDefs?: ICommandDef[];
+	EnabledCommandIds?: string[];
 	PossiblyHasSubordinates?: boolean;
 	ToolTip?: string;
 	Selected?: boolean;
 	TrimType?: BaseObjectTypes;
-	DeleteNow?: boolean;
+	ExternalEditingComplete?: boolean;
 	URN?: string;
 }
 
@@ -244,7 +244,7 @@ export interface ITrimConnector {
 	getRecordAsText(recordUri: number): Promise<string>;
 	getDriveId(
 		webUrl: string,
-		isEmail: boolean,
+
 		recordUri: number,
 		attachmentName?: string,
 		getFile?: boolean
@@ -347,32 +347,45 @@ export class TrimConnector implements ITrimConnector {
 	public getMenuItemsForList(
 		trimType: BaseObjectTypes
 	): Promise<ICommandDef[]> {
-		if (trimType !== BaseObjectTypes.CheckinPlace) {
+		const cachedResults = this.getItemFromCache(CacheIds.CommandDefs) || {};
+
+		if (cachedResults[trimType]) {
 			return new Promise((resolve) => {
-				resolve([]);
+				resolve(cachedResults[trimType]);
 			});
 		} else {
-			const data = {
-				CommandIds: "New",
-				TrimType: trimType,
-			};
-			return this.makeRequest(
-				{ path: "CommandDef", method: "get", data },
-				(data: any) => {
-					const commandDefs = data.CommandDefs.map((cdef: ICommandDef) => {
-						return {
-							CommandId: cdef.CommandId,
-							MenuEntryString: cdef.MenuEntryString,
-							Tooltip: cdef.Tooltip,
-							StatusBarMessage: cdef.StatusBarMessage,
-							IsEnabled: true,
-							NeedsAnObject: cdef.NeedsAnObject,
-						};
-					});
+			if (
+				trimType !== BaseObjectTypes.CheckinPlace &&
+				trimType !== BaseObjectTypes.Record
+			) {
+				return new Promise((resolve) => {
+					resolve([]);
+				});
+			} else {
+				const data = {
+					CommandIds:
+						trimType === BaseObjectTypes.CheckinPlace
+							? "Remove,Properties"
+							: "Properties,RecCheckIn,AddToFavorites,RemoveFromFavorites",
+					TrimType: trimType,
+				};
+				return this.makeRequest(
+					{ path: "CommandDef", method: "get", data },
+					(data: any) => {
+						const commandDefs = data.CommandDefs.map((cdef: ICommandDef) => {
+							return {
+								CommandId: cdef.CommandId,
+								MenuEntryString: cdef.MenuEntryString,
+								Tooltip: cdef.Tooltip,
+								StatusBarMessage: cdef.StatusBarMessage,
+								NeedsAnObject: cdef.NeedsAnObject,
+							};
+						});
 
-					return commandDefs;
-				}
-			);
+						return commandDefs;
+					}
+				);
+			}
 		}
 	}
 
@@ -624,31 +637,34 @@ export class TrimConnector implements ITrimConnector {
 
 	public runAction(
 		commandId: CommandIds,
-		uri: number,
+		Uri: number,
 		fileName: string,
 		webUrl: string
 	): Promise<IDriveActionInformation> {
-		const path = "DriveFile";
+		const path = "Record";
 
+		const postBody = { Uri, properties: "EnabledCommandIds" };
 		const postBodies = {
-			[CommandIds.RecCheckIn]: { uri, Action: "checkin", fileName, webUrl },
-			[CommandIds.RecCheckInDelete]: {
-				uri,
-				Action: "checkin-request-del",
-				fileName,
-				webUrl,
+			[CommandIds.RecCheckIn]: { RecordFilePath: fileName, ...postBody },
+			[CommandIds.RecUndoCheckInDelete]: {
+				RecordExternalEditingComplete: false,
+				...postBody,
 			},
-			[CommandIds.RecDocFinal]: {
-				Action: "finalize",
-				uri,
+			[CommandIds.RecCheckInDelete]: {
+				RecordExternalEditingComplete: true,
+				...postBody,
 			},
 			[CommandIds.AddToFavorites]: {
-				Action: "AddToFavorites",
-				uri,
+				SetUserLabel: {
+					SetUserLabelFavoriteType: "Favorites",
+				},
+				...postBody,
 			},
 			[CommandIds.RemoveFromFavorites]: {
-				Action: "RemoveFromFavorites",
-				uri,
+				RemoveUserLabel: {
+					RemoveUserLabelFavoriteType: "Favorites",
+				},
+				...postBody,
 			},
 		};
 
@@ -740,12 +756,20 @@ export class TrimConnector implements ITrimConnector {
 		trimType: BaseObjectTypes,
 		uri: number
 	): Promise<IObjectDetails> {
+		let properties = "ToolTip,NameString";
+		if (trimType === BaseObjectTypes.Record) {
+			properties += ",RecordExternalEditingComplete,EnabledCommandIds";
+		}
+		if (trimType === BaseObjectTypes.CheckinPlace) {
+			properties += ",EnabledCommandIds";
+		}
+
 		const params = {
 			includePropertyDefs: true,
 			propertySets: "Detailed",
 			propertyValue: "Both",
 			stringDisplayType: "ViewPane",
-			properties: "ToolTip,NameString,DeleteNow,CommandDefs",
+			properties,
 			descendantProperties: "RecordNumber",
 		};
 
@@ -775,22 +799,22 @@ export class TrimConnector implements ITrimConnector {
 
 	public getDriveId(
 		webUrl: string,
-		isEmail: boolean,
+
 		recordUri: number,
 		attachmentName?: string,
 		getFile?: boolean
 	): Promise<IDriveInformation> {
 		return this.makeRequest(
 			{
-				path: "RegisterFile",
+				path: "DriveItem",
 				method: "get",
-				data: { webUrl, isEmail, uri: recordUri, attachmentName, getFile },
+				data: { Url: webUrl, uri: recordUri, attachmentName, getFile },
 			},
 			(data: any) => {
-				const returnData = data.Results
-					? data.Results[0]
+				const returnData = data.DriveItems
+					? data.DriveItems[0]
 					: { Id: "", Uri: [], CommandDefs: [] };
-				returnData.Uris = returnData.Uri;
+
 				return returnData;
 			}
 		);
@@ -973,6 +997,10 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_Save = "Save";
 					data.Messages.web_LinkedFolders = "Linked Folders";
 					data.Messages.web_CheckinStyles = "Checkin Styles";
+					data.Messages.web_disableCheckinOnClose =
+						"Disable check in and delete on close";
+					data.Messages.web_checkinOnClose =
+						"Enable check in and delete on close";
 					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;
@@ -1227,6 +1255,7 @@ export class TrimConnector implements ITrimConnector {
 							response.data.Results ||
 							response.data.FileName ||
 							response.data.File ||
+							response.data.DriveItems ||
 							response.data.PropertiesAndFields ||
 							typeof response.data === "string"
 						) {

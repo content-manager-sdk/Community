@@ -38,6 +38,8 @@ export class TrimMessages {
 	public web_Save = ""; // tslint:disable-line
 	public web_CheckinStyles = ""; // tslint:disable-line
 	public web_LinkedFolders = ""; // tslint:disable-line
+	public web_checkinOnClose = ""; //tslint:disable-line
+	public web_disableCheckinOnClose = ""; //tslint:disable-line
 }
 
 export default TrimMessages;
