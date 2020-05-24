@@ -65,9 +65,9 @@ export class ObjectContextMenu extends React.Component<
 	}
 
 	private async updateIsEnabled(menuItems: ICommandDef[]) {
-		const { record, trimConnector } = this.props;
+		const { record, trimConnector, trimType } = this.props;
 		const enabledCommandIds = await trimConnector!.getEnabledCommandIds(
-			record.TrimType!,
+			trimType,
 			record.Uri
 		);
 

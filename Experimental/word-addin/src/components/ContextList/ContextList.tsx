@@ -117,6 +117,7 @@ export class ContextList extends React.Component<
 						excludeShortCuts={true}
 						onTrimObjectSelected={this._trimObjectSelected}
 						advancedSearch={true}
+						autoSelectFirst={true}
 					/>
 				</FocusTrapZone>
 			</div>

@@ -34,6 +34,7 @@ export interface ITrimObjectSearchListProps
 	filterSearch?: string;
 	excludeShortCuts?: boolean;
 	singleClickActAsDouble?: boolean;
+	autoSelectFirst?: boolean;
 
 	/**
 	 * Callback issued when search is closed

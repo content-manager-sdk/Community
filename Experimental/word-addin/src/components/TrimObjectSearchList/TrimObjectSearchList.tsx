@@ -120,6 +120,7 @@ export class TrimObjectSearchList extends React.Component<
 			filterSearch,
 			onTrimTypeChanged,
 			appStore,
+			autoSelectFirst,
 		} = this.props;
 
 		if (start < 2) {
@@ -181,7 +182,11 @@ export class TrimObjectSearchList extends React.Component<
 						this.setState({ items: response.results });
 					}
 					appStore!.setSpinning(false);
-					if (selectedUri < 1 && response.results.length > 0) {
+					if (
+						autoSelectFirst === true &&
+						selectedUri < 1 &&
+						response.results.length > 0
+					) {
 						this._onTrimObjectSelected(response.results[0].Uri, false);
 					}
 				})

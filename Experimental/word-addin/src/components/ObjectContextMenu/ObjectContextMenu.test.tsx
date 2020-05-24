@@ -89,6 +89,12 @@ describe("Object Context Menu", () => {
 		});
 	}.bind(trimConnector);
 
+	trimConnector.getEnabledCommandIds = function () {
+		return new Promise<string[]>((resolve) => {
+			resolve(["AddToFavorites"]);
+		});
+	}.bind(trimConnector);
+
 	trimConnector.setGlobalUserOptions = function (forOptionsSet) {
 		setForOptionsSet = forOptionsSet;
 
