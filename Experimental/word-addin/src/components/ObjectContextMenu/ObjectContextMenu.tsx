@@ -64,10 +64,13 @@ export class ObjectContextMenu extends React.Component<
 		this.loadMenu(prevProps, prevState);
 	}
 
-	private updateIsEnabled(
-		enabledCommandIds: string[],
-		menuItems: ICommandDef[]
-	) {
+	private async updateIsEnabled(menuItems: ICommandDef[]) {
+		const { record, trimConnector } = this.props;
+		const enabledCommandIds = await trimConnector!.getEnabledCommandIds(
+			record.TrimType!,
+			record.Uri
+		);
+
 		menuItems.forEach((menuItem) => {
 			menuItem.IsEnabled = (enabledCommandIds || []).includes(
 				menuItem.CommandId
@@ -92,7 +95,7 @@ export class ObjectContextMenu extends React.Component<
 					record.TrimType!
 				);
 
-				this.updateIsEnabled(record.EnabledCommandIds!, menuItems);
+				await this.updateIsEnabled(menuItems);
 
 				this.setState({ commandDefs: menuItems });
 			}
@@ -174,8 +177,8 @@ export class ObjectContextMenu extends React.Component<
 								fileName,
 								appStore!.WebUrl
 							)
-							.then((data) => {
-								this.updateIsEnabled(data.EnabledCommandIds!, commandDefs);
+							.then(async (data) => {
+								await this.updateIsEnabled(commandDefs);
 								me.setState(
 									{
 										menuMessage: `Action completed successfully '${item.text}'.`,

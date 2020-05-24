@@ -170,7 +170,6 @@ export class TrimObjectSearchList extends React.Component<
 					purposeExtra: actualPurposeExtra || 0,
 					start,
 					sortBy,
-					properties: "CommandDefs",
 				})
 				.then((response: ISearchResults<ITrimMainObject>) => {
 					this._hasMore = response.hasMoreItems;

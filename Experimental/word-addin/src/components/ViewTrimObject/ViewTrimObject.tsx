@@ -17,7 +17,7 @@ import {
 import ContextList from "../ContextList/ContextList";
 import ObjectContextMenu from "../ObjectContextMenu/ObjectContextMenu";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
-import CommandIds from "src/trim-coms/trim-command-ids";
+import CommandIds from "../../trim-coms/trim-command-ids";
 
 interface ViewTrimObjectProps {
 	appStore?: any;

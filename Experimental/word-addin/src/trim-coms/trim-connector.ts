@@ -80,7 +80,6 @@ export interface IDriveActionInformation {
 	Id: string;
 	Uris: number[];
 	RecordType: string;
-	EnabledCommandIds: string[];
 	Options: ITrimOptions;
 	Enums: IEnums;
 	EmailPath: string;
@@ -96,7 +95,6 @@ export interface ITrimMainObject {
 	Icon?: IIcon;
 	Uri: number;
 	NameString?: string;
-	EnabledCommandIds?: string[];
 	PossiblyHasSubordinates?: boolean;
 	ToolTip?: string;
 	Selected?: boolean;
@@ -294,6 +292,11 @@ export interface ITrimConnector {
 	setOutlookUserOptions(
 		options: IOutlookUserOptions
 	): Promise<IOutlookUserOptions>;
+
+	getEnabledCommandIds(
+		trimType: BaseObjectTypes,
+		uri: Number
+	): Promise<string[]>;
 }
 
 export class TrimConnector implements ITrimConnector {
@@ -306,6 +309,13 @@ export class TrimConnector implements ITrimConnector {
 			this.setCacheItem(CacheIds.UseCheckinStyles, false);
 		}
 		return this.getItemFromCache(CacheIds.UseCheckinStyles);
+	}
+
+	private getCommandIds(trimType: BaseObjectTypes) {
+		if (trimType === BaseObjectTypes.Record) {
+			return "Properties,RecCheckIn,AddToFavorites,RemoveFromFavorites";
+		}
+		return "Remove,Properties";
 	}
 
 	public setUseCheckinStyles(use: boolean): void {
@@ -344,6 +354,22 @@ export class TrimConnector implements ITrimConnector {
 		}
 	}
 
+	getEnabledCommandIds(
+		trimType: BaseObjectTypes,
+		uri: Number
+	): Promise<string[]> {
+		const data = {
+			properties: "EnabledCommandIds",
+			cid_SelectedIds: this.getCommandIds(trimType),
+		};
+		return this.makeRequest(
+			{ path: `${trimType}/${uri}`, method: "get", data },
+			(data: any) => {
+				return data.Results[0].EnabledCommandIds;
+			}
+		);
+	}
+
 	public getMenuItemsForList(
 		trimType: BaseObjectTypes
 	): Promise<ICommandDef[]> {
@@ -363,10 +389,7 @@ export class TrimConnector implements ITrimConnector {
 				});
 			} else {
 				const data = {
-					CommandIds:
-						trimType === BaseObjectTypes.CheckinPlace
-							? "Remove,Properties"
-							: "Properties,RecCheckIn,AddToFavorites,RemoveFromFavorites",
+					CommandIds: this.getCommandIds(trimType),
 					TrimType: trimType,
 				};
 				return this.makeRequest(
@@ -381,6 +404,9 @@ export class TrimConnector implements ITrimConnector {
 								NeedsAnObject: cdef.NeedsAnObject,
 							};
 						});
+
+						cachedResults[trimType] = commandDefs;
+						this.setCacheItem(CacheIds.CommandDefs, cachedResults);
 
 						return commandDefs;
 					}
@@ -643,7 +669,7 @@ export class TrimConnector implements ITrimConnector {
 	): Promise<IDriveActionInformation> {
 		const path = "Record";
 
-		const postBody = { Uri, properties: "EnabledCommandIds" };
+		const postBody = { Uri };
 		const postBodies = {
 			[CommandIds.RecCheckIn]: { RecordFilePath: fileName, ...postBody },
 			[CommandIds.RecUndoCheckInDelete]: {
@@ -758,10 +784,7 @@ export class TrimConnector implements ITrimConnector {
 	): Promise<IObjectDetails> {
 		let properties = "ToolTip,NameString";
 		if (trimType === BaseObjectTypes.Record) {
-			properties += ",RecordExternalEditingComplete,EnabledCommandIds";
-		}
-		if (trimType === BaseObjectTypes.CheckinPlace) {
-			properties += ",EnabledCommandIds";
+			properties += ",RecordExternalEditingComplete";
 		}
 
 		const params = {

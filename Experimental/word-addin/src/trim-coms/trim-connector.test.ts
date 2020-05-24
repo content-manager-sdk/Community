@@ -186,6 +186,37 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("sets enabled Command Ids", () => {
+		let sentProperties: string = "";
+		let sent_selectedIds: string = "";
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
+			sentProperties = config.params.properties;
+			sent_selectedIds = config.params.cid_SelectedIds;
+			return [
+				200,
+				{
+					Results: [{ NameString: "Rec_1", Uri: 1 }],
+				},
+			];
+		});
+
+		expect.assertions(2);
+		return trimConnector
+			.search<ITrimMainObject>({
+				trimType: BaseObjectTypes.Record,
+				q: "all",
+				purpose: 3,
+				sortBy: "registeredOn",
+				includeEnabledCommands: true,
+			})
+			.then(() => {
+				expect(sentProperties).toContain("EnabledCommandIds");
+				expect(sent_selectedIds).toEqual(
+					"Properties,RecCheckIn,AddToFavorites,RemoveFromFavorites"
+				);
+			});
+	});
+
 	it("passes filter to search", () => {
 		let filter: string = "";
 		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
@@ -1679,6 +1710,36 @@ describe("Test fetch from TRIM", () => {
 					CommandIds: testData.commandIds,
 				})
 			);
+		});
+
+		it(`gets the enabled command ids`, async () => {
+			let postConfig: any;
+			mock.reset();
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/CheckinPlace/7`)
+				.reply(function (config: any) {
+					postConfig = config;
+
+					return [
+						200,
+						{
+							Results: [
+								{
+									EnabledCommandIds: ["Properties"],
+								},
+							],
+						},
+					];
+				});
+
+			await flushPromises();
+			const enabledIds = await trimConnector.getEnabledCommandIds(
+				BaseObjectTypes.CheckinPlace,
+				7
+			);
+			expect(enabledIds).toEqual(["Properties"]);
+			expect(postConfig.params.properties).toContain("EnabledCommandIds");
+			expect(postConfig.params.cid_SelectedIds).toEqual("Remove,Properties");
 		});
 	});
 
