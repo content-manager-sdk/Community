@@ -23,6 +23,7 @@ interface IContextListProps {
 	hideSearchBar?: boolean;
 	searchString?: string;
 	onCommand?: (commandKey: string, uri: number) => void;
+	pageTitle?: string;
 }
 
 export class ContextList extends React.Component<
@@ -65,7 +66,7 @@ export class ContextList extends React.Component<
 			hideSearchBar,
 			searchString,
 			onCommand,
-			appStore,
+			pageTitle,
 		} = this.props;
 
 		return (
@@ -86,13 +87,7 @@ export class ContextList extends React.Component<
 						}
 					}}
 					trimType={trimType}
-					pageTitle={
-						trimType === BaseObjectTypes.CheckinPlace
-							? appStore.messages.web_LinkedFolders
-							: trimType === BaseObjectTypes.CheckinStyle
-							? appStore.messages.web_CheckinSyles
-							: undefined
-					}
+					pageTitle={pageTitle}
 				/>
 				{!hideSearchBar && (
 					<SearchBar

@@ -129,13 +129,13 @@ export class CheckinStyles extends React.Component<
 										}}
 										validateRecordType={(recordTypeUri) => {
 											const { trimConnector } = this.props;
-											return new Promise<Boolean>(function(resolve) {
+											return new Promise<Boolean>(function (resolve) {
 												if (!forServerProcessing) {
 													resolve(true);
 												} else {
 													trimConnector!
 														.isDataEntryFormNeeded(recordTypeUri)
-														.then(function(isValid) {
+														.then(function (isValid) {
 															resolve(!isValid);
 														});
 												}
@@ -153,6 +153,11 @@ export class CheckinStyles extends React.Component<
 										forServerProcessing
 											? "cipType:MailForServerProcessing"
 											: "cipType:MailForClientProcessing"
+									}
+									pageTitle={
+										forServerProcessing === true
+											? appStore!.messages.web_LinkedFolders
+											: appStore!.messages.web_CheckinStyles
 									}
 									onCommand={(key: string, uri: number) => {
 										this.setState({ view: key, editUri: uri });
