@@ -60,9 +60,14 @@ export class ObjectContextMenu extends React.Component<
 		prevProps: IContextMenuProps,
 		prevState: IContextMenuState
 	) {
-		const { isInList } = this.props;
+		const { isInList, record } = this.props;
 		const { items } = this.state;
-		if (isInList === false || items.length === 0) {
+
+		if (!record) {
+			if (isInList === false || items.length === 0) {
+				this.loadMenu(prevProps, prevState);
+			}
+		} else {
 			this.loadMenu(prevProps, prevState);
 		}
 	}
@@ -88,14 +93,19 @@ export class ObjectContextMenu extends React.Component<
 		prevProps?: IContextMenuProps,
 		prevState?: IContextMenuState
 	) {
-		const { record, trimConnector, trimType, isInList } = this.props;
+		const { record, trimConnector, trimType } = this.props;
 
-		if (isInList === true) {
+		/*if (isInList === true) {
 			const menuItems = await trimConnector!.getMenuItemsForList(trimType);
-
+			if (record) {
+				await this.updateIsEnabled(menuItems);
+			}
 			this.getFarItems(menuItems);
-		} else if (record) {
+		} else*/ if (
+			record
+		) {
 			if (
+				!record ||
 				!prevProps ||
 				!prevProps.record ||
 				(record && prevProps.record.Uri != record.Uri)
