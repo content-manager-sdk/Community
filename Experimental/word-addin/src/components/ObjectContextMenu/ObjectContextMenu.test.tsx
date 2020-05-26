@@ -42,6 +42,8 @@ describe("Object Context Menu", () => {
 		CommandDefs: [],
 	};
 
+	let menuItemsEnabled: boolean = true;
+
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
@@ -62,11 +64,11 @@ describe("Object Context Menu", () => {
 			if (trimType === BaseObjectTypes.Record) {
 				resolve([
 					{
-						IsEnabled: true,
 						CommandId: "AddToFavorites",
 						Tooltip: "Add To Favorites",
 						MenuItemType: "MenuItemCommand",
 						NeedsAnObject: true,
+						IsEnabled: menuItemsEnabled,
 					},
 					{
 						CommandId: "Properties",
@@ -74,6 +76,7 @@ describe("Object Context Menu", () => {
 						Tooltip: "Display Properties",
 						StatusBarMessage: "Display Properties",
 						NeedsAnObject: true,
+						IsEnabled: menuItemsEnabled,
 					},
 					{
 						CommandId: "RecDocFinal",
@@ -81,10 +84,27 @@ describe("Object Context Menu", () => {
 						Tooltip: "Make Final",
 						StatusBarMessage: "Make Final",
 						NeedsAnObject: true,
+						IsEnabled: menuItemsEnabled,
+					},
+					{
+						CommandId: "RecCheckIn",
+						MenuEntryString: "checkin",
+						Tooltip: "Checkin",
+						StatusBarMessage: "Checkin",
+						IsEnabled: menuItemsEnabled,
+						NeedsAnObject: true,
 					},
 				]);
 			} else {
-				resolve([]);
+				resolve([
+					{
+						IsEnabled: true,
+						CommandId: "New",
+						Tooltip: "new",
+						MenuItemType: "MenuItemCommand",
+						NeedsAnObject: false,
+					},
+				]);
 			}
 		});
 	}.bind(trimConnector);
@@ -173,20 +193,17 @@ describe("Object Context Menu", () => {
 	}.bind(appStore);
 
 	const makeWrapper = (
-		menuItemsEnabled: boolean = true,
 		isInList: boolean = false,
 		trimType = BaseObjectTypes.Record,
-		record = null
-	) => {
-		record = record || {
+		record = {
 			Uri: 7,
 			ToolTip: "test title",
 			NameString: "REC_1",
 			TrimType: trimType,
 			EnabledCommandIds: ["Properties,RecDocFinal"],
 			ExternalEditingComplete: false,
-		};
-
+		}
+	) => {
 		const wrapper = shallow<ObjectContextMenu>(
 			<ObjectContextMenu
 				trimType={trimType}
@@ -200,7 +217,7 @@ describe("Object Context Menu", () => {
 				record={record}
 			/>
 		);
-
+		/*
 		wrapper.setState({
 			commandDefs: [
 				{
@@ -236,7 +253,7 @@ describe("Object Context Menu", () => {
 					NeedsAnObject: false,
 				},
 			],
-		});
+		});*/
 		return wrapper;
 	};
 
@@ -253,7 +270,7 @@ describe("Object Context Menu", () => {
 		isEmail = false;
 		saveDocumentCalled = false;
 		moreToFile = false;
-
+		menuItemsEnabled = true;
 		appStore.setDocumentInfo({
 			Id: "my id",
 			Uris: [7, 9],
@@ -477,12 +494,7 @@ describe("Object Context Menu", () => {
 
 	it("calls favorite when checkin button clicked (from list)", async () => {
 		const wrapper = makeWrapper(true, true);
-		// wrapper.setProps({
-		// 	record: {
-		// 		Uri: 8,
-		// 		EnabledCommandIds: ["AddToFavorites"],
-		// 	},
-		// });
+
 		expect.assertions(3);
 		await flushPromises();
 		const menuItem = findMenu(wrapper, true).items.find((mp) => {
@@ -680,6 +692,19 @@ describe("Object Context Menu", () => {
 		expect(findMenuItem(wrapper, true).disabled).toBeTruthy();
 	});
 
+	it("new button is included", () => {
+		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace, null);
+		const farItems = wrapper.find(CommandBar).props().farItems;
+
+		expect.assertions(1);
+
+		expect(
+			farItems.find((mi) => {
+				return mi.key === "New";
+			})
+		).toBeTruthy();
+	});
+	//const farItems = wrapper.find(CommandBar).props().farItems;
 	it("save button not disabled when command disabled", () => {
 		const wrapper = makeWrapper();
 		expect.assertions(1);
@@ -717,8 +742,8 @@ describe("Object Context Menu", () => {
 		expect.assertions(1);
 	});
 
-	it("not opens in CM for non Record in list", async () => {
-		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
+	it("call new for non Record", async () => {
+		const wrapper = makeWrapper(true, BaseObjectTypes.CheckinPlace);
 
 		await flushPromises();
 		const menuItem = wrapper

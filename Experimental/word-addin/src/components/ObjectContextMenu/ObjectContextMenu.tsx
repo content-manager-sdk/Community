@@ -31,7 +31,7 @@ interface IContextMenuProps {
 
 interface IContextMenuState {
 	menuMessage: string;
-	commandDefs: ICommandDef[];
+
 	items: IContextualMenuItem[];
 }
 
@@ -45,66 +45,66 @@ export class ObjectContextMenu extends React.Component<
 		if (!this.props.isInList) {
 			this.state = {
 				menuMessage: "",
-				commandDefs: [],
 				items: [],
 			};
 		} else {
-			this.state = { menuMessage: "", commandDefs: [], items: [] };
+			this.state = { menuMessage: "", items: [] };
 		}
 	}
 
-	async componentDidMount() {
-		this.loadMenu();
-	}
+	//  async componentDidMount() {
+	//  	this.loadMenu();
+	//  }
 
 	async componentDidUpdate(
 		prevProps: IContextMenuProps,
 		prevState: IContextMenuState
 	) {
-		this.loadMenu(prevProps, prevState);
+		const { isInList } = this.props;
+		const { items } = this.state;
+		if (isInList === false || items.length === 0) {
+			this.loadMenu(prevProps, prevState);
+		}
 	}
 
 	private async updateIsEnabled(menuItems: ICommandDef[]) {
 		const { record, trimConnector, trimType } = this.props;
-		const enabledCommandIds = await trimConnector!.getEnabledCommandIds(
-			trimType,
-			record.Uri
-		);
 
-		menuItems.forEach((menuItem) => {
-			menuItem.IsEnabled = (enabledCommandIds || []).includes(
-				menuItem.CommandId
+		if (record && record.Uri > 0) {
+			const enabledCommandIds = await trimConnector!.getEnabledCommandIds(
+				trimType,
+				record.Uri
 			);
-		});
+
+			menuItems.forEach((menuItem) => {
+				menuItem.IsEnabled = (enabledCommandIds || []).includes(
+					menuItem.CommandId
+				);
+			});
+		}
 	}
 
 	private async loadMenu(
 		prevProps?: IContextMenuProps,
 		prevState?: IContextMenuState
 	) {
-		const { record, trimConnector } = this.props;
-		const { commandDefs } = this.state;
+		const { record, trimConnector, trimType, isInList } = this.props;
 
-		if (record) {
+		if (isInList === true) {
+			const menuItems = await trimConnector!.getMenuItemsForList(trimType);
+
+			this.getFarItems(menuItems);
+		} else if (record) {
 			if (
 				!prevProps ||
 				!prevProps.record ||
-				prevProps.record.Uri != record.Uri
+				(record && prevProps.record.Uri != record.Uri)
 			) {
-				const menuItems = await trimConnector!.getMenuItemsForList(
-					record.TrimType!
-				);
-
+				const menuItems = await trimConnector!.getMenuItemsForList(trimType);
+				//if (record) {
 				await this.updateIsEnabled(menuItems);
-
-				this.setState({ commandDefs: menuItems });
-			}
-
-			if (
-				!prevState ||
-				JSON.stringify(commandDefs) !== JSON.stringify(prevState.commandDefs)
-			) {
-				this.getFarItems();
+				//}
+				this.getFarItems(menuItems);
 			}
 		}
 	}
@@ -127,8 +127,8 @@ export class ObjectContextMenu extends React.Component<
 			appStore,
 			record,
 			isInList,
+			trimType,
 		} = this.props;
-		const { commandDefs } = this.state;
 
 		if (record.Uri < 1 && item.key !== "New") {
 			trimConnector!
@@ -175,17 +175,16 @@ export class ObjectContextMenu extends React.Component<
 								item.key as CommandIds,
 								record.Uri,
 								fileName,
-								appStore!.WebUrl
+								appStore!.WebUrl,
+								trimType
 							)
 							.then(async (data) => {
-								await this.updateIsEnabled(commandDefs);
 								me.setState(
 									{
 										menuMessage: `Action completed successfully '${item.text}'.`,
-										commandDefs: [...commandDefs],
 									},
 									() => {
-										this.getFarItems();
+										this.loadMenu();
 									}
 								);
 								setTimeout(function () {
@@ -278,9 +277,8 @@ export class ObjectContextMenu extends React.Component<
 		return lbl || commandDef.Tooltip;
 	}
 
-	getFarItems = async (): Promise<void> => {
+	getFarItems = async (commandDefs: ICommandDef[]): Promise<void> => {
 		const { appStore, isInList, record, trimType, showCloseIcon } = this.props;
-		const { commandDefs } = this.state;
 
 		let checkinMenuItem: IContextualMenuItem | undefined;
 
@@ -478,7 +476,7 @@ export class ObjectContextMenu extends React.Component<
 				onRender: this.renderTitle,
 			});
 		}
-
+		//this.loadMenu();
 		return <CommandBar items={titleItems} farItems={items} />;
 	}
 }

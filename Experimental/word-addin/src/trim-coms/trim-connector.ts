@@ -147,6 +147,7 @@ export interface ICommandDef {
 	StatusBarMessage: string;
 	IsEnabled: boolean;
 	NeedsAnObject: boolean;
+	IsAvailable: boolean;
 }
 
 export interface ITrimOptions {
@@ -258,7 +259,8 @@ export interface ITrimConnector {
 		commandId: CommandIds,
 		uri: number,
 		fileName: string,
-		webUrl: string
+		webUrl: string,
+		trimType: BaseObjectTypes
 	): Promise<IDriveActionInformation>;
 
 	createRelationship(
@@ -402,6 +404,7 @@ export class TrimConnector implements ITrimConnector {
 								Tooltip: cdef.Tooltip,
 								StatusBarMessage: cdef.StatusBarMessage,
 								NeedsAnObject: cdef.NeedsAnObject,
+								IsAvailable: cdef.IsAvailable,
 							};
 						});
 
@@ -665,9 +668,14 @@ export class TrimConnector implements ITrimConnector {
 		commandId: CommandIds,
 		Uri: number,
 		fileName: string,
-		webUrl: string
+		webUrl: string,
+		trimType: BaseObjectTypes = BaseObjectTypes.Record
 	): Promise<IDriveActionInformation> {
-		const path = "Record";
+		let path = `${trimType}`;
+
+		if (commandId === CommandIds.Remove) {
+			path = `${path}/${Uri}/Delete`;
+		}
 
 		const postBody = { Uri };
 		const postBodies = {

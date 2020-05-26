@@ -186,37 +186,6 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
-	it("sets enabled Command Ids", () => {
-		let sentProperties: string = "";
-		let sent_selectedIds: string = "";
-		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
-			sentProperties = config.params.properties;
-			sent_selectedIds = config.params.cid_SelectedIds;
-			return [
-				200,
-				{
-					Results: [{ NameString: "Rec_1", Uri: 1 }],
-				},
-			];
-		});
-
-		expect.assertions(2);
-		return trimConnector
-			.search<ITrimMainObject>({
-				trimType: BaseObjectTypes.Record,
-				q: "all",
-				purpose: 3,
-				sortBy: "registeredOn",
-				includeEnabledCommands: true,
-			})
-			.then(() => {
-				expect(sentProperties).toContain("EnabledCommandIds");
-				expect(sent_selectedIds).toEqual(
-					"Properties,RecCheckIn,AddToFavorites,RemoveFromFavorites"
-				);
-			});
-	});
-
 	it("passes filter to search", () => {
 		let filter: string = "";
 		mock.onGet(`${SERVICEAPI_BASE_URI}/Record`).reply(function (config: any) {
@@ -998,8 +967,7 @@ describe("Test fetch from TRIM", () => {
 						propertyValue: "Both",
 						stringDisplayType: "ViewPane",
 						includePropertyDefs: true,
-						properties:
-							"ToolTip,NameString,RecordExternalEditingComplete,EnabledCommandIds",
+						properties: "ToolTip,NameString,RecordExternalEditingComplete",
 						descendantProperties: "RecordNumber",
 					},
 				})
@@ -1063,6 +1031,8 @@ describe("Test fetch from TRIM", () => {
 
 	describe("TRIM Actions", () => {
 		let postBody: any;
+		let deleteCalled = false;
+		let postUrl = "";
 		beforeEach(() => {
 			mock.reset();
 			postBody = null;
@@ -1070,6 +1040,15 @@ describe("Test fetch from TRIM", () => {
 				postBody = config.data;
 				return [200, { Results: [{}] }];
 			});
+
+			mock
+				.onPost(new RegExp(`${SERVICEAPI_BASE_URI}/CheckinPlace/*/*`))
+				.reply((config) => {
+					postBody = config.data;
+					deleteCalled = true;
+					postUrl = config.url;
+					return [200, { Results: [{}] }];
+				});
 		});
 
 		it("sends a Uri for the Check in", async () => {
@@ -1078,9 +1057,22 @@ describe("Test fetch from TRIM", () => {
 				expect.objectContaining({
 					Uri: 786,
 					RecordFilePath: "file.doc",
-					properties: "EnabledCommandIds",
 				})
 			);
+		});
+
+		it("Deletes a checkin place", async () => {
+			expect.assertions(1);
+
+			await trimConnector.runAction(
+				CommandIds.Remove,
+				90000001,
+				"",
+				"",
+				BaseObjectTypes.CheckinPlace
+			);
+
+			expect(postUrl).toContain("90000001");
 		});
 
 		it("sends an action for add to favourites", async () => {
@@ -1090,7 +1082,6 @@ describe("Test fetch from TRIM", () => {
 				SetUserLabel: {
 					SetUserLabelFavoriteType: "Favorites",
 				},
-				properties: "EnabledCommandIds",
 			};
 
 			await trimConnector.runAction(
@@ -1110,7 +1101,6 @@ describe("Test fetch from TRIM", () => {
 			const expectedResponse = {
 				Uri: 9000000001,
 				RecordExternalEditingComplete: true,
-				properties: "EnabledCommandIds",
 			};
 
 			await trimConnector.runAction(
@@ -1130,7 +1120,6 @@ describe("Test fetch from TRIM", () => {
 			const expectedResponse = {
 				Uri: 9000000001,
 				RecordExternalEditingComplete: false,
-				properties: "EnabledCommandIds",
 			};
 
 			await trimConnector.runAction(
@@ -1152,7 +1141,6 @@ describe("Test fetch from TRIM", () => {
 				RemoveUserLabel: {
 					RemoveUserLabelFavoriteType: "Favorites",
 				},
-				properties: "EnabledCommandIds",
 			};
 
 			await trimConnector.runAction(

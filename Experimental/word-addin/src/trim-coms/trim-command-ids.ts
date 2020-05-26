@@ -5,6 +5,7 @@ export enum CommandIds {
 	RecUndoCheckInDelete = "RecUndoCheckInDelete",
 	AddToFavorites = "AddToFavorites",
 	RemoveFromFavorites = "RemoveFromFavorites",
+	Remove = "Remove",
 }
 
 export default CommandIds;
