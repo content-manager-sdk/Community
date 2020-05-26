@@ -324,7 +324,8 @@ export class RecordTypePicker extends React.Component<
 						options={recordTypes}
 						onMenuOpen={this.getOptions}
 						onRenderLowerContent={() => {
-							return !appStore!.isEmail() ? null : (
+							return !appStore!.isEmail() ||
+								trimType === BaseObjectTypes.CheckinStyle ? null : (
 								<DefaultButton
 									style={{
 										width: "100%",
