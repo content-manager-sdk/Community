@@ -156,7 +156,7 @@ export class TrimSearchDialog
 						</FocusTrapZone>
 					)}
 				</React.Fragment>
-				)
+
 				<div className="dialog-footer">
 					<Stack horizontal>
 						{filterSearch && !isRunning ? (

@@ -76,7 +76,7 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 				}
 				this.getAccessToken
 					.then((token) => callback(token, ""))
-					.catch(function(error) {
+					.catch(function (error) {
 						callback("", error.message);
 					});
 			}
