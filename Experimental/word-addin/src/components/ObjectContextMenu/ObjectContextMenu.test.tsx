@@ -271,6 +271,7 @@ describe("Object Context Menu", () => {
 
 	it("contains an action button", async () => {
 		expect.assertions(4);
+		enabledCommands = ["RecDocFinal"];
 		const wrapper = makeWrapper();
 
 		await flushPromises();
