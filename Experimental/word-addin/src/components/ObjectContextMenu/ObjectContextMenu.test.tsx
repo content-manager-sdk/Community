@@ -36,6 +36,8 @@ describe("Object Context Menu", () => {
 	let saveDocumentCalled = false;
 	let moreToFile = false;
 
+	let enabledCommands = [];
+
 	const returnedDocumentInfo = {
 		Id: "test-id",
 		Uris: [5],
@@ -111,7 +113,7 @@ describe("Object Context Menu", () => {
 
 	trimConnector.getEnabledCommandIds = function () {
 		return new Promise<string[]>((resolve) => {
-			resolve(["AddToFavorites"]);
+			resolve(enabledCommands);
 		});
 	}.bind(trimConnector);
 
@@ -217,43 +219,7 @@ describe("Object Context Menu", () => {
 				record={record}
 			/>
 		);
-		/*
-		wrapper.setState({
-			commandDefs: [
-				{
-					CommandId: "RecCheckIn",
-					MenuEntryString: "checkin",
-					Tooltip: "Checkin",
-					StatusBarMessage: "Checkin",
-					IsEnabled: menuItemsEnabled,
-					NeedsAnObject: true,
-				},
-				{
-					CommandId: "RecDocFinal",
-					MenuEntryString: "Final",
-					Tooltip: "Make Final",
-					StatusBarMessage: "Make Final",
-					IsEnabled: menuItemsEnabled,
-					NeedsAnObject: true,
-				},
-				{
-					CommandId: "Properties",
-					MenuEntryString: "Properties",
-					Tooltip: "Properties",
-					StatusBarMessage: "Properties",
-					IsEnabled: menuItemsEnabled,
-					NeedsAnObject: true,
-				},
-				{
-					CommandId: "New",
-					MenuEntryString: "new",
-					Tooltip: "new",
-					StatusBarMessage: "new",
-					IsEnabled: menuItemsEnabled,
-					NeedsAnObject: false,
-				},
-			],
-		});*/
+		//	wrapper.instance().loadMenu();
 		return wrapper;
 	};
 
@@ -275,7 +241,7 @@ describe("Object Context Menu", () => {
 			Id: "my id",
 			Uris: [7, 9],
 		});
-
+		enabledCommands = ["AddToFavorites"];
 		appStore.setMessages({
 			web_Actions: "Actions",
 			web_Paste: "Paste",
@@ -303,9 +269,11 @@ describe("Object Context Menu", () => {
 		return theMenu.subMenuProps;
 	};
 
-	it("contains an action button", function (this: any) {
+	it("contains an action button", async () => {
 		expect.assertions(4);
 		const wrapper = makeWrapper();
+
+		await flushPromises();
 		expect(wrapper.find(CommandBar).exists()).toBeTruthy();
 		expect(wrapper.find(CommandBar).props().farItems.length).toEqual(3);
 
@@ -317,10 +285,10 @@ describe("Object Context Menu", () => {
 		expect(makeFinalItem.disabled).toBeFalsy();
 	});
 
-	it("contains paste and split", function (this: any) {
+	it("contains paste and split", async () => {
 		expect.assertions(3);
 		const wrapper = makeWrapper();
-
+		await flushPromises();
 		expect(findMenu(wrapper).items[0].key).toEqual("paste");
 		expect(findMenu(wrapper).items[0].text).toEqual("Paste");
 		expect(findMenu(wrapper).items[1].itemType).toEqual(
@@ -328,10 +296,10 @@ describe("Object Context Menu", () => {
 		);
 	});
 
-	it("not contains paste and split for non record", function (this: any) {
+	it("not contains paste and split for non record", async () => {
 		expect.assertions(1);
-		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
-
+		const wrapper = makeWrapper(true, BaseObjectTypes.CheckinPlace);
+		await flushPromises();
 		expect(
 			findMenu(wrapper, true).items.find((menuItem) => {
 				return menuItem.key === "paste";
@@ -341,7 +309,7 @@ describe("Object Context Menu", () => {
 
 	it("contains add relationship", async () => {
 		expect.assertions(1);
-		const wrapper = makeWrapper(true, true);
+		const wrapper = makeWrapper(true);
 
 		await flushPromises();
 		expect(
@@ -351,10 +319,10 @@ describe("Object Context Menu", () => {
 		).toBeTruthy();
 	});
 
-	it("not contain add relationship", function (this: any) {
+	it("not contain add relationship", async () => {
 		expect.assertions(1);
-		const wrapper = makeWrapper(true, false);
-
+		const wrapper = makeWrapper();
+		await flushPromises();
 		expect(
 			findMenu(wrapper).items.find((menuItem) => {
 				return menuItem.key === "addRelationshipto";
@@ -362,10 +330,10 @@ describe("Object Context Menu", () => {
 		).toBeUndefined();
 	});
 
-	it("not contain add relationship for non Record", function (this: any) {
+	it("not contain add relationship for non Record", async () => {
 		expect.assertions(1);
-		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace);
-
+		const wrapper = makeWrapper(true, BaseObjectTypes.CheckinPlace);
+		await flushPromises();
 		expect(
 			findMenu(wrapper, true).items.find((menuItem) => {
 				return menuItem.key === "addRelationshipto";
@@ -374,7 +342,8 @@ describe("Object Context Menu", () => {
 	});
 
 	it("error when record not selected", async () => {
-		const wrapper = makeWrapper(true, false);
+		const wrapper = makeWrapper(true);
+		await flushPromises();
 		wrapper.setProps({
 			record: {
 				Uri: 0,
@@ -407,7 +376,7 @@ describe("Object Context Menu", () => {
 	});
 
 	it("error on create relationship when record not selected", async () => {
-		const wrapper = makeWrapper(true, true);
+		const wrapper = makeWrapper(true);
 
 		wrapper.setProps({ record: { Uri: 0, TrimType: BaseObjectTypes.Record } });
 		await flushPromises();
@@ -426,6 +395,7 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(1);
+		await flushPromises();
 		const menuItem = findMenu(wrapper)
 			.items.find((mp) => {
 				return mp.key === "paste";
@@ -441,9 +411,10 @@ describe("Object Context Menu", () => {
 	});
 
 	it("fires event when New clicked", async () => {
-		const wrapper = makeWrapper(false);
+		const wrapper = makeWrapper(true, BaseObjectTypes.CheckinPlace);
 
 		expect.assertions(2);
+		await flushPromises();
 		const menuItem = findMenu(wrapper).items.find((mp) => {
 			return mp.key === "New";
 		});
@@ -459,6 +430,7 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(1);
+		await flushPromises();
 		const menuItem = findMenu(wrapper)
 			.items.find((mp) => {
 				return mp.key === "paste";
@@ -477,6 +449,7 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper(false);
 
 		expect.assertions(2);
+		await flushPromises();
 		const menuItem = findMenu(wrapper)
 			.items.find((mp) => {
 				return mp.key === "paste";
@@ -493,7 +466,7 @@ describe("Object Context Menu", () => {
 	});
 
 	it("calls favorite when checkin button clicked (from list)", async () => {
-		const wrapper = makeWrapper(true, true);
+		const wrapper = makeWrapper(true);
 
 		expect.assertions(3);
 		await flushPromises();
@@ -512,6 +485,7 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(2);
+		await flushPromises();
 		const menuItem = findMenu(wrapper).items.find((mp) => {
 			return mp.key === "RecCheckIn";
 		});
@@ -524,7 +498,7 @@ describe("Object Context Menu", () => {
 	});
 
 	it("calls undo checkin on delete", async () => {
-		const wrapper = makeWrapper(true, false, BaseObjectTypes.Record, {
+		const wrapper = makeWrapper(false, BaseObjectTypes.Record, {
 			Uri: 23,
 			ToolTip: "test title",
 			NameString: "REC_1",
@@ -533,7 +507,9 @@ describe("Object Context Menu", () => {
 			ExternalEditingComplete: true,
 		});
 
+		await flushPromises();
 		expect.assertions(2);
+
 		const menuItem = findMenu(wrapper).items.find((mp) => {
 			return mp.key === CommandIds.RecUndoCheckInDelete;
 		});
@@ -548,6 +524,7 @@ describe("Object Context Menu", () => {
 	it("calls get global when get global button clicked", async () => {
 		const wrapper = makeWrapper();
 
+		await flushPromises();
 		expect.assertions(2);
 		const menuItem = findMenu(wrapper).items.find((mp) => {
 			return mp.key === "getGlobalProperties";
@@ -564,6 +541,7 @@ describe("Object Context Menu", () => {
 		const wrapper = makeWrapper();
 
 		expect.assertions(1);
+		await flushPromises();
 		const menuItem = findMenu(wrapper).items.find((mp) => {
 			return mp.key === "edit";
 		});
@@ -590,8 +568,11 @@ describe("Object Context Menu", () => {
 		expect(finalizeUri).toEqual(7);
 	});
 
-	it("disables Make Final when Record is already finalised", () => {
+	it("disables Make Final when Record is already finalised", async () => {
 		const wrapper = makeWrapper(false);
+
+		await flushPromises();
+
 		expect.assertions(1);
 
 		expect(
@@ -601,9 +582,10 @@ describe("Object Context Menu", () => {
 		).toBeTruthy();
 	});
 
-	it("save button hidden for Outlook", () => {
+	it("save button hidden for Outlook", async () => {
 		isEmail = true;
 		const wrapper = makeWrapper(false);
+		await flushPromises();
 		expect.assertions(1);
 
 		expect(
@@ -616,10 +598,11 @@ describe("Object Context Menu", () => {
 		).toBeFalsy();
 	});
 
-	it("file more button not available in Outlook when there are no more to file", () => {
+	it("file more button not available in Outlook when there are no more to file", async () => {
 		isEmail = true;
 		moreToFile = false;
 		const wrapper = makeWrapper(false);
+		await flushPromises();
 		expect.assertions(1);
 
 		expect(
@@ -633,10 +616,11 @@ describe("Object Context Menu", () => {
 		).toBeFalsy();
 	});
 
-	it("file more button available in Outlook when there are more to file", () => {
+	it("file more button available in Outlook when there are more to file", async () => {
 		isEmail = true;
 		moreToFile = true;
 		const wrapper = makeWrapper(false);
+		await flushPromises();
 		expect.assertions(1);
 
 		expect(
@@ -646,11 +630,11 @@ describe("Object Context Menu", () => {
 		).toBeTruthy();
 	});
 
-	it("save on delete button hidden for Outlook", () => {
+	it("save on delete button hidden for Outlook", async () => {
 		isEmail = true;
 		const wrapper = makeWrapper(false);
 		expect.assertions(1);
-
+		await flushPromises();
 		expect(
 			wrapper
 				.find(CommandBar)
@@ -661,9 +645,11 @@ describe("Object Context Menu", () => {
 		).toBeFalsy();
 	});
 
-	it("save menu item hidden for Outlook", () => {
+	it("save menu item hidden for Outlook", async () => {
 		isEmail = true;
 		const wrapper = makeWrapper(false);
+		await flushPromises();
+
 		expect.assertions(1);
 
 		expect(
@@ -673,9 +659,10 @@ describe("Object Context Menu", () => {
 		).toBeFalsy();
 	});
 
-	it("save on delete menu item hidden for Outlook", () => {
+	it("save on delete menu item hidden for Outlook", async () => {
 		isEmail = true;
 		const wrapper = makeWrapper(false);
+		await flushPromises();
 		expect.assertions(1);
 
 		expect(
@@ -685,15 +672,18 @@ describe("Object Context Menu", () => {
 		).toBeFalsy();
 	});
 
-	it("save button disabled when command disabled", () => {
+	it("save button disabled when command disabled", async () => {
 		const wrapper = makeWrapper(false);
+		await flushPromises();
 		expect.assertions(1);
 
 		expect(findMenuItem(wrapper, true).disabled).toBeTruthy();
 	});
 
-	it("new button is included", () => {
-		const wrapper = makeWrapper(true, true, BaseObjectTypes.CheckinPlace, null);
+	it("new button is included", async () => {
+		const wrapper = makeWrapper(true, BaseObjectTypes.CheckinPlace, {});
+
+		await flushPromises();
 		const farItems = wrapper.find(CommandBar).props().farItems;
 
 		expect.assertions(1);
@@ -705,8 +695,10 @@ describe("Object Context Menu", () => {
 		).toBeTruthy();
 	});
 	//const farItems = wrapper.find(CommandBar).props().farItems;
-	it("save button not disabled when command disabled", () => {
+	it("save button not disabled when command disabled", async () => {
+		enabledCommands = ["RecCheckIn"];
 		const wrapper = makeWrapper();
+		await flushPromises();
 		expect.assertions(1);
 
 		expect(findMenuItem(wrapper, true).disabled).toBeFalsy();
@@ -761,7 +753,8 @@ describe("Object Context Menu", () => {
 	});
 
 	it("document related commands not shown(from list)", async () => {
-		const wrapper = makeWrapper(true, true);
+		const wrapper = makeWrapper(true);
+		await flushPromises();
 		wrapper.setProps({
 			record: {
 				Uri: 8,

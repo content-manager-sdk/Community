@@ -52,23 +52,19 @@ export class ObjectContextMenu extends React.Component<
 		}
 	}
 
-	//  async componentDidMount() {
-	//  	this.loadMenu();
-	//  }
+	async componentDidMount() {
+		this.loadMenu();
+	}
 
 	async componentDidUpdate(
 		prevProps: IContextMenuProps,
 		prevState: IContextMenuState
 	) {
-		const { isInList, record } = this.props;
-		const { items } = this.state;
-
-		if (!record) {
-			if (isInList === false || items.length === 0) {
-				this.loadMenu(prevProps, prevState);
+		const { record } = this.props;
+		if (record && record.Uri > 0) {
+			if (record && prevProps.record && prevProps.record.Uri != record.Uri) {
+				this.loadMenu();
 			}
-		} else {
-			this.loadMenu(prevProps, prevState);
 		}
 	}
 
@@ -93,30 +89,13 @@ export class ObjectContextMenu extends React.Component<
 		prevProps?: IContextMenuProps,
 		prevState?: IContextMenuState
 	) {
-		const { record, trimConnector, trimType } = this.props;
+		const { trimConnector, trimType } = this.props;
 
-		/*if (isInList === true) {
-			const menuItems = await trimConnector!.getMenuItemsForList(trimType);
-			if (record) {
-				await this.updateIsEnabled(menuItems);
-			}
-			this.getFarItems(menuItems);
-		} else*/ if (
-			record
-		) {
-			if (
-				!record ||
-				!prevProps ||
-				!prevProps.record ||
-				(record && prevProps.record.Uri != record.Uri)
-			) {
-				const menuItems = await trimConnector!.getMenuItemsForList(trimType);
-				//if (record) {
-				await this.updateIsEnabled(menuItems);
-				//}
-				this.getFarItems(menuItems);
-			}
-		}
+		const menuItems = await trimConnector!.getMenuItemsForList(trimType);
+		//if (record) {
+		await this.updateIsEnabled(menuItems);
+		//}
+		this.getFarItems(menuItems);
 	}
 
 	private callCommandComplete(key: string): void {
@@ -323,7 +302,7 @@ export class ObjectContextMenu extends React.Component<
 				return menuItem;
 			});
 
-		if (record.TrimType === BaseObjectTypes.Record && !appStore.isEmail()) {
+		if (trimType === BaseObjectTypes.Record && !appStore.isEmail()) {
 			menuItems.unshift(
 				{
 					key: "paste",
@@ -353,7 +332,7 @@ export class ObjectContextMenu extends React.Component<
 		}
 
 		if (isInList) {
-			if (record.TrimType === BaseObjectTypes.Record) {
+			if (trimType === BaseObjectTypes.Record) {
 				const items = await this._makeRelationshipMenu();
 				menuItems.push(items);
 			}
