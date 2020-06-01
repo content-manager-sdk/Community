@@ -27,11 +27,11 @@ interface IContextMenuProps {
 	trimType: BaseObjectTypes;
 	showCloseIcon?: boolean;
 	pageTitle?: string;
+	showViewPane?: boolean;
 }
 
 interface IContextMenuState {
 	menuMessage: string;
-
 	items: IContextualMenuItem[];
 }
 
@@ -62,7 +62,10 @@ export class ObjectContextMenu extends React.Component<
 	) {
 		const { record } = this.props;
 		if (record && record.Uri > 0) {
-			if (record && prevProps.record && prevProps.record.Uri != record.Uri) {
+			if (
+				(record && prevProps.record && prevProps.record.Uri != record.Uri) ||
+				prevProps.showViewPane !== this.props.showViewPane
+			) {
 				this.loadMenu();
 			}
 		}
@@ -267,7 +270,14 @@ export class ObjectContextMenu extends React.Component<
 	}
 
 	getFarItems = async (commandDefs: ICommandDef[]): Promise<void> => {
-		const { appStore, isInList, record, trimType, showCloseIcon } = this.props;
+		const {
+			appStore,
+			isInList,
+			record,
+			trimType,
+			showCloseIcon,
+			showViewPane,
+		} = this.props;
 
 		let checkinMenuItem: IContextualMenuItem | undefined;
 
@@ -302,7 +312,7 @@ export class ObjectContextMenu extends React.Component<
 				return menuItem;
 			});
 
-		if (trimType === BaseObjectTypes.Record && !appStore.isEmail()) {
+		if (trimType === BaseObjectTypes.Record && appStore.isOffice()) {
 			menuItems.unshift(
 				{
 					key: "paste",
@@ -336,7 +346,7 @@ export class ObjectContextMenu extends React.Component<
 				const items = await this._makeRelationshipMenu();
 				menuItems.push(items);
 			}
-		} else {
+		} else if (appStore.isOffice() || appStore.isEmail()) {
 			const checkinItem = menuItems.find((mi) => mi.key === "RecCheckIn");
 
 			const msgText = record.ExternalEditingComplete
@@ -375,9 +385,20 @@ export class ObjectContextMenu extends React.Component<
 			}
 		}
 
-		const items = [];
+		const items: IContextualMenuItem[] = [];
 
-		if (!isInList && !appStore.isEmail()) {
+		if (appStore.isWebApp()) {
+			items.push({
+				key: "viewpane",
+				iconProps: {
+					iconName: showViewPane ? "ClosePane" : "OpenPane",
+				},
+				iconOnly: true,
+				onClick: this._onActionClick,
+			});
+		}
+
+		if (!isInList && appStore.isOffice()) {
 			if (checkinMenuItem) {
 				checkinMenuItem.iconProps = { iconName: "Save" };
 				checkinMenuItem.iconOnly = true;

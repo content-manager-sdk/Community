@@ -21,6 +21,10 @@ export class AppStoreWord extends AppStoreBase {
 			}
 		);
 	}
+
+	public isOffice(): boolean {
+		return true;
+	}
 }
 
 export default AppStoreWord;

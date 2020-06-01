@@ -180,12 +180,17 @@ hr.trim-menu-sep {
 	min-width: 110px;
 	background-color: cornflowerblue;
 	backdrop-filter: aliceblue;
-	margin-top: 40vh;
+	/* margin-top: 40vh;
 	border-radius: 15px;
-	left: calc(50% - 55px);
+	left: calc(50% - 55px); */
+	border-radius: 15px;
 	padding-top: 10px;
 	justify-content: start;
 	z-index: 9999999;
+
+	position: fixed;
+	top: 40vh;
+	left: calc(50% - 55px);
 }
 
 .trim-top-spinner > ms-Spinner-circle {
@@ -199,4 +204,7 @@ hr.trim-menu-sep {
 
 .trim-top-spinner > .ms-Spinner-circle {
 	margin-top: 10px;
+}
+.wd-viewpane .details-item {
+	margin: 0;
 }

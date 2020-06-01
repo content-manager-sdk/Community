@@ -41,12 +41,14 @@ export interface ISearchBarProps
 	onQueryChange?: (newQuery: string) => void;
 	includeShortCuts: boolean;
 	wideDisplay?: boolean;
+	callChangeOnLoad?: boolean;
 }
 
 export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 	implements ISearchBar {
 	private _basicComboBox = React.createRef<IComboBox>();
 	private _textField = React.createRef<ITextField>();
+	private _loaded: boolean = false;
 	autocompleteSearchDebounced: any;
 
 	constructor(props: {
@@ -90,6 +92,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			includeShortCuts,
 			onQueryChange,
 			trimConnector,
+			callChangeOnLoad,
 		} = this.props;
 
 		if (includeShortCuts && onQueryChange) {
@@ -109,7 +112,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 
 		let lastGroup = "";
 		trimConnector!.getSearchClauseOrFieldDefinitions(trimType).then((data) => {
-			this.groupBy(data, function(sc: any) {
+			this.groupBy(data, function (sc: any) {
 				return sc.MethodGroup;
 			}).forEach((clauseDefs: ISearchClauseOrFieldDef[]) => {
 				clauseDefs.forEach((clauseDef: ISearchClauseOrFieldDef) => {
@@ -144,17 +147,23 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 						});
 					}
 				});
-
-				if (!includeShortCuts) {
-					this.setState({
-						searchType: latestClause,
-						searchQuery: "",
-						searchFormat: latestFormat,
-					});
-				}
 			});
 
+			if (!includeShortCuts) {
+				this.setState({
+					searchType: latestClause,
+					searchQuery: "",
+					searchFormat: latestFormat,
+				});
+			}
+
 			this.setState({ searchTypeOptions: searchTypeOptions });
+			if (this._loaded === false && latestFormat === "Boolean") {
+				this._loaded = true;
+				if (callChangeOnLoad === true && onQueryChange) {
+					onQueryChange(latestClause);
+				}
+			}
 		});
 	};
 

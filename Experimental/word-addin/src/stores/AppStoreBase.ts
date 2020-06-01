@@ -50,6 +50,7 @@ export interface IAppStore {
 	setFileName(fileName: string): void;
 	moreToFile(): boolean;
 	isEmail(): boolean;
+	isOffice(): boolean;
 	clearUris(): void;
 	fetchFiledRecords(): Promise<IRecord[]>;
 }
@@ -133,6 +134,15 @@ export class AppStoreBase implements IAppStore {
 	public isEmail(): boolean {
 		return false;
 	}
+
+	public isOffice(): boolean {
+		return false;
+	}
+
+	public isWebApp(): boolean {
+		return false;
+	}
+
 	public deferFetchDriveInfo = () => {
 		this._deferFetchDriveInfo = true;
 	};
@@ -343,7 +353,9 @@ export class AppStoreBase implements IAppStore {
 		if (on) {
 			this._spinningCount++;
 		} else {
-			this._spinningCount--;
+			if (this._spinningCount > 0) {
+				this._spinningCount--;
+			}
 		}
 		this.spinning = this._spinningCount > 0;
 		this.spinningLabel = label;
@@ -375,6 +387,15 @@ export class AppStoreBase implements IAppStore {
 
 	@action.bound
 	public setError = (error: any, module?: string, setStatus = true) => {
+		try {
+			if (error.data.response.status === 401) {
+				window.location.replace(
+					`https://desktop-39dgcn3/ServiceAPI/auth/openid?redirect=${encodeURI(
+						"https://desktop-39dgcn3:3000"
+					)}`
+				);
+			}
+		} catch {}
 		let message;
 		if (typeof error === "string" || error instanceof String) {
 			message = error;

@@ -14,6 +14,7 @@ import TrimMessages from "./trim-messages";
 import CommandIds from "./trim-command-ids";
 import { AssertionError } from "assert";
 import flushPromises = require("flush-promises");
+import { PropertySetTypes } from "./PropertySetTypes";
 
 //import * as fetchMock from "fetch-mock";
 
@@ -684,55 +685,60 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
-	it("get view pane property defs", () => {
-		let postConfig: any;
+	[
+		{ get: PropertySetTypes.ViewPane },
+		{ get: PropertySetTypes.DataGrid },
+	].forEach((testData) => {
+		it(`"get ${testData.get} property defs`, () => {
+			let postConfig: any;
 
-		mock
-			.onGet(`${SERVICEAPI_BASE_URI}/PropertyDef`)
-			.replyOnce(function (config: any) {
-				postConfig = config;
+			mock
+				.onGet(`${SERVICEAPI_BASE_URI}/PropertyDef`)
+				.replyOnce(function (config: any) {
+					postConfig = config;
 
-				return [
-					200,
-					{
-						PropertiesAndFields: [
-							{
-								Id: "RecordTitle",
-								IsEMailAddress: false,
-								IsHyperlink: false,
-								DefaultColumnCharacters: 20,
-								ColumnWidth: 134,
-								IsDefaultDataGridColumn: true,
-								BestFitColumn: false,
-								IconAndOrTextMode: "IconAndText",
-								StringAlignment: "Left",
-								SortMode: "AlphaNoCase",
-								Caption: "Title",
-								ObjectType: "Unknown",
-								PFFormat: "String",
-								Property: {},
-								PropertyId: "RecordTitle",
-								IsAField: false,
-								IsAProperty: true,
-								IsMandatory: false,
-							},
-						],
-						ResponseStatus: {},
-					},
-				];
-			});
-
-		expect.assertions(2);
-
-		return trimConnector
-			.getViewPanePropertyDefs(BaseObjectTypes.Record)
-			.then((data) => {
-				expect(postConfig.params).toEqual({
-					TrimType: "Record",
-					Get: "ViewPane",
+					return [
+						200,
+						{
+							PropertiesAndFields: [
+								{
+									Id: "RecordTitle",
+									IsEMailAddress: false,
+									IsHyperlink: false,
+									DefaultColumnCharacters: 20,
+									ColumnWidth: 134,
+									IsDefaultDataGridColumn: true,
+									BestFitColumn: false,
+									IconAndOrTextMode: "IconAndText",
+									StringAlignment: "Left",
+									SortMode: "AlphaNoCase",
+									Caption: "Title",
+									ObjectType: "Unknown",
+									PFFormat: "String",
+									Property: {},
+									PropertyId: "RecordTitle",
+									IsAField: false,
+									IsAProperty: true,
+									IsMandatory: false,
+								},
+							],
+							ResponseStatus: {},
+						},
+					];
 				});
-				expect(postConfig.headers!["Accept"]).toEqual("application/json");
-			});
+
+			expect.assertions(2);
+
+			return trimConnector
+				.getViewPanePropertyDefs(BaseObjectTypes.Record, testData.get)
+				.then((data) => {
+					expect(postConfig.params).toEqual({
+						TrimType: "Record",
+						Get: testData.get,
+					});
+					expect(postConfig.headers!["Accept"]).toEqual("application/json");
+				});
+		});
 	});
 	it("has updated view pane properties", () => {
 		let postConfig: any;

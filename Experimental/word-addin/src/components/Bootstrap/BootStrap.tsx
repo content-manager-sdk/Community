@@ -154,7 +154,7 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 				<div>
 					{appStore.status === "ERROR" && <ErrorDisplay />}
 
-					{appStore.spinning && appStore!.status !== "STARTING" && (
+					{appStore.spinning === true && appStore!.status !== "STARTING" && (
 						<Spinner
 							className="trim-top-spinner"
 							size={SpinnerSize.large}

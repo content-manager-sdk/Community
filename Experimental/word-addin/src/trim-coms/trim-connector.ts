@@ -3,6 +3,7 @@ import { BaseObjectTypes } from "./trim-baseobjecttypes";
 import { CommandIds } from "./trim-command-ids";
 import TrimMessages from "./trim-messages";
 import { CacheIds } from "./cache-ids";
+import { PropertySetTypes } from "./PropertySetTypes";
 
 const config = (global as any).config;
 
@@ -21,6 +22,18 @@ export interface ITrimProperty {
 	StringValue?: string;
 }
 
+export interface ITrimGridObject {
+	Uri: number;
+	[x: string]: ITrimProperty | any;
+	Fields?: { [fieldName: string]: ITrimField };
+}
+
+export interface ISearchGridResults {
+	hasMoreItems: boolean;
+	results: ITrimGridObject[];
+	PropertiesAndFields: IPropertyOrFieldDef[];
+}
+
 export interface ITrimString extends ITrimProperty {
 	Value: string;
 }
@@ -28,13 +41,14 @@ export interface ITrimString extends ITrimProperty {
 export interface ISearchParameters {
 	trimType: BaseObjectTypes;
 	q: string;
-	purpose: number;
+	purpose?: number;
 	purposeExtra?: number;
 	start?: number;
 	sortBy?: string;
 	filter?: string;
 	properties?: string;
 	commandFilter?: string;
+	pageSize?: number;
 }
 
 interface IOptionsInterface {
@@ -47,6 +61,8 @@ interface IOptionsInterface {
 export interface IPropertyOrFieldDef {
 	Caption: string;
 	Id: string;
+	ColumnWidth: number;
+	IconAndOrTextMode: string;
 }
 
 export interface IObjectDetails {
@@ -167,12 +183,14 @@ export interface ISearchClauseDef {
 	ToolTip: string;
 	MethodGroup: string;
 	IsBlocked: boolean;
+	BasedOnProperty: string;
 }
 
 export interface ISearchClauseOrFieldDef {
 	Caption: string;
 	MethodGroup: string;
 	ClauseName: string;
+	ClauseId: string;
 	IsRecent: boolean;
 	IsFavorite: boolean;
 	ParameterFormat: string;
@@ -218,6 +236,9 @@ export interface ITrimConnector {
 	getSearchOptions(): Promise<ISearchOptions>;
 	getDatabaseProperties(): Promise<IDatabase>;
 	getEnum(enumId: string): Promise<IEnumDetails[]>;
+	getServiceAPIPath(): string;
+	gridSearch(options: ISearchParameters): Promise<ISearchGridResults>;
+
 	search<T>(
 		options: ISearchParameters
 	): Promise<ISearchResults<ITrimMainObject>>;
@@ -280,7 +301,8 @@ export interface ITrimConnector {
 	): Promise<IPropertyOrFieldDef[]>;
 
 	getViewPanePropertyDefs(
-		trimType: BaseObjectTypes
+		trimType: BaseObjectTypes,
+		propertySetType: PropertySetTypes
 	): Promise<IPropertyOrFieldDef[]>;
 
 	setGlobalUserOptions(forUserOptionSet: string): Promise<void>;
@@ -304,6 +326,10 @@ export interface ITrimConnector {
 export class TrimConnector implements ITrimConnector {
 	private CancelToken = Axios.CancelToken;
 	private source = this.CancelToken.source();
+
+	public getServiceAPIPath(): string {
+		return SERVICEAPI_BASE_URI;
+	}
 
 	public getUseCheckinStyles(): boolean {
 		const useCheckinStyles = this.getItemFromCache(CacheIds.UseCheckinStyles);
@@ -711,33 +737,22 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	public getViewPanePropertyDefs(
-		trimType: BaseObjectTypes
+		trimType: BaseObjectTypes,
+		propertySetType: PropertySetTypes
 	): Promise<IPropertyOrFieldDef[]> {
-		const cachedResults =
-			this.getItemFromCache(CacheIds.ViewpanePropDefs) || {};
+		const path = "PropertyDef";
 
-		if (cachedResults[trimType]) {
-			return new Promise((resolve) => {
-				resolve(cachedResults[trimType]);
-			});
-		} else {
-			const path = "PropertyDef";
+		const params = {
+			TrimType: trimType,
+			Get: propertySetType,
+		};
 
-			const params = {
-				TrimType: trimType,
-
-				Get: "ViewPane",
-			};
-
-			return this.makeRequest(
-				{ path, method: "get", data: params },
-				(data: any) => {
-					cachedResults[trimType] = data.PropertiesAndFields;
-					this.setCacheItem(CacheIds.ViewpanePropDefs, cachedResults);
-					return data.PropertiesAndFields;
-				}
-			);
-		}
+		return this.makeRequest(
+			{ path, method: "get", data: params },
+			(data: any) => {
+				return data.PropertiesAndFields;
+			}
+		);
 	}
 
 	public setViewPaneProperties(
@@ -1042,6 +1057,37 @@ export class TrimConnector implements ITrimConnector {
 		}
 	}
 
+	public gridSearch(options: ISearchParameters): Promise<ISearchGridResults> {
+		const { q, trimType, start, sortBy } = options;
+
+		const params = {
+			pageSize: options.pageSize || 30,
+			q,
+			start,
+			ExcludeCount: true,
+			PropertyValue: "Both",
+			properties: "Icon",
+			stringDisplayType: "TreeColumn",
+			propertySets: "DataGridVisible",
+			IncludePropertyDefs: false,
+		};
+
+		if (sortBy) {
+			params["sortBy"] = sortBy;
+		}
+
+		return this.makeRequest(
+			{ path: trimType, method: "get", data: params },
+			(data: any) => {
+				return {
+					hasMoreItems: data.HasMoreItems,
+					results: data.Results,
+					PropertiesAndFields: data.PropertiesAndFields[trimType],
+				};
+			}
+		);
+	}
+
 	public search<T extends ITrimMainObject>(
 		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
@@ -1058,7 +1104,7 @@ export class TrimConnector implements ITrimConnector {
 		} = options;
 
 		const params = {
-			pageSize: 30,
+			pageSize: options.pageSize || 30,
 			properties:
 				trimType === BaseObjectTypes.CheckinPlace
 					? "NameString,CheckinAs,Icon"
@@ -1238,21 +1284,25 @@ export class TrimConnector implements ITrimConnector {
 	}
 
 	private makeOptions = (config: IOptionsInterface): AxiosRequestConfig => {
-		const headers = { Accept: "application/json", Authorization: "" };
+		const headers = { Accept: "application/json" };
 
 		if (config.accessToken) {
-			headers.Authorization = `Bearer ${config.accessToken}`;
+			headers["Authorization"] = `Bearer ${config.accessToken}`;
 		}
 
 		if (config.method === "post") {
 			headers["Content-Type"] = "application/json";
 		}
 
-		const options = {
+		const options: AxiosRequestConfig = {
 			headers,
 			method: config.method,
 			url: `${SERVICEAPI_BASE_URI}/${config.path}`,
 		};
+
+		if (!config.accessToken) {
+			options.withCredentials = true;
+		}
 
 		if (config.method === "post") {
 			return { ...options, ...{ data: config.data } };

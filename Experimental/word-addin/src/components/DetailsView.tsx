@@ -16,6 +16,7 @@ interface IDetailsViewProps {
 	wordConnector?: IOfficeConnector;
 	recordDetails: IObjectDetails;
 	trimType: BaseObjectTypes;
+	className?: string;
 }
 import {
 	mergeStyles,
@@ -29,6 +30,7 @@ import {
 	DirectionalHint,
 } from "office-ui-fabric-react";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
+import PropertySetTypes from "../trim-coms/PropertySetTypes";
 
 export class DetailsView extends React.Component<
 	IDetailsViewProps,
@@ -222,7 +224,10 @@ export class DetailsView extends React.Component<
 
 			if (propertyAndFieldDefinitions.length < 1) {
 				trimConnector!
-					.getViewPanePropertyDefs(this.getTrimType())
+					.getViewPanePropertyDefs(
+						this.getTrimType(),
+						PropertySetTypes.ViewPane
+					)
 					.then((data) => {
 						this.setState({
 							propertyAndFieldDefinitions: data,
@@ -276,11 +281,15 @@ export class DetailsView extends React.Component<
 			keysToAdd,
 			spinning,
 		} = this.state;
-		const { appStore } = this.props;
+		const { appStore, className } = this.props;
 
 		return (
 			<React.Fragment>
-				<div className={"new-record-body " + this.getStyles()}>
+				<div
+					className={
+						className ? className : "new-record-body" + " " + this.getStyles()
+					}
+				>
 					<div className="details-view ms-Grid" dir="ltr">
 						{propertiesAndFields
 							.filter((p) => {

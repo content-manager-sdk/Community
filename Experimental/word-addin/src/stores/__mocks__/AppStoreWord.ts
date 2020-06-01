@@ -83,6 +83,9 @@ export class AppStoreWord implements IAppStore {
 		protected trimConnector: ITrimConnector,
 		protected wordConnector?: IWordUrl
 	) {}
+	isOffice(): boolean {
+		throw new Error("Method not implemented.");
+	}
 
 	@observable public status: string = "ERROR";
 }
