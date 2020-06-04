@@ -25,7 +25,7 @@ const root = () => {
 		})
 	) {
 		return <BootStrapOutlook />;
-	} else if (window.location.href.indexOf("LinkedFolders") > -1) {
+	} else if (window.location.href.indexOf("Word") > -1) {
 		return <BootStrapWord />;
 	} else {
 		return <BootStrapWebDrawer />;

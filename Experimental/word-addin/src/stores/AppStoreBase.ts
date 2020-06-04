@@ -389,10 +389,9 @@ export class AppStoreBase implements IAppStore {
 	public setError = (error: any, module?: string, setStatus = true) => {
 		try {
 			if (error.data.response.status === 401) {
+				const servicePath = this.trimConnector.getServiceAPIPath();
 				window.location.replace(
-					`https://desktop-39dgcn3/ServiceAPI/auth/openid?redirect=${encodeURI(
-						"https://desktop-39dgcn3:3000"
-					)}`
+					`${servicePath}/auth/openid?redirect=${encodeURI(top.location.href)}`
 				);
 			}
 		} catch {}

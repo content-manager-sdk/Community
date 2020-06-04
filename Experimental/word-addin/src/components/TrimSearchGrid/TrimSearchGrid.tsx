@@ -47,6 +47,7 @@ export interface ITrimSearchDialogState {
 	showViewPane: boolean;
 	recordDetails: IObjectDetails;
 	height: number;
+	showPreview: boolean;
 }
 
 export interface ITrimSearchDialogProps {
@@ -87,6 +88,7 @@ export class TrimSearchGrid extends React.Component<
 			showViewPane: false,
 			recordDetails: { results: [], propertiesAndFields: [] },
 			height: window.innerHeight,
+			showPreview: false,
 		};
 
 		this._selection = new Selection({
@@ -262,10 +264,16 @@ export class TrimSearchGrid extends React.Component<
 			showViewPane,
 			recordDetails,
 			height,
+			showPreview,
 		} = this.state;
 		const { trimType } = this.props;
 
-		const leftColSize = showViewPane ? "9" : "12";
+		let leftColSize = "12";
+		let viewPaneSize = "3";
+		if (showViewPane) {
+			leftColSize = showPreview ? "7" : "9";
+			viewPaneSize = showPreview ? "5" : "3";
+		}
 
 		return (
 			<Stack>
@@ -347,7 +355,7 @@ export class TrimSearchGrid extends React.Component<
 						</div>
 
 						<div
-							className="ms-Grid-col ms-sm3 ms-md3 ms-lg3"
+							className={`ms-Grid-col ms-sm${viewPaneSize} ms-md${viewPaneSize} ms-lg${viewPaneSize}`}
 							style={{
 								transform: showViewPane ? "translate(0)" : "scale(0)",
 								paddingRight: "0",
@@ -357,6 +365,12 @@ export class TrimSearchGrid extends React.Component<
 								linkFormat={PivotLinkFormat.tabs}
 								linkSize={PivotLinkSize.normal}
 								style={{ marginTop: "8px" }}
+								onLinkClick={(item: PivotItem) => {
+									this.setState({
+										showPreview:
+											item.props.itemKey === "preview" ? true : false,
+									});
+								}}
 							>
 								<PivotItem headerText="Properties" key="properties">
 									<DetailsView
@@ -365,7 +379,7 @@ export class TrimSearchGrid extends React.Component<
 										className="wd-viewpane"
 									/>
 								</PivotItem>
-								<PivotItem headerText="Preview" key="preview">
+								<PivotItem headerText="Preview" key="preview" itemKey="preview">
 									<Preview record={recordDetails.results[0]} />
 								</PivotItem>
 							</Pivot>

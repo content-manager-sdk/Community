@@ -175,6 +175,10 @@ describe("Object Context Menu", () => {
 	appStore.isEmail = function () {
 		return isEmail;
 	}.bind(appStore);
+
+	appStore.isOffice = function () {
+		return !isEmail;
+	}.bind(appStore);
 	appStore.moreToFile = function () {
 		return moreToFile;
 	}.bind(appStore);
