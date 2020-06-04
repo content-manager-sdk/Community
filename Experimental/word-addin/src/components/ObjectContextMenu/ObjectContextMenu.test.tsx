@@ -201,7 +201,7 @@ describe("Object Context Menu", () => {
 	const makeWrapper = (
 		isInList: boolean = false,
 		trimType = BaseObjectTypes.Record,
-		record = {
+		record: any = {
 			Uri: 7,
 			ToolTip: "test title",
 			NameString: "REC_1",
@@ -585,6 +585,23 @@ describe("Object Context Menu", () => {
 				return mp.key === "RecDocFinal";
 			}).disabled
 		).toBeTruthy();
+	});
+
+	it("menu displayed when Record set after load", async () => {
+		isEmail = false;
+		const wrapper = makeWrapper(false, BaseObjectTypes.Record, null);
+		await flushPromises();
+
+		wrapper.setState({ items: [] });
+		wrapper.setProps({
+			record: {
+				Uri: 8,
+			},
+		});
+		await flushPromises();
+		expect.assertions(1);
+
+		expect(wrapper.find(CommandBar).props().farItems.length).toBeGreaterThan(0);
 	});
 
 	it("save button hidden for Outlook", async () => {

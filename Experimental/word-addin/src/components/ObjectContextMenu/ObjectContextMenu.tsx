@@ -61,11 +61,14 @@ export class ObjectContextMenu extends React.Component<
 		prevState: IContextMenuState
 	) {
 		const { record } = this.props;
+
 		if (record && record.Uri > 0) {
+			const prevUri = prevProps.record ? prevProps.record.Uri : 0;
 			if (
-				(record && prevProps.record && prevProps.record.Uri != record.Uri) ||
+				(record && prevUri != record.Uri) ||
 				prevProps.showViewPane !== this.props.showViewPane
 			) {
+				console.log("ssssssssssssss");
 				this.loadMenu();
 			}
 		}
