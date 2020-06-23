@@ -1,6 +1,6 @@
 ﻿// The initialize function must be run each time a new page is loaded.
-(function() {
-	Office.initialize = function(reason) {
+(function () {
+	Office.initialize = function (reason) {
 		// If you need to initialize something you can do so here.
 		//  loadProps();
 	};
@@ -19,11 +19,11 @@ function loadProps() {
 		} else {
 			OfficeRuntime.auth
 				.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: true })
-				.then(function(token) {
+				.then(function (token) {
 					accessToken = token;
 					dfd.resolve("success");
 				})
-				.catch(function(error) {
+				.catch(function (error) {
 					console.log(error);
 					// alert(result.error)
 					if (result.error.code === 13003) {
@@ -65,10 +65,10 @@ function openHelp(event) {
 let dialog;
 
 function insertObjectFromTrim(event) {
-	const fn = function(args) {
+	const fn = function (args) {
 		if (args.message !== "0") {
 			// Run a batch operation against the Word object model.
-			Word.run(function(context) {
+			Word.run(function (context) {
 				// Queue a command to get the current selection and then
 				// create a proxy range object with the results.
 				var range = context.document.getSelection();
@@ -78,10 +78,10 @@ function insertObjectFromTrim(event) {
 
 				// Synchronize the document state by executing the queued commands,
 				// and return a promise to indicate task completion.
-				return context.sync().then(function() {
+				return context.sync().then(function () {
 					console.log("Inserting text");
 				});
-			}).catch(function(error) {
+			}).catch(function (error) {
 				console.log("Error: " + JSON.stringify(error));
 				if (error instanceof OfficeExtension.Error) {
 					console.log("Debug info: " + JSON.stringify(error.debugInfo));
@@ -106,31 +106,26 @@ function insertObjectFromTrim(event) {
 }
 
 function insertTextFromTrim(event) {
-	const fn = function(args) {
+	const fn = function (args) {
 		if (args.message !== "0") {
 			// Run a batch operation against the Word object model.
-			Word.run(function(context) {
+			Word.run(function (context) {
 				// Queue a command to get the current selection and then
 				// create a proxy range object with the results.
 				var range = context.document.getSelection();
 
 				// Queue a commmand to delete the range object.
-				if (
-					args.message
-						.substr(0, 6)
-						.toLowerCase()
-						.startsWith("<html>")
-				) {
+				if (args.message.substr(0, 6).toLowerCase().startsWith("<html>")) {
 					range.insertHtml(args.message, "Replace");
 				} else {
 					range.insertText(args.message, "Replace");
 				}
 				// Synchronize the document state by executing the queued commands,
 				// and return a promise to indicate task completion.
-				return context.sync().then(function() {
+				return context.sync().then(function () {
 					console.log("Inserting text");
 				});
-			}).catch(function(error) {
+			}).catch(function (error) {
 				console.log("Error: " + JSON.stringify(error));
 				if (error instanceof OfficeExtension.Error) {
 					console.log("Debug info: " + JSON.stringify(error.debugInfo));
@@ -155,10 +150,10 @@ function insertTextFromTrim(event) {
 }
 
 function insertPictureFromTrim(event) {
-	const fn = function(args) {
+	const fn = function (args) {
 		if (args.message !== "0") {
 			// Run a batch operation against the Word object model.
-			Word.run(function(context) {
+			Word.run(function (context) {
 				// Queue a command to get the current selection and then
 				// create a proxy range object with the results.
 				var range = context.document.getSelection();
@@ -168,10 +163,10 @@ function insertPictureFromTrim(event) {
 
 				// Synchronize the document state by executing the queued commands,
 				// and return a promise to indicate task completion.
-				return context.sync().then(function() {
+				return context.sync().then(function () {
 					console.log("Inserting picture");
 				});
-			}).catch(function(error) {
+			}).catch(function (error) {
 				console.log("Error: " + JSON.stringify(error));
 				if (error instanceof OfficeExtension.Error) {
 					console.log("Debug info: " + JSON.stringify(error.debugInfo));
@@ -196,7 +191,7 @@ function insertPictureFromTrim(event) {
 
 function openFromTrim(event) {
 	let openUrl = "";
-	const fn = function(args) {
+	const fn = function (args) {
 		if (args.message === "0") {
 			dialog.close();
 		} else {
@@ -209,9 +204,9 @@ function openFromTrim(event) {
 				if (!response.UserHasAccess) {
 					noAccessMsg(response.WebUrl);
 				} else if (Office.context.diagnostics.platform === "PC") {
-					open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
+					window.open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
 				} else {
-					open(response.WebUrl, "_blank");
+					window.open(response.WebUrl);
 				}
 			}
 		}
@@ -232,7 +227,7 @@ function openFromTrim(event) {
 }
 
 function doOpen(event, filter, insertText, fn, fnEv) {
-	$.when(loadProps()).then(function(status) {
+	$.when(loadProps()).then(function (status) {
 		if (status === "success") {
 			const root = getRoot();
 			let insertTextQ = "";
@@ -250,7 +245,7 @@ function doOpen(event, filter, insertText, fn, fnEv) {
 					filter +
 					insertTextQ,
 				{ height: 64, width: 50, displayInIframe: true },
-				function(asyncResult) {
+				function (asyncResult) {
 					dialog = asyncResult.value;
 					dialog.addEventHandler(Office.EventType.DialogMessageReceived, fn);
 
@@ -280,11 +275,16 @@ function noAccessMsg(url) {
 
 	// I wait for half a second otherwise I get an error that another dialog is already open
 
-	setTimeout(function() {
+	setTimeout(function () {
 		Office.context.ui.displayDialogAsync(
 			fullUrl,
-			{ height: 55, width: 50, displayInIframe: true },
-			function(asyncResult) {
+			{
+				height: 55,
+				width: 50,
+				displayInIframe: false,
+				promptBeforeOpen: false,
+			},
+			function (asyncResult) {
 				if (asyncResult.status === Office.AsyncResultStatus.Failed) {
 					console.log(
 						(asyncResult.error.code = ": " + asyncResult.error.message)
@@ -293,7 +293,7 @@ function noAccessMsg(url) {
 					dialog = asyncResult.value;
 					dialog.addEventHandler(
 						Office.EventType.DialogMessageReceived,
-						function() {}
+						function () {}
 					);
 				}
 			}
