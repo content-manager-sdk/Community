@@ -132,7 +132,7 @@ export class TrimObjectSearchList extends React.Component<
 			return;
 		}
 
-		let { trimType, selectedUri } = this.state;
+		let { trimType } = this.state;
 
 		if (navTrimType && trimType !== navTrimType) {
 			this.setState({ trimType: navTrimType });
@@ -184,7 +184,7 @@ export class TrimObjectSearchList extends React.Component<
 					appStore!.setSpinning(false);
 					if (
 						autoSelectFirst === true &&
-						selectedUri < 1 &&
+						start < 2 &&
 						response.results.length > 0
 					) {
 						this._onTrimObjectSelected(response.results[0].Uri, false);
@@ -470,7 +470,7 @@ export class TrimObjectSearchList extends React.Component<
 		index: number | undefined,
 		isScrolling: boolean
 	): JSX.Element => {
-		const { trimConnector } = this.props;
+		const { trimConnector, autoSelectFirst } = this.props;
 
 		if (
 			this.state.scrollDirection === "down" &&
@@ -491,7 +491,9 @@ export class TrimObjectSearchList extends React.Component<
 		return (
 			<div
 				data-is-focusable={true}
-				className={`trim-list-row${index === 0 ? " trim-is-selected" : ""}`}
+				className={`trim-list-row${
+					index === 0 && autoSelectFirst === true ? " trim-is-selected" : ""
+				}`}
 				data-trim-uri={item.Uri}
 			>
 				<div className="trim-list-row-label">

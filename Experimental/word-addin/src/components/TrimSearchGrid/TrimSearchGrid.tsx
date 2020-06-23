@@ -13,7 +13,6 @@ import {
 	IRenderFunction,
 	ScrollablePane,
 	StickyPositionType,
-	//mergeStyles,
 } from "office-ui-fabric-react";
 import {
 	IColumn,
@@ -36,8 +35,6 @@ import PropertySetTypes from "src/trim-coms/PropertySetTypes";
 import ObjectContextMenu from "../ObjectContextMenu/ObjectContextMenu";
 import DetailsView from "../DetailsView";
 import Preview from "../Preview/Preview";
-
-//import { mergeStyles } from "@uifabric/styling";
 
 export interface ITrimSearchDialogState {
 	columns: IColumn[];
@@ -133,17 +130,6 @@ export class TrimSearchGrid extends React.Component<
 			});
 		}
 	}
-
-	// private getStyles(): string {
-	// 	const { height } = this.state;
-	// 	return mergeStyles({
-	// 		selectors: {
-	// 			"& .ms-DetailsList-contentWrapper": {
-	// 				height: `${height - 160}px`,
-	// 			},
-	// 		},
-	// 	});
-	// }
 
 	private loadRecordDetails = (): any => {
 		const { trimConnector, trimType } = this.props;

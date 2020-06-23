@@ -68,7 +68,6 @@ export class ObjectContextMenu extends React.Component<
 				(record && prevUri != record.Uri) ||
 				prevProps.showViewPane !== this.props.showViewPane
 			) {
-				console.log("ssssssssssssss");
 				this.loadMenu();
 			}
 		}

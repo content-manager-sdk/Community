@@ -152,6 +152,7 @@ export class TrimSearchDialog
 								onTrimTypeChanged={(newTrimType) => {
 									this.setState({ navTrimType: newTrimType });
 								}}
+								autoSelectFirst={true}
 							/>
 						</FocusTrapZone>
 					)}
