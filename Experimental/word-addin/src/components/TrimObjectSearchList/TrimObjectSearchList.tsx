@@ -470,6 +470,8 @@ export class TrimObjectSearchList extends React.Component<
 		index: number | undefined,
 		isScrolling: boolean
 	): JSX.Element => {
+		const { trimConnector } = this.props;
+
 		if (
 			this.state.scrollDirection === "down" &&
 			index! + 1 === this.state.items.length
@@ -495,7 +497,7 @@ export class TrimObjectSearchList extends React.Component<
 				<div className="trim-list-row-label">
 					<div>
 						<img
-							src={`${process.env.PUBLIC_URL}/assets/webIcons/${icon}_x16.png`}
+							src={`${trimConnector!.getServiceAPIPath()}/TrimIcon/W16H16/${icon}.png`}
 						/>
 					</div>
 					<div className="row-text">

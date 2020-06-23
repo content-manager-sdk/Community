@@ -163,7 +163,6 @@ export interface ICommandDef {
 	StatusBarMessage: string;
 	IsEnabled: boolean;
 	NeedsAnObject: boolean;
-	IsAvailable: boolean;
 }
 
 export interface ITrimOptions {
@@ -430,7 +429,6 @@ export class TrimConnector implements ITrimConnector {
 								Tooltip: cdef.Tooltip,
 								StatusBarMessage: cdef.StatusBarMessage,
 								NeedsAnObject: cdef.NeedsAnObject,
-								IsAvailable: cdef.IsAvailable,
 							};
 						});
 
@@ -707,11 +705,11 @@ export class TrimConnector implements ITrimConnector {
 		const postBodies = {
 			[CommandIds.RecCheckIn]: { RecordFilePath: fileName, ...postBody },
 			[CommandIds.RecUndoCheckInDelete]: {
-				RecordExternalEditingComplete: false,
+				RecordExternalEditingDoneBy: 0,
 				...postBody,
 			},
 			[CommandIds.RecCheckInDelete]: {
-				RecordExternalEditingComplete: true,
+				RecordExternalEditingDoneBy: { FindBy: "me" },
 				...postBody,
 			},
 			[CommandIds.AddToFavorites]: {
@@ -845,7 +843,6 @@ export class TrimConnector implements ITrimConnector {
 
 	public getDriveId(
 		webUrl: string,
-
 		recordUri: number,
 		attachmentName?: string,
 		getFile?: boolean
@@ -870,7 +867,7 @@ export class TrimConnector implements ITrimConnector {
 		return this.makeRequest(
 			{ path: `OpenFile/${recordUri}`, method: "get" },
 			(data: any) => {
-				return JSON.stringify(data);
+				return JSON.stringify(data.OpenFiles[0]);
 			}
 		);
 	}
@@ -1338,6 +1335,7 @@ export class TrimConnector implements ITrimConnector {
 							response.data.File ||
 							response.data.DriveItems ||
 							response.data.PropertiesAndFields ||
+							response.data.OpenFiles ||
 							typeof response.data === "string"
 						) {
 							resolve(parseCallback(response.data));

@@ -25,7 +25,11 @@ const root = () => {
 		})
 	) {
 		return <BootStrapOutlook />;
-	} else if (window.location.href.indexOf("Word") > -1) {
+	} else if (
+		["Word", "searchdialog"].some(function (a) {
+			return window.location.href.indexOf(a) > -1;
+		})
+	) {
 		return <BootStrapWord />;
 	} else {
 		return <BootStrapWebDrawer />;

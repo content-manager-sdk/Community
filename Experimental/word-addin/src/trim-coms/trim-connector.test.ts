@@ -1106,7 +1106,7 @@ describe("Test fetch from TRIM", () => {
 			expect.assertions(1);
 			const expectedResponse = {
 				Uri: 9000000001,
-				RecordExternalEditingComplete: true,
+				RecordExternalEditingDoneBy: { FindBy: "me" },
 			};
 
 			await trimConnector.runAction(
@@ -1125,7 +1125,7 @@ describe("Test fetch from TRIM", () => {
 			expect.assertions(1);
 			const expectedResponse = {
 				Uri: 9000000001,
-				RecordExternalEditingComplete: false,
+				RecordExternalEditingDoneBy: 0,
 			};
 
 			await trimConnector.runAction(

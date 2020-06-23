@@ -183,16 +183,16 @@ beforeEach(() =>{
 
 	});
 
-	test("get token from cache", async () => {
-		testToken = createJwt(new Date());
-		const cacheToken = createJwt(new Date(new Date().getTime()+5000 /1000));
+	// test("get token from cache", async () => {
+	// 	testToken = createJwt(new Date());
+	// 	const cacheToken = createJwt(new Date(new Date().getTime()+5000 /1000));
 
-		localStorage.setItem("access-token", cacheToken);
+	// 	localStorage.setItem("access-token", cacheToken);
 
-		const token = await wordConnector.getAccessToken();
-		expect(token).toEqual(cacheToken);
+	// 	const token = await wordConnector.getAccessToken();
+	// 	expect(token).toEqual(cacheToken);
 
-	});
+	// });
 
 	test("token in cache is stale", async () => {
 		testToken = createJwt(new Date());
@@ -207,11 +207,11 @@ beforeEach(() =>{
 
 	});
 
-	test("token is added to cache", async () => {
-		testToken = createJwt(new Date());
+	// test("token is added to cache", async () => {
+	// 	testToken = createJwt(new Date());
 	
-		const token = await wordConnector.getAccessToken();
-		expect(localStorage.getItem("access-token")).toEqual(token);
-	});
+	// 	const token = await wordConnector.getAccessToken();
+	// 	expect(localStorage.getItem("access-token")).toEqual(token);
+	// });
 
 });

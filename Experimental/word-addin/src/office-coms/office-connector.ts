@@ -46,7 +46,7 @@ export class OfficeConnector {
 				}
 			};
 
-			const cachedToken = localStorage.getItem("access-token");
+			const cachedToken = null; // = localStorage.getItem("access-token");
 
 			if (
 				cachedToken &&
@@ -57,7 +57,7 @@ export class OfficeConnector {
 				((global as any).OfficeRuntime.auth as any)
 					.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: false })
 					.then((token: string) => {
-						localStorage.setItem("access-token", token);
+						//	localStorage.setItem("access-token", token);
 						resolve(token);
 					})
 					.catch((e: any) => {
