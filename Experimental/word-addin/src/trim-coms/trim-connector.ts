@@ -1353,6 +1353,7 @@ export class TrimConnector implements ITrimConnector {
 					})
 					.catch((error) => {
 						if (Axios.isCancel(error)) {
+							reject("cancel");
 						} else {
 							if (
 								error.response &&

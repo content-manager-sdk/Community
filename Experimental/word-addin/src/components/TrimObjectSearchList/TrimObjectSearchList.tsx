@@ -189,7 +189,11 @@ export class TrimObjectSearchList extends React.Component<
 					}
 				})
 				.catch((error) => {
-					appStore!.setError(error, "Search");
+					if (error === "cancel") {
+						appStore!.setSpinning(false);
+					} else {
+						appStore!.setError(error, "Search");
+					}
 				});
 		} else {
 			appStore!.setSpinning(false);
