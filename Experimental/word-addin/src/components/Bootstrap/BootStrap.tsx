@@ -154,17 +154,14 @@ export class BootStrap<P> extends React.Component<P, IBootstrapState> {
 				<div>
 					{appStore.status === "ERROR" && <ErrorDisplay />}
 
-					{appStore.spinning === true && appStore!.status !== "STARTING" && (
-						<Spinner
-							className="trim-top-spinner"
-							size={SpinnerSize.large}
-							label={appStore.getSpinningLabel()}
-						/>
-					)}
 					<React.Fragment>
-						{appStore!.status === "STARTING" && !appStore.spinning && (
-							<Spinner className="trim-top-spinner" size={SpinnerSize.large} />
-						)}
+						{appStore!.status === "STARTING" ||
+							(appStore!.spinning && (
+								<Spinner
+									className="trim-top-spinner"
+									size={SpinnerSize.large}
+								/>
+							))}
 						{this.renderBody(appStore)}
 					</React.Fragment>
 				</div>

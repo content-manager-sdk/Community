@@ -58,43 +58,41 @@ export class TrimObjectSearchList extends React.Component<
 		}
 	}
 
-	componentDidMount() {
-		const { trimConnector, trimType } = this.props;
+	async componentDidMount() {
+		const { trimConnector, trimType, appStore } = this.props;
 		if (trimConnector) {
-			trimConnector!
-				.getSearchClauseDefinitions(trimType!)
-				.then((data) => {
-					const sc = { ...this.state.searchShortCuts };
-
-					data.forEach((clauseDef) => {
-						if (sc[trimType!][clauseDef.Id]) {
-							sc[trimType!][clauseDef.Id].ToolTip = clauseDef.ToolTip;
-							sc[trimType!][clauseDef.Id].Caption = clauseDef.Caption;
-							sc[trimType!][clauseDef.Id].TrimType = trimType;
-						}
-					});
-				})
-				.then(() => {
-					return trimConnector.getObjectDefinitions();
-				})
-				.then((objectDefs) => {
-					const sc = { ...this.state.searchShortCuts };
-
-					objectDefs.forEach((objectDef) => {
-						if (sc[trimType!][objectDef.Id]) {
-							sc[trimType!][objectDef.Id].Caption = objectDef.CaptionPlural;
-							sc[trimType!][objectDef.Id].TrimType = objectDef.Id;
-						}
-					});
-
-					this.setState({ searchShortCuts: sc });
+			try {
+				appStore!.setSpinning(true);
+				const clauses = await trimConnector!.getSearchClauseDefinitions(
+					trimType!
+				);
+				const sc = { ...this.state.searchShortCuts };
+				clauses.forEach((clauseDef) => {
+					if (sc[trimType!][clauseDef.Id]) {
+						sc[trimType!][clauseDef.Id].ToolTip = clauseDef.ToolTip;
+						sc[trimType!][clauseDef.Id].Caption = clauseDef.Caption;
+						sc[trimType!][clauseDef.Id].TrimType = trimType;
+					}
 				});
 
-			if (trimType === BaseObjectTypes.Location) {
-				trimConnector!.getMessages().then((messages) => {
-					const sc = { ...this.state.searchShortCuts };
-					sc[trimType!]["Me"].Caption = messages.bob_sbMe;
+				const objectDefs = await trimConnector.getObjectDefinitions();
+				objectDefs.forEach((objectDef) => {
+					if (sc[trimType!][objectDef.Id]) {
+						sc[trimType!][objectDef.Id].Caption = objectDef.CaptionPlural;
+						sc[trimType!][objectDef.Id].TrimType = objectDef.Id;
+					}
 				});
+
+				this.setState({ searchShortCuts: sc });
+
+				if (trimType === BaseObjectTypes.Location) {
+					trimConnector!.getMessages().then((messages) => {
+						const sc = { ...this.state.searchShortCuts };
+						sc[trimType!]["Me"].Caption = messages.bob_sbMe;
+					});
+				}
+			} finally {
+				appStore!.setSpinning(false);
 			}
 		}
 
