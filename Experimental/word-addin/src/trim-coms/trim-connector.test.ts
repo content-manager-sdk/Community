@@ -851,7 +851,11 @@ describe("Test fetch from TRIM", () => {
 		let completed = false;
 
 		trimConnector
-			.saveToTrim(BaseObjectTypes.Record, { RecordTypedTitle: "test" })
+			.search<IRecordType>({
+				trimType: BaseObjectTypes.RecordType,
+				q: "all",
+				purpose: 3,
+			})
 
 			.then((data) => {
 				completed = true;
