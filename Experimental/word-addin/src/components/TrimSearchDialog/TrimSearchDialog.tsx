@@ -92,7 +92,6 @@ export class TrimSearchDialog
 				contentsInReverseDateOrder: data.ContentsInReverseDateOrder,
 			});
 		});
-		//	}
 	}
 
 	public render(): JSX.Element {
@@ -207,10 +206,11 @@ export class TrimSearchDialog
 
 		if (selectedItems.length > 0) {
 			const fn = insertText ? "getRecordAsText" : "getDriveUrl";
-
+			appStore!.setSpinning(true);
 			trimConnector!
 				[fn](selectedItems[0].Uri)
 				.then((response: string) => {
+					appStore!.setSpinning(false);
 					Office.context.ui.messageParent(response);
 				})
 				// .finally(() => {
