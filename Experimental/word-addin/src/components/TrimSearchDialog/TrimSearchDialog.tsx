@@ -160,7 +160,9 @@ export class TrimSearchDialog
 
 				<div className="dialog-footer">
 					<Stack horizontal>
-						{filterSearch && !isRunning ? (
+						{filterSearch &&
+						!isRunning &&
+						appStore!.messages.web_ApplySearchFilter ? (
 							<Checkbox
 								label={appStore!.messages.web_ApplySearchFilter}
 								defaultChecked={true}
