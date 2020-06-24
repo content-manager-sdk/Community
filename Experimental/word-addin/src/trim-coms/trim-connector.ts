@@ -1166,7 +1166,8 @@ export class TrimConnector implements ITrimConnector {
 						return newObject;
 					}),
 				};
-			}
+			},
+			true
 		);
 	}
 
@@ -1308,7 +1309,11 @@ export class TrimConnector implements ITrimConnector {
 		}
 	};
 
-	private makeRequest<T>(config: any, parseCallback: any): Promise<T> {
+	private makeRequest<T>(
+		config: any,
+		parseCallback: any,
+		cancelable: Boolean = false
+	): Promise<T> {
 		this.source = this.CancelToken.source();
 
 		return new Promise((resolve, reject) => {
@@ -1318,7 +1323,10 @@ export class TrimConnector implements ITrimConnector {
 				}
 
 				const options = this.makeOptions({ ...{ accessToken }, ...config });
-				options.cancelToken = this.source.token;
+
+				if (cancelable === true) {
+					options.cancelToken = this.source.token;
+				}
 				Axios(options)
 					.then((response) => {
 						if (
