@@ -9,9 +9,9 @@ import {
 } from "../../trim-coms/trim-connector";
 import TrimObjectSearchList from "../TrimObjectSearchList/TrimObjectSearchList";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
-import { doesNotReject } from "assert";
+import flushPromises = require("flush-promises");
 
-describe("Search Bar", function() {
+describe("Search Bar", function () {
 	beforeEach(() => {
 		jest.useRealTimers();
 		latestClause = "anyWord";
@@ -23,10 +23,10 @@ describe("Search Bar", function() {
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
-	const doClauseDefs = function(
+	const doClauseDefs = function (
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseOrFieldDef[]> {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve([
 				{
 					ClauseName: "content",
@@ -65,7 +65,7 @@ describe("Search Bar", function() {
 				{
 					Caption: "All",
 					ClauseName: "all",
-					MethodGroup: "Text",
+					MethodGroup: "Other",
 					IsRecent: false,
 					IsFavorite: true,
 					ParameterFormat: "Boolean",
@@ -110,6 +110,91 @@ describe("Search Bar", function() {
 	trimConnector.getSearchClauseOrFieldDefinitions = doClauseDefs.bind(
 		trimConnector
 	);
+
+	trimConnector.getEnum = function () {
+		return Promise.resolve([
+			{ Caption: "Name", Name: "Name" },
+			{ Caption: "Type", Name: "Type" },
+			{ Icon: "UtyWord", Caption: "Text Search", Value: 2, Name: "Text" },
+			{
+				Icon: "GoForward",
+				Caption: "Linked Navigation",
+
+				Name: "Linked",
+			},
+			{
+				Icon: "RecInTray",
+				Caption: "Trays and Labels",
+
+				Name: "Tray",
+			},
+			{
+				Icon: "Number",
+				Caption: "Reference and Control Numbers",
+
+				Name: "Reference",
+			},
+			{
+				Icon: "LtPpleDoc",
+				Caption: "Document Management",
+
+				Name: "Document",
+			},
+			{ Icon: "RecDates", Caption: "Dates and Times", Value: 7, Name: "Date" },
+			{
+				Icon: "BobUserDefinedFields",
+				Caption: "Additional Fields",
+
+				Name: "Field",
+			},
+			{
+				Icon: "SchSchedule",
+				Caption: "Retention and Disposal",
+
+				Name: "Retention",
+			},
+			{
+				Icon: "LocList",
+				Caption: "Contacts, People and Places",
+
+				Name: "Location",
+			},
+			{
+				Icon: "WrkWorkflow",
+				Caption: "Business Process",
+
+				Name: "Process",
+			},
+			{
+				Icon: "YellowFile",
+				Caption: "Records Management",
+
+				Name: "Rm",
+			},
+			{
+				Icon: "BobSecurityLevel",
+				Caption: "Security and Audit",
+
+				Name: "Security",
+			},
+			{
+				Icon: "BeigeDoc",
+				Caption: "SharePoint Integration",
+
+				Name: "SharePoint",
+			},
+			{ Icon: "DbpSearchMethod", Caption: "Other", Value: 15, Name: "Other" },
+			{ Icon: "NavFavorites", Caption: "Favorites", Name: "Favorite" },
+			{
+				Icon: "RecRecentDocsTray",
+				Caption: "Recently Used Methods",
+
+				Name: "Recent",
+			},
+			{ Icon: "ClientMatter", Caption: "Client/Matter", Name: "ClientMatter" },
+		]);
+	}.bind(trimConnector);
+
 	trimConnector.getLatestClause = getLatestClause.bind(trimConnector);
 	trimConnector.setLatestClause = setLatestClause.bind(trimConnector);
 	const mockWordConnector = {
@@ -123,10 +208,10 @@ describe("Search Bar", function() {
 		resetError: null,
 		messages: { web_Please_Select: "Please select a Record." },
 		status: "",
-		setError: function(message: any) {
+		setError: function (message: any) {
 			testError = message;
 		},
-		openInCM: function(uri: number) {
+		openInCM: function (uri: number) {
 			testUri = uri;
 		},
 		RecordUri: 7,
@@ -135,7 +220,7 @@ describe("Search Bar", function() {
 
 	it("do content search", (done) => {
 		let testValue = "";
-		const doChange = function(newValue) {
+		const doChange = function (newValue) {
 			testValue = newValue;
 		};
 
@@ -242,8 +327,8 @@ describe("Search Bar", function() {
 
 				expect(combo.props().options[1]).toEqual({
 					itemType: 2,
-					key: "Text",
-					text: "Text",
+					key: "Favorites",
+					text: "Favorites",
 				});
 
 				expect.assertions(1);
@@ -268,9 +353,9 @@ describe("Search Bar", function() {
 			try {
 				const combo = wrapper.find(ComboBox).first();
 
-				expect(combo.props().options[2].key).toEqual("content");
-				expect(combo.props().options[2].text).toEqual("Content");
-				expect(combo.props().options[2].data.MethodGroup).toEqual("Text");
+				expect(combo.props().options[2].key).toEqual("all");
+				expect(combo.props().options[2].text).toEqual("All");
+				expect(combo.props().options[2].data.MethodGroup).toEqual("Other");
 
 				expect.assertions(3);
 				done();
@@ -312,7 +397,7 @@ describe("Search Bar", function() {
 
 	it("do 'all' search", (done) => {
 		let testValue = "";
-		const doChange = function(newValue) {
+		const doChange = function (newValue) {
 			testValue = newValue;
 		};
 
@@ -352,7 +437,7 @@ describe("Search Bar", function() {
 
 	it("clears the search on content search", (done) => {
 		let testValue = "xxx";
-		const doChange = function(newValue) {
+		const doChange = function (newValue) {
 			testValue = newValue;
 		};
 
@@ -430,7 +515,7 @@ describe("Search Bar", function() {
 		});
 	});
 
-	it("show correct clause when no shortcuts", (done) => {
+	it("show correct clause when no shortcuts", async () => {
 		const wrapper = shallow<SearchBar>(
 			<SearchBar
 				appStore={mockAppStore}
@@ -440,16 +525,10 @@ describe("Search Bar", function() {
 			/>
 		);
 
-		setTimeout(() => {
-			try {
-				const combo = wrapper.find(ComboBox).last();
+		await flushPromises();
+		const combo = wrapper.find(ComboBox).last();
 
-				expect(combo.props().selectedKey).toEqual("anyWord");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(combo.props().selectedKey).toEqual("anyWord");
 	});
 
 	it("show correct clause when no shortcuts and no latest clause", (done) => {
@@ -468,7 +547,7 @@ describe("Search Bar", function() {
 			try {
 				const combo = wrapper.find(ComboBox).last();
 
-				expect(combo.props().selectedKey).toEqual("content");
+				expect(combo.props().selectedKey).toEqual("all");
 				done();
 			} catch (e) {
 				done.fail(e);

@@ -5,7 +5,7 @@ window.config = {
 	WEB_CLIENT: "cm",
 	DEFAULT_AUTO_OPEN: true,
 	SEARCH_CLAUSES: {
-		Record: ["acl", "PoliceOfficer"],
+		Record: [],
 		SavedSearch: ["top"],
 		UserLabel: ["top"],
 	},

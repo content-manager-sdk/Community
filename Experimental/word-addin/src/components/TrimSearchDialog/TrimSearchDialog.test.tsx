@@ -10,20 +10,20 @@ import {
 } from "../../trim-coms/trim-connector";
 import { PrimaryButton } from "office-ui-fabric-react";
 
-describe("Trim search dialog", function() {
+describe("Trim search dialog", function () {
 	let thisError = null;
 
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
-	const getDriveUrl = function(uri: number): Promise<string> {
-		return new Promise(function(resolve, reject) {
+	const getDriveUrl = function (uri: number): Promise<string> {
+		return new Promise(function (resolve, reject) {
 			reject({ message: "the error" });
 		});
 	};
 
-	const getRecordAsText = function(uri: number): Promise<string> {
-		return new Promise(function(resolve, reject) {
+	const getRecordAsText = function (uri: number): Promise<string> {
+		return new Promise(function (resolve, reject) {
 			resolve("a file");
 		});
 	};
@@ -35,8 +35,9 @@ describe("Trim search dialog", function() {
 		fetchBaseSettingFromTrim: null,
 		resetError: null,
 		messages: {},
+		setSpinning: function () {},
 		status: "",
-		setError: function(message: any) {
+		setError: function (message: any) {
 			thisError = message;
 		},
 	};
@@ -67,7 +68,7 @@ describe("Trim search dialog", function() {
 
 		btn.props().onClick(null);
 
-		setTimeout(function() {
+		setTimeout(function () {
 			try {
 				expect(thisError).toEqual({ message: "the error" });
 				done();
@@ -82,7 +83,7 @@ describe("Trim search dialog", function() {
 		(global as any).Office = {
 			context: {
 				ui: {
-					messageParent: function(message) {
+					messageParent: function (message) {
 						fileText = message;
 					},
 				},
@@ -104,7 +105,7 @@ describe("Trim search dialog", function() {
 
 		btn.props().onClick(null);
 
-		setTimeout(function() {
+		setTimeout(function () {
 			try {
 				expect(fileText).toEqual("a file");
 				done();

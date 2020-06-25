@@ -71,7 +71,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 		this.autocompleteSearchDebounced = debounce(1000, this.__textChanged);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.loadSearchClauses();
 	}
 
@@ -86,7 +86,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 		}
 	}
 
-	private loadSearchClauses = (): void => {
+	private loadSearchClauses = async (): Promise<void> => {
 		const {
 			trimType,
 			includeShortCuts,
@@ -99,9 +99,19 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			onQueryChange(this._getQuery("container"));
 		}
 
+		const searchClauseGroup = await trimConnector!.getEnum("SearchClauseGroup");
+
+		const favLabel = searchClauseGroup.find((sg) => {
+			return sg.Name == "Favorite";
+		})!.Caption;
+
+		const recentLabel = searchClauseGroup.find((sg) => {
+			return sg.Name == "Recent";
+		})!.Caption;
+
 		let latestClause = trimConnector!.getLatestClause(trimType);
 		let latestFormat = "";
-		const searchClauses = (config.SEARCH_CLAUSES || {})[trimType] || [
+		const searchClauses: string[] = (config.SEARCH_CLAUSES || {})[trimType] || [
 			"anyWord",
 			"content",
 		];
@@ -111,22 +121,51 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			: [];
 
 		let lastGroup = "";
-		trimConnector!.getSearchClauseOrFieldDefinitions(trimType).then((data) => {
-			this.groupBy(data, function (sc: any) {
-				return sc.MethodGroup;
-			}).forEach((clauseDefs: ISearchClauseOrFieldDef[]) => {
+
+		const clauses = await trimConnector!.getSearchClauseOrFieldDefinitions(
+			trimType
+		);
+		const clauseMap = this.groupBy(clauses, function (sc: any) {
+			const g = [sc.MethodGroup];
+			if (sc.IsRecent === true) {
+				g.push(recentLabel);
+			}
+			if (sc.IsFavorite === true) {
+				g.push(favLabel);
+			}
+			return g;
+		});
+
+		const keys = Array.from(clauseMap.keys());
+
+		keys
+			.sort((a: any, b: any) => {
+				if (a === favLabel || a === recentLabel) {
+					return -1;
+				} else {
+					return a < b ? -1 : 1;
+				}
+			})
+			.forEach((key) => {
+				const clauseDefs = clauseMap.get(key);
+
 				clauseDefs.forEach((clauseDef: ISearchClauseOrFieldDef) => {
 					if (
 						(clauseDef.ClauseDef || []).IsBlocked === false &&
 						(clauseDef.IsFavorite ||
 							clauseDef.IsRecent ||
+							searchClauses.length === 0 ||
 							searchClauses.includes(clauseDef.ClauseName))
 					) {
-						if (lastGroup !== clauseDef.MethodGroup) {
-							lastGroup = clauseDef.MethodGroup;
+						if (lastGroup !== key) {
+							lastGroup = key;
+							const sg = searchClauseGroup.find((sg) => {
+								return sg.Name == key;
+							});
+							const text = sg ? sg.Caption : key;
 							searchTypeOptions.push({
-								key: clauseDef.MethodGroup,
-								text: clauseDef.MethodGroup,
+								key: key,
+								text: text,
 								itemType: SelectableOptionMenuItemType.Header,
 							});
 						}
@@ -149,22 +188,23 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				});
 			});
 
-			if (!includeShortCuts) {
-				this.setState({
-					searchType: latestClause,
-					searchQuery: "",
-					searchFormat: latestFormat,
-				});
-			}
+		if (!includeShortCuts) {
+			this.setState({
+				searchType: latestClause,
+				searchQuery: "",
+				searchFormat: latestFormat,
+			});
+		}
 
-			this.setState({ searchTypeOptions: searchTypeOptions });
-			if (this._loaded === false && latestFormat === "Boolean") {
-				this._loaded = true;
-				if (callChangeOnLoad === true && onQueryChange) {
-					onQueryChange(latestClause);
-				}
+		this.setState({ searchTypeOptions: searchTypeOptions });
+		if (this._loaded === false && latestFormat === "Boolean") {
+			this._loaded = true;
+			if (callChangeOnLoad === true && onQueryChange) {
+				onQueryChange(latestClause);
 			}
-		});
+		}
+
+		return Promise.resolve();
 	};
 
 	private getStyles(): string {
@@ -199,13 +239,15 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 	private groupBy = (list: any, keyGetter: any) => {
 		const map = new Map();
 		list.forEach((item: any) => {
-			const key = keyGetter(item);
-			const collection = map.get(key);
-			if (!collection) {
-				map.set(key, [item]);
-			} else {
-				collection.push(item);
-			}
+			const keys = keyGetter(item);
+			keys.forEach((key: any) => {
+				const collection = map.get(key);
+				if (!collection) {
+					map.set(key, [item]);
+				} else {
+					collection.push(item);
+				}
+			});
 		});
 		return map;
 	};
