@@ -174,13 +174,11 @@ describe("Search Bar", function () {
 			{
 				Icon: "BobSecurityLevel",
 				Caption: "Security and Audit",
-
 				Name: "Security",
 			},
 			{
 				Icon: "BeigeDoc",
 				Caption: "SharePoint Integration",
-
 				Name: "SharePoint",
 			},
 			{ Icon: "DbpSearchMethod", Caption: "Other", Value: 15, Name: "Other" },
