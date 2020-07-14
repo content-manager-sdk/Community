@@ -20,7 +20,7 @@ import { IGetRecordUriResponse } from "../office-coms/word-connector";
 import flushPromises = require("flush-promises");
 import { Provider } from "mobx-react";
 
-describe("New Record layout", function() {
+describe("New Record layout", function () {
 	let testRecordUrn = "";
 	let testSubjectPrefix = "";
 	let propertySheetTrimType;
@@ -137,7 +137,7 @@ describe("New Record layout", function() {
 			registerType1 = trimType;
 		}
 
-		return new Promise<ITrimMainObject>(function(resolve, reject) {
+		return new Promise<ITrimMainObject>(function (resolve, reject) {
 			if (rejectRegister) {
 				reject("create error");
 			} else {
@@ -146,10 +146,10 @@ describe("New Record layout", function() {
 		});
 	};
 
-	const doSearch = function<T extends ITrimMainObject>(
+	const doSearch = function <T extends ITrimMainObject>(
 		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve({
 				results: [
 					{ Uri: 1, NameString: "Document" } as T,
@@ -164,7 +164,7 @@ describe("New Record layout", function() {
 
 	mockTrimConnector.getPropertySheet = (trimType: BaseObjectTypes) => {
 		propertySheetTrimType = trimType;
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve(
 				noFormNeeded
 					? noFormForm
@@ -176,7 +176,7 @@ describe("New Record layout", function() {
 	};
 
 	mockTrimConnector.getDatabaseProperties = () => {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve({
 				EmailSubjectPrefix: "CM:",
 				CurrencySymbol: "",
@@ -208,7 +208,7 @@ describe("New Record layout", function() {
 	// };
 
 	let mockStore = new AppStoreWord(null, null);
-	mockStore.isEmail = function() {
+	mockStore.isEmail = function () {
 		return isEmail;
 	}.bind(mockStore);
 	mockStore.setDocumentInfo({ Uris: [], URN: "test_urn" });
@@ -217,18 +217,18 @@ describe("New Record layout", function() {
 		web_SelectRecordType: "Select a Record Type",
 		web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 	};
-	mockStore.createRecord = function(recordUri, recordProps) {
+	mockStore.createRecord = function (recordUri, recordProps) {
 		recordUriTest = recordUri;
 		recordPropsTest = recordProps;
 
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve({ Uri: 5678 });
 		});
 	}.bind(mockStore);
 
 	mockStore.setFileName("default title");
 
-	mockStore.setError = function(message: string) {
+	mockStore.setError = function (message: string) {
 		errorMessage = message;
 	}.bind(mockStore);
 
@@ -276,12 +276,7 @@ describe("New Record layout", function() {
 
 	it("contains a button", () => {
 		expect(wrapper.find(PrimaryButton).exists()).toBeTruthy();
-		expect(
-			wrapper
-				.find(PrimaryButton)
-				.childAt(0)
-				.text()
-		).toMatch("Register");
+		expect(wrapper.find(PrimaryButton).childAt(0).text()).toMatch("Register");
 	});
 
 	it("Sets the Record Type Uri from on load and onChange", () => {
@@ -317,7 +312,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		expect(recordUriTest).toEqual(1);
 	});
@@ -334,7 +329,7 @@ describe("New Record layout", function() {
 		wrapper
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 		await flushPromises();
 		expect(registerType1).toEqual(BaseObjectTypes.CheckinStyle);
 		expect(registerType2).toEqual(BaseObjectTypes.CheckinPlace);
@@ -365,7 +360,7 @@ describe("New Record layout", function() {
 		{ isEmail: false, expected: BaseObjectTypes.Record },
 	].forEach((element) => {
 		it(`shows form yes or no when default Record Type set for is email == ${element.isEmail}`, async () => {
-			isEmail = element.isEmail;
+			isEmail = element.isEmail();
 			mount<NewRecord>(
 				<Provider
 					appStore={mockStore}
@@ -420,10 +415,7 @@ describe("New Record layout", function() {
 		});
 
 		expect(
-			wrapper
-				.find(RecordTypePicker)
-				.first()
-				.props().defaultRecordType
+			wrapper.find(RecordTypePicker).first().props().defaultRecordType
 		).toEqual({ Uri: 66, TrimType: BaseObjectTypes.RecordType });
 	});
 
@@ -441,7 +433,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 		await flushPromises();
 		expect(errorMessage).toEqual("create error");
 	});
@@ -465,7 +457,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		await flushPromises();
 		expect(registerProps[1]).toEqual({
@@ -494,7 +486,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		await flushPromises();
 		expect(registerProps[1]).toEqual({
@@ -522,7 +514,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		await flushPromises();
 		expect(eventCalled).toBeTruthy();
@@ -574,7 +566,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		expect(recordPropsTest).toEqual({ RecordTypedTitle: "test title" });
 	});
@@ -584,7 +576,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		await flushPromises();
 		expect(testRecordUrn).toEqual("test_urn");
@@ -595,7 +587,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		await flushPromises();
 		expect(testSubjectPrefix).toEqual("CM:");
@@ -608,7 +600,7 @@ describe("New Record layout", function() {
 			.update()
 			.find("form")
 			.first()
-			.simulate("submit", { preventDefault: function() {} });
+			.simulate("submit", { preventDefault: function () {} });
 
 		await flushPromises();
 		expect(testRecordUrn).toBeFalsy();
@@ -707,7 +699,7 @@ describe("New Record layout", function() {
 
 			wrapper.setProps({
 				validateRecordType: () => {
-					return new Promise<Boolean>(function(resolve) {
+					return new Promise<Boolean>(function (resolve) {
 						resolve(testData.valid);
 					});
 				},

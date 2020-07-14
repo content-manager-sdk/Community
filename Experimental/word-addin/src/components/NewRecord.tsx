@@ -168,6 +168,7 @@ export class NewRecord extends React.Component<
 								this.recordProps = {
 									DataEntryFormDefinition: data.DataEntryFormDefinition,
 								};
+								appStore!.setSpinning(false);
 								this.doSave();
 							} else {
 								appStore!.setSpinning(false);
