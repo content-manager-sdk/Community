@@ -284,10 +284,12 @@ export class AppStoreBase implements IAppStore {
 			const fileName = await this.getFileToSave();
 
 			fields = fields || {};
-			properties.RecordExternalEditorId = this.documentInfo.Id;
+			if (!this.isEmail()) {
+				properties.RecordExternalEditorId = this.documentInfo.Id;
+			}
 			try {
 				let isLocal = false;
-				if (!properties.RecordExternalEditorId) {
+				if (!properties.RecordExternalEditorId && !this.isEmail()) {
 					properties.RecordExternalEditorId = await this.wordConnector!.getWebUrl();
 					isLocal = true;
 				}
@@ -301,7 +303,7 @@ export class AppStoreBase implements IAppStore {
 					fields
 				);
 
-				if (!this.isEmail && isLocal) {
+				if (!this.isEmail() && isLocal) {
 					await this.trimConnector.saveToTrim(BaseObjectTypes.Record, {
 						Uri: newRecord.Uri,
 						Checkout: {
