@@ -33,6 +33,7 @@ export class TrimMessages {
 	public web_fileMore = ""; // tslint:disable-line
 	public web_close = ""; // tslint:disable-line
 	public web_cancel = ""; // tslint:disable-line
+	public web_ok = ""; // tslint:disable-line
 	public web_proceed = ""; // tslint:disable-line
 	public web_useDefaultRecordType = ""; // tslint:disable-line
 	public web_Save = ""; // tslint:disable-line
@@ -40,6 +41,9 @@ export class TrimMessages {
 	public web_LinkedFolders = ""; // tslint:disable-line
 	public web_checkinOnClose = ""; //tslint:disable-line
 	public web_disableCheckinOnClose = ""; //tslint:disable-line
+	public web_openDocument = ""; //tslint:disable-line
+	public web_open = ""; //tslint:disable-line
+	public web_openDocumentBody = ""; //tslint:disable-line
 }
 
 export default TrimMessages;

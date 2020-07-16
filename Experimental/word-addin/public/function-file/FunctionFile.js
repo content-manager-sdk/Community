@@ -185,12 +185,14 @@ function insertPictureFromTrim(event) {
 function openFromTrim(event) {
 	let openUrl = "";
 	const fn = function (args) {
+		dialog.close();
 		if (args.message === "0") {
 			dialog.close();
 		} else {
 			openUrl = args.message;
 
 			const response = JSON.parse(openUrl);
+
 			try {
 				dialog.close();
 			} finally {
@@ -199,7 +201,7 @@ function openFromTrim(event) {
 				} else if (Office.context.diagnostics.platform === "PC") {
 					window.open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
 				} else {
-					window.open(response.WebUrl);
+					openDocMsg(response.WebUrl);
 				}
 			}
 		}
@@ -266,6 +268,39 @@ function noAccessMsg(url) {
 
 	const fullUrl = root + "home/dialog.html?goTo=" + url;
 
+	// I wait for half a second otherwise I get an error that another dialog is already open
+
+	setTimeout(function () {
+		Office.context.ui.displayDialogAsync(
+			fullUrl,
+			{
+				height: 55,
+				width: 50,
+				displayInIframe: false,
+				promptBeforeOpen: false,
+			},
+			function (asyncResult) {
+				if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+					console.log(
+						(asyncResult.error.code = ": " + asyncResult.error.message)
+					);
+				} else {
+					dialog = asyncResult.value;
+					dialog.addEventHandler(
+						Office.EventType.DialogMessageReceived,
+						function () {}
+					);
+				}
+			}
+		);
+	}, 500);
+}
+
+function openDocMsg(url) {
+	const root = getRoot();
+
+	const fullUrl = root + "home/openDoc.html?goTo=" + url;
+	console.log(fullUrl);
 	// I wait for half a second otherwise I get an error that another dialog is already open
 
 	setTimeout(function () {

@@ -19,19 +19,19 @@
 				},
 				{
 					"key": "fileTypeIconUrl",
-					"value": "https://mfcm.xyz/CMWord/assets/cm.png"
+					"value": "https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png"
 				},
 				{
 					"key": "appIcon",
-					"value": "{\"png1x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png1.5x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png2x\":\"https://mfcm.xyz/CMWord/assets/cm.png\"}"
+					"value": "{\"png1x\":\"https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png\", \"png1.5x\":\"https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png\", \"png2x\":\"https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png\"}"
 				},
 				{
 					"key": "fileTypeIcon",
-					"value": "{\"png1x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png1.5x\":\"https://mfcm.xyz/CMWord/assets/cm.png\", \"png2x\":\"https://mfcm.xyz/CMWord/assets/cm.png\"}"
+					"value": "{\"png1x\":\"https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png\", \"png1.5x\":\"https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png\", \"png2x\":\"https://mfcm.xyz/ServiceAPI/TrimIcon/W24h24/Trim.png\"}"
 				},
 				{
 					"key": "actions",
-					"value": "[{\"type\":\"newFile\",\"url\":\"https://mfcm.xyz/CMWord?newfile=true\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}},{\"type\":\"open\",\"url\":\"https://mfcm.xyz/CMWord/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}},{\"type\":\"preview\",\"url\":\"https://mfcm.xyz/CMWord/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".trim\"]}}}]"
+					"value": "[{\"type\":\"newFile\",\"url\":\"https://mfcm.xyz/CMWord?newfile=true\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"open\",\"url\":\"https://mfcm.xyz/ServiceAPI/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"preview\",\"url\":\"https://mfcm.xyz/ServiceAPI/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}}]"
 				}
 			]
 		}

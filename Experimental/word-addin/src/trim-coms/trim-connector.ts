@@ -1044,6 +1044,11 @@ export class TrimConnector implements ITrimConnector {
 						"Disable check in and delete on close";
 					data.Messages.web_checkinOnClose =
 						"Enable check in and delete on close";
+					data.Messages.web_openDocument = "Open document";
+					data.Messages.web_open = "Open";
+
+					data.Messages.web_openDocumentBody =
+						"The document is available in OneDrive, you may open it now or cancel to return to the currently open document";
 					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;
@@ -1312,7 +1317,7 @@ export class TrimConnector implements ITrimConnector {
 	private makeRequest<T>(
 		config: any,
 		parseCallback: any,
-		cancelable: Boolean = false
+		cancelable: boolean = false
 	): Promise<T> {
 		this.source = this.CancelToken.source();
 

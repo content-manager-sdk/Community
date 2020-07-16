@@ -17,7 +17,14 @@ import { inject } from "mobx-react";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import { debounce } from "throttle-debounce";
 import SearchBar from "../SearchBar/SearchBar";
-import { Checkbox, Stack } from "office-ui-fabric-react";
+import {
+	Checkbox,
+	Stack,
+	DialogType,
+	Dialog,
+	DialogFooter,
+	IDialogContentProps,
+} from "office-ui-fabric-react";
 
 export interface ITrimSearchDialogState {
 	isObjectPickerShown?: boolean;
@@ -32,6 +39,7 @@ export interface ITrimSearchDialogState {
 	isRunning: boolean;
 	navTrimType: BaseObjectTypes;
 	applyFilterSearch: boolean;
+	urlToOpen: string;
 }
 
 export class TrimSearchDialog
@@ -111,11 +119,25 @@ export class TrimSearchDialog
 			includeAlternateWhenShowingFolderContents,
 			navTrimType,
 			applyFilterSearch,
+			urlToOpen,
 		} = this.state;
 
 		const startSearchAt = textFieldText || searchStartPoint;
 
 		const myFilterSearch = applyFilterSearch === true ? filterSearch : "";
+		const dialogStyles = { main: { maxWidth: 450 } };
+		const modalProps = {
+			isBlocking: false,
+			styles: dialogStyles,
+		};
+
+		const dialogContentProps: IDialogContentProps = {
+			type: DialogType.normal,
+			title: appStore!.messages.web_openDocument,
+			closeButtonAriaLabel: appStore!.messages.web_cancel,
+			subText: appStore!.messages.web_openDocumentBody,
+			styles: { subText: { fontSize: "14px" } },
+		};
 
 		return (
 			<div className="dialog-top">
@@ -153,6 +175,33 @@ export class TrimSearchDialog
 								}}
 								autoSelectFirst={true}
 							/>
+							<Dialog
+								hidden={!urlToOpen}
+								onDismiss={() => {
+									this.setState({ urlToOpen: "" });
+								}}
+								dialogContentProps={dialogContentProps}
+								modalProps={modalProps}
+							>
+								<DialogFooter>
+									<DefaultButton
+										onClick={() => {
+											this.setState({ urlToOpen: "" });
+										}}
+										text={appStore!.messages.web_cancel}
+									/>
+									<PrimaryButton
+										onClick={() => {
+											const myUrl = urlToOpen;
+											this.setState({ urlToOpen: "" }, function () {
+												window.open(myUrl, "_blank");
+												Office.context.ui.messageParent("0");
+											});
+										}}
+										text={appStore!.messages.web_open}
+									/>
+								</DialogFooter>
+							</Dialog>
 						</FocusTrapZone>
 					)}
 				</React.Fragment>
@@ -179,7 +228,7 @@ export class TrimSearchDialog
 							data-automation-id="cancel"
 							allowDisabledFocus={true}
 							disabled={!startSearchAt}
-							text="Cancel"
+							text={appStore!.messages.web_cancel}
 							onClick={() => {
 								Office.context.ui.messageParent("0");
 							}}
@@ -188,7 +237,7 @@ export class TrimSearchDialog
 						<PrimaryButton
 							data-automation-id="ok"
 							disabled={!startSearchAt}
-							text="OK"
+							text={appStore!.messages.web_ok}
 							onClick={this._onOk}
 							allowDisabledFocus={true}
 						/>
@@ -211,11 +260,18 @@ export class TrimSearchDialog
 				[fn](selectedItems[0].Uri)
 				.then((response: string) => {
 					appStore!.setSpinning(false);
-					Office.context.ui.messageParent(response);
+					const obj = JSON.parse(response);
+
+					if (
+						obj.UserHasAccess === true &&
+						Office.context.diagnostics.platform !== Office.PlatformType.PC
+					) {
+						let url = obj.WebUrl;
+						this.setState({ urlToOpen: url });
+					} else {
+						Office.context.ui.messageParent(response);
+					}
 				})
-				// .finally(() => {
-				// 	this.setState({ isRunning: false });
-				// })
 				.catch((error) => {
 					appStore!.setError(error);
 					this.setState({ isRunning: false });
@@ -229,18 +285,13 @@ export class TrimSearchDialog
 		trimObject: ITrimMainObject,
 		isDoubleClick: boolean
 	): void => {
-		//const { onTrimObjectSelected } = this.props;
 		this.setState({
 			selectedItems: [trimObject],
-			// 	textFieldText: "",
 		});
 
 		if (isDoubleClick) {
 			this._onOk();
 		}
-		// if (onTrimObjectSelected) {
-		// 	onTrimObjectSelected(trimObject);
-		// }
 	};
 
 	private changeQuery = (newText: string): void => {
@@ -272,6 +323,7 @@ export class TrimSearchDialog
 			advancedSearchHelp: "",
 			navTrimType: trimType,
 			applyFilterSearch: true,
+			urlToOpen: "",
 		};
 	}
 
