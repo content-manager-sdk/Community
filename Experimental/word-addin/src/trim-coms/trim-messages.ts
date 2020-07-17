@@ -44,6 +44,10 @@ export class TrimMessages {
 	public web_openDocument = ""; //tslint:disable-line
 	public web_open = ""; //tslint:disable-line
 	public web_openDocumentBody = ""; //tslint:disable-line
+	public web_show = ""; //tslint:disable-line
+	public web_alpha = ""; //tslint:disable-line
+	public web_format = ""; //tslint:disable-line
+	public web_category = ""; //tslint:disable-line
 }
 
 export default TrimMessages;

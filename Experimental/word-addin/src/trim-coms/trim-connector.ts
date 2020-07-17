@@ -1046,7 +1046,10 @@ export class TrimConnector implements ITrimConnector {
 						"Enable check in and delete on close";
 					data.Messages.web_openDocument = "Open document";
 					data.Messages.web_open = "Open";
-
+					data.Messages.web_show = "Show";
+					data.Messages.web_alpha = "Alphabetic";
+					data.Messages.web_category = "Category";
+					data.Messages.web_format = "Category";
 					data.Messages.web_openDocumentBody =
 						"The document is available in OneDrive, you may open it now or cancel to return to the currently open document";
 					this.setCacheItem(CacheIds.Messages, data.Messages);

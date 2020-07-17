@@ -5,6 +5,7 @@ import "./SearchBar.css";
 import {
 	ITrimConnector,
 	ISearchClauseOrFieldDef,
+	IEnumDetails,
 } from "src/trim-coms/trim-connector";
 
 import { BaseObjectTypes } from "../../trim-coms/trim-baseobjecttypes";
@@ -29,6 +30,7 @@ export interface ISearchBarState {
 	searchType: string;
 	searchTypeOptions: IComboBoxOption[];
 	searchFormat: string;
+	clauseGrouping: string;
 }
 
 export interface ISearchBarProps
@@ -66,13 +68,25 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			searchType: "goto",
 			searchTypeOptions: [],
 			searchFormat: "",
+			clauseGrouping: "category",
 		};
 
 		this.autocompleteSearchDebounced = debounce(1000, this.__textChanged);
 	}
-
+	private _clauseGrouping = "category";
 	async componentDidMount() {
 		this.loadSearchClauses();
+	}
+
+	private getComboStyles(): string {
+		return mergeStyles({
+			selectors: {
+				"& .ms-ComboBox-optionsContainerWrapper": {
+					maxHeight: `${window.innerHeight - 100}px`,
+					overflowY: "auto",
+				},
+			},
+		});
 	}
 
 	componentDidUpdate(prevProps: ISearchBarProps, prevState: ISearchBarState) {
@@ -93,6 +107,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			onQueryChange,
 			trimConnector,
 			callChangeOnLoad,
+			appStore,
 		} = this.props;
 
 		if (includeShortCuts && onQueryChange) {
@@ -100,15 +115,9 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 		}
 
 		const searchClauseGroup = await trimConnector!.getEnum("SearchClauseGroup");
-
-		const favLabel = searchClauseGroup.find((sg) => {
-			return sg.Name == "Favorite";
-		})!.Caption;
-
-		const recentLabel = searchClauseGroup.find((sg) => {
-			return sg.Name == "Recent";
-		})!.Caption;
-
+		const searchClauseFormats = await trimConnector!.getEnum(
+			"SearchParameterFormats"
+		);
 		let latestClause = trimConnector!.getLatestClause(trimType);
 		let latestFormat = "";
 		const searchClauses: string[] = (config.SEARCH_CLAUSES || {})[trimType] || [
@@ -117,86 +126,153 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 		];
 
 		let searchTypeOptions: IComboBoxOption[] = includeShortCuts
-			? [{ key: "goto", text: "Show" }]
+			? [
+					{
+						key: "goto",
+						text: appStore!.messages.web_show,
+					},
+					{
+						key: "div",
+						text: "",
+						itemType: SelectableOptionMenuItemType.Divider,
+					},
+			  ]
 			: [];
 
 		let lastGroup = "";
 
-		const clauses = await trimConnector!.getSearchClauseOrFieldDefinitions(
-			trimType
-		);
-		const clauseMap = this.groupBy(clauses, function (sc: any) {
-			const g = [sc.MethodGroup];
-			if (sc.IsRecent === true) {
-				g.push(recentLabel);
-			}
-			if (sc.IsFavorite === true) {
-				g.push(favLabel);
-			}
-			return g;
-		});
-
-		const keys = Array.from(clauseMap.keys());
-
-		keys
-			.sort((a: any, b: any) => {
-				if (a === favLabel || a === recentLabel) {
-					return -1;
-				} else {
-					return a < b ? -1 : 1;
-				}
-			})
-			.forEach((key) => {
-				const clauseDefs = clauseMap.get(key);
-
-				clauseDefs.forEach((clauseDef: ISearchClauseOrFieldDef) => {
+		const addClausesToList = (
+			clauseDefs: ISearchClauseOrFieldDef[],
+			key: string
+		) => {
+			clauseDefs.forEach((clauseDef: ISearchClauseOrFieldDef) => {
+				if (
+					(clauseDef.ClauseDef || []).IsBlocked === false &&
+					(clauseDef.IsFavorite ||
+						clauseDef.IsRecent ||
+						searchClauses.length === 0 ||
+						searchClauses.includes(clauseDef.ClauseName))
+				) {
 					if (
-						(clauseDef.ClauseDef || []).IsBlocked === false &&
-						(clauseDef.IsFavorite ||
-							clauseDef.IsRecent ||
-							searchClauses.length === 0 ||
-							searchClauses.includes(clauseDef.ClauseName))
+						this._clauseGrouping === "category" ||
+						this._clauseGrouping === "format"
 					) {
 						if (lastGroup !== key) {
 							lastGroup = key;
-							const sg = searchClauseGroup.find((sg) => {
-								return sg.Name == key;
-							});
-							const text = sg ? sg.Caption : key;
+							let enumItem: IEnumDetails;
+							if (this._clauseGrouping === "category") {
+								enumItem = searchClauseGroup.find((sg) => {
+									return sg.Name == key;
+								})!;
+							} else {
+								enumItem = searchClauseFormats.find((sg) => {
+									return sg.Name == key;
+								})!;
+							}
+							const text = enumItem ? enumItem.Caption : key;
 							searchTypeOptions.push({
 								key: key,
 								text: text,
 								itemType: SelectableOptionMenuItemType.Header,
 							});
 						}
-
-						if (!latestClause) {
-							latestClause = clauseDef.ClauseName;
-						}
-
-						if (latestClause === clauseDef.ClauseName) {
-							latestFormat =
-								clauseDef.SearchParameterFormat || clauseDef.ParameterFormat;
-						}
-
-						searchTypeOptions.push({
-							key: clauseDef.ClauseName,
-							text: clauseDef.Caption,
-							data: clauseDef,
-						});
 					}
-				});
+
+					if (!latestClause) {
+						latestClause = clauseDef.ClauseName;
+					}
+
+					if (latestClause === clauseDef.ClauseName) {
+						latestFormat =
+							clauseDef.SearchParameterFormat || clauseDef.ParameterFormat;
+					}
+
+					searchTypeOptions.push({
+						key: clauseDef.ClauseName,
+						text: clauseDef.Caption,
+						data: clauseDef,
+					});
+				}
+			});
+		};
+
+		const clauses = await trimConnector!.getSearchClauseOrFieldDefinitions(
+			trimType
+		);
+		if (this._clauseGrouping === "format") {
+			const clauseMap = this.groupBy(clauses, function (sc: any) {
+				const g = [sc.SearchParameterFormat];
+
+				return g;
 			});
 
+			const keys = Array.from(clauseMap.keys());
+
+			keys
+				.sort((a: any, b: any) => {
+					return a < b ? -1 : 1;
+				})
+				.forEach((key) => {
+					const clauseDefs = clauseMap.get(key);
+					addClausesToList(clauseDefs, key);
+				});
+		} else if (this._clauseGrouping === "category") {
+			const favLabel = searchClauseGroup.find((sg) => {
+				return sg.Name == "Favorite";
+			})!.Caption;
+
+			const recentLabel = searchClauseGroup.find((sg) => {
+				return sg.Name == "Recent";
+			})!.Caption;
+
+			const clauseMap = this.groupBy(clauses, function (sc: any) {
+				const g = [sc.MethodGroup];
+				if (sc.IsRecent === true) {
+					g.push(recentLabel);
+				}
+				if (sc.IsFavorite === true) {
+					g.push(favLabel);
+				}
+				return g;
+			});
+
+			const keys = Array.from(clauseMap.keys());
+
+			keys
+				.sort((a: any, b: any) => {
+					if (b === favLabel && a === recentLabel) {
+						return 1;
+					}
+					if (a === favLabel || a === recentLabel) {
+						return -1;
+					}
+					if (b === favLabel || b === recentLabel) {
+						return 1;
+					}
+					return a < b ? -1 : 1;
+				})
+				.forEach((key) => {
+					const clauseDefs = clauseMap.get(key);
+					addClausesToList(clauseDefs, key);
+				});
+		} else {
+			addClausesToList(
+				clauses.sort(function (a, b) {
+					return a.Caption > b.Caption ? 1 : -1;
+				}),
+				""
+			);
+		}
 		if (!includeShortCuts) {
 			this.setState({
 				searchType: latestClause,
 				searchQuery: "",
 				searchFormat: latestFormat,
+				searchTypeOptions: searchTypeOptions,
 			});
+		} else {
+			this.setState({ searchTypeOptions: searchTypeOptions });
 		}
-
-		this.setState({ searchTypeOptions: searchTypeOptions });
 		if (this._loaded === false && latestFormat === "Boolean") {
 			this._loaded = true;
 			if (callChangeOnLoad === true && onQueryChange) {
@@ -219,7 +295,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				"& .trim-search-text": {
 					float: "left",
 					marginLeft: "4px",
-					width: `${wideDisplay ? "calc(100% - 180px)" : "190px"}`,
+					width: `${wideDisplay ? "calc(100% - 150px)" : "190px"}`,
 				},
 				"& .trim-search-query": {
 					width: `${wideDisplay ? "calc(100% - 160px)" : "190px"}`,
@@ -399,7 +475,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			searchFormat,
 		} = this.state;
 
-		const { includeShortCuts } = this.props;
+		const { includeShortCuts, appStore } = this.props;
 
 		const comboOptions = this.getComboOptions();
 		const cannedSearchNumber = this._findCannedSearch(searchQuery);
@@ -410,13 +486,41 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				  }
 				: { value: searchQuery };
 
+		const comboProps = {
+			calloutProps: {
+				hideOverflow: true,
+				className: this.getComboStyles(),
+			},
+		};
+
 		return (
 			<div className={"search-bar " + this.getStyles()}>
 				<ComboBox
+					{...comboProps}
 					className="context-list-title"
 					options={searchTypeOptions}
 					selectedKey={searchType}
 					onChange={this._comboChangeSearchType}
+					allowFreeform={false}
+					autoComplete="on"
+					onRenderLowerContent={() => {
+						return (
+							<ComboBox
+								selectedKey={this._clauseGrouping}
+								options={[
+									{ key: "category", text: appStore.messages.web_category },
+									{ key: "alphabetic", text: appStore.messages.web_alpha },
+									{ key: "format", text: appStore.messages.web_format },
+								]}
+								onChange={(event, option) => {
+									this._clauseGrouping = `${option!.key}`;
+									this.setState({ searchTypeOptions: [] }, () => {
+										this.loadSearchClauses();
+									});
+								}}
+							/>
+						);
+					}}
 				/>
 
 				{includeShortCuts && searchType === "goto" ? (
