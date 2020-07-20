@@ -47,6 +47,7 @@ describe("Trim search dialog", function () {
 			<TrimSearchDialog
 				trimType={BaseObjectTypes.Record}
 				trimConnector={trimConnector}
+				appStore={mockAppStore}
 			/>
 		);
 

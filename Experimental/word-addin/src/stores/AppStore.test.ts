@@ -21,6 +21,7 @@ import {
 import { BaseObjectTypes } from "../trim-coms/trim-baseobjecttypes";
 import { IWordUrl } from "../office-coms/office-connector";
 import { CommandIds } from "../trim-coms/trim-command-ids";
+import flushPromises = require("flush-promises");
 
 let Mock_Action = "";
 let testSearchResults;
@@ -369,17 +370,13 @@ describe("Test basic setup from Trim", () => {
 		});
 	});
 
-	it("sends fields to TRIM", (done) => {
+	it("sends fields to TRIM", async () => {
 		expect.assertions(1);
+		appStore.setDocumentInfo({ Id: "abc" });
+		appStore.createRecord(2, {}, { Speed: 20 });
 
-		appStore.createRecord(2, {}, { Speed: 20 }).then(() => {
-			try {
-				expect(postedFields["Speed"]).toBe(20);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		await flushPromises();
+		expect(postedFields["Speed"]).toBe(20);
 	});
 
 	it("returns record from create", (done) => {

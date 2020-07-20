@@ -90,7 +90,7 @@ function insertObjectFromTrim(event) {
 		event,
 		"recExtension:" +
 			extensions +
-			" OR recContains:[recExtension:" +
+			" OR recContainsEx:[recExtension:" +
 			extensions +
 			"]",
 		true,
@@ -134,7 +134,7 @@ function insertTextFromTrim(event) {
 		event,
 		"recExtension:" +
 			extensions +
-			" OR recContains:[recExtension:" +
+			" OR recContainsEx:[recExtension:" +
 			extensions +
 			"]",
 		true,
@@ -174,7 +174,7 @@ function insertPictureFromTrim(event) {
 		event,
 		"recExtension:" +
 			extensions +
-			" OR recContains:[recExtension:" +
+			" OR recContainsEx:[recExtension:" +
 			extensions +
 			"]",
 		true,
@@ -213,7 +213,7 @@ function openFromTrim(event) {
 		event,
 		"recExtension:" +
 			extensions +
-			" OR recContains:[recExtension:" +
+			" OR recContainsEx:[recExtension:" +
 			extensions +
 			"]",
 		false,

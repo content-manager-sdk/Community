@@ -1,7 +1,11 @@
 import * as React from "react";
 import { shallow, mount } from "enzyme";
 import { SearchBar } from "./SearchBar";
-import { ComboBox, TextField } from "office-ui-fabric-react";
+import {
+	ComboBox,
+	TextField,
+	SelectableOptionMenuItemType,
+} from "office-ui-fabric-react";
 
 import {
 	TrimConnector,
@@ -204,7 +208,10 @@ describe("Search Bar", function () {
 	const mockAppStore = {
 		fetchBaseSettingFromTrim: null,
 		resetError: null,
-		messages: { web_Please_Select: "Please select a Record." },
+		messages: {
+			web_Please_Select: "Please select a Record.",
+			web_show: "Show",
+		},
 		status: "",
 		setError: function (message: any) {
 			testError = message;
@@ -290,7 +297,7 @@ describe("Search Bar", function () {
 		});
 	});
 
-	it("gets goto clause from TrimConnector", (done) => {
+	it("gets goto clause from TrimConnector", async () => {
 		const wrapper = shallow<SearchBar>(
 			<SearchBar
 				appStore={mockAppStore}
@@ -300,14 +307,10 @@ describe("Search Bar", function () {
 			/>
 		);
 
-		setTimeout(() => {
-			const combo = wrapper.find(ComboBox).first();
-
-			expect(combo.props().options[0]).toEqual({ key: "goto", text: "Show" });
-
-			expect.assertions(1);
-			done();
-		});
+		await flushPromises();
+		const combo = wrapper.find(ComboBox).first();
+		expect(combo.props().options[0]).toEqual({ key: "goto", text: "Show" });
+		expect.assertions(1);
 	});
 	it("gets first header from TrimConnector", (done) => {
 		const wrapper = shallow<SearchBar>(
@@ -323,7 +326,7 @@ describe("Search Bar", function () {
 			try {
 				const combo = wrapper.find(ComboBox).first();
 
-				expect(combo.props().options[1]).toEqual({
+				expect(combo.props().options[2]).toEqual({
 					itemType: 2,
 					key: "Favorites",
 					text: "Favorites",
@@ -351,11 +354,17 @@ describe("Search Bar", function () {
 			try {
 				const combo = wrapper.find(ComboBox).first();
 
-				expect(combo.props().options[2].key).toEqual("all");
-				expect(combo.props().options[2].text).toEqual("All");
-				expect(combo.props().options[2].data.MethodGroup).toEqual("Other");
+				expect(combo.props().options[2].key).toEqual("Favorites");
+				expect(combo.props().options[2].text).toEqual("Favorites");
+				expect(combo.props().options[2].itemType).toEqual(
+					SelectableOptionMenuItemType.Header
+				);
+				expect(combo.props().options[3].data.MethodGroup).toEqual("Other");
 
-				expect.assertions(3);
+				expect(combo.props().options[3].key).toEqual("all");
+				expect(combo.props().options[3].text).toEqual("All");
+
+				expect.assertions(6);
 				done();
 			} catch (e) {
 				done.fail(e);

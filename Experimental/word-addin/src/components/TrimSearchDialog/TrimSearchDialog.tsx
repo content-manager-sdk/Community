@@ -259,17 +259,21 @@ export class TrimSearchDialog
 			trimConnector!
 				[fn](selectedItems[0].Uri)
 				.then((response: string) => {
-					appStore!.setSpinning(false);
-					const obj = JSON.parse(response);
-
-					if (
-						obj.UserHasAccess === true &&
-						Office.context.diagnostics.platform !== Office.PlatformType.PC
-					) {
-						let url = obj.WebUrl;
-						this.setState({ urlToOpen: url });
-					} else {
+					if (insertText) {
 						Office.context.ui.messageParent(response);
+					} else {
+						appStore!.setSpinning(false);
+						const obj = JSON.parse(response);
+
+						if (
+							obj.UserHasAccess === true &&
+							Office.context.diagnostics.platform !== Office.PlatformType.PC
+						) {
+							let url = obj.WebUrl;
+							this.setState({ urlToOpen: url });
+						} else {
+							Office.context.ui.messageParent(response);
+						}
 					}
 				})
 				.catch((error) => {
