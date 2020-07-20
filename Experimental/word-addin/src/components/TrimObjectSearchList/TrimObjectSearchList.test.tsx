@@ -17,8 +17,9 @@ import { List } from "office-ui-fabric-react/lib/List";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 import { Breadcrumb } from "office-ui-fabric-react/lib/Breadcrumb";
 import { Text } from "office-ui-fabric-react/lib/Text";
+import flushPromises = require("flush-promises");
 
-describe("Trim object search list", function() {
+describe("Trim object search list", function () {
 	let testPurpose = 0;
 	let testPurposeExtra = 0;
 	let testTrimType = BaseObjectTypes.Location;
@@ -34,6 +35,7 @@ describe("Trim object search list", function() {
 	let testSortBy = "";
 	let cancelCalled = false;
 	let testNewTrimType = BaseObjectTypes.Location;
+	let noResults = false;
 
 	beforeEach(() => {
 		testPurpose = 0;
@@ -44,6 +46,7 @@ describe("Trim object search list", function() {
 		testStart = 0;
 		testObject = { Uri: 0, NameString: "", PossiblyHasSubordinates: false };
 		hasMore = true;
+		noResults = false;
 
 		wrapper = makeWrapper();
 		wrapperDialog = makeWrapper("all", false, true);
@@ -59,7 +62,7 @@ describe("Trim object search list", function() {
 	): any => {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
-				appStore={{ setSpinning: function() {} }}
+				appStore={{ setSpinning: function () {} }}
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				purpose={5}
@@ -86,7 +89,7 @@ describe("Trim object search list", function() {
 	let trimConnector = new TrimConnector();
 	trimConnector.credentialsResolver = (callback) => {};
 
-	const doSearch = function<T extends IClassification>(
+	const doSearch = function <T extends IClassification>(
 		options: ISearchParameters
 	): Promise<ISearchResults<T>> {
 		testPurpose = options.purpose;
@@ -96,30 +99,39 @@ describe("Trim object search list", function() {
 		testFilter = options.filter!;
 		testStart = options.start!;
 		testSortBy = options.sortBy!;
-
-		return new Promise(function(resolve) {
-			resolve({
-				results: [
-					{
-						Uri: 1,
-						NameString: "test",
-						Name: { Value: "test" },
-						Icon: { Id: "test", FileType: "" },
-					} as T,
-				],
-				hasMoreItems: hasMore,
+		if (noResults === true) {
+			return new Promise(function (resolve) {
+				resolve({
+					SearchTitle: "a title",
+					results: [],
+					hasMoreItems: false,
+				});
 			});
-		});
+		} else {
+			return new Promise(function (resolve) {
+				resolve({
+					results: [
+						{
+							Uri: 1,
+							NameString: "test",
+							Name: { Value: "test" },
+							Icon: { Id: "test", FileType: "" },
+						} as T,
+					],
+					hasMoreItems: hasMore,
+				});
+			});
+		}
 	};
 
-	const doCancel = function() {
+	const doCancel = function () {
 		cancelCalled = true;
 	};
 
-	const doClauseDefs = function(
+	const doClauseDefs = function (
 		trimType: BaseObjectTypes
 	): Promise<ISearchClauseDef[]> {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve([
 				{
 					InternalName: "unkFavorite",
@@ -141,10 +153,10 @@ describe("Trim object search list", function() {
 		});
 	};
 
-	const doObjectDefs = function(
+	const doObjectDefs = function (
 		trimType: BaseObjectTypes
 	): Promise<IObjectDef[]> {
-		return new Promise(function(resolve) {
+		return new Promise(function (resolve) {
 			resolve([
 				{
 					Caption: "Saved Search",
@@ -164,12 +176,7 @@ describe("Trim object search list", function() {
 	});
 
 	it("contains the starting list", () => {
-		expect(
-			wrapper
-				.find(List)
-				.at(0)
-				.props().items!.length
-		).toBe(1);
+		expect(wrapper.find(List).at(0).props().items!.length).toBe(1);
 	});
 
 	it("sends the correct parameters", () => {
@@ -279,12 +286,7 @@ describe("Trim object search list", function() {
 		const text = wrapperDialog.find("div.trim-search-shortcuts").find(Text);
 
 		expect(text.length).toEqual(9);
-		expect(
-			text
-				.at(0)
-				.childAt(0)
-				.text()
-		).toEqual("My Containers");
+		expect(text.at(0).childAt(0).text()).toEqual("My Containers");
 
 		expect.assertions(2);
 	});
@@ -297,12 +299,7 @@ describe("Trim object search list", function() {
 		shortCut.at(0).simulate("click");
 
 		setImmediate(() => {
-			expect(
-				wrapper
-					.find(List)
-					.at(0)
-					.props().items!.length
-			).toBe(1);
+			expect(wrapper.find(List).at(0).props().items!.length).toBe(1);
 
 			done();
 		});
@@ -370,14 +367,14 @@ describe("Trim object search list", function() {
 
 	it("event fires when row clicked", () => {
 		wrapper.find(List).simulate("click", {
-			preventDefault: function() {},
+			preventDefault: function () {},
 			nativeEvent: {
 				target: {
 					parentElement: {
-						getAttribute: function() {
+						getAttribute: function () {
 							return "1";
 						},
-						classList: { toggle: function() {} },
+						classList: { toggle: function () {} },
 					},
 				},
 			},
@@ -388,7 +385,7 @@ describe("Trim object search list", function() {
 		expect(testObject.Uri).toBe(1);
 	});
 
-	const getWrapper = function(
+	const getWrapper = function (
 		spec = {
 			trimType: BaseObjectTypes.Record,
 			includeAlt: false,
@@ -397,7 +394,7 @@ describe("Trim object search list", function() {
 	) {
 		return shallow<TrimObjectSearchList>(
 			<TrimObjectSearchList
-				appStore={{ setSpinning: function() {} }}
+				appStore={{ setSpinning: function () {} }}
 				trimConnector={trimConnector}
 				trimType={spec.trimType}
 				purpose={5}
@@ -412,9 +409,9 @@ describe("Trim object search list", function() {
 		);
 	};
 
-	const clickNavigateOnListItem = function(wrapper: ShallowWrapper) {
+	const clickNavigateOnListItem = function (wrapper: ShallowWrapper) {
 		wrapper.find(List).simulate("click", {
-			preventDefault: function() {},
+			preventDefault: function () {},
 			nativeEvent: {
 				target: {
 					classList: {
@@ -423,10 +420,10 @@ describe("Trim object search list", function() {
 						},
 					},
 					parentElement: {
-						getAttribute: function() {
+						getAttribute: function () {
 							return "1";
 						},
-						classList: { toggle: function() {} },
+						classList: { toggle: function () {} },
 					},
 				},
 			},
@@ -498,14 +495,14 @@ describe("Trim object search list", function() {
 
 		setTimeout(() => {
 			wrapper.find(List).simulate("click", {
-				preventDefault: function() {},
+				preventDefault: function () {},
 				nativeEvent: {
 					target: {
 						parentElement: {
-							getAttribute: function() {
+							getAttribute: function () {
 								return "1";
 							},
-							classList: { toggle: function() {} },
+							classList: { toggle: function () {} },
 						},
 					},
 				},
@@ -521,6 +518,21 @@ describe("Trim object search list", function() {
 				done.fail(e);
 			}
 		});
+	});
+
+	it(`show a title when there are no results`, async () => {
+		noResults = true;
+		const wrapper = getWrapper({
+			includeAlt: false,
+			trimType: BaseObjectTypes.Record,
+			contentsInReverseDateOrder: false,
+		});
+
+		await flushPromises();
+		expect.assertions(3);
+		expect(wrapper.find(List).exists()).toBeFalsy();
+		expect(wrapper.find(Text).exists()).toBeTruthy();
+		expect(wrapper.find(Text).childAt(0).text()).toEqual("a title");
 	});
 
 	it(`searches by registered date in reverse order`, async (done) => {
@@ -576,7 +588,7 @@ describe("Trim object search list", function() {
 			const breadcrumb = wrapper.find(Breadcrumb);
 			const items = breadcrumb.props()["items"];
 			if (items) {
-				items[0].onClick({ preventDefault: function() {} }, { key: "2" });
+				items[0].onClick({ preventDefault: function () {} }, { key: "2" });
 			}
 			expect(testQ).toEqual("recContainer:2");
 			done();
@@ -602,7 +614,7 @@ describe("Trim object search list", function() {
 			const breadcrumb = wrapper.find(Breadcrumb);
 			breadcrumb
 				.props()
-				["items"][0].onClick({ preventDefault: function() {} }, { key: "1" });
+				["items"][0].onClick({ preventDefault: function () {} }, { key: "1" });
 
 			expect(wrapper.state("ancestors")).toEqual([
 				{ Uri: 1, NameString: "test" },
@@ -616,12 +628,7 @@ describe("Trim object search list", function() {
 
 		expect.assertions(1);
 
-		expect(
-			tt
-				.at(0)
-				.props()
-				.tooltipProps.onRenderContent()
-		).toEqual(
+		expect(tt.at(0).props().tooltipProps.onRenderContent()).toEqual(
 			<div>
 				<div className="ms-fontWeight-semibold">My Containers</div>
 				<div>My Containers tooltip</div>

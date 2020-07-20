@@ -114,3 +114,8 @@
 .row-text {
 	margin-left: 4px;
 }
+.searchTitleText {
+	display: block;
+	margin-top: 20px;
+	text-align: center;
+}

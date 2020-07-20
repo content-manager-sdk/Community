@@ -72,6 +72,7 @@ export interface IObjectDetails {
 
 export interface ISearchResults<T extends ITrimMainObject> {
 	hasMoreItems: boolean;
+	SearchTitle: string;
 	results: T[];
 }
 
@@ -1160,6 +1161,7 @@ export class TrimConnector implements ITrimConnector {
 			(data: any) => {
 				return {
 					hasMoreItems: data.HasMoreItems,
+					SearchTitle: data.SearchTitle,
 					results: data.Results.map((trimObject: T) => {
 						const newObject = {};
 

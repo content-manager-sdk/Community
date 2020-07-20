@@ -27,6 +27,7 @@ export interface ITrimObjectSearchListState {
 	scrollDirection: string;
 	searchShortCuts: any;
 	selectedUri: number;
+	searchTitle: string;
 
 	trimType: BaseObjectTypes;
 }
@@ -174,10 +175,14 @@ export class TrimObjectSearchList extends React.Component<
 					this._hasMore = response.hasMoreItems;
 					if (start > 1) {
 						this.setState((prevState) => ({
+							searchTitle: response.SearchTitle,
 							items: [...prevState.items, ...response.results],
 						}));
 					} else {
-						this.setState({ items: response.results });
+						this.setState({
+							searchTitle: response.SearchTitle,
+							items: response.results,
+						});
 					}
 					appStore!.setSpinning(false);
 					if (
@@ -304,7 +309,7 @@ export class TrimObjectSearchList extends React.Component<
 			excludeShortCuts,
 			singleClickActAsDouble,
 		} = this.props;
-		const { searchShortCuts, items, ancestors } = this.state;
+		const { searchShortCuts, items, ancestors, searchTitle } = this.state;
 
 		return (
 			<div className="trim-search-list">
@@ -382,18 +387,22 @@ export class TrimObjectSearchList extends React.Component<
 								})}
 							/>
 						)}
-
-						<List
-							items={items}
-							onRenderCell={this._onRenderCell}
-							onShouldVirtualize={this._onVirtualize}
-							onClick={(evt: React.MouseEvent<HTMLDivElement>) => {
-								this._onListClick(evt, singleClickActAsDouble || false);
-							}}
-							onDoubleClick={(evt: React.MouseEvent<HTMLDivElement>) => {
-								this._onListClick(evt, true);
-							}}
-						/>
+						{items.length === 0 && (
+							<Text className="searchTitleText">{searchTitle}</Text>
+						)}
+						{items.length > 0 && (
+							<List
+								items={items}
+								onRenderCell={this._onRenderCell}
+								onShouldVirtualize={this._onVirtualize}
+								onClick={(evt: React.MouseEvent<HTMLDivElement>) => {
+									this._onListClick(evt, singleClickActAsDouble || false);
+								}}
+								onDoubleClick={(evt: React.MouseEvent<HTMLDivElement>) => {
+									this._onListClick(evt, true);
+								}}
+							/>
+						)}
 					</div>
 				</div>
 			</div>
@@ -524,6 +533,7 @@ export class TrimObjectSearchList extends React.Component<
 			trimType: props.trimType!,
 			q: "",
 			items: [],
+			searchTitle: "",
 			ancestors: [],
 			lastScrollPos: 0,
 			scrollDirection: "",

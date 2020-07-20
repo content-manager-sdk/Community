@@ -318,6 +318,42 @@ describe("Test fetch from TRIM", () => {
 			});
 	});
 
+	it("search title is returned", async () => {
+		mock.reset();
+		mock.onGet(`${SERVICEAPI_BASE_URI}/Classification`).replyOnce(200, {
+			Results: [
+				{
+					ClassificationName: { Value: "Test Name" },
+					PossiblyHasSubordinates: true,
+					TrimType: "Classification",
+					NameString: "Accounting - Accounting Automatic",
+					Uri: 9000000005,
+				},
+			],
+			PropertiesAndFields: {},
+			TotalResults: 1,
+			CountStringEx: "1 Classification",
+			MinimumCount: 1,
+			Count: 0,
+			HasMoreItems: false,
+			SearchTitle: "test title",
+			HitHighlightString: "",
+			TrimType: "Classification",
+			ResponseStatus: {},
+		});
+
+		expect.assertions(1);
+
+		const data = await trimConnector.search<IClassification>({
+			trimType: BaseObjectTypes.Classification,
+			q: "all",
+			purpose: 3,
+			purposeExtra: 123,
+		});
+
+		expect(data.SearchTitle).toBe("test title");
+	});
+
 	it("the FullFormattedName is david", () => {
 		mock.reset();
 		mock.onGet(`${SERVICEAPI_BASE_URI}/Location/me`).replyOnce(200, {
