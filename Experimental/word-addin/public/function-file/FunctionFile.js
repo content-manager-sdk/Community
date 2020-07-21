@@ -199,7 +199,24 @@ function openFromTrim(event) {
 				if (!response.UserHasAccess) {
 					noAccessMsg(response.WebUrl);
 				} else if (Office.context.diagnostics.platform === "PC") {
-					window.open("ms-word:ofe|u|" + response.WebDavUrl, "_blank");
+					let app = (function () {
+						switch (Office.context.host) {
+							case Office.HostType.Excel:
+								return "excel";
+							case Office.HostType.Word:
+								return "word";
+							case Office.HostType.PowerPoint:
+								return "powerpoint";
+							case Office.HostType.Access:
+								return "access";
+							case Office.HostType.Project:
+								return "project";
+						}
+
+						throw new Exception("Application not supported.");
+					})();
+
+					window.open(`ms-${app}:ofe|u|` + response.WebDavUrl, "_blank");
 				} else {
 					openDocMsg(response.WebUrl);
 				}
@@ -207,7 +224,15 @@ function openFromTrim(event) {
 		}
 	};
 
-	const extensions = "docx,docm,odt";
+	let extensions = "docx,docm,odt";
+
+	if (Office.context.host === Office.HostType.Excel) {
+		extensions = "xlsx";
+	}
+
+	if (Office.context.host === Office.HostType.PowerPoint) {
+		extensions = "pptx";
+	}
 
 	doOpen(
 		event,

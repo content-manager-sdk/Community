@@ -1,4 +1,5 @@
 import AppStoreBase from "./AppStoreBase";
+import { IOfficeConnector } from "src/office-coms/office-connector";
 
 export class AppStoreWord extends AppStoreBase {
 	protected getFileName(): Promise<string> {
@@ -17,7 +18,11 @@ export class AppStoreWord extends AppStoreBase {
 	protected async getFileToSave(): Promise<string> {
 		return await this.wordConnector!.getDocumentData(
 			(data: number[], fileName: string) => {
-				return this.trimConnector!.writeFileSlice(data, fileName);
+				return this.trimConnector!.writeFileSlice(
+					data,
+					fileName,
+					(this.wordConnector! as IOfficeConnector).getExtension()
+				);
 			}
 		);
 	}

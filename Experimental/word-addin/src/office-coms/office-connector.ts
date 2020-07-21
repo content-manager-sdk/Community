@@ -24,20 +24,16 @@ export interface IOfficeConnector extends IWordUrl {
 	getAutoOpen(): boolean;
 	saveDocument(): Promise<void>;
 	initialize(trimConnector: ITrimConnector, appStore: IAppStore): void;
+	getExtension(): string;
 }
 
 export class OfficeConnector {
+	public getExtension(): string {
+		return "";
+	}
 	public initialize(trimConnector: ITrimConnector, appStore: IAppStore): void {}
 	public getAccessToken(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			// if (Office.context.requirements.isSetSupported("IdentityAPI", 1.1)) {
-			// 	reject({ message: "Identity not supported." });
-			// } else {
-
-			// if (!Office.context || !Office.context["auth"]) {
-			// 	resolve("me");
-			// }
-
 			const parseJwt = (token: string): any => {
 				try {
 					return JSON.parse(atob(token.split(".")[1]));
@@ -55,9 +51,11 @@ export class OfficeConnector {
 				resolve(cachedToken);
 			} else {
 				((global as any).OfficeRuntime.auth as any)
-					.getAccessToken({ allowSignInPrompt: true, forMSGraphAccess: false })
+					.getAccessToken({
+						allowSignInPrompt: true,
+						forMSGraphAccess: false,
+					})
 					.then((token: string) => {
-						//	localStorage.setItem("access-token", token);
 						resolve(token);
 					})
 					.catch((e: any) => {

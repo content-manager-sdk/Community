@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
 	xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
 
 	<!-- Begin Basic Settings: Add-in metadata, used for all versions of Office unless override provided. -->
@@ -10,7 +10,7 @@
 	<Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
 	<!--Version. Updates from the store only get triggered if there is a version change. -->
-	<Version>1.6.109.0</Version>
+	<Version>1.9.609.0</Version>
 	<ProviderName>Micro Focus</ProviderName>
 	<DefaultLocale>en-US</DefaultLocale>
 	<!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -37,6 +37,8 @@
 	<!--Begin TaskPane Mode integration. This section is used if there are no VersionOverrides or if the Office client version does not support add-in commands. -->
 	<Hosts>
 		<Host Name="Document" />
+		<Host Name="Workbook" />
+		<Host Name="Presentation" />
 	</Hosts>
 	<DefaultSettings>
 		<SourceLocation DefaultValue="https://desktop-39dgcn3:3000/" />
@@ -72,7 +74,7 @@
 						<LearnMoreUrl resid="Trim.GetStarted.LearnMoreUrl"/>
 					</GetStarted>
 					<!-- Function file is a HTML page that includes the JavaScript where functions for ExecuteAction will be called.
-            Think of the FunctionFile as the code behind ExecuteFunction. -->
+            		Think of the FunctionFile as the code behind ExecuteFunction. -->
 					<FunctionFile resid="Trim.DesktopFunctionFile.Url" />
 
 					<!-- PrimaryCommandSurface is the main Office Ribbon. -->
@@ -111,7 +113,381 @@
 									<Action xsi:type="ShowTaskpane">
 										<TaskpaneId>Office.AutoShowTaskpaneWithDocument</TaskpaneId>
 										<!-- Provide a url resource id for the location that will be displayed on the task pane. -->
-										<SourceLocation resid="Trim.Taskpane.Url" />
+										<SourceLocation resid="Trim.WordTaskpane.Url" />
+									</Action>
+								</Control>
+
+								<Control xsi:type="Button" id="Trim.OpenButton">
+									<Label resid="Trim.OpenButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.OpenButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.OpenButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.openicon_16x16" />
+										<bt:Image size="32" resid="Trim.openicon_32x32" />
+										<bt:Image size="80" resid="Trim.openicon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>openFromTrim</FunctionName>
+									</Action>
+								</Control>
+							</Group>
+
+							<Group id="Trim.Group.Insert">
+
+								<Label resid="Trim.InsertLabel" />
+
+								<Icon>
+									<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
+									<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
+									<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
+								</Icon>
+
+								<Control xsi:type="Button" id="Trim.InsertPictureButton">
+									<Label resid="Trim.InsertPictureButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.InsertPictureButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.InsertPictureButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
+										<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
+										<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>insertPictureFromTrim</FunctionName>
+									</Action>
+								</Control>
+
+								<Control xsi:type="Button" id="Trim.InsertTextButton">
+									<Label resid="Trim.InsertTextButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.InsertTextButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.InsertTextButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.inserttexticon_16x16" />
+										<bt:Image size="32" resid="Trim.inserttexticon_32x32" />
+										<bt:Image size="80" resid="Trim.inserttexticon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>insertTextFromTrim</FunctionName>
+									</Action>
+								</Control>
+
+								<Control xsi:type="Button" id="Trim.InsertObjectButton">
+									<Label resid="Trim.InsertObjectButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.InsertObjectButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.InsertObjectButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.insertobjecticon_16x16" />
+										<bt:Image size="32" resid="Trim.insertobjecticon_32x32" />
+										<bt:Image size="80" resid="Trim.insertobjecticon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>insertObjectFromTrim</FunctionName>
+									</Action>
+								</Control>
+
+
+							</Group>
+							<Group id="Trim.Group.Tools">
+								<Label resid="Trim.ToolsLabel" />
+
+								<Icon>
+									<bt:Image size="16" resid="Trim.helpicon_16x16" />
+									<bt:Image size="32" resid="Trim.helpicon_32x32" />
+									<bt:Image size="80" resid="Trim.helpicon_80x80" />
+								</Icon>
+
+								<Control xsi:type="Button" id="Trim.HelpButton">
+									<Label resid="Trim.HelpButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.HelpButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.HelpButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.helpicon_16x16" />
+										<bt:Image size="32" resid="Trim.helpicon_32x32" />
+										<bt:Image size="80" resid="Trim.helpicon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>openHelp</FunctionName>
+									</Action>
+								</Control>
+
+							</Group>
+
+							<Label resid="Trim.TabLabel" />
+						</CustomTab>
+					</ExtensionPoint>
+				</DesktopFormFactor>
+			</Host>
+			<Host xsi:type="Workbook">
+				<!-- Form factor. Currently only DesktopFormFactor is supported. -->
+				<DesktopFormFactor>
+					<!--"This code enables a customizable message to be displayed when the add-in is loaded successfully upon individual install."-->
+					<GetStarted>
+						<!-- Title of the Getting Started callout. resid points to a ShortString resource -->
+						<Title resid="Trim.GetStarted.Title"/>
+
+						<!-- Description of the Getting Started callout. resid points to a LongString resource -->
+						<Description resid="Trim.GetStarted.Description"/>
+
+						<!-- Point to a url resource which details how the add-in should be used. -->
+						<LearnMoreUrl resid="Trim.GetStarted.LearnMoreUrl"/>
+					</GetStarted>
+					<!-- Function file is a HTML page that includes the JavaScript where functions for ExecuteAction will be called.
+            		Think of the FunctionFile as the code behind ExecuteFunction. -->
+					<FunctionFile resid="Trim.DesktopFunctionFile.Url" />
+
+					<!-- PrimaryCommandSurface is the main Office Ribbon. -->
+					<ExtensionPoint xsi:type="PrimaryCommandSurface">
+						<!-- Use OfficeTab to extend an existing Tab. Use CustomTab to create a new tab. -->
+						<CustomTab id="Trim.Tab1">
+							<!-- Ensure you provide a unique id for the group. Recommendation for any IDs is to namespace using your company name. -->
+							<Group id="Trim.Group.File">
+								<!-- Label for your group. resid must point to a ShortString resource. -->
+								<Label resid="Trim.FileLabel" />
+								<!-- Icons. Required sizes 16,32,80, optional 20, 24, 40, 48, 64. Strongly recommended to provide all sizes for great UX. -->
+								<!-- Use PNG icons. All URLs on the resources section must use HTTPS. -->
+
+								<Icon>
+									<bt:Image size="16" resid="Trim.tpicon_16x16" />
+									<bt:Image size="32" resid="Trim.tpicon_32x32" />
+									<bt:Image size="80" resid="Trim.tpicon_80x80" />
+								</Icon>
+
+								<!-- Control. It can be of type "Button" or "Menu". -->
+								<Control xsi:type="Button" id="Trim.TaskpaneButton">
+									<Label resid="Trim.TaskpaneButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.TaskpaneButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.TaskpaneButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.newobjecticon_16x16" />
+										<bt:Image size="32" resid="Trim.newobjecticon_32x32" />
+										<bt:Image size="80" resid="Trim.newobjecticon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ShowTaskpane">
+										<TaskpaneId>Office.AutoShowTaskpaneWithDocument</TaskpaneId>
+										<!-- Provide a url resource id for the location that will be displayed on the task pane. -->
+										<SourceLocation resid="Trim.ExcelTaskpane.Url" />
+									</Action>
+								</Control>
+
+								<Control xsi:type="Button" id="Trim.OpenButton">
+									<Label resid="Trim.OpenButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.OpenButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.OpenButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.openicon_16x16" />
+										<bt:Image size="32" resid="Trim.openicon_32x32" />
+										<bt:Image size="80" resid="Trim.openicon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>openFromTrim</FunctionName>
+									</Action>
+								</Control>
+							</Group>
+
+							<Group id="Trim.Group.Insert">
+
+								<Label resid="Trim.InsertLabel" />
+
+								<Icon>
+									<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
+									<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
+									<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
+								</Icon>
+
+								<Control xsi:type="Button" id="Trim.InsertPictureButton">
+									<Label resid="Trim.InsertPictureButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.InsertPictureButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.InsertPictureButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
+										<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
+										<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>insertPictureFromTrim</FunctionName>
+									</Action>
+								</Control>
+
+								<Control xsi:type="Button" id="Trim.InsertTextButton">
+									<Label resid="Trim.InsertTextButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.InsertTextButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.InsertTextButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.inserttexticon_16x16" />
+										<bt:Image size="32" resid="Trim.inserttexticon_32x32" />
+										<bt:Image size="80" resid="Trim.inserttexticon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>insertTextFromTrim</FunctionName>
+									</Action>
+								</Control>
+
+								<Control xsi:type="Button" id="Trim.InsertObjectButton">
+									<Label resid="Trim.InsertObjectButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.InsertObjectButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.InsertObjectButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.insertobjecticon_16x16" />
+										<bt:Image size="32" resid="Trim.insertobjecticon_32x32" />
+										<bt:Image size="80" resid="Trim.insertobjecticon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>insertObjectFromTrim</FunctionName>
+									</Action>
+								</Control>
+
+
+							</Group>
+							<Group id="Trim.Group.Tools">
+								<Label resid="Trim.ToolsLabel" />
+
+								<Icon>
+									<bt:Image size="16" resid="Trim.helpicon_16x16" />
+									<bt:Image size="32" resid="Trim.helpicon_32x32" />
+									<bt:Image size="80" resid="Trim.helpicon_80x80" />
+								</Icon>
+
+								<Control xsi:type="Button" id="Trim.HelpButton">
+									<Label resid="Trim.HelpButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.HelpButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.HelpButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.helpicon_16x16" />
+										<bt:Image size="32" resid="Trim.helpicon_32x32" />
+										<bt:Image size="80" resid="Trim.helpicon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ExecuteFunction">
+										<FunctionName>openHelp</FunctionName>
+									</Action>
+								</Control>
+
+							</Group>
+
+							<Label resid="Trim.TabLabel" />
+						</CustomTab>
+					</ExtensionPoint>
+				</DesktopFormFactor>
+			</Host>
+			<Host xsi:type="Presentation">
+				<!-- Form factor. Currently only DesktopFormFactor is supported. -->
+				<DesktopFormFactor>
+					<!--"This code enables a customizable message to be displayed when the add-in is loaded successfully upon individual install."-->
+					<GetStarted>
+						<!-- Title of the Getting Started callout. resid points to a ShortString resource -->
+						<Title resid="Trim.GetStarted.Title"/>
+
+						<!-- Description of the Getting Started callout. resid points to a LongString resource -->
+						<Description resid="Trim.GetStarted.Description"/>
+
+						<!-- Point to a url resource which details how the add-in should be used. -->
+						<LearnMoreUrl resid="Trim.GetStarted.LearnMoreUrl"/>
+					</GetStarted>
+					<!-- Function file is a HTML page that includes the JavaScript where functions for ExecuteAction will be called.
+            		Think of the FunctionFile as the code behind ExecuteFunction. -->
+					<FunctionFile resid="Trim.DesktopFunctionFile.Url" />
+
+					<!-- PrimaryCommandSurface is the main Office Ribbon. -->
+					<ExtensionPoint xsi:type="PrimaryCommandSurface">
+						<!-- Use OfficeTab to extend an existing Tab. Use CustomTab to create a new tab. -->
+						<CustomTab id="Trim.Tab1">
+							<!-- Ensure you provide a unique id for the group. Recommendation for any IDs is to namespace using your company name. -->
+							<Group id="Trim.Group.File">
+								<!-- Label for your group. resid must point to a ShortString resource. -->
+								<Label resid="Trim.FileLabel" />
+								<!-- Icons. Required sizes 16,32,80, optional 20, 24, 40, 48, 64. Strongly recommended to provide all sizes for great UX. -->
+								<!-- Use PNG icons. All URLs on the resources section must use HTTPS. -->
+
+								<Icon>
+									<bt:Image size="16" resid="Trim.tpicon_16x16" />
+									<bt:Image size="32" resid="Trim.tpicon_32x32" />
+									<bt:Image size="80" resid="Trim.tpicon_80x80" />
+								</Icon>
+
+								<!-- Control. It can be of type "Button" or "Menu". -->
+								<Control xsi:type="Button" id="Trim.TaskpaneButton">
+									<Label resid="Trim.TaskpaneButton.Label" />
+									<Supertip>
+										<!-- ToolTip title. resid must point to a ShortString resource. -->
+										<Title resid="Trim.TaskpaneButton.Label" />
+										<!-- ToolTip description. resid must point to a LongString resource. -->
+										<Description resid="Trim.TaskpaneButton.Tooltip" />
+									</Supertip>
+									<Icon>
+										<bt:Image size="16" resid="Trim.newobjecticon_16x16" />
+										<bt:Image size="32" resid="Trim.newobjecticon_32x32" />
+										<bt:Image size="80" resid="Trim.newobjecticon_80x80" />
+									</Icon>
+
+									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+									<Action xsi:type="ShowTaskpane">
+										<TaskpaneId>Office.AutoShowTaskpaneWithDocument</TaskpaneId>
+										<!-- Provide a url resource id for the location that will be displayed on the task pane. -->
+										<SourceLocation resid="Trim.PowerPointTaskpane.Url" />
 									</Action>
 								</Control>
 
@@ -274,7 +650,9 @@
 
 			</bt:Images>
 			<bt:Urls>
-				<bt:Url id="Trim.Taskpane.Url" DefaultValue="https://desktop-39dgcn3:3000/index.html?Word=1" />
+				<bt:Url id="Trim.WordTaskpane.Url" DefaultValue="https://desktop-39dgcn3:3000/index.html?Word=1" />
+				<bt:Url id="Trim.ExcelTaskpane.Url" DefaultValue="https://desktop-39dgcn3:3000/index.html?Excel=1" />
+				<bt:Url id="Trim.PowerPointTaskpane.Url" DefaultValue="https://desktop-39dgcn3:3000/index.html?PowerPoint=1" />
 				<bt:Url id="Trim.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
 				<bt:Url id="Trim.DesktopFunctionFile.Url" DefaultValue="https://desktop-39dgcn3:3000/function-file/function-file.html" />
 			</bt:Urls>

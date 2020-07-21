@@ -4,7 +4,7 @@
 	"private": true,
 	"homepage": "/CMWord/",
 	"dependencies": {
-		"@microsoft/office-js": "^1.1.10",
+		"@microsoft/office-js": "^1.1.40",
 		"@types/fetch-mock": "^6.0.5",
 		"@types/react-router-dom": "^5.1.2",
 		"@types/throttle-debounce": "^1.1.1",

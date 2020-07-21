@@ -290,7 +290,11 @@ export interface ITrimConnector {
 		relationshipType: string
 	): Promise<void>;
 
-	writeFileSlice(data: number[], fileName: string): Promise<string>;
+	writeFileSlice(
+		data: number[],
+		fileName: string,
+		extension: string
+	): Promise<string>;
 	makeFriendlySearchQuery(trimType: BaseObjectTypes, query: string): string;
 
 	setLatestClause(trimType: BaseObjectTypes, queryName: string): void;
@@ -680,9 +684,17 @@ export class TrimConnector implements ITrimConnector {
 	}
 	public credentialsResolver: (callback: ITokenCallback) => void;
 
-	writeFileSlice(data: number[], fileName: string): Promise<string> {
+	writeFileSlice(
+		data: number[],
+		fileName: string,
+		extension: string
+	): Promise<string> {
 		return this.makeRequest(
-			{ path: "WriteFile", method: "post", data: { data, fileName } },
+			{
+				path: "WriteFile",
+				method: "post",
+				data: { data, fileName, extension },
+			},
 			(data: any) => {
 				return data.FileName;
 			}

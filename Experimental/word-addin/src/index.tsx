@@ -1,16 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import BootStrapWord from "./components/BootStrap/BootStrapWord";
+import BootStrapExcel from "./components/BootStrap/BootStrapExcel";
 import "./index.css";
-//import registerServiceWorker from "./registerServiceWorker";
 import { initializeIcons } from "@uifabric/icons";
-
-//import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-//import FunctionFile from "./components/FunctionFile/FunctionFile";
 import BootStrapOutlook from "./components/BootStrap/BootStrapOutlook";
 import BootStrapCheckinStyles from "./components/BootStrap/BootStrapCheckinStyles";
 import BootStrapWebDrawer from "./components/BootStrap/BootStrapWebDrawer";
-//import BootStrapAttachments from "./components/BootStrap/BootStrapAttachments";
+import BootStrapPowerPoint from "./components/BootStrap/BootStrapPowerPoint";
+import BootStrapNotebook from "./components/BootStrap/BootStrapNotebook";
 
 initializeIcons();
 
@@ -31,6 +29,24 @@ const root = () => {
 		})
 	) {
 		return <BootStrapWord />;
+	} else if (
+		["Excel"].some(function (a) {
+			return window.location.href.indexOf(a) > -1;
+		})
+	) {
+		return <BootStrapExcel />;
+	} else if (
+		["PowerPoint"].some(function (a) {
+			return window.location.href.indexOf(a) > -1;
+		})
+	) {
+		return <BootStrapPowerPoint />;
+	} else if (
+		["Notebook"].some(function (a) {
+			return window.location.href.indexOf(a) > -1;
+		})
+	) {
+		return <BootStrapNotebook />;
 	} else {
 		return <BootStrapWebDrawer />;
 	}

@@ -3,7 +3,7 @@ import { IAppStore } from "../../stores/AppStoreBase";
 import { IOfficeConnector } from "../../office-coms/office-connector";
 import AppStoreWord from "../../stores/AppStoreWord";
 
-import WordConnector from "../../office-coms/word-connector";
+import ExcelConnector from "../../office-coms/excel-connector";
 
 export class BootStrapWord extends BootStrap<{}> {
 	private appStore: IAppStore;
@@ -20,7 +20,7 @@ export class BootStrapWord extends BootStrap<{}> {
 	private officeConnector: IOfficeConnector;
 	protected getOfficeConnector(): IOfficeConnector {
 		if (!this.officeConnector) {
-			this.officeConnector = new WordConnector();
+			this.officeConnector = new ExcelConnector();
 		}
 		return this.officeConnector;
 	}

@@ -192,7 +192,11 @@ export class ObjectContextMenu extends React.Component<
 					if (item.key === CommandIds.RecCheckIn) {
 						wordConnector!
 							.getDocumentData((data: number[], fileName: string) => {
-								return trimConnector!.writeFileSlice(data, fileName);
+								return trimConnector!.writeFileSlice(
+									data,
+									fileName,
+									wordConnector!.getExtension()
+								);
 							})
 							.then((fileName) => {
 								runAction(fileName);
