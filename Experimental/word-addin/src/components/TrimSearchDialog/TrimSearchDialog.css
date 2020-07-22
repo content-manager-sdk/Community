@@ -29,9 +29,9 @@
 
 .dialog-list .trim-list-container {
 	position: fixed;
-	top: 40px;
+	top: 48px;
 	bottom: 52px;
-	right: 10px;
+	right: 14px;
 	/* left: 0;
 	right: 0; */
 	overflow: auto;

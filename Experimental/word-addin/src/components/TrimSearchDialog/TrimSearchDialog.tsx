@@ -142,12 +142,15 @@ export class TrimSearchDialog
 		return (
 			<div className="dialog-top">
 				<React.Fragment>
-					<SearchBar
-						trimType={navTrimType}
-						onQueryChange={this.changeQuery}
-						includeShortCuts={false}
-						wideDisplay={true}
-					/>
+					{searchStartPoint && (
+						<SearchBar
+							trimType={navTrimType}
+							onQueryChange={this.changeQuery}
+							includeShortCuts={false}
+							wideDisplay={true}
+							startingSearch={searchStartPoint}
+						/>
+					)}
 					<div className="trim-list-clear-float" />
 					{startSearchAt && (
 						<FocusTrapZone

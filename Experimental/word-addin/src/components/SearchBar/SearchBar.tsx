@@ -44,6 +44,7 @@ export interface ISearchBarProps
 	includeShortCuts: boolean;
 	wideDisplay?: boolean;
 	callChangeOnLoad?: boolean;
+	startingSearch?: string;
 }
 
 export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
@@ -108,6 +109,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 			trimConnector,
 			callChangeOnLoad,
 			appStore,
+			startingSearch,
 		} = this.props;
 
 		if (includeShortCuts && onQueryChange) {
@@ -118,7 +120,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 		const searchClauseFormats = await trimConnector!.getEnum(
 			"SearchParameterFormats"
 		);
-		let latestClause = trimConnector!.getLatestClause(trimType);
+		let latestClause = ""; // = trimConnector!.getLatestClause(trimType);
 		let latestFormat = "";
 		const searchClauses: string[] = (config.SEARCH_CLAUSES || {})[trimType] || [
 			"anyWord",
@@ -178,11 +180,9 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 						}
 					}
 
-					if (!latestClause) {
-						latestClause = clauseDef.ClauseName;
-					}
+					if ((clauseDef.ClauseDef || {}).InternalName === startingSearch) {
+						latestClause = key + clauseDef.ClauseName;
 
-					if (latestClause === clauseDef.ClauseName) {
 						latestFormat =
 							clauseDef.SearchParameterFormat || clauseDef.ParameterFormat;
 					}
@@ -295,14 +295,14 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				"& .trim-search-text": {
 					float: "left",
 					marginLeft: "4px",
-					width: `${wideDisplay ? "calc(100% - 150px)" : "190px"}`,
+					width: `${wideDisplay ? "calc(100% - 182px)" : "190px"}`,
 				},
 				"& .trim-search-query": {
-					width: `${wideDisplay ? "calc(100% - 160px)" : "190px"}`,
+					width: `${wideDisplay ? "calc(100% - 180px)" : "190px"}`,
 				},
 				"& .context-list-title": {
 					float: "left",
-					width: `${wideDisplay ? "140" : "90"}px`,
+					width: `${wideDisplay ? "170" : "90"}px`,
 				},
 				"& .context-list-title .ms-ComboBox": {
 					paddingRight: "5px",
