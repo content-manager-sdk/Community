@@ -335,26 +335,6 @@
 									<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
 								</Icon>
 
-								<Control xsi:type="Button" id="Trim.InsertPictureButton">
-									<Label resid="Trim.InsertPictureButton.Label" />
-									<Supertip>
-										<!-- ToolTip title. resid must point to a ShortString resource. -->
-										<Title resid="Trim.InsertPictureButton.Label" />
-										<!-- ToolTip description. resid must point to a LongString resource. -->
-										<Description resid="Trim.InsertPictureButton.Tooltip" />
-									</Supertip>
-									<Icon>
-										<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
-										<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
-										<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
-									</Icon>
-
-									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
-									<Action xsi:type="ExecuteFunction">
-										<FunctionName>insertPictureFromTrim</FunctionName>
-									</Action>
-								</Control>
-
 								<Control xsi:type="Button" id="Trim.InsertTextButton">
 									<Label resid="Trim.InsertTextButton.Label" />
 									<Supertip>
@@ -375,25 +355,7 @@
 									</Action>
 								</Control>
 
-								<Control xsi:type="Button" id="Trim.InsertObjectButton">
-									<Label resid="Trim.InsertObjectButton.Label" />
-									<Supertip>
-										<!-- ToolTip title. resid must point to a ShortString resource. -->
-										<Title resid="Trim.InsertObjectButton.Label" />
-										<!-- ToolTip description. resid must point to a LongString resource. -->
-										<Description resid="Trim.InsertObjectButton.Tooltip" />
-									</Supertip>
-									<Icon>
-										<bt:Image size="16" resid="Trim.insertobjecticon_16x16" />
-										<bt:Image size="32" resid="Trim.insertobjecticon_32x32" />
-										<bt:Image size="80" resid="Trim.insertobjecticon_80x80" />
-									</Icon>
 
-									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
-									<Action xsi:type="ExecuteFunction">
-										<FunctionName>insertObjectFromTrim</FunctionName>
-									</Action>
-								</Control>
 
 
 							</Group>
@@ -510,79 +472,6 @@
 										<FunctionName>openFromTrim</FunctionName>
 									</Action>
 								</Control>
-							</Group>
-
-							<Group id="Trim.Group.Insert">
-
-								<Label resid="Trim.InsertLabel" />
-
-								<Icon>
-									<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
-									<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
-									<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
-								</Icon>
-
-								<Control xsi:type="Button" id="Trim.InsertPictureButton">
-									<Label resid="Trim.InsertPictureButton.Label" />
-									<Supertip>
-										<!-- ToolTip title. resid must point to a ShortString resource. -->
-										<Title resid="Trim.InsertPictureButton.Label" />
-										<!-- ToolTip description. resid must point to a LongString resource. -->
-										<Description resid="Trim.InsertPictureButton.Tooltip" />
-									</Supertip>
-									<Icon>
-										<bt:Image size="16" resid="Trim.insertpictureicon_16x16" />
-										<bt:Image size="32" resid="Trim.insertpictureicon_32x32" />
-										<bt:Image size="80" resid="Trim.insertpictureicon_80x80" />
-									</Icon>
-
-									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
-									<Action xsi:type="ExecuteFunction">
-										<FunctionName>insertPictureFromTrim</FunctionName>
-									</Action>
-								</Control>
-
-								<Control xsi:type="Button" id="Trim.InsertTextButton">
-									<Label resid="Trim.InsertTextButton.Label" />
-									<Supertip>
-										<!-- ToolTip title. resid must point to a ShortString resource. -->
-										<Title resid="Trim.InsertTextButton.Label" />
-										<!-- ToolTip description. resid must point to a LongString resource. -->
-										<Description resid="Trim.InsertTextButton.Tooltip" />
-									</Supertip>
-									<Icon>
-										<bt:Image size="16" resid="Trim.inserttexticon_16x16" />
-										<bt:Image size="32" resid="Trim.inserttexticon_32x32" />
-										<bt:Image size="80" resid="Trim.inserttexticon_80x80" />
-									</Icon>
-
-									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
-									<Action xsi:type="ExecuteFunction">
-										<FunctionName>insertTextFromTrim</FunctionName>
-									</Action>
-								</Control>
-
-								<Control xsi:type="Button" id="Trim.InsertObjectButton">
-									<Label resid="Trim.InsertObjectButton.Label" />
-									<Supertip>
-										<!-- ToolTip title. resid must point to a ShortString resource. -->
-										<Title resid="Trim.InsertObjectButton.Label" />
-										<!-- ToolTip description. resid must point to a LongString resource. -->
-										<Description resid="Trim.InsertObjectButton.Tooltip" />
-									</Supertip>
-									<Icon>
-										<bt:Image size="16" resid="Trim.insertobjecticon_16x16" />
-										<bt:Image size="32" resid="Trim.insertobjecticon_32x32" />
-										<bt:Image size="80" resid="Trim.insertobjecticon_80x80" />
-									</Icon>
-
-									<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
-									<Action xsi:type="ExecuteFunction">
-										<FunctionName>insertObjectFromTrim</FunctionName>
-									</Action>
-								</Control>
-
-
 							</Group>
 							<Group id="Trim.Group.Tools">
 								<Label resid="Trim.ToolsLabel" />

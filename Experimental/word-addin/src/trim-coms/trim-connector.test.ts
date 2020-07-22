@@ -964,16 +964,16 @@ describe("Test fetch from TRIM", () => {
 	it("gets the record text", () => {
 		let token = "";
 		let uri = 0;
-		mock.onGet(`${SERVICEAPI_BASE_URI}/GetFile`).reply(function (config: any) {
-			token = config.headers["Authorization"];
-			uri = config.params["uri"];
+		mock
+			.onGet(`${SERVICEAPI_BASE_URI}/Record/1/file/content`)
+			.reply(function (config: any) {
+				token = config.headers["Authorization"];
 
-			return [200, { File: "test" }];
-		});
+				return [200, "test"];
+			});
 
-		expect.assertions(2);
+		expect.assertions(1);
 		return trimConnector.getRecordAsText(1).then((data) => {
-			expect(uri).toEqual(1);
 			expect(data).toEqual("test");
 			// expect(data.Uri).toEqual(567);
 			// expect(token).toEqual("Bearer token123");

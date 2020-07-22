@@ -101,29 +101,50 @@ function insertObjectFromTrim(event) {
 function insertTextFromTrim(event) {
 	const fn = function (args) {
 		if (args.message !== "0") {
-			// Run a batch operation against the Word object model.
-			Word.run(function (context) {
-				// Queue a command to get the current selection and then
-				// create a proxy range object with the results.
-				var range = context.document.getSelection();
+			if (Office.context.host === Office.HostType.Word) {
+				Word.run(function (context) {
+					// Queue a command to get the current selection and then
+					// create a proxy range object with the results.
+					var range = context.document.getSelection();
 
-				// Queue a commmand to delete the range object.
-				if (args.message.substr(0, 6).toLowerCase().startsWith("<html>")) {
-					range.insertHtml(args.message, "Replace");
-				} else {
-					range.insertText(args.message, "Replace");
-				}
-				// Synchronize the document state by executing the queued commands,
-				// and return a promise to indicate task completion.
-				return context.sync().then(function () {
-					console.log("Inserting text");
+					// Queue a commmand to delete the range object.
+					if (args.message.substr(0, 6).toLowerCase().startsWith("<html>")) {
+						range.insertHtml(args.message, "Replace");
+					} else {
+						range.insertText(args.message, "Replace");
+					}
+					// Synchronize the document state by executing the queued commands,
+					// and return a promise to indicate task completion.
+					return context.sync().then(function () {
+						console.log("Inserting text");
+					});
+				}).catch(function (error) {
+					console.log("Error: " + JSON.stringify(error));
+					if (error instanceof OfficeExtension.Error) {
+						console.log("Debug info: " + JSON.stringify(error.debugInfo));
+					}
 				});
-			}).catch(function (error) {
-				console.log("Error: " + JSON.stringify(error));
-				if (error instanceof OfficeExtension.Error) {
-					console.log("Debug info: " + JSON.stringify(error.debugInfo));
-				}
-			});
+			}
+			if (Office.context.host === Office.HostType.Excel) {
+				Excel.run(function (context) {
+					// Queue a command to get the current selection and then
+					// create a proxy range object with the results.
+					const range = context.workbook.getSelectedRange();
+					range.values = [[args.message]];
+					range.format.autofitColumns();
+
+					// Synchronize the document state by executing the queued commands,
+					// and return a promise to indicate task completion.
+					return context.sync().then(function () {
+						console.log("Inserting picture");
+					});
+				}).catch(function (error) {
+					console.log("Error: " + JSON.stringify(error));
+					if (error instanceof OfficeExtension.Error) {
+						console.log("Debug info: " + JSON.stringify(error.debugInfo));
+					}
+				});
+			}
 		}
 		dialog.close();
 	};
@@ -145,26 +166,27 @@ function insertTextFromTrim(event) {
 function insertPictureFromTrim(event) {
 	const fn = function (args) {
 		if (args.message !== "0") {
-			// Run a batch operation against the Word object model.
-			Word.run(function (context) {
-				// Queue a command to get the current selection and then
-				// create a proxy range object with the results.
-				var range = context.document.getSelection();
+			if (Office.context.host === Office.HostType.Word) {
+				Word.run(function (context) {
+					// Queue a command to get the current selection and then
+					// create a proxy range object with the results.
+					var range = context.document.getSelection();
 
-				// Queue a command to delete the range object.
-				range.insertInlinePictureFromBase64(args.message, "Replace");
+					// Queue a command to delete the range object.
+					range.insertInlinePictureFromBase64(args.message, "Replace");
 
-				// Synchronize the document state by executing the queued commands,
-				// and return a promise to indicate task completion.
-				return context.sync().then(function () {
-					console.log("Inserting picture");
+					// Synchronize the document state by executing the queued commands,
+					// and return a promise to indicate task completion.
+					return context.sync().then(function () {
+						console.log("Inserting picture");
+					});
+				}).catch(function (error) {
+					console.log("Error: " + JSON.stringify(error));
+					if (error instanceof OfficeExtension.Error) {
+						console.log("Debug info: " + JSON.stringify(error.debugInfo));
+					}
 				});
-			}).catch(function (error) {
-				console.log("Error: " + JSON.stringify(error));
-				if (error instanceof OfficeExtension.Error) {
-					console.log("Debug info: " + JSON.stringify(error.debugInfo));
-				}
-			});
+			}
 		}
 		dialog.close();
 	};

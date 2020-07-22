@@ -887,9 +887,9 @@ export class TrimConnector implements ITrimConnector {
 
 	public getRecordAsText(recordUri: number): Promise<string> {
 		return this.makeRequest(
-			{ path: `GetFile`, method: "get", data: { uri: recordUri } },
+			{ path: `Record/${recordUri}/file/content`, method: "get" },
 			(data: any) => {
-				return data.File;
+				return data;
 			}
 		);
 	}

@@ -188,7 +188,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 					}
 
 					searchTypeOptions.push({
-						key: clauseDef.ClauseName,
+						key: key + clauseDef.ClauseName,
 						text: clauseDef.Caption,
 						data: clauseDef,
 					});
@@ -340,7 +340,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 	};
 
 	private _getQuery(key: string) {
-		if (key.startsWith("search_")) {
+		if (key.indexOf("search_") > -1) {
 			return "";
 		}
 
@@ -417,9 +417,9 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 							so.data.ParameterFormat === "Boolean" ||
 							so.data.SearchParameterFormat === "Boolean"
 						) {
-							onQueryChange(so.key);
+							onQueryChange(so.data.ClauseName);
 						} else if (fullSearchQuery) {
-							onQueryChange(so.key + ":" + fullSearchQuery);
+							onQueryChange(so.data.ClauseName + ":" + fullSearchQuery);
 						} else {
 							onQueryChange("");
 						}
