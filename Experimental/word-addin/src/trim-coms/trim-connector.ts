@@ -867,9 +867,10 @@ export class TrimConnector implements ITrimConnector {
 				data: { Url: webUrl, uri: recordUri, attachmentName, getFile },
 			},
 			(data: any) => {
-				const returnData = data.DriveItems
-					? data.DriveItems[0]
-					: { Id: "", Uri: [], CommandDefs: [] };
+				const returnData =
+					data.DriveItems && data.DriveItems.length > 0
+						? data.DriveItems[0]
+						: { Id: "", Uris: [] };
 
 				return returnData;
 			}
@@ -1065,6 +1066,8 @@ export class TrimConnector implements ITrimConnector {
 					data.Messages.web_format = "Category";
 					data.Messages.web_openDocumentBody =
 						"The document is available in OneDrive, you may open it now or cancel to return to the currently open document";
+					data.Messages.web_oneDrive =
+						"Please save the document to a OneDrive folder before registering in Content Manager.";
 					this.setCacheItem(CacheIds.Messages, data.Messages);
 
 					//this._messageCache = data.Messages;

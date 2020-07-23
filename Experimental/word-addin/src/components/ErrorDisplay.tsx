@@ -15,7 +15,7 @@ import { TeachingBubble } from "office-ui-fabric-react/lib/TeachingBubble";
 initializeIcons();
 
 export class ErrorDisplay extends React.Component<
-	{ appStore?: any },
+	{ appStore?: any; errorMessage?: string; onClose?: any },
 	{ isDetailVisble: boolean }
 > {
 	constructor(props: {}) {
@@ -30,8 +30,11 @@ export class ErrorDisplay extends React.Component<
 	private _menuButtonElement: HTMLElement;
 
 	private _closeDialog = (): void => {
-		const { appStore } = this.props;
+		const { appStore, onClose } = this.props;
 
+		if (onClose) {
+			onClose();
+		}
 		appStore!.resetError();
 		// 	this.setState({ hideDialog: true });
 	};
@@ -49,7 +52,7 @@ export class ErrorDisplay extends React.Component<
 	}
 
 	public render() {
-		const { appStore } = this.props;
+		const { appStore, errorMessage } = this.props;
 		const { isDetailVisble } = this.state;
 
 		return (
@@ -72,7 +75,7 @@ export class ErrorDisplay extends React.Component<
 								<Icon iconName="Error" className="trim-error" />
 							</div>
 							<div className="trim-error-message ms-Grid-col ms-sm11 ms-md11 ms-lg11">
-								{appStore!.errorMessage}
+								{errorMessage || appStore!.errorMessage}
 							</div>
 						</div>
 						<div className="ms-Grid-row">

@@ -48,6 +48,7 @@ export class TrimMessages {
 	public web_alpha = ""; //tslint:disable-line
 	public web_format = ""; //tslint:disable-line
 	public web_category = ""; //tslint:disable-line
+	public web_oneDrive = ""; //tslint:disable-line
 }
 
 export default TrimMessages;
