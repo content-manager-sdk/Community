@@ -10,18 +10,18 @@
 	<Id>5d7bd8ba-11b0-46b1-98ab-95fadd95a97d</Id>
 
 	<!--Version. Updates from the store only get triggered if there is a version change. -->
-	<Version>1.9.609.0</Version>
+	<Version>2.0.909.0</Version>
 	<ProviderName>Micro Focus</ProviderName>
 	<DefaultLocale>en-US</DefaultLocale>
 	<!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
-	<DisplayName DefaultValue="Content Manager Connect">
-		<Override Locale="en-US" Value="Content Manager Connect" />
+	<DisplayName DefaultValue="Content Manager">
+		<Override Locale="en-US" Value="Content Manager" />
 	</DisplayName>
 	<Description DefaultValue="An addin to register documents in Content Manager."/>
 
 	<!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
-	<IconUrl DefaultValue="https://desktop-39dgcn3:3000/assets/icon-32.png" />
-	<HighResolutionIconUrl DefaultValue="https://desktop-39dgcn3:3000/assets/icon-80.png"/>
+	<IconUrl DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/Trim.png" />
+	<HighResolutionIconUrl DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/Trim.png"/>
 
 	<!--If you plan to submit this add-in to the Office Store, uncomment the SupportUrl element below-->
 	<!--<SupportUrl DefaultValue="[Insert the URL of a page that provides support information for the app]">-->
@@ -29,29 +29,28 @@
 	<!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
 	<AppDomains>
 		<AppDomain>desktop-39dgcn3</AppDomain>
-		<AppDomain>cmofficedev-my.sharepoint.com</AppDomain>
-		<AppDomain>AppDomain3</AppDomain>
+		<!-- <AppDomain>cmofficedev-my.sharepoint.com</AppDomain> -->
 	</AppDomains>
 	<!--End Basic Settings. -->
 
 	<!--Begin TaskPane Mode integration. This section is used if there are no VersionOverrides or if the Office client version does not support add-in commands. -->
-	<Hosts>
+	<!-- <Hosts>
 		<Host Name="Document" />
 		<Host Name="Workbook" />
 		<Host Name="Presentation" />
-	</Hosts>
+	</Hosts> -->
 	<DefaultSettings>
 		<SourceLocation DefaultValue="https://desktop-39dgcn3:3000/" />
 	</DefaultSettings>
 	<!-- End TaskPane Mode integration.  -->
 
 	<Permissions>ReadWriteDocument</Permissions>
-
 	<!-- Begin Add-in Commands Mode integration. -->
 	<VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
 		<Requirements>
 			<bt:Sets DefaultMinVersion="1.1">
 				<bt:Set Name="IdentityAPI"/>
+
 			</bt:Sets>
 		</Requirements>
 		<!-- The Hosts node is required. -->
@@ -514,28 +513,28 @@
 		<!-- You can use resources across hosts and form factors. -->
 		<Resources>
 			<bt:Images>
-				<bt:Image id="Trim.tpicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/trim16.png" />
-				<bt:Image id="Trim.tpicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/trim32.png" />
-				<bt:Image id="Trim.tpicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/trim80.png" />
-				<bt:Image id="Trim.openicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/open16.png" />
-				<bt:Image id="Trim.openicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/open32.png" />
-				<bt:Image id="Trim.openicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/open80.png" />
-				<bt:Image id="Trim.helpicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/help16.png" />
-				<bt:Image id="Trim.helpicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/help32.png" />
-				<bt:Image id="Trim.helpicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/help80.png" />
-				<bt:Image id="Trim.inserttexticon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-text16.png" />
-				<bt:Image id="Trim.inserttexticon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-text32.png" />
-				<bt:Image id="Trim.inserttexticon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-text80.png" />
-				<bt:Image id="Trim.insertobjecticon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-object16.png" />
-				<bt:Image id="Trim.insertobjecticon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-object32.png" />
-				<bt:Image id="Trim.insertobjecticon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-object80.png" />
-				<bt:Image id="Trim.insertpictureicon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-picture16.png" />
-				<bt:Image id="Trim.insertpictureicon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-picture32.png" />
-				<bt:Image id="Trim.insertpictureicon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/insert-picture80.png" />
+				<bt:Image id="Trim.tpicon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/Trim.png" />
+				<bt:Image id="Trim.tpicon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/Trim.png" />
+				<bt:Image id="Trim.tpicon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/Trim.png" />
+				<bt:Image id="Trim.openicon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/Open.png" />
+				<bt:Image id="Trim.openicon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/Open.png" />
+				<bt:Image id="Trim.openicon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/Open.png" />
+				<bt:Image id="Trim.helpicon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/Help.png" />
+				<bt:Image id="Trim.helpicon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/Help.png" />
+				<bt:Image id="Trim.helpicon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/Help.png" />
+				<bt:Image id="Trim.inserttexticon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/OfficeInsertText.png" />
+				<bt:Image id="Trim.inserttexticon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/OfficeInsertText.png" />
+				<bt:Image id="Trim.inserttexticon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/OfficeInsertText.png" />
+				<bt:Image id="Trim.insertobjecticon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/OfficeInsertObject.png" />
+				<bt:Image id="Trim.insertobjecticon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/OfficeInsertObject.png" />
+				<bt:Image id="Trim.insertobjecticon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/OfficeInsertObject.png" />
+				<bt:Image id="Trim.insertpictureicon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/OfficeInsertPicture.png" />
+				<bt:Image id="Trim.insertpictureicon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/OfficeInsertPicture.png" />
+				<bt:Image id="Trim.insertpictureicon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/OfficeInsertPicture.png" />
 
-				<bt:Image id="Trim.newobjecticon_16x16" DefaultValue="https://desktop-39dgcn3:3000/assets/new-object16.png" />
-				<bt:Image id="Trim.newobjecticon_32x32" DefaultValue="https://desktop-39dgcn3:3000/assets/new-object32.png" />
-				<bt:Image id="Trim.newobjecticon_80x80" DefaultValue="https://desktop-39dgcn3:3000/assets/new-object80.png" />
+				<bt:Image id="Trim.newobjecticon_16x16" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W16h16/TrmNewObject.png" />
+				<bt:Image id="Trim.newobjecticon_32x32" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W32h32/TrmNewObject.png" />
+				<bt:Image id="Trim.newobjecticon_80x80" DefaultValue="https://desktop-39dgcn3/ServiceAPI/TrimIcon/W64h64/TrmNewObject.png" />
 
 			</bt:Images>
 			<bt:Urls>
