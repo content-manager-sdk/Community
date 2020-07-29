@@ -15,6 +15,7 @@ export class TrimMessages {
 	public web_Select_Folder = ""; // tslint:disable-line
 	public web_RecordTypeRequiresForm = ""; // tslint:disable-line
 	public web_NewLinkedFolder = ""; // tslint:disable-line
+	public web_NewCheckinStyle = ""; // tslint:disable-line
 	public web_UseCheckinStyles = ""; // tslint:disable-line
 	public web_UseRecordTypes = ""; // tslint:disable-line
 	public web_EditTrimObject = ""; // tslint:disable-line

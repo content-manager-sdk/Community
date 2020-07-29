@@ -20,6 +20,7 @@ interface IOutlookUserOptionsProps {
 interface IOutlookUserOptionsState {
 	defaultRecordType?: IRecordType;
 	useDefaultRecordType: boolean;
+	loaded: boolean;
 }
 
 export class OutlookUserOptions extends React.Component<
@@ -28,7 +29,11 @@ export class OutlookUserOptions extends React.Component<
 > {
 	constructor(props: IOutlookUserOptionsProps) {
 		super(props);
-		this.state = { defaultRecordType: undefined, useDefaultRecordType: false };
+		this.state = {
+			defaultRecordType: undefined,
+			useDefaultRecordType: false,
+			loaded: false,
+		};
 	}
 
 	componentWillMount() {
@@ -45,13 +50,14 @@ export class OutlookUserOptions extends React.Component<
 			this.setState({
 				defaultRecordType: options.defaultRecordType,
 				useDefaultRecordType: options.useDefaultRecordType,
+				loaded: true,
 			});
 		}
 		appStore!.setSpinning(false);
 	}
 
 	public render() {
-		const { defaultRecordType, useDefaultRecordType } = this.state;
+		const { defaultRecordType, useDefaultRecordType, loaded } = this.state;
 		const { appStore } = this.props;
 
 		let val: ITrimMainObject[] = [];
@@ -60,7 +66,7 @@ export class OutlookUserOptions extends React.Component<
 			val = [defaultRecordType as ITrimMainObject];
 		}
 
-		return (
+		return loaded === true ? (
 			<form>
 				<Checkbox
 					label={appStore!.messages.web_useDefaultRecordType}
@@ -90,14 +96,14 @@ export class OutlookUserOptions extends React.Component<
 								defaultRecordType,
 								useDefaultRecordType,
 							})
-							.then(function() {
+							.then(function () {
 								trimConnector!.clearCache(CacheIds.DefaultRecordType);
 								appStore!.setSpinning(false);
 							});
 					}}
 				/>
 			</form>
-		);
+		) : null;
 	}
 }
 

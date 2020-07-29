@@ -24,6 +24,7 @@ interface IContextListProps {
 	searchString?: string;
 	onCommand?: (commandKey: string, uri: number) => void;
 	pageTitle?: string;
+	newCaption?: string;
 }
 
 export class ContextList extends React.Component<
@@ -67,6 +68,7 @@ export class ContextList extends React.Component<
 			searchString,
 			onCommand,
 			pageTitle,
+			newCaption,
 		} = this.props;
 
 		return (
@@ -88,6 +90,7 @@ export class ContextList extends React.Component<
 					}}
 					trimType={trimType}
 					pageTitle={pageTitle}
+					newCaption={newCaption}
 				/>
 				{!hideSearchBar && (
 					<SearchBar

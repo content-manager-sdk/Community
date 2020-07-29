@@ -263,6 +263,7 @@ export class TrimObjectPicker
 		defaultRender?: (props?: ITextFieldProps) => JSX.Element | null
 	): JSX.Element => {
 		const { advancedSearch, selectedItems } = this.state;
+		const { trimConnector } = this.props;
 
 		return (
 			<React.Fragment>
@@ -272,9 +273,9 @@ export class TrimObjectPicker
 					iconProps={{
 						iconType: IconType.image,
 						imageProps: {
-							src: `${process.env.PUBLIC_URL}/assets/${
-								advancedSearch ? "dbp_searchmethod" : "spanner"
-							}_x24.png`,
+							src: `${trimConnector!.getServiceAPIPath()}/TrimIcon/W24h24/${
+								advancedSearch ? "Search" : "Spanner"
+							}.png`,
 						},
 					}}
 				/>

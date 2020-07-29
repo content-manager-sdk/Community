@@ -159,6 +159,11 @@ export class CheckinStyles extends React.Component<
 											? appStore!.messages.web_LinkedFolders
 											: appStore!.messages.web_CheckinStyles
 									}
+									newCaption={
+										forServerProcessing === true
+											? appStore!.messages.web_NewLinkedFolder
+											: appStore!.messages.web_NewCheckinStyle
+									}
 									onCommand={(key: string, uri: number) => {
 										this.setState({ view: key, editUri: uri });
 									}}

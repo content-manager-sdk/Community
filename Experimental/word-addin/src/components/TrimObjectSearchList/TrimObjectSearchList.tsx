@@ -310,6 +310,7 @@ export class TrimObjectSearchList extends React.Component<
 			singleClickActAsDouble,
 		} = this.props;
 		const { searchShortCuts, items, ancestors, searchTitle } = this.state;
+		const { trimConnector } = this.props;
 
 		return (
 			<div className="trim-search-list">
@@ -351,7 +352,9 @@ export class TrimObjectSearchList extends React.Component<
 													calloutProps={{ gapSpace: 0 }}
 												>
 													<img
-														src={`${process.env.PUBLIC_URL}/assets/${sc.src}_x32.png`}
+														src={`${trimConnector!.getServiceAPIPath()}/TrimIcon/W32H32/${
+															sc.src
+														}.png`}
 													/>
 													{dialogDisplay === true && (
 														<Text variant={"smallPlus"} block={true}>
@@ -556,11 +559,11 @@ export class TrimObjectSearchList extends React.Component<
 					RecordInTray: { src: "recintray", q: "recInTray" },
 					RecordDueOrInTray: { src: "recinduetray", q: "recDueOrInTray" },
 					RecordCheckedOutBy: {
-						src: "rec_docstray",
+						src: "RecDocsTray",
 						q: "recCheckedOutBy:me",
 					},
 					SavedSearch: {
-						src: "savedsearch",
+						src: "SrhFavorites",
 						q: "srhOwner:me or srhPublic",
 					},
 					UserLabel: {

@@ -27,6 +27,7 @@ interface IContextMenuProps {
 	trimType: BaseObjectTypes;
 	showCloseIcon?: boolean;
 	pageTitle?: string;
+	newCaption?: string;
 	showViewPane?: boolean;
 }
 
@@ -283,6 +284,7 @@ export class ObjectContextMenu extends React.Component<
 			trimType,
 			showCloseIcon,
 			showViewPane,
+			newCaption,
 		} = this.props;
 
 		let checkinMenuItem: IContextualMenuItem | undefined;
@@ -434,7 +436,7 @@ export class ObjectContextMenu extends React.Component<
 					iconName: "NewFolder",
 				},
 				key: "New",
-				name: appStore.messages.web_NewLinkedFolder,
+				name: newCaption,
 				iconOnly: true,
 				onClick: this._onActionClick,
 				data: { NeedsAnObject: false },
