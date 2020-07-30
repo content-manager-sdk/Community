@@ -9,17 +9,20 @@ import {
 	ITrimConnector,
 	IEnumDetails,
 } from "../trim-coms/trim-connector";
-import {
-	Pivot,
-	PivotItem,
-	PivotLinkFormat,
-	PivotLinkSize,
-} from "office-ui-fabric-react/lib/Pivot";
 import BaseObjectTypes from "../trim-coms/trim-baseobjecttypes";
 import TrimNumberField, {
 	TrimNumberFieldHelpers,
 } from "./TrimNumberField/TrimNumberField";
-import { ComboBox, IComboBoxOption } from "office-ui-fabric-react";
+import {
+	ComboBox,
+	IComboBoxOption,
+	OverflowSet,
+	IOverflowSetItemProps,
+	IButtonStyles,
+	IconButton,
+	CommandButton,
+	IStyle,
+} from "office-ui-fabric-react";
 
 enum FieldPickerType {
 	Any = 1,
@@ -49,6 +52,7 @@ interface IPageItem extends IPageItemValue {
 export interface IPropertySheetState {
 	isTextFieldMultiline: any;
 	fieldValues: any;
+	selectedPage: number;
 }
 
 export interface IPropertySheetProps {
@@ -56,6 +60,7 @@ export interface IPropertySheetProps {
 	onChange?: (newValue?: any, newFields?: any) => void;
 	trimConnector?: ITrimConnector;
 	computedProperties?: IPageItemValue[];
+	showStyleProperties?: Boolean;
 }
 
 interface IGetItemDef {
@@ -71,10 +76,18 @@ export class PropertySheet extends React.Component<
 > {
 	constructor(props: IPropertySheetProps) {
 		super(props);
-		this.state = { isTextFieldMultiline: {}, fieldValues: {} };
+		this.state = {
+			isTextFieldMultiline: {},
+			fieldValues: {},
+			selectedPage: 1,
+		};
 	}
 
 	private fieldInit: IGetItemDef[] = [];
+
+	tabClick(item: number) {
+		this.setState({ selectedPage: item });
+	}
 
 	doValues() {
 		const { onChange } = this.props;
@@ -152,6 +165,7 @@ export class PropertySheet extends React.Component<
 
 	private doPropOrFieldChange = (prop: IPageItemValue, newValue: any) => {
 		const { onChange } = this.props;
+
 		if (onChange) {
 			let v = newValue;
 
@@ -447,17 +461,149 @@ export class PropertySheet extends React.Component<
 	};
 
 	public render() {
-		const { formDefinition } = this.props;
+		const { formDefinition, showStyleProperties } = this.props;
+		const { selectedPage } = this.state;
+
+		let pageID = 1;
+		let tabId = 0;
+
+		const selectedStyle: IStyle = {
+			position: "relative",
+			fontSize: "14px",
+			backgroundColor: "rgb(0, 120, 212)",
+			color: "rgb(255,255,255)",
+		};
+
+		const onRenderItem = (item: IOverflowSetItemProps): JSX.Element => {
+			const buttonStyle: IButtonStyles = {
+				labelHovered:
+					selectedPage === Number(item.key)
+						? selectedStyle
+						: { backgroundColor: "rgb(244,244,244)" },
+				root:
+					selectedPage === Number(item.key)
+						? selectedStyle
+						: { backgroundColor: "rgb(244,244,244)" },
+			};
+			return (
+				<CommandButton
+					role="tab"
+					id={`tab-${item.key}`}
+					selected={selectedPage === Number(item.key)}
+					styles={buttonStyle}
+					onClick={item.onClick}
+					className={`ms-Pivot-link${
+						selectedPage === Number(item.key) ? " is-selected" : ""
+					}`}
+				>
+					{item.name}
+				</CommandButton>
+			);
+		};
+
+		const onRenderOverflowButton = (
+			overflowItems: any[] | undefined
+		): JSX.Element => {
+			const buttonStyles: Partial<IButtonStyles> = {
+				root: {
+					minWidth: 0,
+					padding: "0 4px",
+					alignSelf: "stretch",
+					height: "auto",
+				},
+			};
+			return (
+				<IconButton
+					role="menuitem"
+					title="More options"
+					styles={buttonStyles}
+					menuIconProps={{ iconName: "More" }}
+					menuProps={{ items: overflowItems! }}
+				/>
+			);
+		};
+		const mapItem = (page: any) => {
+			const itemId = pageID++;
+			return {
+				key: itemId,
+				name: page.Caption,
+				onClick: () => {
+					this.tabClick(itemId);
+				},
+			};
+		};
+		const allItems: IOverflowSetItemProps[] = (
+			(formDefinition || {}).Pages || []
+		)
+			.filter((p: any) => {
+				return (
+					(p.Type === "Normal" &&
+						!p.PageItems.find(function (pg: any) {
+							return pg.Name === "CheckinStyleUseForServerMailCapture";
+						})) ||
+					showStyleProperties
+				);
+			})
+			.map(mapItem);
+
+		let items = allItems.slice(0, 3);
+
+		if (
+			!items.find((anItem) => {
+				return Number(anItem.key) === selectedPage;
+			})
+		) {
+			items = allItems.slice(0, 2);
+			items.push(allItems[selectedPage - 1]);
+		}
+
+		const overflowItems = allItems.filter((itm) => {
+			return !items.find((mainItem) => {
+				return itm.key === mainItem.key;
+			});
+		});
 
 		if (
 			formDefinition &&
 			formDefinition.Pages &&
 			formDefinition.Pages.length > 0
 		) {
-			let pageID = 1;
+			//let pageID = 1;
 			return (
 				<div className={"trim-properties"}>
-					<Pivot
+					<OverflowSet
+						role="menubar"
+						items={items}
+						overflowItems={overflowItems}
+						onRenderOverflowButton={onRenderOverflowButton}
+						onRenderItem={onRenderItem}
+					></OverflowSet>
+
+					{formDefinition.Pages.filter((p: any) => {
+						return (
+							(p.Type === "Normal" &&
+								!p.PageItems.find(function (pg: any) {
+									return pg.Name === "CheckinStyleUseForServerMailCapture";
+								})) ||
+							showStyleProperties
+						);
+					}).map((page: any) => {
+						return (
+							<div
+								className="trim-tab"
+								key={tabId++}
+								style={
+									tabId === selectedPage
+										? { display: "block" }
+										: { display: "none" }
+								}
+							>
+								{this.makePageItems(page.PageItems)}
+							</div>
+						);
+					})}
+
+					{/* <Pivot
 						linkFormat={PivotLinkFormat.tabs}
 						linkSize={PivotLinkSize.normal}
 						onLinkClick={() => {
@@ -467,7 +613,13 @@ export class PropertySheet extends React.Component<
 						}}
 					>
 						{formDefinition.Pages.filter((p: any) => {
-							return p.Type === "Normal";
+							return (
+								(p.Type === "Normal" &&
+									!p.PageItems.find(function (pg: any) {
+										return pg.Name === "CheckinStyleUseForServerMailCapture";
+									})) ||
+								showStyleProperties
+							);
 						}).map((page: any) => {
 							return (
 								<PivotItem headerText={page.Caption} key={pageID++}>
@@ -475,7 +627,7 @@ export class PropertySheet extends React.Component<
 								</PivotItem>
 							);
 						})}
-					</Pivot>
+					</Pivot> */}
 				</div>
 			);
 		} else {

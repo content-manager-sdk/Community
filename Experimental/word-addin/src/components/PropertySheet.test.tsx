@@ -21,9 +21,9 @@ import { ReactNode } from "react";
 import { SpinButton } from "office-ui-fabric-react/lib/SpinButton";
 import TrimNumberField from "./TrimNumberField/TrimNumberField";
 import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
-import { ComboBox } from "office-ui-fabric-react";
+import { ComboBox, OverflowSet } from "office-ui-fabric-react";
 
-describe("Property Sheet", function() {
+describe("Property Sheet", function () {
 	it("displays nothing when form definition is null", () => {
 		const wrapper = shallow<PropertySheet>(
 			<PropertySheet formDefinition={null} />
@@ -51,7 +51,6 @@ describe("Property Sheet", function() {
 	it("creates pages", () => {
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				defaultRecordTitle="test title"
 				formDefinition={{
 					Pages: [
 						{
@@ -76,13 +75,12 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		expect(wrapperWithForm.find(PivotItem).length).toEqual(2);
+		expect(wrapperWithForm.find("div.trim-tab").length).toEqual(2);
 	});
 
 	it("does not create special pages", () => {
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				defaultRecordTitle="test title"
 				formDefinition={{
 					Pages: [
 						{
@@ -111,7 +109,7 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		expect(wrapperWithForm.find(PivotItem).length).toEqual(1);
+		expect(wrapperWithForm.find("div.trim-tab").length).toEqual(1);
 	});
 
 	it("displays a text field with label", () => {
@@ -152,10 +150,7 @@ describe("Property Sheet", function() {
 			.onChange(null, "01234567890123456789012345678901234567890");
 		expect(wrapperWithForm.find(TextField).props().multiline).toBeTruthy();
 
-		wrapperWithForm
-			.find(TextField)
-			.props()
-			.onChange(null, "012345678");
+		wrapperWithForm.find(TextField).props().onChange(null, "012345678");
 		expect(wrapperWithForm.find(TextField).props().multiline).toBeFalsy();
 	});
 
@@ -189,7 +184,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				computedProperties={[
@@ -218,7 +213,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				computedProperties={[
@@ -247,7 +242,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -276,7 +271,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -297,10 +292,7 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		wrapperWithForm
-			.find(TextField)
-			.props()
-			.onChange(null, "abc");
+		wrapperWithForm.find(TextField).props().onChange(null, "abc");
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
 	});
@@ -309,7 +301,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -338,7 +330,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -359,10 +351,7 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		wrapperWithForm
-			.find(Checkbox)
-			.props()
-			.onChange(null, true);
+		wrapperWithForm.find(Checkbox).props().onChange(null, true);
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: true });
 	});
@@ -371,7 +360,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -400,7 +389,7 @@ describe("Property Sheet", function() {
 	const getEnumWrapper = () => {
 		return shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					enumOnChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -476,7 +465,7 @@ describe("Property Sheet", function() {
 			let onChangeFields;
 			const wrapperWithForm = shallow<PropertySheet>(
 				<PropertySheet
-					onChange={function(newForm, newFields) {
+					onChange={function (newForm, newFields) {
 						onChangeFields = newFields;
 					}}
 					formDefinition={{
@@ -506,7 +495,7 @@ describe("Property Sheet", function() {
 			let onChangeForm;
 			const wrapperWithForm = shallow<PropertySheet>(
 				<PropertySheet
-					onChange={function(newForm) {
+					onChange={function (newForm) {
 						onChangeForm = newForm;
 					}}
 					formDefinition={{
@@ -527,10 +516,7 @@ describe("Property Sheet", function() {
 				/>
 			);
 
-			wrapperWithForm
-				.find(TrimNumberField)
-				.props()
-				.onChange(89);
+			wrapperWithForm.find(TrimNumberField).props().onChange(89);
 
 			expect(onChangeForm).toEqual({ Speed: 89 });
 		});
@@ -539,7 +525,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -570,10 +556,7 @@ describe("Property Sheet", function() {
 		});
 
 		const testDate = new Date();
-		wrapperWithForm
-			.find(DatePicker)
-			.props()
-			.onSelectDate(testDate);
+		wrapperWithForm.find(DatePicker).props().onSelectDate(testDate);
 
 		expect(onChangeForm).toEqual({ RecordDateCreated: testDate.toISOString() });
 	});
@@ -613,36 +596,18 @@ describe("Property Sheet", function() {
 
 		it("adds a date field to the property sheet", () => {
 			expect.assertions(3);
-			expect(
-				wrapper
-					.find(DatePicker)
-					.at(0)
-					.exists()
-			).toBeTruthy();
-			expect(
-				wrapper
-					.find(DatePicker)
-					.at(0)
-					.props().label
-			).toEqual("Date created");
+			expect(wrapper.find(DatePicker).at(0).exists()).toBeTruthy();
+			expect(wrapper.find(DatePicker).at(0).props().label).toEqual(
+				"Date created"
+			);
 
-			expect(
-				wrapper
-					.find(DatePicker)
-					.at(0)
-					.props().value
-			).toBeInstanceOf(Date);
+			expect(wrapper.find(DatePicker).at(0).props().value).toBeInstanceOf(Date);
 		});
 
 		it("does not set a value when IsClear == true", () => {
 			expect.assertions(1);
 
-			expect(
-				wrapper
-					.find(DatePicker)
-					.at(1)
-					.props().value
-			).toBeFalsy();
+			expect(wrapper.find(DatePicker).at(1).props().value).toBeFalsy();
 		});
 	});
 
@@ -653,7 +618,7 @@ describe("Property Sheet", function() {
 		beforeEach(() => {
 			wrapper = shallow<PropertySheet>(
 				<PropertySheet
-					onChange={function(newForm) {
+					onChange={function (newForm) {
 						onChangeForm = newForm;
 					}}
 					formDefinition={{
@@ -730,10 +695,7 @@ describe("Property Sheet", function() {
 		it("fires the onChange event when an object picker changes", () => {
 			const testObject = { Uri: 2, NameString: "test" };
 
-			wrapper
-				.find(TrimObjectPicker)
-				.props()
-				.onTrimObjectSelected(testObject);
+			wrapper.find(TrimObjectPicker).props().onTrimObjectSelected(testObject);
 
 			expect(onChangeForm).toEqual({ RecordContainer: testObject.Uri });
 		});
@@ -743,7 +705,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapper = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -779,10 +741,7 @@ describe("Property Sheet", function() {
 		it("fires the onChange event when an object picker changes", () => {
 			const testObject = { Uri: 2, NameString: "test" };
 
-			wrapper
-				.find(TrimObjectPicker)
-				.props()
-				.onTrimObjectSelected(testObject);
+			wrapper.find(TrimObjectPicker).props().onTrimObjectSelected(testObject);
 
 			expect(onChangeForm).toEqual({ Something_Field: "test" });
 		});
@@ -792,7 +751,7 @@ describe("Property Sheet", function() {
 		let onChangeForm;
 		const wrapperWithForm = shallow<PropertySheet>(
 			<PropertySheet
-				onChange={function(newForm) {
+				onChange={function (newForm) {
 					onChangeForm = newForm;
 				}}
 				formDefinition={{
@@ -813,28 +772,28 @@ describe("Property Sheet", function() {
 			/>
 		);
 
-		wrapperWithForm
-			.find(TextField)
-			.props()
-			.onChange(null, "abc");
+		wrapperWithForm.find(TextField).props().onChange(null, "abc");
 
 		expect(onChangeForm).toEqual({ RecordTypedTitle: "abc" });
 	});
 });
 
-describe("Property Sheet - retain values when switching in Pivot", function() {
+describe("Property Sheet - retain values when switching in Pivot", function () {
 	const makeWrapper = (format: string, lookupSetUri: number) => {
 		return mount<PropertySheet>(
 			<Provider
 				trimConnector={{
+					getServiceAPIPath(): any {
+						return "";
+					},
 					getSearchOptions(): Promise<ISearchOptions> {
-						return new Promise(function(resolve, reject) {});
+						return new Promise(function (resolve, reject) {});
 					},
 					getDatabaseProperties(): Promise<IDatabase> {
-						return new Promise(function(resolve, reject) {});
+						return new Promise(function (resolve, reject) {});
 					},
 					getEnum(enumId: string): Promise<IEnumDetails[]> {
-						return new Promise(function(resolve, reject) {
+						return new Promise(function (resolve, reject) {
 							resolve([
 								{
 									Caption: "Unknown",
@@ -855,7 +814,6 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 				}}
 			>
 				<PropertySheet
-					defaultRecordTitle="test title"
 					formDefinition={{
 						Pages: [
 							{
@@ -890,16 +848,8 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 			PropertySheet
 		>
 	) => {
-		wrapper
-			.find(Pivot)
-			.find(CommandButton)
-			.last()
-			.simulate("click");
-		wrapper
-			.find(Pivot)
-			.find(CommandButton)
-			.first()
-			.simulate("click");
+		wrapper.find(OverflowSet).find(CommandButton).last().simulate("click");
+		wrapper.find(OverflowSet).find(CommandButton).first().simulate("click");
 	};
 
 	[
@@ -922,10 +872,7 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 		{
 			format: "String",
 			selectObject: (wrapper: any) => {
-				wrapper
-					.find(TextField)
-					.props()
-					.onChange(null, "aaa");
+				wrapper.find(TextField).props().onChange(null, "aaa");
 			},
 			expect: (wrapper: any) => {
 				expect(wrapper.find(".ms-TextField-field").props().value).toEqual(
@@ -951,34 +898,25 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 		{
 			format: "Number",
 			selectObject: (wrapper: any) => {
-				wrapper
-					.find(TrimNumberField)
-					.props()
-					.onChange(34);
+				wrapper.find(TrimNumberField).props().onChange(34);
 			},
 			expect: (wrapper: any) => {
-				expect(wrapper.find(".ms-spinButton-input").props().value).toEqual(34);
+				expect(wrapper.find(TrimNumberField).props().defaultValue).toEqual(34);
 			},
 		},
 		{
 			format: "Currency",
 			selectObject: (wrapper: any) => {
-				wrapper
-					.find(TrimNumberField)
-					.props()
-					.onChange(34);
+				wrapper.find(TrimNumberField).props().onChange(34);
 			},
 			expect: (wrapper: any) => {
-				expect(wrapper.find(".ms-spinButton-input").props().value).toEqual(34);
+				expect(wrapper.find(TrimNumberField).props().defaultValue).toEqual(34);
 			},
 		},
 		{
 			format: "Boolean",
 			selectObject: (wrapper: any) => {
-				wrapper
-					.find(Checkbox)
-					.props()
-					.onChange(null, true);
+				wrapper.find(Checkbox).props().onChange(null, true);
 			},
 			expect: (wrapper: any) => {
 				expect(wrapper.find(Checkbox).props().defaultChecked).toEqual(true);
@@ -987,10 +925,7 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 		{
 			format: "Datetime",
 			selectObject: (wrapper: any) => {
-				wrapper
-					.find(DatePicker)
-					.props()
-					.onSelectDate(new Date(2010, 1, 1));
+				wrapper.find(DatePicker).props().onSelectDate(new Date(2010, 1, 1));
 			},
 			expect: (wrapper: any) => {
 				expect(wrapper.find(DatePicker).props().value).toEqual(
@@ -1019,7 +954,7 @@ describe("Property Sheet - retain values when switching in Pivot", function() {
 	});
 });
 
-describe("Property Sheet - call trimconnector correctly", function() {
+describe("Property Sheet - call trimconnector correctly", function () {
 	let testEnumId;
 
 	beforeEach(() => {
@@ -1031,7 +966,7 @@ describe("Property Sheet - call trimconnector correctly", function() {
 				trimConnector={{
 					getEnum(enumId: string): Promise<IEnumDetails[]> {
 						testEnumId = enumId;
-						return new Promise(function(resolve, reject) {
+						return new Promise(function (resolve, reject) {
 							resolve([
 								{
 									Caption: "Unknown",

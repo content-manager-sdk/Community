@@ -295,7 +295,7 @@ describe("Record Type Picker", function () {
 		wrapper.find(ComboBox).props().onMenuOpen();
 
 		await flushPromises();
-		expect(wrapper.state().recordTypes[1].selected).toBeTruthy();
+		expect(wrapper.find(ComboBox).at(0).props().defaultSelectedKey).toEqual(5);
 	});
 
 	it("onRecordTypeSelected fires on mount", async () => {
@@ -357,7 +357,7 @@ describe("Record Type Picker", function () {
 		expect(wrapper.state().checkinUsingStyle).toBeFalsy();
 	});
 
-	it("selects the default Record Type", async () => {
+	it("selects the default Record Type options", async () => {
 		testRecordTypes = [];
 		const wrapper = shallow<RecordTypePicker>(
 			<RecordTypePicker
@@ -432,19 +432,8 @@ describe("Record Type Picker", function () {
 		);
 
 		wrapper.setState({ checkinUsingStyle: true });
-		wrapper.find(ComboBox).props().onMenuOpen();
-		await flushPromises();
-		resolveCheckinStyles({
-			results: [
-				{
-					Uri: 1,
-					CheckinAs: { Uri: 1 },
-					NameString: "checkin style 1",
-				} as ICheckinPlace,
-			],
-		});
 
 		await flushPromises();
-		expect(wrapper.state().checkinStyles[0].selected).toBeTruthy();
+		expect(wrapper.find(ComboBox).at(0).props().defaultSelectedKey).toEqual(1);
 	});
 });

@@ -263,6 +263,7 @@ export class SearchBar extends React.Component<ISearchBarProps, ISearchBarState>
 				""
 			);
 		}
+
 		if (!includeShortCuts) {
 			this.setState({
 				searchType: latestClause,

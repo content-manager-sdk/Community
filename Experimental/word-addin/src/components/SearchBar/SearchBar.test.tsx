@@ -59,7 +59,7 @@ describe("Search Bar", function () {
 					SearchParameterFormat: "String",
 					ClauseDef: {
 						Id: "",
-						InternalName: "",
+						InternalName: "anyWord",
 						Caption: "",
 						ToolTip: "",
 						MethodGroup: "",
@@ -223,7 +223,7 @@ describe("Search Bar", function () {
 		documentInfo: { Enums: { RecordRelationshipType: [] } },
 	};
 
-	it("do content search", (done) => {
+	it("do content search", async () => {
 		let testValue = "";
 		const doChange = function (newValue) {
 			testValue = newValue;
@@ -238,26 +238,22 @@ describe("Search Bar", function () {
 				onQueryChange={doChange}
 			/>
 		);
-		setTimeout(() => {
-			try {
-				wrapper
-					.find(ComboBox)
-					.first()
-					.props()
-					.onChange(null, { key: "content", text: "" }, 1, null);
 
-				jest.useFakeTimers();
-				wrapper.instance().autocompleteSearchDebounced("test");
+		await flushPromises();
 
-				jest.runOnlyPendingTimers();
-				expect(testValue).toEqual("content:test");
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(null, { key: "Textcontent", text: "" }, 1, null);
 
-				expect.assertions(1);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		jest.useFakeTimers();
+		wrapper.instance().autocompleteSearchDebounced("test");
+
+		jest.runOnlyPendingTimers();
+		expect(testValue).toEqual("content:test");
+
+		expect.assertions(1);
 	});
 
 	it("re-sets the search on selection of 'show'", (done) => {
@@ -361,7 +357,7 @@ describe("Search Bar", function () {
 				);
 				expect(combo.props().options[3].data.MethodGroup).toEqual("Other");
 
-				expect(combo.props().options[3].key).toEqual("all");
+				expect(combo.props().options[3].key).toEqual("Favoritesall");
 				expect(combo.props().options[3].text).toEqual("All");
 
 				expect.assertions(6);
@@ -402,7 +398,7 @@ describe("Search Bar", function () {
 		});
 	});
 
-	it("do 'all' search", (done) => {
+	it("do 'all' search", async () => {
 		let testValue = "";
 		const doChange = function (newValue) {
 			testValue = newValue;
@@ -417,32 +413,26 @@ describe("Search Bar", function () {
 				onQueryChange={doChange}
 			/>
 		);
-		setTimeout(() => {
-			wrapper
-				.find(ComboBox)
-				.first()
-				.props()
-				.onChange(
-					null,
-					{
-						key: "all",
-						text: "",
-						data: { SearchParameterFormat: "Boolean" },
-					},
-					1,
-					null
-				);
+		await flushPromises();
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(
+				null,
+				{
+					key: "Otherall",
+					text: "",
+					data: { SearchParameterFormat: "Boolean" },
+				},
+				1,
+				null
+			);
 
-			try {
-				expect(testValue).toEqual("all");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(testValue).toEqual("all");
 	});
 
-	it("clears the search on content search", (done) => {
+	it("clears the search on content search", async () => {
 		let testValue = "xxx";
 		const doChange = function (newValue) {
 			testValue = newValue;
@@ -457,23 +447,19 @@ describe("Search Bar", function () {
 				onQueryChange={doChange}
 			/>
 		);
-		setTimeout(() => {
-			try {
-				wrapper
-					.find(ComboBox)
-					.first()
-					.props()
-					.onChange(null, { key: "content", text: "" }, 1, null);
 
-				expect(testValue).toEqual("");
-				expect(wrapper.state().searchType).toEqual("content");
+		await flushPromises();
 
-				expect.assertions(2);
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		wrapper
+			.find(ComboBox)
+			.first()
+			.props()
+			.onChange(null, { key: "Textcontent", text: "" }, 1, null);
+
+		expect(testValue).toEqual("");
+		expect(wrapper.state().searchType).toEqual("Textcontent");
+
+		expect.assertions(2);
 	});
 
 	[
@@ -503,23 +489,19 @@ describe("Search Bar", function () {
 		});
 	});
 
-	it("show text field when no shortcuts", (done) => {
+	it("show text field when no shortcuts", async () => {
 		const wrapper = shallow<SearchBar>(
 			<SearchBar
 				appStore={mockAppStore}
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				includeShortCuts={false}
+				startingSearch="anyWord"
 			/>
 		);
-		setTimeout(() => {
-			try {
-				expect(wrapper.find(TextField).exists()).toBeTruthy();
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+
+		await flushPromises();
+		expect(wrapper.find(TextField).exists()).toBeTruthy();
 	});
 
 	it("show correct clause when no shortcuts", async () => {
@@ -529,37 +511,14 @@ describe("Search Bar", function () {
 				trimConnector={trimConnector}
 				trimType={BaseObjectTypes.Record}
 				includeShortCuts={false}
+				startingSearch="anyWord"
 			/>
 		);
 
 		await flushPromises();
 		const combo = wrapper.find(ComboBox).last();
 
-		expect(combo.props().selectedKey).toEqual("anyWord");
-	});
-
-	it("show correct clause when no shortcuts and no latest clause", (done) => {
-		latestClause = global.undefined;
-
-		const wrapper = shallow<SearchBar>(
-			<SearchBar
-				appStore={mockAppStore}
-				trimConnector={trimConnector}
-				trimType={BaseObjectTypes.Record}
-				includeShortCuts={false}
-			/>
-		);
-
-		setTimeout(() => {
-			try {
-				const combo = wrapper.find(ComboBox).last();
-
-				expect(combo.props().selectedKey).toEqual("all");
-				done();
-			} catch (e) {
-				done.fail(e);
-			}
-		});
+		expect(combo.props().selectedKey).toEqual("TextanyWord");
 	});
 
 	it("empty search text when no shortcuts", (done) => {

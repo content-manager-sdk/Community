@@ -128,7 +128,7 @@ hr.trim-menu-sep {
 	position: fixed;
 	width: calc(100% - 16px);
 }
-.new-record-body .ms-Pivot {
+.new-record-body .ms-OverflowSet {
 	border-bottom: 1px groove;
 }
 

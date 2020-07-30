@@ -369,6 +369,11 @@ export class NewRecord extends React.Component<
 		if (trimType === BaseObjectTypes.CheckinStyle) {
 			computedProps.push(
 				{
+					Name: "CheckinStyleShowDataEntryForm",
+					Value: false,
+					Type: "Property",
+				},
+				{
 					Name: "CheckinStyleUseForServerMailCapture",
 					Value: isLinkedFolder === true && !folderId ? true : false,
 					Type: "Property",
@@ -415,6 +420,7 @@ export class NewRecord extends React.Component<
 							formDefinition={formDefinition}
 							onChange={this._onPropertySheetChange}
 							computedProperties={computedProps}
+							showStyleProperties={!!folderId}
 						/>
 
 						<Stack horizontal>

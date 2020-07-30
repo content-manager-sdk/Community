@@ -541,6 +541,11 @@ describe("New Record layout", function () {
 			const propertySheet = wrapper.find(PropertySheet);
 			expect(propertySheet.props().computedProperties).toEqual([
 				{
+					Name: "CheckinStyleShowDataEntryForm",
+					Type: "Property",
+					Value: false,
+				},
+				{
 					Name: "CheckinStyleUseForServerMailCapture",
 					Value: testData.createPlace,
 					Type: "Property",

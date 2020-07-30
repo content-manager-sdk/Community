@@ -61,23 +61,8 @@ export class RecordTypePicker extends React.Component<
 	_mounted: Boolean;
 
 	setRecordTypes(recTypes: IDropdownOption[]): IDropdownOption[] {
-		const { defaultRecordType } = this.props;
-
 		const newRecTypes = [...recTypes];
-		let defaultUri = 0;
 
-		if (
-			defaultRecordType &&
-			defaultRecordType.TrimType === BaseObjectTypes.RecordType
-		) {
-			defaultUri = defaultRecordType.Uri;
-		}
-
-		newRecTypes.forEach((rt) => {
-			if (rt.key === defaultUri) {
-				rt.selected = true;
-			}
-		});
 		this.recordTypeUri = 0;
 		return newRecTypes;
 	}
@@ -145,7 +130,7 @@ export class RecordTypePicker extends React.Component<
 	}
 
 	private getOptions = (): void => {
-		const { trimConnector, defaultRecordType, appStore } = this.props;
+		const { trimConnector, appStore } = this.props;
 		const { checkinUsingStyle } = this.state;
 
 		appStore!.setSpinning(true);
@@ -163,18 +148,9 @@ export class RecordTypePicker extends React.Component<
 							checkinStyles: placesResponse.results.map(function (
 								o: ICheckinPlace
 							) {
-								let selected = false;
-								if (
-									defaultRecordType &&
-									defaultRecordType.TrimType == BaseObjectTypes.CheckinStyle &&
-									defaultRecordType.Uri === o.CheckinAs.Uri
-								) {
-									selected = true;
-								}
 								return {
 									key: o.CheckinAs.Uri,
 									text: o.NameString,
-									selected,
 								} as IDropdownOption;
 							}),
 						},
@@ -290,6 +266,12 @@ export class RecordTypePicker extends React.Component<
 						{...comboProps}
 						options={checkinStyles}
 						onMenuOpen={this.getOptions}
+						defaultSelectedKey={
+							defaultRecordType &&
+							defaultRecordType!.TrimType === BaseObjectTypes.CheckinStyle
+								? defaultRecordType!.Uri
+								: 0
+						}
 						placeholder={appStore.messages.web_SelectCheckinStyle}
 						onRenderLowerContent={() => {
 							return (
@@ -323,6 +305,12 @@ export class RecordTypePicker extends React.Component<
 						}
 						options={recordTypes}
 						onMenuOpen={this.getOptions}
+						defaultSelectedKey={
+							defaultRecordType &&
+							defaultRecordType!.TrimType === BaseObjectTypes.RecordType
+								? defaultRecordType!.Uri
+								: 0
+						}
 						onRenderLowerContent={() => {
 							return !appStore!.isEmail() ||
 								trimType === BaseObjectTypes.CheckinStyle ? null : (
