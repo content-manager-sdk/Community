@@ -22,6 +22,8 @@ import {
 	IconButton,
 	CommandButton,
 	IStyle,
+	ITooltipHostStyles,
+	TooltipHost,
 } from "office-ui-fabric-react";
 
 enum FieldPickerType {
@@ -279,7 +281,12 @@ export class PropertySheet extends React.Component<
 			return getValue();
 		}
 	};
-
+	private truncate = (label: string, length: number) => {
+		if (label.length <= length) {
+			return label;
+		}
+		return label.slice(0, length) + "...";
+	};
 	private makePageItems = (formItems: any) => {
 		const { isTextFieldMultiline, fieldValues } = this.state;
 		const { computedProperties } = this.props;
@@ -473,7 +480,9 @@ export class PropertySheet extends React.Component<
 			backgroundColor: "rgb(0, 120, 212)",
 			color: "rgb(255,255,255)",
 		};
-
+		const hostStyles: Partial<ITooltipHostStyles> = {
+			root: { display: "inline-block" },
+		};
 		const onRenderItem = (item: IOverflowSetItemProps): JSX.Element => {
 			const buttonStyle: IButtonStyles = {
 				labelHovered:
@@ -486,18 +495,24 @@ export class PropertySheet extends React.Component<
 						: { backgroundColor: "rgb(244,244,244)" },
 			};
 			return (
-				<CommandButton
-					role="tab"
-					id={`tab-${item.key}`}
-					selected={selectedPage === Number(item.key)}
-					styles={buttonStyle}
-					onClick={item.onClick}
-					className={`ms-Pivot-link${
-						selectedPage === Number(item.key) ? " is-selected" : ""
-					}`}
+				<TooltipHost
+					content={item.name}
+					id={`tab-tip-${item.key}`}
+					styles={hostStyles}
 				>
-					{item.name}
-				</CommandButton>
+					<CommandButton
+						role="tab"
+						id={`tab-${item.key}`}
+						selected={selectedPage === Number(item.key)}
+						styles={buttonStyle}
+						onClick={item.onClick}
+						className={`ms-Pivot-link${
+							selectedPage === Number(item.key) ? " is-selected" : ""
+						}`}
+					>
+						{this.truncate(item.name, 33)}
+					</CommandButton>
+				</TooltipHost>
 			);
 		};
 
@@ -532,6 +547,7 @@ export class PropertySheet extends React.Component<
 				},
 			};
 		};
+
 		const allItems: IOverflowSetItemProps[] = (
 			(formDefinition || {}).Pages || []
 		)
@@ -547,13 +563,29 @@ export class PropertySheet extends React.Component<
 			.map(mapItem);
 
 		let items = allItems.slice(0, 3);
+		let visibleTabNames = items.map((i) => {
+			return i.name.length;
+		});
+
+		while (
+			items.length > 1 &&
+			visibleTabNames.length > 0 &&
+			visibleTabNames.reduce((total, item) => {
+				return total + item;
+			}) > 34
+		) {
+			items = allItems.slice(0, items.length - 1);
+			visibleTabNames = items.map((i) => {
+				return i.name.length;
+			});
+		}
 
 		if (
 			!items.find((anItem) => {
 				return Number(anItem.key) === selectedPage;
 			})
 		) {
-			items = allItems.slice(0, 2);
+			items = allItems.slice(0, items.length - 1);
 			items.push(allItems[selectedPage - 1]);
 		}
 
@@ -568,7 +600,6 @@ export class PropertySheet extends React.Component<
 			formDefinition.Pages &&
 			formDefinition.Pages.length > 0
 		) {
-			//let pageID = 1;
 			return (
 				<div className={"trim-properties"}>
 					<OverflowSet
