@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--Created:cb85b80c-f585-40ff-8bfc-12ff4d0e34a9-->
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
 	xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="MailApp">
 	<Id>BBF8F785-AC58-4FA1-A679-1D2A00BEC93C</Id>
-	<Version>1.0.0.8</Version>
-	<ProviderName>Microsoft Outlook Dev Center</ProviderName>
+	<Version>1.0.1.0</Version>
+	<ProviderName>Micro Focus</ProviderName>
 	<DefaultLocale>en-US</DefaultLocale>
 	<DisplayName DefaultValue="Content Manager" />
 	<Description DefaultValue="An addin to register mail items in Content Manager."/>
-	<IconUrl DefaultValue="https://mfcm.xyz/CMWord/Assets/icon-64.png" />
-	<HighResolutionIconUrl DefaultValue="https://mfcm.xyz/CMWord/Assets/icon-80.png" />
+	<IconUrl DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/Trim.png" />
+	<HighResolutionIconUrl DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W64h64/Trim.png"/>
 	<Hosts>
 		<Host Name="Mailbox" />
 	</Hosts>
@@ -49,70 +49,7 @@
 
 	<VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
 
-		<Requirements>
-			<bt:Sets DefaultMinVersion="1.3">
-				<bt:Set Name="Mailbox" />
-			</bt:Sets>
-		</Requirements>
-		<Hosts>
-			<Host xsi:type="MailHost">
-
-				<DesktopFormFactor>
-					<FunctionFile resid="functionFile" />
-					
-					<ExtensionPoint xsi:type="MessageComposeCommandSurface">
-						<OfficeTab id="TabDefault">
-							<Group id="msgComposeDemoGroup">
-								<Label resid="groupLabel" />
-								<!-- Function (UI-less) button -->
-								<Control xsi:type="Button" id="msgComposeFunctionButton">
-									<Label resid="funcComposeButtonLabel" />
-									<Supertip>
-										<Title resid="funcComposeSuperTipTitle" />
-										<Description resid="funcComposeSuperTipDescription" />
-									</Supertip>
-									<Icon>
-										<bt:Image size="16" resid="blue-icon-16" />
-										<bt:Image size="32" resid="blue-icon-32" />
-										<bt:Image size="80" resid="blue-icon-80" />
-									</Icon>
-									<Action xsi:type="ExecuteFunction">
-										<FunctionName>addDefaultMsgToBody</FunctionName>
-									</Action>
-								</Control>
-
-
-							</Group>
-						</OfficeTab>
-					</ExtensionPoint>
-				</DesktopFormFactor>
-			</Host>
-		</Hosts>
-
-		<Resources>
-			<bt:Images>
-
-				<bt:Image id="blue-icon-16" DefaultValue="https://localhost:8443/Assets/Images/blue-16.png"/>
-				<bt:Image id="blue-icon-32" DefaultValue="https://localhost:8443/Assets/Images/blue-32.png"/>
-				<bt:Image id="blue-icon-80" DefaultValue="https://localhost:8443/Assets/Images/blue-80.png"/>
-
-			</bt:Images>
-			<bt:Urls>
-				<bt:Url id="functionFile" DefaultValue="https://mfcm.xyz/CMWord/FunctionFile/Functions.html"/>
-			</bt:Urls>
-			<bt:ShortStrings>
-				<bt:String id="groupLabel" DefaultValue="Content Manager"/>
-				<bt:String id="funcComposeButtonLabel" DefaultValue="Insert links"/>
-				<bt:String id="funcComposeSuperTipTitle" DefaultValue="Shows a Record list to allow for the insertion of links."/>
-			</bt:ShortStrings>
-			<bt:LongStrings>
-
-				<bt:String id="funcComposeSuperTipDescription" DefaultValue="Inserts text into body of the message or appointment. This is an example of a function button."/>
-			</bt:LongStrings>
-		</Resources>
-		<!-- VersionOverrides for the v1.1 schema -->
 		<VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
-
 			<Requirements>
 				<bt:Sets DefaultMinVersion="1.3">
 					<bt:Set Name="Mailbox" />
@@ -120,16 +57,12 @@
 			</Requirements>
 			<Hosts>
 				<Host xsi:type="MailHost">
-
 					<DesktopFormFactor>
 						<FunctionFile resid="functionFile" />
-
-
-<ExtensionPoint xsi:type="MessageComposeCommandSurface">
+						<ExtensionPoint xsi:type="MessageComposeCommandSurface">
 							<CustomTab id="Trim.Compose.Tab1">
 								<Group id="msgComposeoGroup">
 									<Label resid="groupLabel" />
-									<!-- Function (UI-less) button -->
 
 									<Control xsi:type="Button" id="cmpCheckinStylesFunctionButton">
 										<Label resid="funcCheckinStylesButtonLabel" />
@@ -138,9 +71,9 @@
 											<Description resid="Cs_SuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="cs-icon-16" />
-											<bt:Image size="32" resid="cs-icon-32" />
-											<bt:Image size="80" resid="cs-icon-80" />
+											<bt:Image size="16" resid="Trim.csicon_16x16" />
+											<bt:Image size="32" resid="Trim.csicon_32x32" />
+											<bt:Image size="80" resid="Trim.csicon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="checkinStyleTaskPaneUrl" />
@@ -154,9 +87,9 @@
 											<Description resid="linkedFolderSuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="folder-icon-16" />
-											<bt:Image size="32" resid="folder-icon-32" />
-											<bt:Image size="80" resid="folder-icon-80" />
+											<bt:Image size="16" resid="Trim.foldericon_16x16" />
+											<bt:Image size="32" resid="Trim.foldericon_32x32" />
+											<bt:Image size="80" resid="Trim.foldericon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="linkedFolderTaskPaneUrl" />
@@ -170,9 +103,9 @@
 											<Description resid="optionsSuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="options-icon-16" />
-											<bt:Image size="32" resid="options-icon-32" />
-											<bt:Image size="80" resid="options-icon-80" />
+											<bt:Image size="16" resid="Trim.optionsicon_16x16" />
+											<bt:Image size="32" resid="Trim.optionsicon_32x32" />
+											<bt:Image size="80" resid="Trim.optionsicon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="optionsTaskPaneUrl" />
@@ -197,17 +130,15 @@
 											<Description resid="funcReadSuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="file-icon-16" />
-											<bt:Image size="32" resid="file-icon-32" />
-											<bt:Image size="80" resid="file-icon-80" />
+											<bt:Image size="16" resid="Trim.saveicon_16x16" />
+											<bt:Image size="32" resid="Trim.saveicon_32x32" />
+											<bt:Image size="80" resid="Trim.saveicon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="checkinTaskPaneUrl" />
 											<SupportsPinning>true</SupportsPinning>
 										</Action>
 									</Control>
-
-
 									<Control xsi:type="Button" id="msgCheckinStylesFunctionButton">
 										<Label resid="funcCheckinStylesButtonLabel" />
 										<Supertip>
@@ -215,9 +146,9 @@
 											<Description resid="Cs_SuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="cs-icon-16" />
-											<bt:Image size="32" resid="cs-icon-32" />
-											<bt:Image size="80" resid="cs-icon-80" />
+											<bt:Image size="16" resid="Trim.csicon_16x16" />
+											<bt:Image size="32" resid="Trim.csicon_32x32" />
+											<bt:Image size="80" resid="Trim.csicon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="checkinStyleTaskPaneUrl" />
@@ -231,14 +162,15 @@
 											<Description resid="linkedFolderSuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="folder-icon-16" />
-											<bt:Image size="32" resid="folder-icon-32" />
-											<bt:Image size="80" resid="folder-icon-80" />
+											<bt:Image size="16" resid="Trim.foldericon_16x16" />
+											<bt:Image size="32" resid="Trim.foldericon_32x32" />
+											<bt:Image size="80" resid="Trim.foldericon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="linkedFolderTaskPaneUrl" />
 										</Action>
 									</Control>
+
 									<Control xsi:type="Button" id="optionsFunctionButton">
 										<Label resid="optionsButtonLabel" />
 										<Supertip>
@@ -246,107 +178,15 @@
 											<Description resid="optionsSuperTipDescription" />
 										</Supertip>
 										<Icon>
-											<bt:Image size="16" resid="options-icon-16" />
-											<bt:Image size="32" resid="options-icon-32" />
-											<bt:Image size="80" resid="options-icon-80" />
+											<bt:Image size="16" resid="Trim.optionsicon_16x16" />
+											<bt:Image size="32" resid="Trim.optionsicon_32x32" />
+											<bt:Image size="80" resid="Trim.optionsicon_64x64" />
 										</Icon>
 										<Action xsi:type="ShowTaskpane">
 											<SourceLocation resid="optionsTaskPaneUrl" />
 										</Action>
 									</Control>
-									<!-- Menu (dropdown) button -->
-									<!-- <Control xsi:type="Menu" id="msgReadMenuButton">
-                    <Label resid="menuReadButtonLabel" />
-                    <Supertip>
-                      <Title resid="menuReadSuperTipTitle" />
-                      <Description resid="menuReadSuperTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="red-icon-16" />
-                      <bt:Image size="32" resid="red-icon-32" />
-                      <bt:Image size="80" resid="red-icon-80" />
-                    </Icon>
-                    <Items>
-                      <Item id="msgReadMenuItem1">
-                        <Label resid="menuItem1ReadLabel" />
-                        <Supertip>
-                          <Title resid="menuItem1ReadLabel" />
-                          <Description resid="menuItem1ReadTip" />
-                        </Supertip>
-                        <Icon>
-                          <bt:Image size="16" resid="red-icon-16" />
-                          <bt:Image size="32" resid="red-icon-32" />
-                          <bt:Image size="80" resid="red-icon-80" />
-                        </Icon>
-                        <Action xsi:type="ExecuteFunction">
-                          <FunctionName>getItemClass</FunctionName>
-                        </Action>
-                      </Item>
-                      <Item id="msgReadMenuItem2">
-                        <Label resid="menuItem2ReadLabel" />
-                        <Supertip>
-                          <Title resid="menuItem2ReadLabel" />
-                          <Description resid="menuItem2ReadTip" />
-                        </Supertip>
-                        <Icon>
-                          <bt:Image size="16" resid="red-icon-16" />
-                          <bt:Image size="32" resid="red-icon-32" />
-                          <bt:Image size="80" resid="red-icon-80" />
-                        </Icon>
-                        <Action xsi:type="ExecuteFunction">
-                          <FunctionName>getDateTimeCreated</FunctionName>
-                        </Action>
-                      </Item>
-                      <Item id="msgReadMenuItem3">
-                        <Label resid="menuItem3ReadLabel" />
-                        <Supertip>
-                          <Title resid="menuItem3ReadLabel" />
-                          <Description resid="menuItem3ReadTip" />
-                        </Supertip>
-                        <Icon>
-                          <bt:Image size="16" resid="red-icon-16" />
-                          <bt:Image size="32" resid="red-icon-32" />
-                          <bt:Image size="80" resid="red-icon-80" />
-                        </Icon>
-                        <Action xsi:type="ExecuteFunction">
-                          <FunctionName>getItemID</FunctionName>
-                        </Action>
-                      </Item>
-                    </Items>
-                  </Control> -->
-									<!-- Task pane button -->
-									<!-- <Control xsi:type="Button" id="msgReadOpenPaneButton">
-                    <Label resid="paneReadButtonLabel" />
-                    <Supertip>
-                      <Title resid="paneReadSuperTipTitle" />
-                      <Description resid="paneReadSuperTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="green-icon-16" />
-                      <bt:Image size="32" resid="green-icon-32" />
-                      <bt:Image size="80" resid="green-icon-80" />
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="readTaskPaneUrl" />
-                      <SupportsPinning>true</SupportsPinning>
-                    </Action>
-                  </Control> -->
 
-									<!-- <Control xsi:type="Button" id="msgReadRestPaneButton">
-                    <Label resid="restpaneReadButtonLabel" />
-                    <Supertip>
-                      <Title resid="restpaneReadSuperTipTitle" />
-                      <Description resid="restpaneReadSuperTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="green-icon-16" />
-                      <bt:Image size="32" resid="green-icon-32" />
-                      <bt:Image size="80" resid="green-icon-80" />
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="restTaskPaneUrl" />
-                    </Action>
-                  </Control> -->
 								</Group>
 								<Label resid="Trim.TabLabel" />
 							</CustomTab>
@@ -360,42 +200,21 @@
 
 			<Resources>
 				<bt:Images>
+					<bt:Image id="Trim.saveicon_16x16" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W16h16/FileSave.png"/>
+					<bt:Image id="Trim.saveicon_32x32" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/FileSave.png"/>
+					<bt:Image id="Trim.saveicon_64x64" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W64h64/FileSave.png"/>
 
-					<bt:Image id="blue-icon-16" DefaultValue="https://localhost:8443/Assets/Images/blue-16.png"/>
-					<bt:Image id="blue-icon-32" DefaultValue="https://localhost:8443/Assets/Images/blue-32.png"/>
-					<bt:Image id="blue-icon-80" DefaultValue="https://localhost:8443/Assets/Images/blue-80.png"/>
+					<bt:Image id="Trim.csicon_16x16" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W16h16/CheckinStyle.png"/>
+					<bt:Image id="Trim.csicon_32x32" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/CheckinStyle.png"/>
+					<bt:Image id="Trim.csicon_64x64" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/CheckinStyle.png"/>
 
-					<bt:Image id="cm-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/icon-16.png"/>
-					<bt:Image id="cm-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/icon-32.png"/>
-					<bt:Image id="cm-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/icon-80.png"/>
+					<bt:Image id="Trim.foldericon_16x16" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W16h16/EmailLink.png"/>
+					<bt:Image id="Trim.foldericon_32x32" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/EmailLink.png"/>
+					<bt:Image id="Trim.foldericon_64x64" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/EmailLink.png"/>
 
-					<bt:Image id="file-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/filesave_x16.png"/>
-					<bt:Image id="file-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/filesave_x32.png"/>
-					<bt:Image id="file-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/filesave_x80.png"/>
-
-					<bt:Image id="cs-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/checkinstyles_x16.png"/>
-					<bt:Image id="cs-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/checkinstyles_x32.png"/>
-					<bt:Image id="cs-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/checkinstyles_x80.png"/>
-
-					<bt:Image id="folder-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/folder_x16.png"/>
-					<bt:Image id="folder-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/folder_x32.png"/>
-					<bt:Image id="folder-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/folder_x80.png"/>
-					
-					<bt:Image id="options-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/options_x16.png"/>
-					<bt:Image id="options-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/options_x32.png"/>
-					<bt:Image id="options-icon-80" DefaultValue="https://mfcm.xyz/Assets/options_x80.png"/>
-					
-					<bt:Image id="attachments-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/checkinattachmentonly_x16.png"/>
-					<bt:Image id="attachments-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/checkinattachmentonly_x32.png"/>
-					<bt:Image id="attachments-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/checkinattachmentonly_x80.png"/>
-					<!-- Red icon -->
-					<bt:Image id="red-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/Images/red-16.png"/>
-					<bt:Image id="red-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/Images/red-32.png"/>
-					<bt:Image id="red-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/Images/red-80.png"/>
-					<!-- Green icon -->
-					<bt:Image id="green-icon-16" DefaultValue="https://mfcm.xyz/CMWord/Assets/Images/green-16.png"/>
-					<bt:Image id="green-icon-32" DefaultValue="https://mfcm.xyz/CMWord/Assets/Images/green-32.png"/>
-					<bt:Image id="green-icon-80" DefaultValue="https://mfcm.xyz/CMWord/Assets/Images/green-80.png"/>
+					<bt:Image id="Trim.optionsicon_16x16" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W16h16/UserOptions.png"/>
+					<bt:Image id="Trim.optionsicon_32x32" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/UserOptions.png"/>
+					<bt:Image id="Trim.optionsicon_64x64" DefaultValue="https://mfcm.xyz/ServiceAPI/TrimIcon/W32h32/UserOptions.png"/>
 				</bt:Images>
 				<bt:Urls>
 					<bt:Url id="functionFile" DefaultValue="https://mfcm.xyz/CMWord/FunctionFile/Functions.html"/>
@@ -433,10 +252,11 @@
 
 					<bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles"/>
 					<bt:String id="linkedFoldersButtonLabel" DefaultValue="Linked Folders"/>
+					<bt:String id="optionsButtonLabel" DefaultValue="User Options"/>
 					<bt:String id="residExtensionPointLabel" DefaultValue="Content Manager"/>
 					<bt:String id="residGroupLabel" DefaultValue="Support"/>
 					<bt:String id="residChangeToAssociateLabel" DefaultValue="Checkin Styles"/>
-					<bt:String id="optionsButtonLabel" DefaultValue="User Options"/>
+
 
 					<bt:String id="residCustomTabLabel" DefaultValue="Content Manager"/>
 
@@ -448,10 +268,10 @@
 					<bt:String id="funcAttachmentsSuperTipTitle" DefaultValue="Checks the attachments into Content Manager"/>
 					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles"/>
 					<bt:String id="linkedFoldersSuperTipTitle" DefaultValue="Create linked folders"/>
+					<bt:String id="optionsSuperTipTitle" DefaultValue="Update Content Manager user options"/>
 					<bt:String id="menuReadSuperTipTitle" DefaultValue="Choose a property to get"/>
 					<bt:String id="paneReadSuperTipTitle" DefaultValue="Get all properties"/>
 					<bt:String id="restpaneReadSuperTipTitle" DefaultValue="Open REST Test pane"/>
-					<bt:String id="optionsSuperTipTitle" DefaultValue="Update Content Manager user options"/>
 
 					<bt:String id="menuItem1ReadLabel" DefaultValue="Get item class"/>
 					<bt:String id="menuItem2ReadLabel" DefaultValue="Get date time created"/>
@@ -467,13 +287,14 @@
 					<bt:String id="menuItem1ComposeTip" DefaultValue="Inserts Hello World! into the body of the message or appointment." />
 					<bt:String id="menuItem2ComposeTip" DefaultValue="Inserts Add-in commands are cool! into the body of the message or appointment." />
 					<bt:String id="menuItem3ComposeTip" DefaultValue="Inserts Visit Outlook Dev Center into the body of the message or appointment." />
-<bt:String id="optionsSuperTipDescription" DefaultValue="Update Content Manager options."/>
+
 					<!-- Read mode -->
 					<bt:String id="funcReadSuperTipDescription" DefaultValue="Check an email into Content Manager."/>
 					<bt:String id="attachmentsSuperTipDescription" DefaultValue="Check email attachments into Content Manager."/>
 
 					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles."/>
 					<bt:String id="linkedFolderSuperTipDescription" DefaultValue="Edit linked folders."/>
+					<bt:String id="optionsSuperTipDescription" DefaultValue="Update Content Manager options."/>
 					<bt:String id="menuReadSuperTipDescription" DefaultValue="Gets the selected property of the message or appointment and displays it in the info bar. This is an example of a drop-down menu button."/>
 					<bt:String id="paneReadSuperTipDescriptionf" DefaultValue="Opens a pane displaying all available properties of the message or appointment. This is an example of a button that opens a task pane."/>
 					<bt:String id="restpaneReadSuperTipDescription" DefaultValue="Opens a pane allowing you to test various REST API calls using the access token returned by the server."/>

@@ -44,7 +44,7 @@ export class MainApp extends React.Component<IMainAppProps, IMainAppState> {
 	public render() {
 		const { appStore, className } = this.props;
 		const { defaultRecordType, webUrl } = this.state;
-console.log(webUrl);
+
 		if (appStore.status === "STARTING" || appStore.status === "PAUSE") {
 			return null;
 		}

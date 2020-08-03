@@ -383,7 +383,7 @@ export class ObjectContextMenu extends React.Component<
 					data: {},
 				});
 
-				if (appStore!.moreToFile()) {
+				if (trimType === BaseObjectTypes.Record && appStore!.moreToFile()) {
 					menuItems.push({
 						key: "FileMore",
 						text: appStore!.messages.web_fileMore,

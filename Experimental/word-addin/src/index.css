@@ -170,7 +170,7 @@ hr.trim-menu-sep {
 .disabled {
 	pointer-events: none;
 }
-.trim-top-spinner {
+div.trim-top-spinner {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
