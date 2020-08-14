@@ -31,7 +31,7 @@
 				},
 				{
 					"key": "actions",
-					"value": "[{\"type\":\"newFile\",\"url\":\"https://desktop-39dgcn3:3000?newfile=true\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"open\",\"url\":\"https://desktop-39dgcn3/ServiceAPI/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"preview\",\"url\":\"https://desktop-39dgcn3/ServiceAPI/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}}]"
+					"value": "[{\"type\":\"open\",\"url\":\"https://desktop-39dgcn3/ServiceAPI/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"preview\",\"url\":\"https://desktop-39dgcn3/ServiceAPI/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}}]"
 				}
 			]
 		}

@@ -2,20 +2,20 @@
 	"odata.metadata": "https://graph.windows.net/myorganization/$metadata#Collection(Microsoft.DirectoryServices.AddIn)",
 	"value": [
 		{
-			"id": "082E0831-14F5-4241-B519-BF909DD58E42",
+			"id": "EBAFC5FA-1D3E-4B25-A680-91DA45EF474B",
 			"type": "FileHandler",
 			"properties": [
 				{
 					"key": "actionMenuDisplayName",
-					"value": "Word"
+					"value": "Content Manager"
 				},
 				{
 					"key": "version",
-					"value": "2"
+					"value": "4"
 				},
 				{
 					"key": "fileTypeDisplayName",
-					"value": "Content Manager (Word)"
+					"value": "Content Manager"
 				},
 				{
 					"key": "fileTypeIconUrl",
@@ -31,7 +31,7 @@
 				},
 				{
 					"key": "actions",
-					"value": "[{\"type\":\"newFile\",\"url\":\"https://mfcm.xyz/CMWord?newfile=true\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"open\",\"url\":\"https://mfcm.xyz/ServiceAPI/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"preview\",\"url\":\"https://mfcm.xyz/ServiceAPI/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}}]"
+					"value": "[{\"type\":\"open\",\"url\":\"https://mfcm.xyz/ServiceAPI/OpenFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}},{\"type\":\"preview\",\"url\":\"https://mfcm.xyz/ServiceAPI/PreviewFile\",\"availableOn\":{\"file\":{\"extensions\":[\".tr5\"]}}}]"
 				}
 			]
 		}
