@@ -1,5 +1,4 @@
 import { OutlookConnector } from "./OutlookConnector";
-import { SERVICEAPI_BASE_URI } from "../trim-coms/trim-connector";
 import MockAdapter from "axios-mock-adapter";
 
 let responseType = "folders";

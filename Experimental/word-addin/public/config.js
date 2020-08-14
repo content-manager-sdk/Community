@@ -1,7 +1,7 @@
 window.config = {
-	BASE_URL: "https://desktop-39dgcn3",
+	BASE_URL: "/",
 	SERVICEAPI_PATH: "ServiceAPI",
-	MY_PATH: "/",
+	MY_PATH: "/ServiceAPI/office",
 	WEB_CLIENT: "cm",
 	DEFAULT_AUTO_OPEN: true,
 	SEARCH_CLAUSES: {
