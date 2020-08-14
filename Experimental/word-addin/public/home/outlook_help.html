@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width,initial-scale=1,shrink-to-fit=no"
+		/>
+		<meta name="theme-color" content="#000000" />
+		<link
+			rel="stylesheet"
+			href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"
+		/>
+
+		<link rel="shortcut icon" href="../favicon.ico" />
+
+		<title>Help</title>
+	</head>
+	<body class="ms-Fabric">
+		<h1 class="ms-fontSize-42 ms-fontWeight-semibold">Help</h1>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">Overview</h2>
+
+		<p>This add-in allows you to:</p>
+		<ul>
+			<li>
+				register an individual email in Content Manager,
+			</li>
+			<li>register the attachments on an email in Content Manager,</li>
+			<li>
+				move one or more emails to a linked folder causing them to be filed in
+				Content Manager,
+			</li>
+			<li>
+				create Checkin Styles which contain pre=set a particular Record Type and
+				default values for various Record properties,
+			</li>
+			<li>create a linked folder,</li>
+			<li>set the default Record Type</li>
+			<li>
+				pin the Record task pane to avoid having to access the menu repeatedly
+				when you have multiple emails to file or view in Content Manager.
+			</li>
+			<li>
+				view and edit the Record properties once an email is filed in Content
+				Manager, and
+			</li>
+			<li>
+				easily navigate to other Records related to this Record from the context
+				tab.
+			</li>
+		</ul>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			The Content Manager menu
+		</h2>
+		<p>
+			The menu for the Content Manager integration is found in the ribbon in
+			desktop Outlook but in the 'More actions' menu within a mail item in
+			Outlook Online. Throughout this documentation it will be referred to as
+			'the menu'.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">File a single email</h2>
+		<p>
+			To file a single email, or attachments from a single email:
+		</p>
+		<ul>
+			<li>select the email</li>
+			<li>from the menu select 'Record'</li>
+			<li>select a Record Type or Check in Style, then</li>
+			<li>enter the details and click 'Register in Content Manager.</li>
+		</ul>
+		<p>
+			If there are attachments on the email the first screen, instead of showing
+			the Record Type quick select, will allow you to choose one or more
+			attachments and/or the email itself. At this point you may also choose to
+			bypass the data entry form.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Create a Check in Style
+		</h2>
+
+		<p>
+			A Check in Style is simply a way to set up default values in Record
+			properties. For example if you have fields that always contain the same
+			value whenever you file email from a particular customer you might create
+			a Check in Style to save re-entering those values every time.To create a
+			Check in Style:
+		</p>
+		<ol>
+			<li>from the menu select 'Linked Folders',</li>
+			<li>
+				from the context menu in the linked folder list select the 'New Check in
+				Style' icon,
+			</li>
+			<li>select a Record Type and enter default values in fields, then</li>
+			<li>select 'Register in Content Manager'.</li>
+		</ol>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Create a linked folder
+		</h2>
+		<p>
+			A linked folder is a special type of Check in Style that has a link to one
+			of the folders in your mail box. This allows the server side component of
+			the integration to monitor these linked folders and register any mail item
+			that is moved to the folder according to the settings in the Check in
+			Style. Because the email is filed by a server process linked folders do
+			not allow you to access the data entry form when you move the item to the
+			folder. To create a linked folder:
+		</p>
+		<ol>
+			<li>from the menu select 'Linked Folders',</li>
+			<li>
+				from the context menu in the linked folder list select the 'New Linked
+				Folder' icon,
+			</li>
+			<li>
+				select either a pre-existing folder or choose 'Auto Create New Folder'
+				to have the integration create a folder for you,
+			</li>
+			<li>
+				select a Record Type and fill in any properties you want to be used as
+				defaults on items filed using this folder
+			</li>
+			<li>
+				the 'Processing' tab contains properties that determine how this folder
+				behaves, does it file only attachments on emails and does it delete mail
+				items from Outlook as the are filed to Content Manager.
+			</li>
+		</ol>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Record Context
+		</h2>
+
+		<p>
+			Once a document has been registered in Content Manager the the Task Pane
+			should open automatically whenever the document is opening. This Task Pane
+			contains a Context tab with quick links to those Records that are:
+		</p>
+		<ul>
+			<li>in the same container</li>
+			<li>have the same contacts, or</li>
+			<li>are related to.</li>
+		</ul>
+		<p>
+			The context pane may also be used to do a search for any Record in Content
+			Manager.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			User Options
+		</h2>
+		<p>The User Options menu item allows you to set the default Record Type.</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			User Interface Components
+		</h2>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">Quick Select</h3>
+		<p>
+			Fields in the Record entry form that contain Content Manager objects, such
+			as Container or Author, are populated using quick select fields. These
+			quick select fields are simpler than the corresponding fields in either
+			the desktop or web clients, you may find an object by:
+		</p>
+		<ul>
+			<li>
+				clicking the magnifying glass than selecting one of the shortcut icons
+				to the left of the of the list
+			</li>
+			<li>typing in the field to do a simple search (by name or title)</li>
+			<li>
+				clicking the spanner icon at the left of the field to toggle into
+				advanced search which allows you to use the Content Manager search
+				language in the field, for example `contains:all' to find a Records that
+				contain at least one other Record.
+			</li>
+		</ul>
+		<p>
+			Once you have found the appropriate object in the list select it to
+			populate the field.
+		</p>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Record Entry form tabs
+		</h3>
+		<p>
+			The tabs used in the record entry form have to fit into the width of the
+			task pane, for this reason they have an overflow feature. If there is more
+			than one tab in the Record Entry form and it is likely the combined size
+			of the tabs will be larger than the available width then overflowing tabs
+			will be shown not as tabs but in the overflow menu, represented by the an
+			ellipsis menu.
+		</p>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Properties Pane
+		</h3>
+		<p>
+			Records and Check in Places are displayed using the properties pane, this
+			is the pane that is displayed in the task pane when you select the
+			'Record' menu item for an item that exists in Content Manager. The
+			properties pane shows the list of properties you have selected to show in
+			the View Pane. To remove a propery from display use the X icon to the
+			right of the property value. To add a propert use the combobox at the
+			bottom of the pane to choose the property then select 'Add'. To reset the
+			displayed properties to the default choose 'Get default properties andf
+			fields for view pane' from the context menu.
+		</p>
+	</body>
+</html>

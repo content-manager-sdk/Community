@@ -21,7 +21,7 @@
 
 		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">Overview</h2>
 
-		<p>This word add-in is designed to allow you to:</p>
+		<p>This add-in allows you to:</p>
 		<ul>
 			<li>
 				register a document in CM by creating a Record linked to this document,
@@ -29,28 +29,182 @@
 			<li>check the document into the linked Record,</li>
 			<li>request deletion of the document in OneDrive,</li>
 			<li>finalise the Record,</li>
-			<li>link to the Record in the CM Web Client,</li>
-			<li>favourite the record,</li>
-			<li>view the record properties from within Word,</li>
+			<li>link to the Record in the Content Manager Web Client,</li>
+			<li>favorite the record,</li>
+			<li>view the record properties,</li>
 			<li>
 				request sharing of a Record already checked out by another user, and
 			</li>
-			<li>open a record from CM into Word.</li>
+			<li>open a record from Content Manager.</li>
 		</ul>
 
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Registering a document
+		</h2>
+		To register a document into Content Manager:
+		<ol>
+			<li>from the Content Manager ribbon tab select 'Record',</li>
+			<li>from the Task Pane choose a Record Type,</li>
+			<li>supply the required properties on the Record, then</li>
+			<li>click the 'Register in Content Manager' button.</li>
+		</ol>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Support in OneDrive local and web
+		</h2>
 		<p>
-			In addition to the functions available from Word there are operations that
-			are available from within the Web Client (under the 'More' menu),
-			including:
+			The integration should work seamlessly no matter how the file is opened
+			from OneDrive, including:
 		</p>
 		<ul>
-			<li>checkin the electronic document,</li>
-
-			<li>checkin, and delete from OneDrive (Word online),</li>
-			<li>edit in Word online</li>
+			<li>OneDrive Web Site,</li>
+			<li>locally synced OneDrive files,</li>
+			<li>open from OneDrive in desktop Office application, or</li>
+			<li>document stored in SharePoint document library</li>
 		</ul>
 
-		<h2>Using the Open dialog</h2>
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Office support
+		</h2>
+		<p>The only Office applications supported by this integration are:</p>
+		<ul>
+			<li>Word,</li>
+			<li>Excel, and</li>
+			<li>PowerPoint.</li>
+		</ul>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Viewing the Record properties
+		</h2>
+		<p>
+			Once the document has been filed in Content Manager the task pane should
+			open automatically to display the list of properties available in the
+			Content Manager view pane. If this task pane is not open it may be opened
+			using the same 'Record' menu option as was used to originally register
+			them document.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Transferring a document to Content Manager
+		</h2>
+		<p>
+			Once the document has been registered in Content Manager its content may
+			be updated in one of two ways:
+		</p>
+		<ul>
+			<li>
+				manually, by selecting the 'Check in an Electronic Document' option in
+				the Task Pane menu, or
+			</li>
+			<li>
+				automatically on close by selecting the 'Enable check in and delete on
+				close' option from the Task Pane menu.
+			</li>
+		</ul>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Re-opening a document from Content Manager
+		</h2>
+		<p>
+			If you have used the 'Check in and delete on close' method to update a
+			Record in Content Manager then a link to that Record will have been
+			created for you in OneDrive. This link may be used to re-open the Record.
+			Opening the record will cause it to be checked out to you and a copy of
+			the document placed in your 'Content Manager Documents' folder in
+			OneDrive.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Previewing a document from Content Manager
+		</h2>
+		<p>
+			If you have used the 'Check in and delete on close' method to update a
+			Record in Content Manager then a link to that Record will have been
+			created for you in OneDrive. This link may be used to preview the document
+			within Content Manager. The ellipsis menu on the document contains a
+			'preview' option, this will open a PDF rendition of the document from
+			within Content Manager for preview. From this preview you may to choose to
+			open the actual document which will cause it to be copied back into your
+			'Content Manager Documents' folder in OneDrive.
+		</p>
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Sharing a Record
+		</h2>
+		<p>
+			The integration will prompt you to send a request to share a Record if you
+			use the open dialog to find a Record in Content Manager that is already
+			checked out to someone elses OneDrive. If the owner of the checked out
+			Record allows sharing you will be able to edit the instance in their
+			OneDrive but only they will have permission to check the document into
+			Content Manager.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Paste Record Details
+		</h2>
+		<p>
+			The context menu in the task pane contains a 'paste' item which allows you
+			to paste the:
+		</p>
+		<ul>
+			<li>Record Title,</li>
+			<li>Record Number, or</li>
+			<li>a link to the Record in the Web Client.</li>
+		</ul>
+		<p>
+			These paste menu is availeble both in the context menu for the current
+			Record and also in the list of Records displayed inside the Context tab.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Record Context
+		</h2>
+
+		<p>
+			Once a document has been registered in Content Manager the the Task Pane
+			should open automatically whenever the document is opening. This Task Pane
+			contains a Context tab with quick links to those Records that are:
+		</p>
+		<ul>
+			<li>in the same container,</li>
+			<li>have the same contacts, or</li>
+			<li>are related to.</li>
+		</ul>
+		<p>
+			The context pane may also be used to do a search for any Record in Content
+			Manager.
+		</p>
+
+		<h2 class="ms-fontSize-28 ms-fontWeight-semibold">
+			User Interface Components
+		</h2>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">Quick Select</h3>
+		<p>
+			Fields in the Record entry form that contain Content Manager objects, such
+			as Container or Author, are populated using quick select fields. These
+			quick select fields are simpler than the corresponding fields in either
+			the desktop or web clients, you may find an object by:
+		</p>
+		<ul>
+			<li>
+				clicking the magnifying glass than selecting one of the shortcut icons
+				to the left of the of the list
+			</li>
+			<li>typing in the field to do a simple search (by name or title)</li>
+			<li>
+				clicking the spanner icon at the left of the field to toggle into
+				advanced search which allows you to use the Content Manager search
+				language in the field, for example `contains:all' to find a Records that
+				contain at least one other Record.
+			</li>
+		</ul>
+		<p>
+			Once you have found the appropriate object in the list select it to
+			populate the field.
+		</p>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">Open dialog</h3>
 		<p>
 			The open dialog allows you to search all Records in CM, even non
 			electronic ones. To use it:
@@ -66,5 +220,32 @@
 				opened.
 			</li>
 		</ol>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Record Entry form tabs
+		</h3>
+		<p>
+			The tabs used in the record entry form have to fit into the width of the
+			task pane, for this reason they have an overflow feature. If there is more
+			than one tab in the Record Entry form and it is likely the combined size
+			of the tabs will be larger than the available width then overflowing tabs
+			will be shown not as tabs but in the overflow menu, represented by the an
+			ellipsis menu.
+		</p>
+
+		<h3 class="ms-fontSize-28 ms-fontWeight-semibold">
+			Properties Pane
+		</h3>
+		<p>
+			Records and Check in Places are displayed using the properties pane, this
+			is the pane that is displayed in the task pane when you select the
+			'Record' menu item for an item that exists in Content Manager. The
+			properties pane shows the list of properties you have selected to show in
+			the View Pane. To remove a property from display use the X icon to the
+			right of the property value. To add a property use the combobox at the
+			bottom of the pane to choose the property then select 'Add'. To reset the
+			displayed properties to the default choose 'Get default properties and
+			fields for view pane' from the context menu.
+		</p>
 	</body>
 </html>
