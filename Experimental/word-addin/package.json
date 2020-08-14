@@ -2,7 +2,7 @@
 	"name": "word-addin",
 	"version": "0.1.0",
 	"private": true,
-	"homepage": "/CMWord/",
+	"homepage": "./",
 	"dependencies": {
 		"@microsoft/office-js": "^1.1.40",
 		"@types/fetch-mock": "^6.0.5",
