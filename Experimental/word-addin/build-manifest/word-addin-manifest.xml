@@ -10,7 +10,7 @@
 	<Id>edc27695-a13f-4394-8447-7ba90e045985</Id>
 
 	<!--Version. Updates from the store only get triggered if there is a version change. -->
-	<Version>1.7.207.0</Version>
+	<Version>1.7.307.0</Version>
 	<ProviderName>Micro Focus</ProviderName>
 	<DefaultLocale>en-US</DefaultLocale>
 	<!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -569,8 +569,8 @@
 			</bt:LongStrings>
 		</Resources>
 		<WebApplicationInfo>
-			<Id>6894e422-aa5e-4097-afd6-965ce110271e</Id>
-			<Resource>api://mfcm.xyz/CMWord/6894e422-aa5e-4097-afd6-965ce110271e</Resource>
+			<Id>b8da6d8c-c134-47ba-9a63-891e048b8b8a</Id>
+			<Resource>api://mfcm.xyz/b8da6d8c-c134-47ba-9a63-891e048b8b8a</Resource>
 			<Scopes>
 				<Scope>Sites.ReadWrite.All</Scope>
 				<Scope>user.read</Scope>
