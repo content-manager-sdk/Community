@@ -41,7 +41,10 @@ function getRoot() {
 		? location.origin
 		: location.origin + "/";
 
-	root = root + (appPath === "/" ? "" : appPath);
+	if (appPath.startsWith("/")) {
+		appPath = appPath.substr(1);
+	}
+	root = root + (appPath.startsWith("/") ? appPath.slice(1) : appPath);
 
 	root = root.endsWith("/") ? root : root + "/";
 
@@ -52,6 +55,13 @@ function openHelp(event) {
 	const root = getRoot();
 
 	open(root + "home/help.html", "_help");
+	event.completed();
+}
+
+function openOutlookHelp(event) {
+	const root = getRoot();
+
+	open(root + "home/outlook_help.html", "_help");
 	event.completed();
 }
 
