@@ -433,7 +433,7 @@ export class NewRecord extends React.Component<
 							)}
 							{formDefinition.Pages && (
 								<PrimaryButton className="trim-register" type="submit">
-									{appStore!.messages.web_Register}
+									{appStore!.messages.web_Save}
 								</PrimaryButton>
 							)}
 						</Stack>

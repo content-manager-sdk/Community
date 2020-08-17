@@ -998,7 +998,6 @@ export class TrimConnector implements ITrimConnector {
 				{ path: "Localisation", method: "get", data: params },
 				(data: any) => {
 					// temporary - need to go in TRIM Messages
-					data.Messages.web_Register = "Register in Content Manager";
 					data.Messages.web_SelectRecordType = "Select a Record Type";
 					data.Messages.web_SelectCheckinStyle = "Select Checkin Style";
 					data.Messages.web_UseCheckinStyles = "Use Checkin Styles";

@@ -80,7 +80,7 @@ describe("Record Type Picker", function () {
 			EmailPath: null,
 		});
 		appStore.setMessages({
-			web_Register: "Register",
+			web_Save: "Register",
 			web_SelectRecordType: "Select a Record Type",
 			web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 		});

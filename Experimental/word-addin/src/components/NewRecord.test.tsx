@@ -184,36 +184,13 @@ describe("New Record layout", function () {
 		});
 	};
 
-	// const mockStore = {
-	// 	RecordUri: 0,
-	// 	RecordProps: {},
-	// 	messages: {
-	// 		web_Register: "Register",
-	// 		web_SelectRecordType: "Select a Record Type",
-	// 		web_RecordTypeRequiresForm: "NeedsDataEntryForm",
-	// 	},
-	// 	documentInfo: { Options: {}, URN: "test_urn", EmailPath: null },
-	// 	createRecord: (recordUri, recordProps) => {
-	// 		mockStore.RecordUri = recordUri;
-	// 		mockStore.RecordProps = recordProps;
-
-	// 		return new Promise(function(resolve) {
-	// 			resolve();
-	// 		});
-	// 	},
-	// 	FileName: "default title",
-	// 	setError: (message: string) => {
-	// 		errorMessage = message;
-	// 	},
-	// };
-
 	let mockStore = new AppStoreWord(null, null);
 	mockStore.isEmail = function () {
 		return isEmail;
 	}.bind(mockStore);
 	mockStore.setDocumentInfo({ Uris: [], URN: "test_urn" });
 	mockStore.messages = {
-		web_Register: "Register",
+		web_Save: "Register",
 		web_SelectRecordType: "Select a Record Type",
 		web_RecordTypeRequiresForm: "NeedsDataEntryForm",
 	};
