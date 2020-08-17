@@ -299,6 +299,7 @@ export class AppStoreBase implements IAppStore {
 					{
 						...properties,
 						RecordFilePath: fileName,
+						CheckinAs: fileName,
 					},
 					fields
 				);

@@ -372,6 +372,7 @@ export class OutlookAttachments extends React.Component<
 							const selectedAttachment = selectedAttachments.find(
 								(a) => a.Id === attachment.Id
 							);
+
 							return (
 								<React.Fragment key={attachment.Id}>
 									<div key={attachment.Id}>
