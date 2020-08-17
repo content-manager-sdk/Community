@@ -10,7 +10,12 @@ import {
 import { OutlookConnector } from "../../office-coms/OutlookConnector";
 import { IOutlookAttachment } from "../../office-coms/OutlookConnector";
 import { IOfficeConnector } from "../../office-coms/office-connector";
-import { Checkbox, PrimaryButton, Stack } from "office-ui-fabric-react";
+import {
+	Checkbox,
+	PrimaryButton,
+	Stack,
+	DefaultButton,
+} from "office-ui-fabric-react";
 import NewRecord from "../NewRecord";
 import BaseObjectTypes from "../../trim-coms/trim-baseobjecttypes";
 import RecordTypePicker from "../RecordTypePicker/RecordTypePicker";
@@ -422,6 +427,17 @@ export class OutlookAttachments extends React.Component<
 							checked={autoCreate}
 						/>
 						<hr />
+						{(appStore!.PreservedUris || []).length > 0 && (
+							<DefaultButton
+								text={appStore!.messages.web_cancel}
+								onClick={() => {
+									appStore!.setDocumentInfo({
+										...appStore!.documentInfo,
+										Uris: appStore!.PreservedUris,
+									});
+								}}
+							/>
+						)}
 						<PrimaryButton
 							key="next"
 							text={appStore!.messages.vb_nts_Next}
