@@ -23,11 +23,11 @@ Since the page numbering is no longer required you may choose to optimise the se
 
 ## Hiding the page number
 If you have optimised the search the page number and 'Get Count' button will still be displayed at the bottom of the page, you may choose to hide these, to do this:
- 1) edit the file Views\Shared\searchResults.cshtml
- 2) add the code 'if (!(this.Request.Dto is HP.HPTRIM.ServiceModel.Records))' after the else statement that surrounds the page number code
+ 1) edit the file Views\Shared\searchResults.cshtml, and
+ 2) add the code 'if (!(this.Request.Dto is HP.HPTRIM.ServiceModel.Records))' after the else statement that surrounds the page number code.
  
 ### Before
-  ![image 1](code_before.PNG)
+  ![code before](code_before.png)
   
 ### Before
-  ![image 1](code_after.PNG)
+  ![code after](code_after.png)
