@@ -1,0 +1,45 @@
+﻿    
+@if (this.Request.Dto is HP.HPTRIM.ServiceModel.Records)
+{
+    <script>
+        var scrollLoad = true;
+        var start = 0;
+        var pageSize = 15;
+        $(window).scroll(function () {
+            if (scrollLoad && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+
+                scrollLoad = false;
+
+                var searchParams = new URLSearchParams(window.location.search);
+                if (start === 0) {
+                    start = searchParams.get("start");
+                }
+                start = (Number(start) || 1) + pageSize
+
+                searchParams.set("start", start);
+                searchParams.set("pageSize", pageSize);
+                searchParams.set("format", "json");
+
+               var pageUrl = window.location.origin + window.location.pathname + "?" + searchParams.toString();
+
+                $.get(pageUrl, function (response) {
+                    if (response.Results && response.Results.length > 0) {
+                        
+                        $.each(response.Results, function (idx, row) {
+                            var rowUrl = window.location.origin + location.pathname + '/' + row.Uri;
+
+                            var rowHtml = '<tr><td class="row-icon"><div>' + row.RecordExtension.Value + '</div>';
+                            rowHtml += '<img src="/WebDrawer/TrimIcon/w48h48/' + row.RecordRecordType.Icon.Id + '.png">';
+                            rowHtml += '</td></td><td><a class="prop-val" href="' + rowUrl + '">' + row.RecordTitle.Value + '</a></td>';
+                            rowHtml += '<td><a class="prop-val" href="' + rowUrl +'">' + row.RecordNumber.Value + '</a></td></tr > ';
+
+
+                            $(".trim-list tr:last").after(rowHtml);
+                        });
+                        scrollLoad = response.HasMoreItems;
+                    }
+                })
+            }
+        });
+    </script>
+}
