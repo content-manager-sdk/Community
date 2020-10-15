@@ -31,3 +31,16 @@ If you have optimised the search the page number and 'Get Count' button will sti
   
 ### Before
   ![code after](code_after.png)
+  
+## A modification for 94 and before
+This sample was built in CM 10, which has changed the way icons are handled.  If you look in custom_scripts.cshtml you will see the icon IMG HTML like this: 
+
+```
+<img src="/WebDrawer/TrimIcon/w48h48/' + row.RecordRecordType.Icon.Id + '.png">
+```
+
+In 94 and earlier versions it should look like this:
+
+```
+<img src="images/record_types/' + row.RecordRecordType.Icon.Id + '_x48.png">
+```
