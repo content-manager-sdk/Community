@@ -1,5 +1,10 @@
 var NAVTREEINDEX26 =
 {
+"release_notes.html#rn_92_lookupsets":[2,2,2],
+"release_notes.html#rn_92_rt_contains_searching":[2,2,1],
+"release_notes.html#rn_93":[2,1],
+"release_notes.html#rn_93_TraySortAndFilterUserOptions":[2,1,15],
+"release_notes.html#rn_93_archive":[2,1,7],
 "release_notes.html#rn_93_audits":[2,1,1],
 "release_notes.html#rn_93_consignment":[2,1,4],
 "release_notes.html#rn_93_database":[2,1,10],

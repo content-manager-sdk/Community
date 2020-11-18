@@ -377,6 +377,7 @@ var searchData=
   ['bob_5finfo_5flicenceseatshdg',['bob_info_licenceSeatsHdg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca34c6b7c49774af509fa5c97fd1efab58',1,'HP::HPTRIM::SDK']]],
   ['bob_5finfo_5fmainmenudetails',['bob_info_mainMenuDetails',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca76b9a16cdc3b1b03cc4fab686b76ee99',1,'HP::HPTRIM::SDK']]],
   ['bob_5finfo_5fnetworkhdg',['bob_info_networkHdg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca2a7ea14f57e4626c238dabef57c2852a',1,'HP::HPTRIM::SDK']]],
+  ['bob_5finfo_5foptionalmoduleshdg',['bob_info_optionalModulesHdg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca2cea6f90863222d94b4f7f4a71ab2ebb',1,'HP::HPTRIM::SDK']]],
   ['bob_5finfo_5fperformancehdg',['bob_info_performanceHdg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca699cd67e0beb0d5b1acb46b4e4f9e37e',1,'HP::HPTRIM::SDK']]],
   ['bob_5finfo_5fpermissionshdg',['bob_info_permissionsHdg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca7dea00c56e68b53e9a99b475d3bf4179',1,'HP::HPTRIM::SDK']]],
   ['bob_5finfo_5fsecurityhdg',['bob_info_securityHdg',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca4b570d378cd28f1eff3d79c50a160676',1,'HP::HPTRIM::SDK']]],

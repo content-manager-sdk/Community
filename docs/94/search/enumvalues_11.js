@@ -2129,7 +2129,7 @@ var searchData=
   ['recshowrequests',['RecShowRequests',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a49ac42e8e87bbb5cac5c6a8d5ed5f937a706a3c97ee1c363902ea67479c13958b',1,'HP::HPTRIM::SDK']]],
   ['recshowworkflow',['RecShowWorkflow',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a49ac42e8e87bbb5cac5c6a8d5ed5f937adf23d1b6a8ea5e3c6efc2b38a47cbbd0',1,'HP::HPTRIM::SDK']]],
   ['recsopened',['RecsOpened',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a2b4cd755c49b88450aee3ad6f46d9c5caa0982bc03bdd829997fd324a10787b57',1,'HP::HPTRIM::SDK']]],
-  ['recsupercopy',['RecSuperCopy',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a49ac42e8e87bbb5cac5c6a8d5ed5f937a17f504e4c61d3cd323db606f4c0422ea',1,'HP.HPTRIM.SDK.RecSuperCopy()'],['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a88829ac01c8adfd2c4f22183e9bf1d33aa9471e61bdee2a105119337615e77485',1,'HP.HPTRIM.SDK.RecSupercopy()']]],
+  ['recsupercopy',['RecSupercopy',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a88829ac01c8adfd2c4f22183e9bf1d33aa9471e61bdee2a105119337615e77485',1,'HP.HPTRIM.SDK.RecSupercopy()'],['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a49ac42e8e87bbb5cac5c6a8d5ed5f937a17f504e4c61d3cd323db606f4c0422ea',1,'HP.HPTRIM.SDK.RecSuperCopy()']]],
   ['recsyncmaildates',['RecSyncMailDates',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a49ac42e8e87bbb5cac5c6a8d5ed5f937ad0c5bb397a2ce31bea2d6a22c5e03b52',1,'HP::HPTRIM::SDK']]],
   ['rectangle',['Rectangle',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a456a0d43ae717b77d2ec2748aa220fa1ace9291906a4c3b042650b70d7f3b152e',1,'HP::HPTRIM::SDK']]],
   ['rectasktray',['RecTaskTray',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a88829ac01c8adfd2c4f22183e9bf1d33a8bc00dfc4f61715e21c4057a65329649',1,'HP::HPTRIM::SDK']]],
