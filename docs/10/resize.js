@@ -67,7 +67,7 @@ function initResizable()
   function restoreWidth(navWidth)
   {
     var windowWidth = $(window).width() + "px";
-    content.css({marginLeft:parseInt(navWidth)+barWidth+"px"});
+    content.css({marginLeft:parseInt(navWidth)+barWidth+10+"px"});
     sidenav.css({width:navWidth + "px"});
   }
 
