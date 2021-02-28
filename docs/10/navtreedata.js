@@ -266,18 +266,16 @@ var NAVTREE =
     ] ],
     [ "Zero Footprint OfficeIntegration", "zero_office.html", [
       [ "Components", "zero_office.html#autotoc_md61", null ],
-      [ "Requirements", "zero_office.html#autotoc_md62", [
-        [ "ServiceAPI", "zero_office.html#autotoc_md63", [
-          [ "ServiceAPI Configuration", "zero_office.html#autotoc_md64", [
-            [ "Office Integration configuration", "zero_office.html#autotoc_md65", null ],
-            [ "Authentication", "zero_office.html#autotoc_md66", null ]
-          ] ]
-        ] ],
-        [ "Manifests", "zero_office.html#autotoc_md67", null ],
-        [ "Email Link", "zero_office.html#autotoc_md68", null ],
-        [ "OneDrive file handler", "zero_office.html#autotoc_md69", [
-          [ "Refreshing the file handler", "zero_office.html#refresh_access_token", null ]
+      [ "Requirements", "zero_office.html#autotoc_md62", null ],
+      [ "ServiceAPI", "zero_office.html#autotoc_md63", [
+        [ "ServiceAPI Configuration", "zero_office.html#autotoc_md64", [
+          [ "Authentication", "zero_office.html#autotoc_md66", null ]
         ] ]
+      ] ],
+      [ "Manifests", "zero_office.html#autotoc_md67", null ],
+      [ "Email Link", "zero_office.html#autotoc_md68", null ],
+      [ "OneDrive file handler", "zero_office.html#autotoc_md69", [
+        [ "Refreshing the file handler", "zero_office.html#refresh_access_token", null ]
       ] ]
     ] ],
     [ "Programming in Content Manager", "programming_guide.html", [
