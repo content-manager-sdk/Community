@@ -54,6 +54,7 @@ var class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record =
     [ "CreateNewVersion", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a0031aaaca9d38ce416d36a2d5755220d", null ],
     [ "DeleteAndDeleteContents", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a52439cf4cb8afcc509b47f36c12f5a38", null ],
     [ "DeleteAndUnlinkContents", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a79758f6ac8bc78023e4c27e7d89729f4", null ],
+    [ "DeleteFromRecycleBin", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a14259a46485412f012ae5b52842d9dd3", null ],
     [ "DetachDocument", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a5eaed6ab09393b6956966e9b450a4b4e", null ],
     [ "DetachUserLabel", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#abc7ee9aa0aaaceb8f7efcaea47bd6249", null ],
     [ "DiscardWorkingCopy", "class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a4318fecce02bbd4214ec7d7712164610", null ],

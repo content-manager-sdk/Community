@@ -470,6 +470,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3264d2fb342381dd01e13b85125ebb31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a3264d2fb342381dd01e13b85125ebb31">RestoreFromRecycleBin</a> ()</td></tr>
 <tr class="memdesc:a3264d2fb342381dd01e13b85125ebb31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores the record back from the recycle bin. The record will be restored to the state it was in prior to being placed in the recycle bin.  <a href="#a3264d2fb342381dd01e13b85125ebb31">More...</a><br /></td></tr>
 <tr class="separator:a3264d2fb342381dd01e13b85125ebb31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14259a46485412f012ae5b52842d9dd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a14259a46485412f012ae5b52842d9dd3">DeleteFromRecycleBin</a> ()</td></tr>
+<tr class="memdesc:a14259a46485412f012ae5b52842d9dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a record that is currently in the recycle bin  <a href="#a14259a46485412f012ae5b52842d9dd3">More...</a><br /></td></tr>
+<tr class="separator:a14259a46485412f012ae5b52842d9dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e1eb4e9d88e3c18ed35211a1cb7a272"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a7e1eb4e9d88e3c18ed35211a1cb7a272">ChangeClient</a> (<a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html">Record</a> newClient)</td></tr>
 <tr class="memdesc:a7e1eb4e9d88e3c18ed35211a1cb7a272"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the client associated with this matter record - for use when using the client/matter feature. Note that this method automatically commits the change, so no <a class="el" href="class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_trim_main_object.html#a240e040efa984cd87e167b66f94c01b0" title="Permanently commits all changes made to this object (and all its child objects). For new objects a ne...">Save()</a> is necessary and it should not be used with other transactions.  <a href="#a7e1eb4e9d88e3c18ed35211a1cb7a272">More...</a><br /></td></tr>
 <tr class="separator:a7e1eb4e9d88e3c18ed35211a1cb7a272"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2470,6 +2473,23 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Deletes this record and disassociates any contents from the container (i.e. all contents become 'unfiled'.) </p>
+
+</div>
+</div>
+<a class="anchor" id="a14259a46485412f012ae5b52842d9dd3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HP.HPTRIM.SDK.Record.DeleteFromRecycleBin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Delete a record that is currently in the recycle bin </p>
 
 </div>
 </div>

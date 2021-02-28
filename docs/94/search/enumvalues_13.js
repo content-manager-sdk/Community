@@ -216,6 +216,7 @@ var searchData=
   ['tem_5ferrorloadingcachedata',['tem_errorLoadingCacheData',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca747fe6c64067bdd1ea4cf5a185ff831c',1,'HP::HPTRIM::SDK']]],
   ['tem_5ferrors',['tem_errors',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7ccabab9d094867937dee3d29af6be169a1a',1,'HP::HPTRIM::SDK']]],
   ['tem_5feventprocaddinlimitreached',['tem_eventProcAddInLimitReached',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca739487307f3d636a6647de2987c7af39',1,'HP::HPTRIM::SDK']]],
+  ['tem_5fexpirydateaftermspdate',['tem_expiryDateAfterMspDate',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca814bb54a23a805140ed5e6ffb0506641',1,'HP::HPTRIM::SDK']]],
   ['tem_5fexpirydateexpired',['tem_expiryDateExpired',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca85e776dc46a04404f8ca5a17e9486367',1,'HP::HPTRIM::SDK']]],
   ['tem_5fexpirydatetodaytomorrow',['tem_expiryDateTodayTomorrow',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7ccacafc11a14df105431a0e8c1e9f7e534e',1,'HP::HPTRIM::SDK']]],
   ['tem_5fexport',['tem_export',['../namespace_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k.html#a9de967b2ebe579684d69bd0e5853b7cca7465adfc4a86e2ae9b1bba2381e605c8',1,'HP::HPTRIM::SDK']]],

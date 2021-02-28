@@ -14,6 +14,7 @@ var searchData=
   ['deleteanddeletecontents',['DeleteAndDeleteContents',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a52439cf4cb8afcc509b47f36c12f5a38',1,'HP::HPTRIM::SDK::Record']]],
   ['deleteandunlinkcontents',['DeleteAndUnlinkContents',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a79758f6ac8bc78023e4c27e7d89729f4',1,'HP::HPTRIM::SDK::Record']]],
   ['deleteex',['DeleteEx',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_location.html#a7f45a4811c772a75dcb782c1e26d48ea',1,'HP.HPTRIM.SDK.Location.DeleteEx()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_security_level.html#a5b7bceb0c7770a0a41aec98edd48f36f',1,'HP.HPTRIM.SDK.SecurityLevel.DeleteEx()'],['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_user_label.html#a3daf31ebc5b32d1acf4727bf95739878',1,'HP.HPTRIM.SDK.UserLabel.DeleteEx()']]],
+  ['deletefromrecyclebin',['DeleteFromRecycleBin',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_record.html#a14259a46485412f012ae5b52842d9dd3',1,'HP::HPTRIM::SDK::Record']]],
   ['deleteitem',['DeleteItem',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_page_definition.html#a0c86c6d53e7b39c581e222ff540169cb',1,'HP::HPTRIM::SDK::PageDefinition']]],
   ['deletepage',['DeletePage',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_form_definition.html#af6693c7b57e62d79a448a572831bbe64',1,'HP::HPTRIM::SDK::FormDefinition']]],
   ['desktophelper',['DesktopHelper',['../class_h_p_1_1_h_p_t_r_i_m_1_1_s_d_k_1_1_desktop_helper.html#a6358b6cc3137262805d16136e68466c4',1,'HP::HPTRIM::SDK::DesktopHelper']]],
