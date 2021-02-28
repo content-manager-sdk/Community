@@ -1,0 +1,25 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options =
+[
+    [ "CopyRecordOptions", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a9018a111837ac6b0e4cc06c80a387333", null ],
+    [ "setNewVersionDocument", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a0b84196dc07c304c3b99e07a20404fd3", null ],
+    [ "setNewVersionDocument", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a1fa40c506998f8c430bec8f92420070f", null ],
+    [ "setSuggestedNumbers", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a9ff78589e45f12c2a98f6b889b30b5ed", null ],
+    [ "ContainerRecord", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a15a4bceb5cec1ce4d636261f601bfb91", null ],
+    [ "CopyAccessControls", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#ab5ec05001d197a5e7e3f444997201b37", null ],
+    [ "CopyActions", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a090f52c79ef874eb981b7b94c0319451", null ],
+    [ "CopyAlternateContainers", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#ac255c5f6f29b086b5ee0e670224aa3e9", null ],
+    [ "CopyClassification", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a5af21083bac1020c591806124ce4dece", null ],
+    [ "CopyContacts", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a8c1bf03f24b7b0eefe1d04ba45b26d3d", null ],
+    [ "CopyCustomFieldValues", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#afb46df4611b5c95dd64c9e473ccaa9bc", null ],
+    [ "CopyDates", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#affdac4cae6253550c4bf12a05fc3a29c", null ],
+    [ "CopyDisposition", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a1f27e87684a60fb8dd925d3d1ea9cd39", null ],
+    [ "CopyDocument", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#ae5d7341d4c4601989ff805df6562d66f", null ],
+    [ "CopyExclusions", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#af1d543eefbdcc5218ccc5d6cd88ac027", null ],
+    [ "CopyKeywords", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#ae410c9cd88f1b0123a3dc8bc1f85ad14", null ],
+    [ "CopyNotes", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#ac36e43f2e393017ecfab3f95d5a7ffc9", null ],
+    [ "CopyRelatedTo", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a7892009f680ce962a946ec1a3247716a", null ],
+    [ "CopySchedule", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a1b262283d891f6fb5cd13bbfc79a0b14", null ],
+    [ "CopySecurity", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a71f2c88953f5ed0f52428fecd1fb311c", null ],
+    [ "PurgeOldVersionRevisions", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#a5ef3cfd46130aa6def3f897ebe093564", null ],
+    [ "RelateCopyToOriginal", "class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html#ac5d3e4320bbc3e2a7eb84e3d93015a20", null ]
+];

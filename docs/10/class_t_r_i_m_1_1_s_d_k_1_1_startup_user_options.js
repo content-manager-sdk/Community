@@ -1,0 +1,28 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options =
+[
+    [ "StartupUserOptions", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a558bc42da4f10a671d4016f568657a3c", null ],
+    [ "ActivityDue", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#aa8bd50a85a51a291b009bd6594a6014b", null ],
+    [ "CheckinStyles", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#aa70c6a7e030c009372e4ca09bf7a99eb", null ],
+    [ "ClassificationBrowser", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a6744725aa8e279f30baf159ce9b11113", null ],
+    [ "ClientMatterHierarchy", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a94a759ed81a2f0c8879633e3c034b0f9", null ],
+    [ "Dashboard", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#aa100e9650dcc735a2409701f1984b912", null ],
+    [ "DocumentsCheckedOut", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a6c6aabb7162247e53907522c979cc2c1", null ],
+    [ "DueTray", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a1a2161312ed2fb95b5a5fcd6d44a156d", null ],
+    [ "Explorer", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#ac7eced82c59dfa768be7af5dd8c451a6", null ],
+    [ "FavoriteClassifications", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#ae25d68660440ad4d293a677d83e3c45c", null ],
+    [ "FavoriteLocations", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a7c8581f1a6e1bcc144fccbd37a158d71", null ],
+    [ "FavoriteRecords", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#acd7b9827153bc629481ef3930af4e961", null ],
+    [ "FavoriteSearches", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a136f9608f0254c2f9befb8af322b8280", null ],
+    [ "FavoriteWorkflows", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#ac42099c48b1750a58d393ec2e661cbeb", null ],
+    [ "Find", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#aeb8c12550405e3ba2cd829c93a47fb82", null ],
+    [ "InDueTray", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#ae83c429920338e1f21b9ad4b61456931", null ],
+    [ "InTray", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#abd2f021feda6ebcae381400f15507a6b", null ],
+    [ "NewItem", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a713c8d67a4d52508df9c040ab686b452", null ],
+    [ "OfflineRecords", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a8757f5c2c3d25eadc0bfdc4cfdac2df5", null ],
+    [ "RecentContainers", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a36ede9f2bda3c51a9423d951cb5ecdff", null ],
+    [ "RecentDocuments", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a4daa6605d0a6ead482f21ed4419fdb73", null ],
+    [ "Requests", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#aad856666181356284db8196496593902", null ],
+    [ "TodoItems", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a0e280ed6e61721bbc8e94975fc46969a", null ],
+    [ "UserLabels", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#ac3a3e723d6bcdd77f1c56573cb985dea", null ],
+    [ "WorkTray", "class_t_r_i_m_1_1_s_d_k_1_1_startup_user_options.html#a41e0faadc09fe2dcc68975af3b12c355", null ]
+];

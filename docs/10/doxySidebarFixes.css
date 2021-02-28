@@ -1,0 +1,22 @@
+
+/* JL: adjust side nav bar so it doesnt stick out */
+#side-nav {
+  padding-left: 15px;
+}
+
+/* JL: adjust padding on arrow items in side menu */
+#nav-tree-contents ul.children_ul div.item>a {
+    padding-right: 16px;
+}
+
+h1 {
+    font-size: 1.75rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1.12rem;
+}

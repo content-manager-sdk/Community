@@ -1,0 +1,25 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_share_point_item =
+[
+    [ "SharePointItem", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a4f675013eeaaa5a9a35f70d59369c5f2", null ],
+    [ "SharePointItem", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a12803ac71ef5ef2d3b41475f27022b37", null ],
+    [ "SharePointItem", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a12c13ce80aeb92fcc1c053055f69c2a2", null ],
+    [ "InitSpUniqueIdAndProperties", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#aa96c44934e56c33d77f78fc67ceda61e", null ],
+    [ "ReindexContent", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#aedec3947d090802b787e5cea0c28be90", null ],
+    [ "Relocate", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a22c3d41269ab3b308da1489b4b40da48", null ],
+    [ "ResetSynchronizationFlag", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a47f342275dd447fa57abfe2797a2731a", null ],
+    [ "IsDocument", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#ab88cd0c47662abe861801b122409fa4c", null ],
+    [ "ItemURL", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a79f37e30881e231431abbdb7c4ef5f5c", null ],
+    [ "ListGUID", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#af5c74b11c7470537f5966082451e0871", null ],
+    [ "ListItemId", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#ab3ea3f9546ac850625882844919ca777", null ],
+    [ "ListItemRecord", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#ab1cd8a66250876891f6d6c0e4a2b645b", null ],
+    [ "ListRecord", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a7f0f1a9762b1139e5c25a0a2760ff510", null ],
+    [ "ListType", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a608ca5e5c3090040e5dd30944e32958c", null ],
+    [ "ListURL", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a288c2d67a66105b7a0e656ee5d37572a", null ],
+    [ "ModifiedTitle", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#ad12325f2809dc488991ff99c11af3904", null ],
+    [ "Originator", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a60dd5826972ff1f3ae54809d08b844e6", null ],
+    [ "Relationship", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a8717dfdb1aba267e52f37a95724131c0", null ],
+    [ "Status", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a159b5f877c6346c633fa89396965441b", null ],
+    [ "SynchPending", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a3d4368e5f322fc686ed89123e70ab303", null ],
+    [ "UniqueId", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#aeb33c31fe04efbb9f966ff764aac798f", null ],
+    [ "Viewable", "class_t_r_i_m_1_1_s_d_k_1_1_share_point_item.html#a5f3c366e14228be63316fbd387e3f1d6", null ]
+];

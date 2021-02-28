@@ -1,0 +1,27 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def =
+[
+    [ "SearchClauseDef", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#af3e678111469569e942ba2febff48bbe", null ],
+    [ "CanSort", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a2fcd5a486f98faaf2681d60451e89a9d", null ],
+    [ "GetEnumTypeParameter", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a70660835dc480375c1082ef9b0efd5e0", null ],
+    [ "GetObjectTypeParameter", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a65ec4c23d96d7ba43e7bfe78a5a7cb7d", null ],
+    [ "GetParametersTooltip", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#aecc2358391aba9b78dc84c6a54834ac9", null ],
+    [ "GetSortTooltip", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a39ca4721c5b3cdd10ded8a84c572491b", null ],
+    [ "GetTooltip", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a37f73c5423300605c886dcb8aaac7373", null ],
+    [ "IsActivatedForType", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#aea8b9004a37f14b19d22f7a45dec7c2e", null ],
+    [ "IsAvailableForType", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#ace7048a19d1acceeba1f6b92ea71a494", null ],
+    [ "IsBlocked", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a671312259679445cb70cf43db3996b17", null ],
+    [ "IsRelevantForType", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a5c9243a3341035a5743b7a684225ec19", null ],
+    [ "BasedOnProperty", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a9ec6eec185ddfd5ca7d78753b1de6548", null ],
+    [ "Caption", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a5430d002567bb32b01b53c4ab5ce26be", null ],
+    [ "Icon", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#aad4a2ee64d3bd57abb29805ff0b38603", null ],
+    [ "Id", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#afa5b4887bac285b16cdc2ca936e01d53", null ],
+    [ "InternalName", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a4321a8069bc2af59f0dbe9b711960df3", null ],
+    [ "MethodGroup", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#ae9a387fb16e0c6b44484154612c723bb", null ],
+    [ "Name", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#acf1745c04e1a0ee85fd081eaefafcb70", null ],
+    [ "NeedsAccessControlTypeParameter", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a892d79e08e3344cf3b58fff7af56feac", null ],
+    [ "NeedsRelationshipTypeParameter", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#affbe2b5d9fa2c22be6ee8b712c6f6eff", null ],
+    [ "NeedsSubQueryObjectTypeParameter", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a8aea22c471c84be8de1f3547022ba564", null ],
+    [ "OnlyForType", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#ae93a970f30615a3f2f10b284c041bed1", null ],
+    [ "ParameterFormat", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a25caff1a9e0c96c1563a249ebdf6a8e5", null ],
+    [ "SearchParameterFormat", "class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html#a4d986e9ebb9160416a17f856627da08e", null ]
+];

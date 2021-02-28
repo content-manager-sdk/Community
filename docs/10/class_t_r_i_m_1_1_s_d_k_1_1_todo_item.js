@@ -1,0 +1,27 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_todo_item =
+[
+    [ "TodoItem", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a8be8bd35750609d94521b4dc18063bce", null ],
+    [ "TodoItem", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a0eec224af011610fb0faf13958ca3e6d", null ],
+    [ "TodoItem", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a6b5613243f7bac7e6572ed8fca464fb6", null ],
+    [ "GetFieldValue", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a44debd9be6c6bf45ed0f6f3c37b6257e", null ],
+    [ "GetFieldValueAsString", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a9c6b66254b7a4c73abd76911ab826738", null ],
+    [ "SetFieldValue", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a4d2ad7cb8a903dc381812c64261c22b4", null ],
+    [ "SetNotes", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a40d5c97e65e3975076d367880f5f548f", null ],
+    [ "AccessControlList", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#aed78654557394862cf808f73864d02d0", null ],
+    [ "AllReferences", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a84ad1e6452f736f72cb2c3d8a56d88f8", null ],
+    [ "Assignee", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#ab4cc52c7dc624570495fcf480231f9d6", null ],
+    [ "CanAddToNotes", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a44ae2823b68fd10aefd30f3e49b1dd56", null ],
+    [ "CanModifyExistingNotes", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a476598b8cd3cba9751c61a98c0b6fe9e", null ],
+    [ "ChildItemReferences", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#aad04fcdd3d5a2600146c0a3a2f5198cc", null ],
+    [ "CreatedBy", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a97ff4e46e94c11a504b30cf4775c592d", null ],
+    [ "DateCreated", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#aa4db1b92aef4cd094b81f29c7f358220", null ],
+    [ "DateDone", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#ab39cdaa27dd4589437555264f5d541f2", null ],
+    [ "DateDue", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#ac82fcf9e34def351e676b2a0eb9b7ffe", null ],
+    [ "Description", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a6736cbe1bafa64222a778d7c882cdece", null ],
+    [ "IsComplete", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a5320e19ea99ea74d29f9037960202ccc", null ],
+    [ "IsOverdue", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#af32227542d0b4dca1ef187b3e40df4fb", null ],
+    [ "ItemPriority", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a1d4214b40fa7084bebe1aa1b217bd239", null ],
+    [ "Notes", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#afea08d61572c9c96c00f5928c7ff84dd", null ],
+    [ "NotifyByEmail", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#aeb20f4cf41d2752a346ae2eecbf1c1bb", null ],
+    [ "Todo", "class_t_r_i_m_1_1_s_d_k_1_1_todo_item.html#a3f3620cf447b83990503c611efe4c4df", null ]
+];
