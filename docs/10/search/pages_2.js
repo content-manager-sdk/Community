@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['open_20id_20connect_20authentication_18986',['Open ID Connect Authentication',['../oidc.html',1,'']]]
+  ['programming_20in_20content_20manager_19788',['Programming in Content Manager',['../programming_guide.html',1,'']]]
 ];

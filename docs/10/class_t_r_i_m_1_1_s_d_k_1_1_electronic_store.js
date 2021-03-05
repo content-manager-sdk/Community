@@ -22,6 +22,8 @@ var class_t_r_i_m_1_1_s_d_k_1_1_electronic_store =
     [ "LoginPassword", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a2159e6a6d1d4a0cc751e37c0ab43ecdd", null ],
     [ "MaxFolderSize", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a2405e5713fa4ba84eb738a5d63ce1404", null ],
     [ "Name", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#ab9802e2676ab4695d0e439c8c2692958", null ],
+    [ "NotifyHolds", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a6ddfbe084cdc0789057bec4d8e9d88b6", null ],
+    [ "NotifyMetadata", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a63c36a72fc679fe4ebe963d37e3977fe", null ],
     [ "Path", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#afcd16cd23510ff31254d1d1b03f7adff", null ],
     [ "SecCompliant", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a5fde83b06d1fdb3029e57d2a3932d9a5", null ],
     [ "StorageTier", "class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a0e7bc1c3bdb72b8741e49f672bad95e2", null ],

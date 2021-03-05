@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['welcome_20to_20the_20content_20manager_20sdk_20documentation_18991',['Welcome to the Content Manager SDK Documentation',['../index.html',1,'']]]
+  ['zero_20footprint_20officeintegration_19793',['Zero Footprint OfficeIntegration',['../zero_office.html',1,'']]]
 ];

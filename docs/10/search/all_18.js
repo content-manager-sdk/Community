@@ -1,11 +1,19 @@
 var searchData=
 [
-  ['xc7_5fexcel2003_5fxls_9018',['xc7_Excel2003_xls',['../namespace_t_r_i_m_1_1_s_d_k.html#a74a97d15ed1a04c245b32580daff2136a8fbc00596e3b0e2ab97e8c8bf38d6325',1,'TRIM::SDK']]],
-  ['xc7_5fexcel2003tmpl_5fxlt_9019',['xc7_Excel2003Tmpl_xlt',['../namespace_t_r_i_m_1_1_s_d_k.html#a74a97d15ed1a04c245b32580daff2136aea18045bdf293fbe8b94b3f8d3079e90',1,'TRIM::SDK']]],
-  ['xml_9020',['Xml',['../namespace_t_r_i_m_1_1_s_d_k.html#a65b27421514a32012b812ee70162d711a9ec8e4e3ab4c7eeba097f27d7364d743',1,'TRIM.SDK.Xml()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a9ec8e4e3ab4c7eeba097f27d7364d743',1,'TRIM.SDK.Xml()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a89727bc7ceef207b35be380a29514eaaa9ec8e4e3ab4c7eeba097f27d7364d743',1,'TRIM.SDK.Xml()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a263264eabdf75f6f843ac0e6a9fa5922a9ec8e4e3ab4c7eeba097f27d7364d743',1,'TRIM.SDK.Xml()']]],
-  ['xmldocumentexporttype_9021',['XmlDocumentExportType',['../namespace_t_r_i_m_1_1_s_d_k.html#a656d1ad995dad2de82b263af8a1eec1f',1,'TRIM.SDK.XmlDocumentExportType()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa663e194b88c084802c36eed8ef97412c',1,'TRIM.SDK.XmlDocumentExportType()']]],
-  ['xmlfile_9022',['XmlFile',['../namespace_t_r_i_m_1_1_s_d_k.html#a80075e201f548155a19687920e5fab90a0bb2f28d3ad5ef6bac75828da0911c7d',1,'TRIM::SDK']]],
-  ['xmlschematypes_9023',['XmlSchemaTypes',['../namespace_t_r_i_m_1_1_s_d_k.html#a52bf3de9d9de8de346af5db6fe351a86',1,'TRIM.SDK.XmlSchemaTypes()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa063869550dd9260a96fe40d2f57d4036',1,'TRIM.SDK.XmlSchemaTypes()']]],
-  ['xmlsummary_9024',['XmlSummary',['../class_t_r_i_m_1_1_s_d_k_1_1_history.html#a2d2129d90373b8088a0a815afdd71aa7',1,'TRIM::SDK::History']]],
-  ['xonxoff_9025',['XonXoff',['../namespace_t_r_i_m_1_1_s_d_k.html#ac30a6db4b17807d5aab009ce3ed96f52a68b2e819c7ae75383d71fba14fd307cf',1,'TRIM::SDK']]]
+  ['yard_9409',['Yard',['../namespace_t_r_i_m_1_1_s_d_k.html#a301e41de2a965346dc6235b82ab5d3fda351cda5a720d59953a9f3d69bd2b3002',1,'TRIM::SDK']]],
+  ['year_9410',['Year',['../class_t_r_i_m_1_1_s_d_k_1_1_trim_date_time.html#a83650740c9054b8b0d570825d3e6a629',1,'TRIM.SDK.TrimDateTime.Year()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a35514737fb8ab6fd1e825db406ff181ba537c66b24ef5c83b7382cdc3f34885f2',1,'TRIM.SDK.Year()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a0c79c1cad2bfc2a1484ba4791131de46a537c66b24ef5c83b7382cdc3f34885f2',1,'TRIM.SDK.Year()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a4387013121e9edf85f8e3a31984bd933a537c66b24ef5c83b7382cdc3f34885f2',1,'TRIM.SDK.Year()']]],
+  ['yearandmonth_9411',['YearAndMonth',['../namespace_t_r_i_m_1_1_s_d_k.html#a35514737fb8ab6fd1e825db406ff181babba4af24085990686c102acadb9b25f6',1,'TRIM::SDK']]],
+  ['yearfirst_9412',['YearFirst',['../class_t_r_i_m_1_1_s_d_k_1_1_locale_user_options.html#ac609305b994e186cfc42840b52e9ce49',1,'TRIM::SDK::LocaleUserOptions']]],
+  ['yearmonthandday_9413',['YearMonthAndDay',['../namespace_t_r_i_m_1_1_s_d_k.html#a35514737fb8ab6fd1e825db406ff181ba0d400943626c025b6db1bc05e0156236',1,'TRIM::SDK']]],
+  ['yearmonthdayandhour_9414',['YearMonthDayAndHour',['../namespace_t_r_i_m_1_1_s_d_k.html#a35514737fb8ab6fd1e825db406ff181ba42bbd1110506efe95fc7db5db6ceca12',1,'TRIM::SDK']]],
+  ['yearmonthdayhourandminute_9415',['YearMonthDayHourAndMinute',['../namespace_t_r_i_m_1_1_s_d_k.html#a35514737fb8ab6fd1e825db406ff181baeaaa3992e0829bd52920244526358eab',1,'TRIM::SDK']]],
+  ['years_9416',['Years',['../namespace_t_r_i_m_1_1_s_d_k.html#a6f1f3b3a1f2d0b89d0b4fa08436bfcceae4a00407f4e14849a66f076123f38494',1,'TRIM.SDK.Years()'],['../namespace_t_r_i_m_1_1_s_d_k.html#a35230cb79630a8c5f4ccd71ce7083ae4ae4a00407f4e14849a66f076123f38494',1,'TRIM.SDK.Years()']]],
+  ['yearsafter_9417',['YearsAfter',['../namespace_t_r_i_m_1_1_s_d_k.html#abbf47354727591f83752aea97c99133da249e8770ddd70948f3957116cad8bd2d',1,'TRIM::SDK']]],
+  ['yearsandmonths_9418',['YearsAndMonths',['../namespace_t_r_i_m_1_1_s_d_k.html#aeb1f587c6224221fe77f8dda19b5dc91a77f474c22506757d0d533ced755212ea',1,'TRIM::SDK']]],
+  ['yeartodate_9419',['YearToDate',['../namespace_t_r_i_m_1_1_s_d_k.html#a125ad95d546df9aadb00d9dbf645f8fca3e473ff97826425aa0fc02d47ec1cb95',1,'TRIM::SDK']]],
+  ['yellowbook_9420',['YellowBook',['../namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739afc20aa5023ef20248810d0ea968fcfd0',1,'TRIM::SDK']]],
+  ['yellowbox_9421',['YellowBox',['../namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739aa57102a7fbfec508a27c3192f246addc',1,'TRIM::SDK']]],
+  ['yellowdoc_9422',['YellowDoc',['../namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a549a02f6fc7a0223ac85639feb3b83ab',1,'TRIM::SDK']]],
+  ['yellowfile_9423',['YellowFile',['../namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739ab572c477d6d61347ce7df45f58fa2e84',1,'TRIM::SDK']]],
+  ['yesterday_9424',['Yesterday',['../namespace_t_r_i_m_1_1_s_d_k.html#a125ad95d546df9aadb00d9dbf645f8fcaebfe9ce86e6e9fb953aa7a25b59c1956',1,'TRIM::SDK']]]
 ];

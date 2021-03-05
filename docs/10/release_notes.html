@@ -90,9 +90,9 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
 <ul><li class="level1"><a href="#rn_100">Content Manager 10.0</a><ul><li class="level2"><a href="#rn_10_SdkRename">Content Manager SDK assembly and namespace renamed</a></li>
-<li class="level2"><a href="#autotoc_md1">Deleted methods and properties:</a></li>
-<li class="level2"><a href="#autotoc_md2">Get the field definition for this word</a></li>
-<li class="level2"><a href="#autotoc_md3">Create External Link from SDK</a></li>
+<li class="level2"><a href="#autotoc_md6">Deleted methods and properties:</a></li>
+<li class="level2"><a href="#autotoc_md7">Get the field definition for this word</a></li>
+<li class="level2"><a href="#autotoc_md8">Create External Link from SDK</a></li>
 <li class="level2"><a href="#rn_10_EventProcessor">Monitor event processor</a></li>
 <li class="level2"><a href="#rn_10_OnlyRecordTypes">Get a string listing all the record types to which this classification is allowed to be attached</a></li>
 <li class="level2"><a href="#rn_10_InitialAssignee">Get the Location object which is the assignee of the first activity in this workflow</a></li>
@@ -126,15 +126,15 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <li class="level2"><a href="#rn_10_CR_373007">Include Tags in the metadata options of electronic records</a></li>
 <li class="level2"><a href="#rn_10_CR_379030">Introduce a UDF that can be updated once disposition is Destroyed</a></li>
 <li class="level2"><a href="#rn_10_CR_242100">Ability to suppress legal hold designation</a></li>
-<li class="level2"><a href="#rn_10_CR_379045">Light weight Records</a><ul><li class="level3"><a href="#autotoc_md4">Example</a></li>
+<li class="level2"><a href="#rn_10_CR_379045">Light weight Records</a><ul><li class="level3"><a href="#autotoc_md9">Example</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#rn_10_CR_384012">Indicator on a record when Notes have been added</a></li>
 <li class="level2"><a href="#rn_10_CR_335066">Provide a version of TransferStorage just for older revisions</a></li>
 <li class="level2"><a href="#rn_10_CR_373041">New DocumentStoreIncrementalCheckTask</a></li>
 <li class="level2"><a href="#rn_10_CR_387008">Changes to Consignment processing</a></li>
-<li class="level2"><a href="#autotoc_md5">Unknown Location type validation</a></li>
-<li class="level2"><a href="#autotoc_md6">Display Child lists in the .Net SDK</a><ul><li class="level3"><a href="#autotoc_md7">Sample Code</a></li>
+<li class="level2"><a href="#autotoc_md10">Unknown Location type validation</a></li>
+<li class="level2"><a href="#autotoc_md11">Display Child lists in the .Net SDK</a><ul><li class="level3"><a href="#autotoc_md12">Sample Code</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#rn_10_CR_339007">Provide a way of limiting users from extracting and printing sensitive documents</a></li>
@@ -143,7 +143,7 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <li class="level2"><a href="#rn_10_CR_421003">Improve performance and stability of document integrity check</a></li>
 <li class="level2"><a href="#rn_10_CR_398052">InputDocument.SetAsAlreadyStoredItem SDK function sets record Date Modified to current date rather than Date Modified from document profile</a></li>
 <li class="level2"><a href="#rn_10_CR_360002">Allow content index updates of missing Records using the SDK so that users can automate the process</a></li>
-<li class="level2"><a href="#rn_10_CR_343056">More user-friendly style of displaying record types for selection</a><ul><li class="level3"><a href="#autotoc_md8">Sample Code</a></li>
+<li class="level2"><a href="#rn_10_CR_343056">More user-friendly style of displaying record types for selection</a><ul><li class="level3"><a href="#autotoc_md13">Sample Code</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#rn_100_CreateNewCopy">More control on copying a record using Record.CreateNewCopy() method</a></li>
@@ -187,7 +187,7 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 </ul>
 </li>
 <li class="level1"><a href="#rn_93">Content Manager 9.3</a><ul><li class="level2"><a href="#rn_sdk_GAC">SDK no longer installed in GAC</a></li>
-<li class="level2"><a href="#autotoc_md9">Removed properties</a></li>
+<li class="level2"><a href="#autotoc_md14">Removed properties</a></li>
 <li class="level2"><a href="#rn_93_audits">Audits - Unable to see the Audit log for the records placed on hold as a group</a></li>
 <li class="level2"><a href="#rn_93_lookupset">Record import not working when lookup item additional field is on a record</a></li>
 <li class="level2"><a href="#rn_93_offlinerecord">Property on Offline Record object to tell us whether auto checkin has is enabled</a></li>
@@ -216,8 +216,8 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <li class="level2"><a href="#rn_92_InvalidExtensions">Prevent invalid extensions from interfering with the checkout process</a></li>
 <li class="level2"><a href="#rn_92_FieldSorting">SDK methods to support field sorting</a></li>
 <li class="level2"><a href="#rn_92_BlockedSearchMethods">SDK methods to support blocking of search methods</a></li>
-<li class="level2"><a href="#autotoc_md10">Exposing the Initiating Workflow template concept in the SDK</a></li>
-<li class="level2"><a href="#autotoc_md11">Provide a way of &quot;crawling&quot; the repository without tripping the LastUpdatedOn date</a></li>
+<li class="level2"><a href="#autotoc_md15">Exposing the Initiating Workflow template concept in the SDK</a></li>
+<li class="level2"><a href="#autotoc_md16">Provide a way of &quot;crawling&quot; the repository without tripping the LastUpdatedOn date</a></li>
 </ul>
 </li>
 </ul>
@@ -234,7 +234,7 @@ Content Manager SDK assembly and namespace renamed</h2>
 <li>Change namespace references in your code, from <code>HP.HPTRIM.SDK</code> to <code><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">TRIM.SDK</a></code>.</li>
 </ul>
 <p>Please note that it is not supported for a process to load both the <code>TRIM.SDK.dll</code> and <code>HP.HPTRIM.SDK.dll</code> assemblies. As a consequence, if you have a record addin configured, which references a particular SDK assembly, then any SDK code you write must be compiled against the same SDK assembly as the record addin.</p>
-<h2><a class="anchor" id="autotoc_md1"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 Deleted methods and properties:</h2>
 <ul>
 <li>Consignment.PrepareForTransfer() (see new functions WaitForTransferReceipt() and AcknowledgeTransferReceipt())</li>
@@ -246,12 +246,12 @@ Deleted methods and properties:</h2>
 <li>StartupUserOptions.WebClientPane2</li>
 <li>StartupUserOptions.WebClientPane3</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md2"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Get the field definition for this word</h2>
 <p>If the word is sourced from a field the relevant FieldDefinition:</p><ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_word.html#a54f0f227a774e08f770456cf3dc5a06a">Word.Field</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Create External Link from SDK</h2>
 <p>New <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_external_link.html">ExternalLink</a> object to allow for creation of External Links.</p>
 <h2><a class="anchor" id="rn_10_EventProcessor"></a>
@@ -481,7 +481,7 @@ Light weight Records</h2>
 <p>New property:</p><ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record_type.html#a687b43ce76a607296e6bda015cca67af">RecordType.BasicMetadataOnly</a> </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md4"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a9a91a6f03e7107a92af44bdd2092ca45a237bc42b2bd920bfb5e405bee26c8a36">RecordType</a> rt = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a9a91a6f03e7107a92af44bdd2092ca45a237bc42b2bd920bfb5e405bee26c8a36">RecordType</a>(database, <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a0aa5083d1e8b9be139d6b73d1928ecbd">RecordBehaviour</a>.BasicDocument);</div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a0aa5083d1e8b9be139d6b73d1928ecbd"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a0aa5083d1e8b9be139d6b73d1928ecbd">TRIM.SDK.RecordBehaviour</a></div><div class="ttdeci">RecordBehaviour</div><div class="ttdoc">Behaviours</div><div class="ttdef"><b>Definition:</b> RecordBehaviour.cs:16</div></div>
@@ -515,16 +515,16 @@ Changes to Consignment processing</h2>
 <li>Consignment.CompleteTransfer</li>
 <li>Consignment.PrepareForTransfer</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md10"></a>
 Unknown Location type validation</h2>
 <p>Gets or sets a GeneralExceptionHandling enum value indicating how to deal with unknown location types when verifying new record data entry forms that contain auto profiled contacts</p>
 <ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#af7c847845c3432ef4c5f08105a6aeb2a">Database.UnknownLocationTypeValidation</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 Display Child lists in the .Net SDK</h2>
 <p>The COM SDK included a UI component to display and modify a child list (for example Record Revisions), this is now also available in the .Net SDK.</p>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md12"></a>
 Sample Code</h3>
 <div class="fragment"><div class="line"><span class="keyword">private</span> IntPtr windowHandle = IntPtr.Zero;</div>
 <div class="line"> </div>
@@ -594,7 +594,7 @@ More user-friendly style of displaying record types for selection</h2>
 <p>New <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#af33254e6ddf46b290bd5eb7c480ce427">UserOptionSet</a> SelectRecordType with properties:</p><ul>
 <li>SelectRecordTypeUserOptionsFavoritesFirst = SelectRecordTypeUserOptionsUseSavedSearch</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md13"></a>
 Sample Code</h3>
 <div class="fragment"><div class="line">var search = <span class="keyword">new</span> TrimMainObjectSearch(db, <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ae8f17bcd9c48f17f7d0e776779d0ced6">RecordTypeFilter</a>.ElectronicForCreateNoManual);</div>
 <div class="line"> </div>
@@ -758,7 +758,7 @@ Implement a generic origin type for third party applications to use for bulk loa
 <ul>
 <li>Existing origin types are targeted to specific uses. The new <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_origin.html">Origin</a> type is appropriate for SDK <a href="https://github.com/content-manager-sdk/Community/tree/master/Samples/SDK/CSharp/BulkDataLoader">bulk loader</a> applications.</li>
 <li>New enum value<ul>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a80075e201f548155a19687920e5fab90a8045a0a6c688b0635e3caccc408a1446">OriginType.Generic</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a80075e201f548155a19687920e5fab90">OriginType.Generic</a></li>
 </ul>
 </li>
 </ul>
@@ -895,13 +895,13 @@ Check-in Styles and Document Queues to include additional options</h2>
 <li><b>ER</b> <a href="https://softwaresupport.softwaregrp.com/doc/KM03209226">KM03209226</a></li>
 <li>New properties (<a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html">CheckinStyle</a>)<ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ac4c35bffc01bfaea59fb4943acd94df1">CheckinStyle.Addressee</a></li>
-<li>CheckinStyle.Author</li>
+<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html">CheckinStyle.Author</a></li>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ad62897fbf1c678e7b1db18478e8e9569">CheckinStyle.AlternativeContainer</a></li>
 </ul>
 </li>
 <li>New properties (<a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_document_queue.html">DocumentQueue</a>)<ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_document_queue.html#a21654cdc916b3b0d022574004efc4569">DocumentQueue.Addressee</a></li>
-<li>DocumentQueue.Author</li>
+<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_document_queue.html">DocumentQueue.Author</a></li>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_document_queue.html#a27d24ee4d9e2de7b15ef94fb35956217">DocumentQueue.AlternativeContainer</a></li>
 </ul>
 </li>
@@ -989,7 +989,7 @@ SDK no longer installed in GAC</h2>
 <ul>
 <li>In previous versions the .NET SDK has been installed in the GAC. This is no longer the case. To support dynamic loading of <code>TRIM.SDK.dll</code>, follow the pattern demonstrated in this <a href="https://github.com/HPECM/Community/tree/master/Samples/SDK/CSharp/SDKLocationResolver">sample</a>.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Removed properties</h2>
 <ul>
 <li>The following properties are no longer required and have been removed from the SDK:<ul>
@@ -1250,8 +1250,8 @@ Searching for Record types: 'can contain' and 'can be contained in'</h2>
 <li><b>CR</b> <a href="https://quixy.hpecorp.net/quixy/query/detail.php?ISSUEID=QCCR2D61825">61825</a></li>
 <li>New Search Clauses<ul>
 <li>Two new search clauses make it simpler to find the correct RecordType when creating a contained (or container) Record.<ul>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33baac26bef16bd1558f01ebdf0357638cf0">SearchClauseIds.RecordTypeCanBeContainedBy</a></li>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33bac3cddb1176d8f078696123a77a54ba45">SearchClauseIds.RecordTypeCanContain</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.RecordTypeCanBeContainedBy</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.RecordTypeCanContain</a></li>
 </ul>
 </li>
 </ul>
@@ -1279,21 +1279,21 @@ Updates to Lookupsets</h2>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a80bc8983c6d1ffa0508ec3d401b993fa">LookupItem.ParentItem</a></li>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a98595b9428bc02d775f4f2c7cfc61546">LookupItem.HasChildItems</a></li>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#ade93b2a2d45d17dff4cc449d0dfea994">LookupItem.FullDescription</a></li>
-<li>LookupItem.AccessControl</li>
+<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html">LookupItem.AccessControl</a></li>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a5447bfcf173970a59074f7619c7aaeb9">LookupItem.ItemNumber</a></li>
 </ul>
 </li>
 <li>New search clauses<ul>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba028e2938525bf4740f3c8546cf892368">SearchClauseIds.LookupItemNumber</a></li>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba876667c843e8e2be34da22b3e9ec7113">SearchClauseIds.LookupItemParentOf</a></li>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba3dcbb5733ab23dbbfacf4f31110004f4">SearchClauseIds.LookupItemParent</a></li>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba4a5b97130a036c267744a7d95182b2fa">SearchClauseIds.LookupItemIsParent</a></li>
-<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33baa4ffdcf0dc1f31b9acaf295d75b51d00">SearchClauseIds.Top</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.LookupItemNumber</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.LookupItemParentOf</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.LookupItemParent</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.LookupItemIsParent</a></li>
+<li><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.Top</a></li>
 </ul>
 </li>
 <li>Comments<ul>
 <li>Lookup Sets have changed significantly and the properties (and methods) reflect this. Changes include:<ul>
-<li>hierarchical lookup sets: find child items via the search clause <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba3dcbb5733ab23dbbfacf4f31110004f4">SearchClauseIds.LookupItemParent</a></li>
+<li>hierarchical lookup sets: find child items via the search clause <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33b">SearchClauseIds.LookupItemParent</a></li>
 <li>LookupSet type additional fields: use these fields to store a reference to the exact LookupItem rather than relying on the string value of the LookupItem</li>
 </ul>
 </li>
@@ -1412,7 +1412,7 @@ Prevent invalid extensions from interfering with the checkout process</h2>
 <ul>
 <li><b>CR</b> <a href="https://quixy.hpecorp.net/quixy/query/detail.php?ISSUEID=QCCR2D62054">62054</a></li>
 <li>Comments<ul>
-<li>Putting invalid characters in InputDocument.CheckInAs would cause an error when checking the document out. These characters are now stripped from the file name on check out.</li>
+<li>Putting invalid characters in <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_input_document.html">InputDocument.CheckInAs</a> would cause an error when checking the document out. These characters are now stripped from the file name on check out.</li>
 </ul>
 </li>
 </ul>
@@ -1446,7 +1446,7 @@ SDK methods to support blocking of search methods</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Exposing the Initiating Workflow template concept in the SDK</h2>
 <ul>
 <li><b>CR</b> <a href="https://quixy.hpecorp.net/quixy/query/detail.php?ISSUEID=QCCR2D64493">64493</a></li>
@@ -1459,7 +1459,7 @@ Exposing the Initiating Workflow template concept in the SDK</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Provide a way of "crawling" the repository without tripping the LastUpdatedOn date</h2>
 <ul>
 <li><b>CR</b> <a href="https://quixy.hpecorp.net/quixy/query/detail.php?ISSUEID=QCCR2D64506">64506</a></li>
@@ -1468,7 +1468,7 @@ Provide a way of "crawling" the repository without tripping the LastUpdatedOn da
 </ul>
 </li>
 <li>Comments<ul>
-<li>This <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_extract_document.html">ExtractDocument</a> boolean property has been provided so that you can write an application that extracts a copy of a record's document without setting the Record.DateLastAction property. Typically the act of extracting a document can be seen as an "action" on a record and thus the <code>DateLastAction</code> is set, together with a consequential update to the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object.html#ac79c80703b39a39b4e276c522ec15497">Record.LastUpdatedOn</a> property. If you turn it on, this property overrides the RecordType setting for "Set Last Action Date On View". It is useful for writing an app that must periodically check and extract any new content, and is relying on the <code>LastUpdatedOn</code> property to find recently updated records. </li>
+<li>This <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_extract_document.html">ExtractDocument</a> boolean property has been provided so that you can write an application that extracts a copy of a record's document without setting the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html">Record.DateLastAction</a> property. Typically the act of extracting a document can be seen as an "action" on a record and thus the <code>DateLastAction</code> is set, together with a consequential update to the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object.html#ac79c80703b39a39b4e276c522ec15497">Record.LastUpdatedOn</a> property. If you turn it on, this property overrides the RecordType setting for "Set Last Action Date On View". It is useful for writing an app that must periodically check and extract any new content, and is relying on the <code>LastUpdatedOn</code> property to find recently updated records. </li>
 </ul>
 </li>
 </ul>

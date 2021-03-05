@@ -88,352 +88,9 @@ $(document).ready(function(){initNavTree('md_doc_81____enum__values.html',''); i
 <div class="title">81 - Enum Values </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#enums_using">Using Enums</a><ul><li class="level2"><a href="#autotoc_md106">Interrogating metadata</a><ul><li class="level3"><a href="#autotoc_md107">Code Sample</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="level1"><a href="#enum_item_by_enum_type_type">List of enum items by Enum</a><ul><li class="level2"><a href="#enum_help_databaseTypes">Database Type</a></li>
-<li class="level2"><a href="#enum_help_userTypes">User Access Type</a></li>
-<li class="level2"><a href="#enum_help_genericPurposes">Generic Usage Purpose</a></li>
-<li class="level2"><a href="#enum_help_accessControlSettings">Access Control Setting</a></li>
-<li class="level2"><a href="#enum_help_titlingMethods">Titling Method</a></li>
-<li class="level2"><a href="#enum_help_numberingMethods">Numbering Method</a></li>
-<li class="level2"><a href="#enum_help_recordBehaviour">Behavior</a></li>
-<li class="level2"><a href="#enum_help_recordClass">Record Class</a></li>
-<li class="level2"><a href="#enum_help_recordDisp">Disposition</a></li>
-<li class="level2"><a href="#enum_help_triggerTypes">Schedule trigger</a></li>
-<li class="level2"><a href="#enum_help_estoreTypes">Document Store Type</a></li>
-<li class="level2"><a href="#enum_help_wordTypes">Word Type</a></li>
-<li class="level2"><a href="#enum_help_nbrTypes">Numbering Type</a></li>
-<li class="level2"><a href="#enum_help_keywordAttachMethod">Methods to Attach thesaurus term</a></li>
-<li class="level2"><a href="#enum_help_recordLocationType">Record location Type</a></li>
-<li class="level2"><a href="#enum_help_contactType">Contact Type</a></li>
-<li class="level2"><a href="#enum_help_searchContactType">Search contact Type</a></li>
-<li class="level2"><a href="#enum_help_keywordRelationship">Thesaurus Term Relationship</a></li>
-<li class="level2"><a href="#enum_help_recordRelationshipType">Record Relationship</a></li>
-<li class="level2"><a href="#enum_help_revRecRelationship">Reverse record Relationship</a></li>
-<li class="level2"><a href="#enum_help_renditionType">Rendition Type</a></li>
-<li class="level2"><a href="#enum_help_recordTypeFilter">Record Type Filter</a></li>
-<li class="level2"><a href="#enum_help_events">Event</a></li>
-<li class="level2"><a href="#enum_help_eventProcessType">Event Process Type</a></li>
-<li class="level2"><a href="#enum_help_trayType">Tray Type</a></li>
-<li class="level2"><a href="#enum_help_locationType">Location Type</a></li>
-<li class="level2"><a href="#enum_help_searchLocationType">Search location Type</a></li>
-<li class="level2"><a href="#enum_help_eAddressType">Electronic Address Type</a></li>
-<li class="level2"><a href="#enum_help_locationPurpose">Location Usage Purpose</a></li>
-<li class="level2"><a href="#enum_help_propertyFormats">Property Format</a></li>
-<li class="level2"><a href="#enum_help_userFieldFormats">Additional Field Format</a></li>
-<li class="level2"><a href="#enum_help_searchFilterTypes">Search Filter</a></li>
-<li class="level2"><a href="#enum_help_recordSortFields">Sort Field</a></li>
-<li class="level2"><a href="#enum_help_barcodeLabelType">Barcode userLabels Type</a></li>
-<li class="level2"><a href="#enum_help_controlLabelType">Barcode Control Label</a></li>
-<li class="level2"><a href="#enum_help_barcodeError">Barcode Error</a></li>
-<li class="level2"><a href="#enum_help_stringFormat">String Format</a></li>
-<li class="level2"><a href="#enum_help_textObjectType">Text Object Type</a></li>
-<li class="level2"><a href="#enum_help_recLocSubTypes">Record location Sub Types</a></li>
-<li class="level2"><a href="#enum_help_dateInterval">Date Interval</a></li>
-<li class="level2"><a href="#enum_help_documentLinkType">Document Link Type</a></li>
-<li class="level2"><a href="#enum_help_generalExceptionHandling">General Error Handling</a></li>
-<li class="level2"><a href="#enum_help_containerSecurityHandling">Container Security Type</a></li>
-<li class="level2"><a href="#enum_help_barcodePrintOption">Barcode Printing Option</a></li>
-<li class="level2"><a href="#enum_help_locationDefault">Location Default</a></li>
-<li class="level2"><a href="#enum_help_useStoreType">Uses Store</a></li>
-<li class="level2"><a href="#enum_help_addressTypes">Address Type</a></li>
-<li class="level2"><a href="#enum_help_locRelationshipType">Location Relationship Type</a></li>
-<li class="level2"><a href="#enum_help_propertiesStringType">Type of PropertiesAsStrings</a></li>
-<li class="level2"><a href="#enum_help_classificationPurpose">Classification Usage Purpose</a></li>
-<li class="level2"><a href="#enum_help_hashingAlgorithms">Hashing Algorithm</a></li>
-<li class="level2"><a href="#enum_help_generalAccess">General Access Control</a></li>
-<li class="level2"><a href="#enum_help_workflowAccess">Workflow Access Control</a></li>
-<li class="level2"><a href="#enum_help_recordAccess">Record Access Control</a></li>
-<li class="level2"><a href="#enum_help_accessReferenceStyle">Access Transfer Style</a></li>
-<li class="level2"><a href="#enum_help_currLocDef">Assignee Default</a></li>
-<li class="level2"><a href="#enum_help_flowControl">Flow Control Type</a></li>
-<li class="level2"><a href="#enum_help_spaceLevel">Space Level</a></li>
-<li class="level2"><a href="#enum_help_spacePurposes">Space Purpose</a></li>
-<li class="level2"><a href="#enum_help_spaceRecordsSelection">Space record Selection</a></li>
-<li class="level2"><a href="#enum_help_spaceAllocation">Space Allocation Method</a></li>
-<li class="level2"><a href="#enum_help_dateIntervalSing">Date Interval Singular</a></li>
-<li class="level2"><a href="#enum_help_finalizedFilter">Record Finalized Filter</a></li>
-<li class="level2"><a href="#enum_help_censusRecords">Census record</a></li>
-<li class="level2"><a href="#enum_help_workflowLockOperation">Workflow Lock Operation</a></li>
-<li class="level2"><a href="#enum_help_recordPurposes">Record Purpose</a></li>
-<li class="level2"><a href="#enum_help_recordDispPending">Disposition Pending</a></li>
-<li class="level2"><a href="#enum_help_mailRecipientType">Mail Recipient Type</a></li>
-<li class="level2"><a href="#enum_help_xmlDocumentExportType">XML Document Export Type</a></li>
-<li class="level2"><a href="#enum_help_databaseAvailability">Dataset availability</a></li>
-<li class="level2"><a href="#enum_help_layoutPurpose">Layout Purpose</a></li>
-<li class="level2"><a href="#enum_help_stringDisplayType">Property String Display Type</a></li>
-<li class="level2"><a href="#enum_help_language">Language</a></li>
-<li class="level2"><a href="#enum_help_storeUsageType">Document Store Usage Type</a></li>
-<li class="level2"><a href="#enum_help_pendingEventReviewFilter">Review Filter</a></li>
-<li class="level2"><a href="#enum_help_documentSecurityHandling">Less Secure Document Security Type</a></li>
-<li class="level2"><a href="#enum_help_queueTypes">Document Queue Type</a></li>
-<li class="level2"><a href="#enum_help_statTypes">Statistical Select By</a></li>
-<li class="level2"><a href="#enum_help_queueUsageType">Queue Usage Type</a></li>
-<li class="level2"><a href="#enum_help_statGroupByType">Statistical Grouping</a></li>
-<li class="level2"><a href="#enum_help_queueItemAttributes">Queue Item Attribute</a></li>
-<li class="level2"><a href="#enum_help_queueCapability">Queue Property</a></li>
-<li class="level2"><a href="#enum_help_serverMessageTypes">Server Message Type</a></li>
-<li class="level2"><a href="#enum_help_nativeMailStyles">Native Mail Capture Style</a></li>
-<li class="level2"><a href="#enum_help_declassifyType">Declassify Option</a></li>
-<li class="level2"><a href="#enum_help_taskStatus">Scheduled Task Status</a></li>
-<li class="level2"><a href="#enum_help_securityUpdateTypes">Security Update Type</a></li>
-<li class="level2"><a href="#enum_help_objectURLformats">URL Format</a></li>
-<li class="level2"><a href="#enum_help_pluginPageType">Plugin Page Type</a></li>
-<li class="level2"><a href="#enum_help_notesUpdateType">Notes Update Type</a></li>
-<li class="level2"><a href="#enum_help_lockdownStyles">Lock Down Type</a></li>
-<li class="level2"><a href="#enum_help_environments">Runtime Environment</a></li>
-<li class="level2"><a href="#enum_help_notesInsertStyles">Notes Insert Style</a></li>
-<li class="level2"><a href="#enum_help_meetingDocumentType">Meeting Document Type</a></li>
-<li class="level2"><a href="#enum_help_invitationType">Type of Participant</a></li>
-<li class="level2"><a href="#enum_help_attendanceType">Meeting Attendance Type</a></li>
-<li class="level2"><a href="#enum_help_lookupSetType">Lookup Set Type</a></li>
-<li class="level2"><a href="#enum_help_aprType">Automated Part Type</a></li>
-<li class="level2"><a href="#enum_help_aprDateTypes">Automated Part Rule Trigger</a></li>
-<li class="level2"><a href="#enum_help_documentSelectionType">Document Selection Type</a></li>
-<li class="level2"><a href="#enum_help_xmlSchemaTypes">XML Schema Type</a></li>
-<li class="level2"><a href="#enum_help_alertType">Alert Type</a></li>
-<li class="level2"><a href="#enum_help_gender">Gender</a></li>
-<li class="level2"><a href="#enum_help_wgsCacheType">Cache type</a></li>
-<li class="level2"><a href="#enum_help_propertyOrFieldFormat">Property or Field Format</a></li>
-<li class="level2"><a href="#enum_help_priority">Priority</a></li>
-<li class="level2"><a href="#enum_help_userLabelType">User Label Type</a></li>
-<li class="level2"><a href="#enum_help_psoActionType">Physical Storage Action Type</a></li>
-<li class="level2"><a href="#enum_help_mailEventType">Email Event Type</a></li>
-<li class="level2"><a href="#enum_help_communicationMedium">Communication Medium</a></li>
-<li class="level2"><a href="#enum_help_communicationDirection">Communication Direction</a></li>
-<li class="level2"><a href="#enum_help_communicatorType">Communicator Type</a></li>
-<li class="level2"><a href="#enum_help_offlineStatus">Offline Status</a></li>
-<li class="level2"><a href="#enum_help_snapAddressType">Address Type Used</a></li>
-<li class="level2"><a href="#enum_help_esoActionType">Electronic Storage Action Type</a></li>
-<li class="level2"><a href="#enum_help_triggerRounding">Trigger Rounding Type</a></li>
-<li class="level2"><a href="#enum_help_months">Month</a></li>
-<li class="level2"><a href="#enum_help_desktopStartStates">Desktop Startup State</a></li>
-<li class="level2"><a href="#enum_help_dayOfTheWeek">Day of the Week</a></li>
-<li class="level2"><a href="#enum_help_timeInterval">Time Interval</a></li>
-<li class="level2"><a href="#enum_help_meetingAccess">Meeting Access Control</a></li>
-<li class="level2"><a href="#enum_help_emailSecurityMode">Email Security Mode</a></li>
-<li class="level2"><a href="#enum_help_motionOutcome">Motion Outcome</a></li>
-<li class="level2"><a href="#enum_help_todoReferenceType">Reference Type</a></li>
-<li class="level2"><a href="#enum_help_outlineNumberType">Outline Number Type</a></li>
-<li class="level2"><a href="#enum_help_notificationType">Notification Type</a></li>
-<li class="level2"><a href="#enum_help_activityDocumentUsage">Document Usage Type</a></li>
-<li class="level2"><a href="#enum_help_workflowDocumentPlaceholderType">Document Placeholder Type</a></li>
-<li class="level2"><a href="#enum_help_activityStates">Activity State</a></li>
-<li class="level2"><a href="#enum_help_initiatingRecordBehavior">Initiating Record Behavior</a></li>
-<li class="level2"><a href="#enum_help_autoRenditionStatus">Automatic Rendition Status</a></li>
-<li class="level2"><a href="#enum_help_autoRenderError">Auto Rendering Error</a></li>
-<li class="level2"><a href="#enum_help_cachedTableNotificationType">Cached Table Notification Type</a></li>
-<li class="level2"><a href="#enum_help_agendaItemAccess">Agenda Item Access Control</a></li>
-<li class="level2"><a href="#enum_help_genderSalutation">Gender Salutation</a></li>
-<li class="level2"><a href="#enum_help_agendaPrintStyles">Agenda Print Style</a></li>
-<li class="level2"><a href="#enum_help_commandRefreshTypes">Command Refresh Type</a></li>
-<li class="level2"><a href="#enum_help_activityDocumentAction">Document Action</a></li>
-<li class="level2"><a href="#enum_help_activityDocumentOrigin">Document Origin</a></li>
-<li class="level2"><a href="#enum_help_activityDocumentStatus">Document Status</a></li>
-<li class="level2"><a href="#enum_help_wordProcessorMergeFormats">Word Processor Merge Format</a></li>
-<li class="level2"><a href="#enum_help_trimPathType">Content Manager Path Type</a></li>
-<li class="level2"><a href="#enum_help_alertConditionTypes">Alert Condition Type</a></li>
-<li class="level2"><a href="#enum_help_favoriteType">Favorite Type</a></li>
-<li class="level2"><a href="#enum_help_originType">Origin Type</a></li>
-<li class="level2"><a href="#enum_help_documentUpdateStyles">Document Update Style</a></li>
-<li class="level2"><a href="#enum_help_emailUpdateStyles">Email Update Style</a></li>
-<li class="level2"><a href="#enum_help_iconDisplayMode">Icon Display Mode</a></li>
-<li class="level2"><a href="#enum_help_iconUsage">Icon Usage Type</a></li>
-<li class="level2"><a href="#enum_help_stringDisplayAlignment">String Display Alignment</a></li>
-<li class="level2"><a href="#enum_help_propertySortMode">Property Sort Mode</a></li>
-<li class="level2"><a href="#enum_help_prefetchStyles">Prefetch Style</a></li>
-<li class="level2"><a href="#enum_help_dataEntryPageType">Data Entry Page Type</a></li>
-<li class="level2"><a href="#enum_help_searchClauseGroup">Search Clause Group</a></li>
-<li class="level2"><a href="#enum_help_productString">Product String</a></li>
-<li class="level2"><a href="#enum_help_actionPurpose">Action Purpose</a></li>
-<li class="level2"><a href="#enum_help_meetingPurpose">Meeting Purpose</a></li>
-<li class="level2"><a href="#enum_help_offlineRecordPurpose">Offline Record Purpose</a></li>
-<li class="level2"><a href="#enum_help_searchPurposes">Saved Search Purpose</a></li>
-<li class="level2"><a href="#enum_help_storePurposes">Document Store Purpose</a></li>
-<li class="level2"><a href="#enum_help_specialDates">Special Date String</a></li>
-<li class="level2"><a href="#enum_help_labelPurposes">User Label Purpose</a></li>
-<li class="level2"><a href="#enum_help_keywordPurposes">Thesaurus Term Purpose</a></li>
-<li class="level2"><a href="#enum_help_eventProcessorStatus">Event Processor Status</a></li>
-<li class="level2"><a href="#enum_help_activityPurposes">Activity Purpose</a></li>
-<li class="level2"><a href="#enum_help_authenticationMethod">Authentication Method</a></li>
-<li class="level2"><a href="#enum_help_spListItemOriginator">List Item Orginator</a></li>
-<li class="level2"><a href="#enum_help_spManagedItemStatus">Managed List Item Status</a></li>
-<li class="level2"><a href="#enum_help_spElementType">SharePoint Element Type</a></li>
-<li class="level2"><a href="#enum_help_searchTimePeriodSingular">Search Time Period (Singular)</a></li>
-<li class="level2"><a href="#enum_help_searchTimePeriodPlural">Search Time Period (Plural)</a></li>
-<li class="level2"><a href="#enum_help_searchTimeTense">Search Time Tense</a></li>
-<li class="level2"><a href="#enum_help_searchGrammarItem">Search Grammar Item</a></li>
-<li class="level2"><a href="#enum_help_searchEditor">Search Editor</a></li>
-<li class="level2"><a href="#enum_help_referenceFileApplication">Reference File Application</a></li>
-<li class="level2"><a href="#enum_help_fontStyle">Font Style</a></li>
-<li class="level2"><a href="#enum_help_locationFieldType">Location Field Type</a></li>
-<li class="level2"><a href="#enum_help_recordDeclassifyTypes">Record Security Declassification Type</a></li>
-<li class="level2"><a href="#enum_help_searchStartPoint">Search Starting Point</a></li>
-<li class="level2"><a href="#enum_help_reporterFonts">Reporter Font</a></li>
-<li class="level2"><a href="#enum_help_tabBarStyle">Tab Bar Style</a></li>
-<li class="level2"><a href="#enum_help_skinStyle">Skin Style</a></li>
-<li class="level2"><a href="#enum_help_windowsFrameType">Frame Type</a></li>
-<li class="level2"><a href="#enum_help_columnIndexType">Column Index Type</a></li>
-<li class="level2"><a href="#enum_help_migrationType">Migration Type</a></li>
-<li class="level2"><a href="#enum_help_wordFileTypes">Microsoft Word File Type</a></li>
-<li class="level2"><a href="#enum_help_excelFileTypes">Microsoft Excel File Type</a></li>
-<li class="level2"><a href="#enum_help_powerpointFileTypes">Microsoft PowerPoint File Type</a></li>
-<li class="level2"><a href="#enum_help_projectFileTypes">Microsoft Project File Type</a></li>
-<li class="level2"><a href="#enum_help_word11FileTypes">Microsoft Office 2003 Word File Type</a></li>
-<li class="level2"><a href="#enum_help_excel11FileTypes">Microsoft Office 2003 Excel File Type</a></li>
-<li class="level2"><a href="#enum_help_powerpoint11FileTypes">Microsoft Office 2003 PowerPoint File Type</a></li>
-<li class="level2"><a href="#enum_help_project11FileTypes">Microsoft Office 2003 Project File Type</a></li>
-<li class="level2"><a href="#enum_help_wordOpenFileTypes">Microsoft Open Word File Type</a></li>
-<li class="level2"><a href="#enum_help_excelOpenFileTypes">Microsoft Open Excel File Type</a></li>
-<li class="level2"><a href="#enum_help_powerpointOpenFileTypes">Microsoft Open PowerPoint File Type</a></li>
-<li class="level2"><a href="#enum_help_projectOpenFileTypes">Microsoft Open Project File Type</a></li>
-<li class="level2"><a href="#enum_help_locationMatchType">Location Import Type</a></li>
-<li class="level2"><a href="#enum_help_pathTypes">Path Type</a></li>
-<li class="level2"><a href="#enum_help_idolIndexType">IDOL Index Type</a></li>
-<li class="level2"><a href="#enum_help_idolIndexStatus">Content Index Status</a></li>
-<li class="level2"><a href="#enum_help_editNotesStyle">Edit Notes Style</a></li>
-<li class="level2"><a href="#enum_help_storeStatus">Document Store Status</a></li>
-<li class="level2"><a href="#enum_help_fileSizeUnits">File Size Unit</a></li>
-<li class="level2"><a href="#enum_help_mediaTypes">Media Type</a></li>
-<li class="level2"><a href="#enum_help_statisticsOutputType">Statistics Output Type</a></li>
-<li class="level2"><a href="#enum_help_databaseLockType">Database Lock Type</a></li>
-<li class="level2"><a href="#enum_help_searchParameterFormats">Search parameter format</a></li>
-<li class="level2"><a href="#enum_help_jurisdictionTypes">Jurisdiction Type</a></li>
-<li class="level2"><a href="#enum_help_primaryRecordStatisticsGrouping">Record Creation Statistics Primary Grouping</a></li>
-<li class="level2"><a href="#enum_help_locationGrouping">Record Creation Statistics Location Grouping</a></li>
-<li class="level2"><a href="#enum_help_eventStatisticsGroup">Event Statistics Group</a></li>
-<li class="level2"><a href="#enum_help_trimEventCounters">Content Manager Event Counter</a></li>
-<li class="level2"><a href="#enum_help_documentEventCounters">Document Event Counter</a></li>
-<li class="level2"><a href="#enum_help_workflowEventCounters">Workflow Event Counter</a></li>
-<li class="level2"><a href="#enum_help_auditEventCounters">Audit Event Counter</a></li>
-<li class="level2"><a href="#enum_help_statisticalDateRangeTypes">Record Creation Statistics Date Range Type</a></li>
-<li class="level2"><a href="#enum_help_productFeatures">Product Feature</a></li>
-<li class="level2"><a href="#enum_help_openDocumentStatus">Open Document Status</a></li>
-<li class="level2"><a href="#enum_help_bulkLoaderCopyMode">BulkLoader Document Transfer Mode</a></li>
-<li class="level2"><a href="#enum_help_fieldAccess">Additional Field Access Control</a></li>
-<li class="level2"><a href="#enum_help_duplicateEmailOptions">Duplicate Email Option</a></li>
-<li class="level2"><a href="#enum_help_licenseTypes">License Type</a></li>
-<li class="level2"><a href="#enum_help_featureState">Feature State</a></li>
-<li class="level2"><a href="#enum_help_userLicenseTypes">User License Type</a></li>
-<li class="level2"><a href="#enum_help_oldVersionPurgeOptions">Old Version Purge Style</a></li>
-<li class="level2"><a href="#enum_help_objectCapabilities">Object Capability</a></li>
-<li class="level2"><a href="#enum_help_idolSearchStyles">Content Index Search Style</a></li>
-<li class="level2"><a href="#enum_help_rmGrammarItem">RM Grammar Item</a></li>
-<li class="level2"><a href="#enum_help_rmTerminologyType">RM Terminology Type</a></li>
-<li class="level2"><a href="#enum_help_tieredStorageType">Tiered Storage Type</a></li>
-<li class="level2"><a href="#enum_help_requestPurposes">Request Purpose</a></li>
-<li class="level2"><a href="#enum_help_requestTypes">Request Type</a></li>
-<li class="level2"><a href="#enum_help_requestPriority">Request Priority</a></li>
-<li class="level2"><a href="#enum_help_requestStatus">Request Status</a></li>
-<li class="level2"><a href="#enum_help_sqlErrorTypes">SQL Error Type</a></li>
-<li class="level2"><a href="#enum_help_retainOptions">Retain Option</a></li>
-<li class="level2"><a href="#enum_help_disposalType">Disposal Type</a></li>
-<li class="level2"><a href="#enum_help_disposalScheduleStatus">Disposition Calculation Status</a></li>
-<li class="level2"><a href="#enum_help_clientMatterInterestTypes">Interest Type</a></li>
-<li class="level2"><a href="#enum_help_consignmentItemApprovalStatus">Consignment Item Status</a></li>
-<li class="level2"><a href="#enum_help_consignmentItemIssueType">Consignment Issue Type</a></li>
-<li class="level2"><a href="#enum_help_consignmentPickListFormat">Consignent Picklist Format</a></li>
-<li class="level2"><a href="#enum_help_consignmentDisposalType">Consignment Disposal Type</a></li>
-<li class="level2"><a href="#enum_help_fieldPurposeType">Additional Field Purpose Type</a></li>
-<li class="level2"><a href="#enum_help_unregisteredUsers">Unregistered User Option</a></li>
-<li class="level2"><a href="#enum_help_mailFormat">Mail Format</a></li>
-<li class="level2"><a href="#enum_help_lookupItemPurposeType">Lookup Item Purpose Type</a></li>
-<li class="level2"><a href="#enum_help_clientServerProtocol">Client Server Protocol</a></li>
-<li class="level2"><a href="#enum_help_ipConnectionType">Connection Type</a></li>
-<li class="level2"><a href="#enum_help_startupPaneType">Startup Pane Type</a></li>
-<li class="level2"><a href="#enum_help_jurisdictionPurposes">Jurisdiction Purpose</a></li>
-<li class="level2"><a href="#enum_help_oauthImplementationType">OAuth Implementation Type</a></li>
-<li class="level2"><a href="#enum_help_clientAuthenticationMechanism">Client Authentication Mechanism</a></li>
-<li class="level2"><a href="#enum_help_frameAppearance">Frame Appearance</a></li>
-<li class="level2"><a href="#enum_help_psoDateType">Physical Inactive Record Selection Date Type</a></li>
-<li class="level2"><a href="#enum_help_esoDateType">Electronic Inactive Record Selection Date Type</a></li>
-<li class="level2"><a href="#enum_help_dateSearchType">Date Search Type</a></li>
-<li class="level2"><a href="#enum_help_geographyDistanceUnit">Geography Distance Unit</a></li>
-<li class="level2"><a href="#enum_help_geographySearchType">Geography Search Type</a></li>
-<li class="level2"><a href="#enum_help_checkinPlaceTypes">Check In Place Type</a></li>
-<li class="level2"><a href="#enum_help_authorizationMethods">Authorization Method</a></li>
-<li class="level2"><a href="#enum_help_locationAccess">Location Access Control</a></li>
-<li class="level2"><a href="#enum_help_documentReviewStates">Document Review State</a></li>
-<li class="level2"><a href="#enum_help_encryptionAlgorithm">Encryption Algorithm</a></li>
-<li class="level2"><a href="#enum_help_labelPositionChange">Label Position Change Type</a></li>
-<li class="level2"><a href="#enum_help_containmentRule">ContainmentRule</a></li>
-<li class="level2"><a href="#enum_help_dblClickStyle">Double Click Style</a></li>
-<li class="level2"><a href="#enum_help_dblClickContainerStyle">Double Click Container Style</a></li>
-<li class="level2"><a href="#enum_help_mailFolderTypes">Mail Folder Type</a></li>
-<li class="level2"><a href="#enum_help_ldapMatchingType">LDAP Attribute Matching Type</a></li>
-<li class="level2"><a href="#enum_help_ldapSearchScope">LDAP Search Scope</a></li>
-<li class="level2"><a href="#enum_help_ldapAuthMethod">LDAP Authentication Method</a></li>
-<li class="level2"><a href="#enum_help_schedulePurposes">Schedule Usage Purpose</a></li>
-<li class="level2"><a href="#enum_help_triggerDelayTypes">Trigger Delay Type</a></li>
-<li class="level2"><a href="#enum_help_cuspDateDisplayType">Cusp Date Display Type</a></li>
-<li class="level2"><a href="#enum_help_logLevels">Log Level</a></li>
-<li class="level2"><a href="#enum_help_outputPathTypes">Output Path Type</a></li>
-<li class="level2"><a href="#enum_help_lookupItemFieldStyle">Lookup Item Display Style</a></li>
-<li class="level2"><a href="#enum_help_checkinToolPurposes">Check In Style/Place Purpose</a></li>
-<li class="level2"><a href="#enum_help_genericPermissions">Generic Permission</a></li>
-<li class="level2"><a href="#enum_help_checkOutStyles">Checkout Style</a></li>
-<li class="level2"><a href="#enum_help_sslMode">SSL Mode</a></li>
-<li class="level2"><a href="#enum_help_mailPersistence">Mail Persistence Style</a></li>
-<li class="level2"><a href="#enum_help_consignmentState">Consignment State</a></li>
-<li class="level2"><a href="#enum_help_viewPaneStyle">View Pane Style</a></li>
-<li class="level2"><a href="#enum_help_autoRenderSelectOption">Auto Render Select Option</a></li>
-<li class="level2"><a href="#enum_help_documentStoreIntegrityCheckCounter">Document Store Integrity Check Counter Type</a></li>
-<li class="level2"><a href="#enum_help_contentEngineType">Content Engine Type</a></li>
-<li class="level2"><a href="#enum_help_asynchTaskStatus">Asynchronous Task Status</a></li>
-<li class="level2"><a href="#enum_help_historyPurposes">Active Audit Event</a></li>
-<li class="level2"><a href="#enum_help_aclMenuItems">Access Control Custom Add Menu Item</a></li>
-<li class="level2"><a href="#enum_help_activityAccess">Activity Access Control</a></li>
-<li class="level2"><a href="#enum_help_stringVerificationTypes">String Verification Type</a></li>
-<li class="level2"><a href="#enum_help_addressHistoryOption">Address History Option</a></li>
-<li class="level2"><a href="#enum_help_webServiceCacheSettings">Web Service Cache Setting</a></li>
-<li class="level2"><a href="#enum_help_occurrenceTypes">Event Occurrence Type</a></li>
-<li class="level2"><a href="#enum_help_resultPostProcessingMethod">Result Post Processing Methods</a></li>
-<li class="level2"><a href="#enum_help_externalWorkflowTypePurposes">External Workflow Type Purpose</a></li>
-<li class="level2"><a href="#enum_help_todoItemAccess">To Do Item Access Control</a></li>
-<li class="level2"><a href="#enum_help_loggingCategories">Diagnostic Logging Category</a></li>
-<li class="level2"><a href="#enum_help_userDashboardItem">User Dashboard Item</a></li>
-<li class="level2"><a href="#enum_help_autoProfilingTitleOptions">Document Auto Profiling Title Option</a></li>
-<li class="level2"><a href="#enum_help_labelAccess">User Label Access Control</a></li>
-<li class="level2"><a href="#enum_help_officeIntegrationMenuCaptions">Office Integration Menu Caption</a></li>
-<li class="level2"><a href="#enum_help_setAuthorOptions">Set Author Option</a></li>
-<li class="level2"><a href="#enum_help_recycleReasons">Recycle Reason</a></li>
-<li class="level2"><a href="#enum_help_externalLinkType">External Link Type</a></li>
-<li class="level2"><a href="#enum_help_dateAggregationType">Date Aggregation Type</a></li>
-<li class="level2"><a href="#enum_help_aggregationSortOrder">Aggrehation Sort Order</a></li>
-<li class="level2"><a href="#enum_help_externalLinkSpecialParameters">External Link Special Parameter</a></li>
-<li class="level2"><a href="#enum_help_copyRelationship">Copy Relationship</a></li>
-<li class="level2"><a href="#enum_help_explorerCategory">Explorer Top Level Category</a></li>
-<li class="level2"><a href="#enum_help_iconSizes">Icon Size</a></li>
-<li class="level2"><a href="#enum_help_storedProcedures">Stored Procedure</a></li>
-<li class="level2"><a href="#enum_help_storedFunctions">Stored Function</a></li>
-<li class="level2"><a href="#enum_help_dotsPerInch">Dots per Inch</a></li>
-<li class="level2"><a href="#enum_help_contentIndexDocumentStatus">Content Index Document Status</a></li>
-<li class="level2"><a href="#enum_help_documentEditStatus">Document Edit Status</a></li>
-<li class="level2"><a href="#enum_help_holdAccess">Hold Access Control</a></li>
-<li class="level2"><a href="#enum_help_baseObjectTypes">TRIM Object</a></li>
-<li class="level2"><a href="#enum_help_selectors">Selector</a></li>
-<li class="level2"><a href="#enum_help_enumerations">Enumeration</a></li>
-<li class="level2"><a href="#enum_help_commandIds">Command</a></li>
-<li class="level2"><a href="#enum_help_userPermissions">User Permission</a></li>
-<li class="level2"><a href="#enum_help_permissionGroups">Permission Group</a></li>
-<li class="level2"><a href="#enum_help_propertyIds">Property</a></li>
-<li class="level2"><a href="#enum_help_icons">Icon</a></li>
-<li class="level2"><a href="#enum_help_searchClauseIds">Search Clause</a></li>
-<li class="level2"><a href="#enum_help_userOptionSetIds">User Option Set</a></li>
-<li class="level2"><a href="#enum_help_menuIds">Menu</a></li>
-<li class="level2"><a href="#enum_help_menuItemIds">Menu Item</a></li>
-<li class="level2"><a href="#enum_help_menuPopupIds">Menu Popup</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="textblock"><p>﻿# Enum Items {#enum_metadata}</p>
-<h1><a class="anchor" id="enums_using"></a>
-Using Enums</h1>
+<div class="textblock"><p>﻿# Enum Items {#enum_items}</p>
+<h2><a class="anchor" id="enums_using"></a>
+Using Enums</h2>
 <p>Enum objects can be used to get localised captions when building a user interface, they are also useful to determine which enum item matches a particular value after exporting data from Content Manager.</p>
 <h2><a class="anchor" id="autotoc_md106"></a>
 Interrogating metadata</h2>
@@ -441,18 +98,18 @@ Interrogating metadata</h2>
 <h3><a class="anchor" id="autotoc_md107"></a>
 Code Sample</h3>
 <div class="fragment"><div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a5764e73bb5dc7b9e7fc7b2ea675bf334aec211f7c20af43e742bf2570c3cb84f9">Add</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ac0789e41090dc05a84ce39467d216592aa1fa27779242b4902f7ae3bdd5c6d508">Type</a> -Path <span class="stringliteral">&quot;[PATH TO cm BINARIES]\TRIM.SDK.dll&quot;</span></div>
-<div class="line">$database = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> <a class="code" href="namespace_t_r_i_m.html">TRIM</a>.<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>.<a class="code" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a></div>
+<div class="line">$database = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> <a class="code" href="namespace_t_r_i_m.html">TRIM</a>.<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>.<a class="code" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a></div>
 <div class="line">$database.<a class="code" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#a0cd3f59a50c7dde5b53e8935cdfab063">Id</a> = <span class="stringliteral">&quot;[YOUR DATABASE id]&quot;</span></div>
 <div class="line">$database.WorkgroupServerName = <span class="stringliteral">&quot;[YOUR SERVER NAME]&quot;</span></div>
 <div class="line">$database.Connect()</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordflow">try</span> {</div>
-<div class="line">    $file = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> System.IO.StreamWriter(<span class="stringliteral">&quot;c:\\temp\\enums.txt&quot;</span>, $false)</div>
+<div class="line">    $file = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> System.IO.StreamWriter(<span class="stringliteral">&quot;c:\\temp\\enums.txt&quot;</span>, $false)</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">foreach</span> ($allEnum <span class="keywordflow">in</span> [System.Enum]::GetValues([<a class="code" href="namespace_t_r_i_m.html">TRIM</a>.<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>.AllEnumerations])) {</div>
 <div class="line"> </div>
 <div class="line">        </div>
-<div class="line">        $trimEnum = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> <a class="code" href="namespace_t_r_i_m.html">TRIM</a>.<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>.<a class="code" href="class_t_r_i_m_1_1_s_d_k_1_1_enum.html">Enum</a>($allEnum, $database)</div>
+<div class="line">        $trimEnum = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> <a class="code" href="namespace_t_r_i_m.html">TRIM</a>.<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>.<a class="code" href="class_t_r_i_m_1_1_s_d_k_1_1_enum.html">Enum</a>($allEnum, $database)</div>
 <div class="line">        <span class="keywordflow">if</span> ($trimEnum.GetItemArray().Count -gt 0) {</div>
 <div class="line">        <span class="keywordflow">if</span> ($trimEnum.IsValid -eq $true) {</div>
 <div class="line"> </div>
@@ -486,10 +143,10 @@ Code Sample</h3>
 <div class="ttc" id="aclass_t_r_i_m_1_1_s_d_k_1_1_database_html_a0cd3f59a50c7dde5b53e8935cdfab063"><div class="ttname"><a href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#a0cd3f59a50c7dde5b53e8935cdfab063">TRIM.SDK.Database.Id</a></div><div class="ttdeci">string Id</div><div class="ttdoc">Gets or sets a string containing the Database id for this Database. Setting this property will make a...</div><div class="ttdef"><b>Definition:</b> Database.cs:1966</div></div>
 <div class="ttc" id="aclass_t_r_i_m_1_1_s_d_k_1_1_enum_html"><div class="ttname"><a href="class_t_r_i_m_1_1_s_d_k_1_1_enum.html">TRIM.SDK.Enum</a></div><div class="ttdoc">A helper class that allows you to iterate through enum item values and access captions for them.</div><div class="ttdef"><b>Definition:</b> Enum.cs:16</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html">TRIM.SDK</a></div><div class="ttdef"><b>Definition:</b> ApiHost.cs:5</div></div>
-<div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a0193b3b41a16f67d107228cdc4c92739a03c2e7e41ffc181a4e84080b4710e81e"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a03c2e7e41ffc181a4e84080b4710e81e">TRIM.SDK.Icons.New</a></div><div class="ttdeci">@ New</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a5764e73bb5dc7b9e7fc7b2ea675bf334aec211f7c20af43e742bf2570c3cb84f9"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a5764e73bb5dc7b9e7fc7b2ea675bf334aec211f7c20af43e742bf2570c3cb84f9">TRIM.SDK.CommandRefreshTypes.Add</a></div><div class="ttdeci">@ Add</div><div class="ttdoc">Object Added</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">TRIM.SDK.OfficeIntegrationMenuCaptions.Object</a></div><div class="ttdeci">@ Object</div><div class="ttdoc">Object</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_ac0789e41090dc05a84ce39467d216592aa1fa27779242b4902f7ae3bdd5c6d508"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#ac0789e41090dc05a84ce39467d216592aa1fa27779242b4902f7ae3bdd5c6d508">TRIM.SDK.QueueItemAttributes.Type</a></div><div class="ttdeci">@ Type</div><div class="ttdoc">Type</div></div>
+<div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_af7e058b1d73a0123587a52d773c2ad6ba03c2e7e41ffc181a4e84080b4710e81e"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba03c2e7e41ffc181a4e84080b4710e81e">TRIM.SDK.CommandIds.New</a></div><div class="ttdeci">@ New</div><div class="ttdoc">New Bob%</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_html"><div class="ttname"><a href="namespace_t_r_i_m.html">TRIM</a></div><div class="ttdef"><b>Definition:</b> ApiHost.cs:5</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="enum_item_by_enum_type_type"></a>
 List of enum items by Enum</h1>

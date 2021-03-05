@@ -282,6 +282,12 @@ Properties</h2></td></tr>
 <tr class="memitem:ab9802e2676ab4695d0e439c8c2692958"><td class="memItemLeft" align="right" valign="top">new string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#ab9802e2676ab4695d0e439c8c2692958">Name</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:ab9802e2676ab4695d0e439c8c2692958"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets a string containing the name of this Document Store.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#ab9802e2676ab4695d0e439c8c2692958">More...</a><br /></td></tr>
 <tr class="separator:ab9802e2676ab4695d0e439c8c2692958"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ddfbe084cdc0789057bec4d8e9d88b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a6ddfbe084cdc0789057bec4d8e9d88b6">NotifyHolds</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a6ddfbe084cdc0789057bec4d8e9d88b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets a boolean value indicating whether this store should be notified whenever a hold is added or removed from a record.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a6ddfbe084cdc0789057bec4d8e9d88b6">More...</a><br /></td></tr>
+<tr class="separator:a6ddfbe084cdc0789057bec4d8e9d88b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63c36a72fc679fe4ebe963d37e3977fe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a63c36a72fc679fe4ebe963d37e3977fe">NotifyMetadata</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a63c36a72fc679fe4ebe963d37e3977fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets a boolean value indicating whether this store should be notified whenever a hold is added or removed from a record.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a63c36a72fc679fe4ebe963d37e3977fe">More...</a><br /></td></tr>
+<tr class="separator:a63c36a72fc679fe4ebe963d37e3977fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcd16cd23510ff31254d1d1b03f7adff"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#afcd16cd23510ff31254d1d1b03f7adff">Path</a><code> [get]</code></td></tr>
 <tr class="memdesc:afcd16cd23510ff31254d1d1b03f7adff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a string containing the full path to the directory where this Document Store is located. The electronic documents are kept in subdirectories of this location. A string containing the path to the base directory of the Document Store is held in the ElectronicStore.DbPath property.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#afcd16cd23510ff31254d1d1b03f7adff">More...</a><br /></td></tr>
 <tr class="separator:afcd16cd23510ff31254d1d1b03f7adff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -910,6 +916,54 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets or sets a string containing the name of this Document Store. </p>
+
+</div>
+</div>
+<a id="a6ddfbe084cdc0789057bec4d8e9d88b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ddfbe084cdc0789057bec4d8e9d88b6">&#9670;&nbsp;</a></span>NotifyHolds</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TRIM.SDK.ElectronicStore.NotifyHolds</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets a boolean value indicating whether this store should be notified whenever a hold is added or removed from a record. </p>
+
+</div>
+</div>
+<a id="a63c36a72fc679fe4ebe963d37e3977fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63c36a72fc679fe4ebe963d37e3977fe">&#9670;&nbsp;</a></span>NotifyMetadata</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TRIM.SDK.ElectronicStore.NotifyMetadata</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets a boolean value indicating whether this store should be notified whenever a hold is added or removed from a record. </p>
 
 </div>
 </div>
