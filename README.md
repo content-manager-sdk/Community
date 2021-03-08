@@ -53,7 +53,7 @@ The .Net SDK [documentation](http://sdk.mfcm.xyz) is available.
 | [Power BI connector](Samples/ServiceAPI/Power%20Query/PowerQueryTRIMConnector)             | Source CM data from Power BI                                                                                                                                                             |
 | [DateTime Converter](Samples/SDK/CSharp/DateTimeConverter/)                                | Operate in the correct time-zone when writing a CM web service.                                                                                                                          |
 | [Blazor sample application](Samples/SDK/CSharp/BlazorApp)                                  | [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) is a Microsoft technology that allows you to build interactive web UIs using C# instead of JavaScript.                |
-| [OpenId Connect Authentication Plugin](Samples/ServiceAPI/CSharp/OpenIdConnectPlugin)      | The OpenId Connect Plugin supports OAuth authentication from any OAuth provider, for both native and web clients. This one plugin should supersede all other OAuth plugins in this repo. |
+| [OpenId Connect Authentication Plugin](Samples/ServiceAPI/CSharp/OpenIdConnectPlugin)      | The OpenId Connect Plugin supports OAuth authentication from any OAuth provider, for both native and web clients. This one plugin should supersede all other OAuth plugins in this repo.
 
 | [ServiceAPI samples using Nuget package](Samples/ServiceAPI/CSharp/ConsoleServiceAPIClient)| Connect to the Content Manager ServiceAPI using OpenId Connect and the service model library sourced from Nuget. |
 
