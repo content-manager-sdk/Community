@@ -129,76 +129,76 @@ namespace ConsoleServiceAPIClient
 		private async static Task getRecordUri()
 		{
 			var trimClient = await getServiceClient();
-var response = trimClient.Get<RecordsResponse>(new RecordFind() { Id = "REC_1" });
-Console.WriteLine(response.Results[0].Uri);
+			var response = trimClient.Get<RecordsResponse>(new RecordFind() { Id = "REC_1" });
+			Console.WriteLine(response.Results[0].Uri);
 		}
 
 		private async static Task getRecordTitle()
 		{
 			var trimClient = await getServiceClient();
-var response = trimClient.Get<RecordsResponse>(new RecordFind()
-{
-	Id = "REC_1",
-	Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
-});
+			var response = trimClient.Get<RecordsResponse>(new RecordFind()
+			{
+				Id = "REC_1",
+				Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
+			});
 
 
-Console.WriteLine(response.Results[0].Title);
+			Console.WriteLine(response.Results[0].Title);
 		}
 
 		private async static Task createRecord()
 		{
 			var trimClient = await getServiceClient();
 
-var record = new Record()
-{
-	RecordType = new RecordTypeRef() { FindBy = "Document" },
-	Title = "my test",
-	Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
-};
+			var record = new Record()
+			{
+				RecordType = new RecordTypeRef() { FindBy = "Document" },
+				Title = "my test",
+				Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
+			};
 
-var response = trimClient.Post<RecordsResponse>(record);
+			var response = trimClient.Post<RecordsResponse>(record);
 
-Console.WriteLine(response.Results[0].Title);
+			Console.WriteLine(response.Results[0].Title);
 		}
 
 		private async static Task recordSearch()
 		{
 			var trimClient = await getServiceClient();
-var response = trimClient.Get<RecordsResponse>(new Records()
-{
-	q = "all",
-	Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}" },
-	ResultsOnly = true,
-	PropertyValue = PropertyType.String,
-	pageSize = 100
-});
+			var response = trimClient.Get<RecordsResponse>(new Records()
+			{
+				q = "all",
+				Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}" },
+				ResultsOnly = true,
+				PropertyValue = PropertyType.String,
+				pageSize = 100
+			});
 
 
-foreach (var record in response.Results)
-{
-	Console.WriteLine(record.OwnerLocation.StringValue);
-}
+			foreach (var record in response.Results)
+			{
+				Console.WriteLine(record.OwnerLocation.StringValue);
+			}
 		}
 
 		private async static Task streamSearch()
 		{
 			var trimClient = await getServiceClient();
-var response = trimClient.Get<RecordsResponse>(new TrimStreamSearch()
-{
-	TrimType = BaseObjectTypes.Record,
-	q = "all",
-	Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}", $"{PropertyIds.RecordTitle}" },
-	pageSize = 100,
-});
+			var response = trimClient.Get<RecordsResponse>(new TrimStreamSearch()
+			{
+				TrimType = BaseObjectTypes.Record,
+				q = "all",
+				Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}", $"{PropertyIds.RecordTitle}" },
+				pageSize = 100,
+			});
 
 
-foreach (var record in response.Results)
-{
-	Console.WriteLine(record.Uri);
-	Console.WriteLine(record.OwnerLocation);
+			foreach (var record in response.Results)
+			{
+				Console.WriteLine(record.Uri);
+				Console.WriteLine(record.OwnerLocation);
 
-}
+			}
 		}
 
 
@@ -206,21 +206,21 @@ foreach (var record in response.Results)
 		{
 			var trimClient = await getServiceClient();
 
-var record = new Record()
-{
-	RecordType = new RecordTypeRef() { FindBy = "Document" },
-	Title = "my test document",
-	Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
-};
+			var record = new Record()
+			{
+				RecordType = new RecordTypeRef() { FindBy = "Document" },
+				Title = "my test document",
+				Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
+			};
 
-using (FileStream filestream = new FileStream("d:\\junk\\trim.png", FileMode.Open))
-{
-	var uploadFile = new ServiceStack.UploadFile("trim.png", filestream);
-	uploadFile.ContentType = "image/png";
+			using (FileStream filestream = new FileStream("d:\\junk\\trim.png", FileMode.Open))
+			{
+				var uploadFile = new ServiceStack.UploadFile("trim.png", filestream);
+				uploadFile.ContentType = "image/png";
 
-	var response = trimClient.PostFilesWithRequest<RecordsResponse>(record, new ServiceStack.UploadFile[] { uploadFile });
-	Console.WriteLine(response.Results[0].Title);
-}
+				var response = trimClient.PostFilesWithRequest<RecordsResponse>(record, new ServiceStack.UploadFile[] { uploadFile });
+				Console.WriteLine(response.Results[0].Title);
+			}
 		}
 
 		private async static Task getDocument()
@@ -228,29 +228,29 @@ using (FileStream filestream = new FileStream("d:\\junk\\trim.png", FileMode.Ope
 			var trimClient = await getServiceClient();
 			var httpClient = await getHttpClient();
 
-var recordDownload = new RecordDownload()
-{
-	Id = "REC_1",
-	DownloadType = DownloadType.Document
-};
+			var recordDownload = new RecordDownload()
+			{
+				Id = "REC_1",
+				DownloadType = DownloadType.Document
+			};
 
-string url = trimClient.ResolveTypedUrl("GET", recordDownload);
+			string url = trimClient.ResolveTypedUrl("GET", recordDownload);
 
 
-var response = await httpClient.GetAsync(url).ConfigureAwait(false); 
-string fileName = "test.dat";
-IEnumerable<string> values;
-if (response.Content.Headers.TryGetValues("Content-Disposition", out values))
-{
-	ContentDisposition contentDisposition = new ContentDisposition(values.First());
-	fileName = contentDisposition.FileName;
-}
+			var response = await httpClient.GetAsync(url).ConfigureAwait(false);
+			string fileName = "test.dat";
+			IEnumerable<string> values;
+			if (response.Content.Headers.TryGetValues("Content-Disposition", out values))
+			{
+				ContentDisposition contentDisposition = new ContentDisposition(values.First());
+				fileName = contentDisposition.FileName;
+			}
 
-using (var fileStream = File.Create(Path.Combine($"C:\\junk\\{fileName}")))
-{
-	var stream = await response.Content.ReadAsStreamAsync();
-	stream.CopyTo(fileStream);
-}
+			using (var fileStream = File.Create(Path.Combine($"C:\\junk\\{fileName}")))
+			{
+				var stream = await response.Content.ReadAsStreamAsync();
+				stream.CopyTo(fileStream);
+			}
 
 		}
 
