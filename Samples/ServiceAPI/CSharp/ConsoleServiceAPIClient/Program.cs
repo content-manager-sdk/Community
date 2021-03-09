@@ -79,6 +79,7 @@ namespace ConsoleServiceAPIClient
 
 			if (_trimClient == null)
 			{
+				// repalce the URL with the URL to your ServiceAPI instance
 				_trimClient = new JsonHttpClient("https://MyDev/ServiceAPI");
 			}
 
