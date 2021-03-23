@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -98,14 +99,17 @@ namespace ConsoleServiceAPIClient
 			if (_httpClient == null)
 			{
 				_httpClient = new HttpClient();
+				_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			}
 
 			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
 			return _httpClient;
 		}
 
 		static async Task Main(string[] args)
 		{
+
 			var stopWatch = Stopwatch.StartNew();
 
 			//	await getRecordUri();
@@ -116,11 +120,13 @@ namespace ConsoleServiceAPIClient
 
 			//await recordSearch();
 
-			await streamSearch();
+			//await streamSearch();
 
 			//await createRecordWithDocument();
 
 			// await getDocument();
+
+			await uploadFileAndCreateRecord();
 
 			Console.WriteLine(stopWatch.ElapsedMilliseconds);
 			Console.ReadKey();
@@ -222,6 +228,42 @@ namespace ConsoleServiceAPIClient
 				var response = trimClient.PostFilesWithRequest<RecordsResponse>(record, new ServiceStack.UploadFile[] { uploadFile });
 				Console.WriteLine(response.Results[0].Title);
 			}
+		}
+
+		private async static Task uploadFileAndCreateRecord()
+		{
+			var trimClient = await getServiceClient();
+			var httpClient = await getHttpClient();
+
+			HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
+
+			string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
+
+			using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
+			using (var formContent = new MultipartFormDataContent("NKdKd9Yk"))
+			using (var streamContent = new StreamContent(fileStream))
+			{
+
+				formContent.Headers.ContentType.MediaType = "multipart/form-data";
+				formContent.Add(streamContent, "Files", "trim.png");
+
+				var uploadedFileResponse = await httpClient.PostAsync(url, formContent);
+
+				var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
+				var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
+
+				var record = new Record()
+				{
+					RecordType = new RecordTypeRef() { FindBy = "Document" },
+					Title = "my test document",
+					Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }, 
+					FilePath = uploadedFile.FilePath
+				};
+
+					var response = await trimClient.PostAsync<RecordsResponse>(record);
+					Console.WriteLine(response.Results[0].Title);
+			}
+
 		}
 
 		private async static Task getDocument()

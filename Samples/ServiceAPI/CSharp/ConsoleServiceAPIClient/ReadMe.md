@@ -120,6 +120,43 @@ using (FileStream filestream = new FileStream("d:\\junk\\trim.png", FileMode.Ope
 }
 ```
 
+
+### Upload a file and Create a Record
+First upload the file and then post the Record.  This has advantages over the 'PostFilesWithRequest' in that the Record JSON is not compressed into a format that will fit inside a multipart upload.
+A limitation of the UploadFile end point is that it only accepts multipart file uploads, so the file must be sent as part of a multipart request.  As with all other samples error handling is not considered in this sample.
+
+```cs
+HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
+
+string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
+
+using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
+using (var formContent = new MultipartFormDataContent("NKdKd9Yk"))
+using (var streamContent = new StreamContent(fileStream))
+{
+
+	formContent.Headers.ContentType.MediaType = "multipart/form-data";
+	formContent.Add(streamContent, "Files", "trim.png");
+
+	var uploadedFileResponse = await httpClient.PostAsync(url, formContent);
+
+	var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
+	var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
+
+	var record = new Record()
+	{
+		RecordType = new RecordTypeRef() { FindBy = "Document" },
+		Title = "my test document",
+		Properties = new List<string>() { $"{PropertyIds.RecordTitle}" },
+		FilePath = uploadedFile.FilePath
+	};
+
+	var response = await trimClient.PostAsync<RecordsResponse>(record);
+	Console.WriteLine(response.Results[0].Title);
+}
+
+```
+
 ### Download document
 Download a document and write it to the local file system using the file name contained on the content disposition response header.
 
