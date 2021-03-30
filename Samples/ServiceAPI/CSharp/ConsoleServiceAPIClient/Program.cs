@@ -112,6 +112,9 @@ namespace ConsoleServiceAPIClient
 
 			var stopWatch = Stopwatch.StartNew();
 
+
+			await recordTypeSearch();
+
 			//	await getRecordUri();
 
 			//	await getRecordTitle();
@@ -126,12 +129,22 @@ namespace ConsoleServiceAPIClient
 
 			// await getDocument();
 
-			await uploadFileAndCreateRecord();
+			//await uploadFileAndCreateRecord();
 
 			Console.WriteLine(stopWatch.ElapsedMilliseconds);
 			Console.ReadKey();
 		}
 
+
+		private async static Task recordTypeSearch()
+		{
+			var trimClient = await getServiceClient();
+
+			var response = trimClient.Get<RecordTypesResponse>(new RecordTypes() { q = "all" });
+			Console.WriteLine(response.Results[0].Uri );
+
+
+		}
 
 		private async static Task getRecordUri()
 		{
