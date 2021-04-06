@@ -1,6 +1,6 @@
 var namespace_t_r_i_m_1_1_s_d_k =
 [
-    [ "Office Integration configuration", "zero_office.html#autotoc_md70", null ],
+    [ "Office Integration configuration", "zero_office.html#autotoc_md67", null ],
     [ "DownloadNotifier", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier.html", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier" ],
     [ "SwigHelper", "class_t_r_i_m_1_1_s_d_k_1_1_swig_helper.html", null ],
     [ "ITrimAccessControl", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control.html", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control" ],
@@ -4749,8 +4749,6 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "ElectronicStoreLoginPassword", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a3b01eba13541ab6a6f9d4344073a1e4a", null ],
       [ "ElectronicStoreMaxFolderSize", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ac3b128aa48961b5aa6cc560cf662dcc8", null ],
       [ "ElectronicStoreName", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ae7a47a63961b1b4b9a73223256885ede", null ],
-      [ "ElectronicStoreNotifyHolds", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ae9c97d1a5c3f55354b3a380d556350e2", null ],
-      [ "ElectronicStoreNotifyMetadata", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a7691a55c4c0c0d8410e991e9c469f27a", null ],
       [ "ElectronicStorePath", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a78c032ec24dfb56920be3860105c65f7", null ],
       [ "ElectronicStoreSecCompliant", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a62d346d58476e4b10935b8471f0848c5", null ],
       [ "ElectronicStoreStorageTier", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ae682ed1c060a104cc8959cb744c91b12", null ],

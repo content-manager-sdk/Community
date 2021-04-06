@@ -88,9 +88,75 @@ $(document).ready(function(){initNavTree('md_doc_83____property_definitions.html
 <div class="title">83 - PropertyDefinitions </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>﻿# Property Definitions</p>
-<h2><a class="anchor" id="property_definitions_using"></a>
-Using Property Definitions</h2>
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#property_definitions_using">Using Property Definitions</a></li>
+<li class="level1"><a href="#property_definitions_by_object_type">List of property definitions by object type</a><ul><li class="level2"><a href="#property_definitions_ActionDef">ActionDef</a></li>
+<li class="level2"><a href="#property_definitions_Activity">Activity</a></li>
+<li class="level2"><a href="#property_definitions_AgendaItem">AgendaItem</a></li>
+<li class="level2"><a href="#property_definitions_AgendaItemType">AgendaItemType</a></li>
+<li class="level2"><a href="#property_definitions_Alert">Alert</a></li>
+<li class="level2"><a href="#property_definitions_ArchiveEvent">ArchiveEvent</a></li>
+<li class="level2"><a href="#property_definitions_AutoPartRule">AutoPartRule</a></li>
+<li class="level2"><a href="#property_definitions_Census">Census</a></li>
+<li class="level2"><a href="#property_definitions_CheckinStyle">CheckinStyle</a></li>
+<li class="level2"><a href="#property_definitions_Classification">Classification</a></li>
+<li class="level2"><a href="#property_definitions_Communication">Communication</a></li>
+<li class="level2"><a href="#property_definitions_Consignment">Consignment</a></li>
+<li class="level2"><a href="#property_definitions_ConsignmentApprover">ConsignmentApprover</a></li>
+<li class="level2"><a href="#property_definitions_ConsignmentIssue">ConsignmentIssue</a></li>
+<li class="level2"><a href="#property_definitions_ConsignmentRejection">ConsignmentRejection</a></li>
+<li class="level2"><a href="#property_definitions_DocumentQueue">DocumentQueue</a></li>
+<li class="level2"><a href="#property_definitions_ElectronicStore">ElectronicStore</a></li>
+<li class="level2"><a href="#property_definitions_ExternalIcon">ExternalIcon</a></li>
+<li class="level2"><a href="#property_definitions_ExternalLink">ExternalLink</a></li>
+<li class="level2"><a href="#property_definitions_ExternalWorkflow">ExternalWorkflow</a></li>
+<li class="level2"><a href="#property_definitions_ExternalWorkflowTask">ExternalWorkflowTask</a></li>
+<li class="level2"><a href="#property_definitions_ExternalWorkflowType">ExternalWorkflowType</a></li>
+<li class="level2"><a href="#property_definitions_FieldDefinition">FieldDefinition</a></li>
+<li class="level2"><a href="#property_definitions_History">History</a></li>
+<li class="level2"><a href="#property_definitions_Hold">Hold</a></li>
+<li class="level2"><a href="#property_definitions_HtmlLayout">HtmlLayout</a></li>
+<li class="level2"><a href="#property_definitions_Jurisdiction">Jurisdiction</a></li>
+<li class="level2"><a href="#property_definitions_Keyword">Keyword</a></li>
+<li class="level2"><a href="#property_definitions_Location">Location</a></li>
+<li class="level2"><a href="#property_definitions_LookupSet">LookupSet</a></li>
+<li class="level2"><a href="#property_definitions_MailTemplate">MailTemplate</a></li>
+<li class="level2"><a href="#property_definitions_Meeting">Meeting</a></li>
+<li class="level2"><a href="#property_definitions_MeetingType">MeetingType</a></li>
+<li class="level2"><a href="#property_definitions_MetadataRule">MetadataRule</a></li>
+<li class="level2"><a href="#property_definitions_MinuteItem">MinuteItem</a></li>
+<li class="level2"><a href="#property_definitions_MinuteItemType">MinuteItemType</a></li>
+<li class="level2"><a href="#property_definitions_OfflineRecord">OfflineRecord</a></li>
+<li class="level2"><a href="#property_definitions_Origin">Origin</a></li>
+<li class="level2"><a href="#property_definitions_OriginHistory">OriginHistory</a></li>
+<li class="level2"><a href="#property_definitions_Record">Record</a></li>
+<li class="level2"><a href="#property_definitions_RecordAction">RecordAction</a></li>
+<li class="level2"><a href="#property_definitions_RecordType">RecordType</a></li>
+<li class="level2"><a href="#property_definitions_Report">Report</a></li>
+<li class="level2"><a href="#property_definitions_ReportBitmap">ReportBitmap</a></li>
+<li class="level2"><a href="#property_definitions_Request">Request</a></li>
+<li class="level2"><a href="#property_definitions_SavedSearch">SavedSearch</a></li>
+<li class="level2"><a href="#property_definitions_Schedule">Schedule</a></li>
+<li class="level2"><a href="#property_definitions_ScheduledTask">ScheduledTask</a></li>
+<li class="level2"><a href="#property_definitions_SearchForm">SearchForm</a></li>
+<li class="level2"><a href="#property_definitions_SecurityCaveat">SecurityCaveat</a></li>
+<li class="level2"><a href="#property_definitions_SecurityLevel">SecurityLevel</a></li>
+<li class="level2"><a href="#property_definitions_SharePointItem">SharePointItem</a></li>
+<li class="level2"><a href="#property_definitions_Space">Space</a></li>
+<li class="level2"><a href="#property_definitions_StopWord">StopWord</a></li>
+<li class="level2"><a href="#property_definitions_TodoItem">TodoItem</a></li>
+<li class="level2"><a href="#property_definitions_UserLabel">UserLabel</a></li>
+<li class="level2"><a href="#property_definitions_Word">Word</a></li>
+<li class="level2"><a href="#property_definitions_Workflow">Workflow</a></li>
+<li class="level2"><a href="#property_definitions_WorkflowTemplate">WorkflowTemplate</a></li>
+<li class="level2"><a href="#property_definitions_ZipCode">ZipCode</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="textblock"><p>﻿# Property Definitions # {#property_definition_metadata}</p>
+<h1><a class="anchor" id="property_definitions_using"></a>
+Using Property Definitions</h1>
 <p>Property values of main objects and child objects may be retrieved using the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set.html#afcd22c447795601b7f054540ebfe1cec">TrimPropertySet.GetProperty()</a> and <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set.html#afb2cd833d9ded326f88d6e045a1df851">TrimPropertySet.GetPropertyAsString()</a> methods. In addition the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_property_def.html">PropertyDef</a> class may be used to interrogate system metadata.</p>
 <h1><a class="anchor" id="property_definitions_by_object_type"></a>
 List of property definitions by object type</h1>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Micro Focus Content Manager SDK 10.0: Search Clauses</title>
+<title>Micro Focus Content Manager SDK 10.0: 70 - SearchClauses</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('_search_clauses.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md_doc_70____search_clauses.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -85,20 +85,89 @@ $(document).ready(function(){initNavTree('_search_clauses.html',''); initResizab
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Search Clauses </div>  </div>
+<div class="title">70 - SearchClauses </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="sc_using"></a>
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#search_clause_using">Using Search Clauses</a><ul><li class="level2"><a href="#autotoc_md106">Interrogating metadata</a><ul><li class="level3"><a href="#autotoc_md107">Code Sample</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><a href="#searcg_clauses_by_object_type">List of search clauses by object type</a><ul><li class="level2"><a href="#search_clauses_ActionDef">ActionDef</a></li>
+<li class="level2"><a href="#search_clauses_Activity">Activity</a></li>
+<li class="level2"><a href="#search_clauses_AgendaItem">AgendaItem</a></li>
+<li class="level2"><a href="#search_clauses_AgendaItemType">AgendaItemType</a></li>
+<li class="level2"><a href="#search_clauses_Alert">Alert</a></li>
+<li class="level2"><a href="#search_clauses_ArchiveEvent">ArchiveEvent</a></li>
+<li class="level2"><a href="#search_clauses_AutoPartRule">AutoPartRule</a></li>
+<li class="level2"><a href="#search_clauses_Census">Census</a></li>
+<li class="level2"><a href="#search_clauses_CheckinStyle">CheckinStyle</a></li>
+<li class="level2"><a href="#search_clauses_Classification">Classification</a></li>
+<li class="level2"><a href="#search_clauses_Communication">Communication</a></li>
+<li class="level2"><a href="#search_clauses_Consignment">Consignment</a></li>
+<li class="level2"><a href="#search_clauses_ConsignmentApprover">ConsignmentApprover</a></li>
+<li class="level2"><a href="#search_clauses_ConsignmentIssue">ConsignmentIssue</a></li>
+<li class="level2"><a href="#search_clauses_ConsignmentRejection">ConsignmentRejection</a></li>
+<li class="level2"><a href="#search_clauses_DocumentQueue">DocumentQueue</a></li>
+<li class="level2"><a href="#search_clauses_ElectronicStore">ElectronicStore</a></li>
+<li class="level2"><a href="#search_clauses_ExternalIcon">ExternalIcon</a></li>
+<li class="level2"><a href="#search_clauses_ExternalLink">ExternalLink</a></li>
+<li class="level2"><a href="#search_clauses_ExternalWorkflow">ExternalWorkflow</a></li>
+<li class="level2"><a href="#search_clauses_ExternalWorkflowTask">ExternalWorkflowTask</a></li>
+<li class="level2"><a href="#search_clauses_ExternalWorkflowType">ExternalWorkflowType</a></li>
+<li class="level2"><a href="#search_clauses_FieldDefinition">FieldDefinition</a></li>
+<li class="level2"><a href="#search_clauses_History">History</a></li>
+<li class="level2"><a href="#search_clauses_Hold">Hold</a></li>
+<li class="level2"><a href="#search_clauses_HtmlLayout">HtmlLayout</a></li>
+<li class="level2"><a href="#search_clauses_Jurisdiction">Jurisdiction</a></li>
+<li class="level2"><a href="#search_clauses_Keyword">Keyword</a></li>
+<li class="level2"><a href="#search_clauses_Location">Location</a></li>
+<li class="level2"><a href="#search_clauses_LookupSet">LookupSet</a></li>
+<li class="level2"><a href="#search_clauses_MailTemplate">MailTemplate</a></li>
+<li class="level2"><a href="#search_clauses_Meeting">Meeting</a></li>
+<li class="level2"><a href="#search_clauses_MeetingType">MeetingType</a></li>
+<li class="level2"><a href="#search_clauses_MetadataRule">MetadataRule</a></li>
+<li class="level2"><a href="#search_clauses_MinuteItem">MinuteItem</a></li>
+<li class="level2"><a href="#search_clauses_MinuteItemType">MinuteItemType</a></li>
+<li class="level2"><a href="#search_clauses_OfflineRecord">OfflineRecord</a></li>
+<li class="level2"><a href="#search_clauses_Origin">Origin</a></li>
+<li class="level2"><a href="#search_clauses_OriginHistory">OriginHistory</a></li>
+<li class="level2"><a href="#search_clauses_Record">Record</a></li>
+<li class="level2"><a href="#search_clauses_RecordAction">RecordAction</a></li>
+<li class="level2"><a href="#search_clauses_RecordType">RecordType</a></li>
+<li class="level2"><a href="#search_clauses_Report">Report</a></li>
+<li class="level2"><a href="#search_clauses_ReportBitmap">ReportBitmap</a></li>
+<li class="level2"><a href="#search_clauses_Request">Request</a></li>
+<li class="level2"><a href="#search_clauses_SavedSearch">SavedSearch</a></li>
+<li class="level2"><a href="#search_clauses_Schedule">Schedule</a></li>
+<li class="level2"><a href="#search_clauses_ScheduledTask">ScheduledTask</a></li>
+<li class="level2"><a href="#search_clauses_SearchForm">SearchForm</a></li>
+<li class="level2"><a href="#search_clauses_SecurityCaveat">SecurityCaveat</a></li>
+<li class="level2"><a href="#search_clauses_SecurityLevel">SecurityLevel</a></li>
+<li class="level2"><a href="#search_clauses_SharePointItem">SharePointItem</a></li>
+<li class="level2"><a href="#search_clauses_Space">Space</a></li>
+<li class="level2"><a href="#search_clauses_StopWord">StopWord</a></li>
+<li class="level2"><a href="#search_clauses_TodoItem">TodoItem</a></li>
+<li class="level2"><a href="#search_clauses_UserLabel">UserLabel</a></li>
+<li class="level2"><a href="#search_clauses_Word">Word</a></li>
+<li class="level2"><a href="#search_clauses_Workflow">Workflow</a></li>
+<li class="level2"><a href="#search_clauses_WorkflowTemplate">WorkflowTemplate</a></li>
+<li class="level2"><a href="#search_clauses_ZipCode">ZipCode</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="textblock"><p>﻿# Search Clauses # {#search_clause_metadata}</p>
+<h1><a class="anchor" id="search_clause_using"></a>
 Using Search Clauses</h1>
-<h2><a class="anchor" id="sc_overview"></a>
-Overview</h2>
 <p>Search clauses may be used with <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html">TrimMainObjectSearch</a>, either via the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_search_clause.html">TrimSearchClause</a> class, or as strings via <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a3c09f2617f7377dd77ee214e60e2cb48">TrimMainObjectSearch.SetSearchString()</a>. Given that search clauses may be captioned, it is a good idea when using them as strings to use their internal name. <br  />
 </p>
 <p>This document lists all search clauses along with their internal names.</p>
-<h2><a class="anchor" id="autotoc_md104"></a>
+<h2><a class="anchor" id="autotoc_md106"></a>
 Interrogating metadata</h2>
 <p>The information about search clauses, like much of the Content Manager metadata, is available via the SDK. In this case, we can use the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_search_clause_def.html">SearchClauseDef</a> class to get information about each search clause. This Powershell script was used to build the table below.</p>
-<h3><a class="anchor" id="autotoc_md105"></a>
+<h3><a class="anchor" id="autotoc_md107"></a>
 Code Sample</h3>
 <div class="fragment"><div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a5764e73bb5dc7b9e7fc7b2ea675bf334aec211f7c20af43e742bf2570c3cb84f9">Add</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ac0789e41090dc05a84ce39467d216592aa1fa27779242b4902f7ae3bdd5c6d508">Type</a> -Path <span class="stringliteral">&quot;[PATH TO cm BINARIES]\TRIM.SDK.dll&quot;</span></div>
 <div class="line">$database = <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba03c2e7e41ffc181a4e84080b4710e81e">New</a>-<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ab8a61ddc8d2bf0a4d8d9c6404b1d0c2fa497031794414a552435f90151ac3b54b">Object</a> <a class="code" href="namespace_t_r_i_m.html">TRIM</a>.<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>.<a class="code" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a></div>

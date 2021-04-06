@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Micro Focus Content Manager SDK 10.0: Zero Footprint OfficeIntegration</title>
+<title>Micro Focus Content Manager SDK 10.0: Zero Footprint Office Integration</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,28 +85,28 @@ $(document).ready(function(){initNavTree('zero_office.html',''); initResizable()
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Zero Footprint OfficeIntegration </div>  </div>
+<div class="title">Zero Footprint Office Integration </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md66">Components</a></li>
-<li class="level1"><a href="#autotoc_md67">Requirements</a></li>
-<li class="level1"><a href="#autotoc_md68">ServiceAPI</a><ul><li class="level2"><a href="#autotoc_md69">ServiceAPI Configuration</a><ul><ul><li class="level4"><a href="#autotoc_md70">Office Integration configuration</a></li>
+<ul><li class="level1"><a href="#autotoc_md63">Components</a></li>
+<li class="level1"><a href="#autotoc_md64">Requirements</a></li>
+<li class="level1"><a href="#autotoc_md65">ServiceAPI</a><ul><li class="level2"><a href="#autotoc_md66">ServiceAPI Configuration</a><ul><ul><li class="level4"><a href="#autotoc_md67">Office Integration configuration</a></li>
 </ul>
-<li class="level3"><a href="#autotoc_md71">Authentication</a></li>
-</ul>
-</li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md72">Manifests</a></li>
-<li class="level1"><a href="#autotoc_md73">Email Link</a></li>
-<li class="level1"><a href="#autotoc_md74">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
+<li class="level2"><a href="#autotoc_md68">ServiceAPI Authentication</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#autotoc_md69">Manifests</a></li>
+<li class="level1"><a href="#autotoc_md70">Email Link</a></li>
+<li class="level1"><a href="#autotoc_md71">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_doc_15___Office_Integration"></a></p>
-<h1><a class="anchor" id="autotoc_md66"></a>
+<h1><a class="anchor" id="autotoc_md63"></a>
 Components</h1>
 <p>The zero footprint office is made up of a number of components, not all of which need to be configured depending on the level of functionality required. The components are:</p><ul>
 <li>ServiceAPI</li>
@@ -114,10 +114,10 @@ Components</h1>
 <li>Email Link</li>
 <li>OneDrive file handler</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md67"></a>
+<h1><a class="anchor" id="autotoc_md64"></a>
 Requirements</h1>
-<p>The components listed above work together to provide the complete zero footprint integration. If the only part of the integration required is the Outlook integration then only the ServiceAPI, Email Link and Outlook manifest are required, the other components (Office manifest and OneDrive handler) are required for Word, Excel and PowerPoint.</p>
-<h1><a class="anchor" id="autotoc_md68"></a>
+<p>The components listed above work together to provide the complete zero footprint integration. If the only part of the integration required is the Outlook integration then only the ServiceAPI, Email Link and Outlook manifest are required, the other components (Office manifest, Email Link and OneDrive handler) are required for Word, Excel and PowerPoint.</p>
+<h1><a class="anchor" id="autotoc_md65"></a>
 ServiceAPI</h1>
 <p>The ServiceAPI must be installed and must have a valid HTTPS certificate, any HTTP errors will cause the Office Integration to fail.</p>
 <p>The ServiceAPI performs three functions within the integration:</p><ul>
@@ -125,9 +125,9 @@ ServiceAPI</h1>
 <li>provides the backend services to which the add-on communicates when reading from or writing to Content Manager, and</li>
 <li>provides services that act as a proxy between the Add-in and OneDrive for reading from and writing to OneDrive.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md69"></a>
+<h2><a class="anchor" id="autotoc_md66"></a>
 ServiceAPI Configuration</h2>
-<h4><a class="anchor" id="autotoc_md70"></a>
+<h4><a class="anchor" id="autotoc_md67"></a>
 Office Integration configuration</h4>
 <p>The ServiceAPI must be provided with the GUID and Version found in the Id element of the Office add-in manifest. This guid is used when a document is first opened from Content Manager to notify the add-in that the Content Manager add-in should be auto-opened when the document is opened. To add this GUID:</p><ul>
 <li>edit the hptrim.config file</li>
@@ -135,10 +135,39 @@ Office Integration configuration</h4>
 </ul>
 <p>** Example **</p>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">officeIntegration</span> <span class="keyword">guid</span>=<span class="stringliteral">&quot;5d7bd8ba-11b0-46b1-98ab-95fadd95a97d&quot;</span> <span class="keyword">version</span>=<span class="stringliteral">&quot;1.0.0.0&quot;</span>/&gt;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md71"></a>
-Authentication</h3>
-<p>The ServiceAPI must be configured to use OpenId Connect authentication as described in the <a href="oidc.html#oidc_azuread">authentication section</a>.</p>
-<h1><a class="anchor" id="autotoc_md72"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md68"></a>
+ServiceAPI Authentication</h2>
+<p>The ServiceAPI must be configured to use OpenId Connect authentication as described in the <a href="oidc.html#oidc_azuread">authentication section</a>. New permissions must be assigned to the Azure AD Application to support OneDrive access, these are:</p><ul>
+<li>Delegated:<ul>
+<li>Files.Read.All</li>
+<li>Files.ReadWrite.All</li>
+</ul>
+</li>
+<li>Application:<ul>
+<li>Files.Read.All</li>
+<li>Files.ReadWrite.All</li>
+<li>Office 365 Exchange Online - full_access_as_app</li>
+</ul>
+</li>
+</ul>
+<p>To assign these permissions:</p><ul>
+<li>open the Azure AD Application used for authenticating the Web Client</li>
+<li>go to API permissions</li>
+<li>select 'Add a permission'</li>
+<li>select Microsoft Graph</li>
+<li>choose either 'Delegated' or 'Application' permissions</li>
+<li>find the permission and add it <br  />
+</li>
+<li>once you have added all the permissions select 'Grant admin consent' to consent to all permissions.</li>
+</ul>
+<p>** Note ** The Office 365 Exchange Online permission is not a part of the OneDrive permissions, to find it:</p><ul>
+<li>select 'Add a permission' <br  />
+</li>
+<li>select 'API's my organisation uses'</li>
+<li>find 'Office 365 Exchange Online' in the listed</li>
+<li>add the 'Application' permission as you did the other permissions.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md69"></a>
 Manifests</h1>
 <p>The manifest's purpose is to notify Office 365 of the presence of your add-in. Manifest files must be customised before upload to your Office 365 Admin. To prepare your manifests:</p><ul>
 <li>download the <a href="files/manifests.zip">sample manifests</a>,</li>
@@ -149,14 +178,14 @@ Manifests</h1>
 <li>the name of the add-in that will be displayed in the task pane title (and in the context menu for Outlook) is embedded in the manifest, by default it is 'Content Manager' but this can be changed if desired, and</li>
 <li>go to the <a href="https://admin.microsoft.com/?applauncher#/Settings/AddIns">Add-ins page</a> in Office 365 Admin and deploy each manifest.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md73"></a>
+<h1><a class="anchor" id="autotoc_md70"></a>
 Email Link</h1>
 <p>Email Link serves to purposes in the Outlook/Office integration, to:</p><ol type="1">
 <li>file email from Linked Folders in the Outlook integration, and</li>
 <li>check documents in from Office applications when 'check in on close' is selected.</li>
 </ol>
 <p>Email Link should be installed as usual, there must be a Microsoft authentication configuration for your Office 365 domain that is of type OAuth and has both Email and Drive selected (if both Office and Outlook integration is required).</p>
-<h1><a class="anchor" id="autotoc_md74"></a>
+<h1><a class="anchor" id="autotoc_md71"></a>
 OneDrive file handler</h1>
 <p>When a document is checked in to Content Managed via 'Check in and Delete on Close' a TR5 file is created as a stub for the document in OneDrive. The OneDrive file handler supports:</p><ul>
 <li>re-opening the document for editing in OneDrive, and</li>

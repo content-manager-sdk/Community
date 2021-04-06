@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a0829d879855dbafd0ff854d75cb9e246":[13,0,0,0,269,14],
-"class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a14c1aac9d21f153644a1f250bde72997":[13,0,0,0,269,13],
 "class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a2f017482b88d06395062d4efecaba56c":[13,0,0,0,269,12],
 "class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a3fd67dc6f099362cde6adfa23a1d7490":[13,0,0,0,269,5],
 "class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a4d9850c64cd07d40c11676b9691c5bc9":[13,0,0,0,269,11],
@@ -249,5 +247,7 @@ var NAVTREEINDEX23 =
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#a5c6d701e26403fdbe0fab9a168d36734":[13,0,0,0,284,1],
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#a79accefb2783bd52f65b3f9d3cc4f76d":[13,0,0,0,284,5],
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#a7c67d2d8aa6d8730d2d428f19f33d389":[13,0,0,0,284,3],
-"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#a8a25d6d97e248bd190fe02633b2d99a2":[13,0,0,0,284,7]
+"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#a8a25d6d97e248bd190fe02633b2d99a2":[13,0,0,0,284,7],
+"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#aa161e78f61f444e569b7df7f0e6a7764":[13,0,0,0,284,6],
+"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#ab3bd1131f5d00aaa1ec6abfdd1e1b4ec":[13,0,0,0,284,2]
 };
