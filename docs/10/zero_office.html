@@ -98,9 +98,9 @@ $(document).ready(function(){initNavTree('zero_office.html',''); initResizable()
 <li class="level2"><a href="#autotoc_md69">ServiceAPI Authentication</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md70">Manifests</a></li>
-<li class="level1"><a href="#autotoc_md71">Email Link</a></li>
-<li class="level1"><a href="#autotoc_md72">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
+<li class="level1"><a href="#zero_manifests">Manifests</a></li>
+<li class="level1"><a href="#autotoc_md70">Email Link</a></li>
+<li class="level1"><a href="#autotoc_md71">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
 </ul>
 </li>
 </ul>
@@ -129,7 +129,7 @@ ServiceAPI</h1>
 ServiceAPI Configuration</h2>
 <h4><a class="anchor" id="autotoc_md68"></a>
 Office Integration configuration</h4>
-<p>The ServiceAPI must be provided with the GUID and Version found in the Id element of the Office add-in manifest. This guid is used when a document is first opened from Content Manager to notify the add-in that the Content Manager add-in should be auto-opened when the document is opened. To add this GUID:</p><ul>
+<p>The ServiceAPI must be provided with the GUID and Version found in the Id element of the Office add-in <a href="#zero_manifests">manifest</a>. This guid is used when a document is first opened from Content Manager to notify the add-in that the Content Manager add-in should be auto-opened when the document is opened. To add this GUID:</p><ul>
 <li>edit the hptrim.config file</li>
 <li>add the officeIntegration element below the setup element</li>
 </ul>
@@ -167,7 +167,7 @@ ServiceAPI Authentication</h2>
 <li>find 'Office 365 Exchange Online' in the listed</li>
 <li>add the 'Application' permission as you did the other permissions.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md70"></a>
+<h1><a class="anchor" id="zero_manifests"></a>
 Manifests</h1>
 <p>The manifest's purpose is to notify Office 365 of the presence of your add-in. Manifest files must be customised before upload to your Office 365 Admin. To prepare your manifests:</p><ul>
 <li>download the <a href="files/manifests.zip">sample manifests</a>,</li>
@@ -178,14 +178,14 @@ Manifests</h1>
 <li>the name of the add-in that will be displayed in the task pane title (and in the context menu for Outlook) is embedded in the manifest, by default it is 'Content Manager' but this can be changed if desired, and</li>
 <li>go to the <a href="https://admin.microsoft.com/?applauncher#/Settings/AddIns">Add-ins page</a> in Office 365 Admin and deploy each manifest.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md71"></a>
+<h1><a class="anchor" id="autotoc_md70"></a>
 Email Link</h1>
 <p>Email Link serves to purposes in the Outlook/Office integration, to:</p><ol type="1">
 <li>file email from Linked Folders in the Outlook integration, and</li>
 <li>check documents in from Office applications when 'check in on close' is selected.</li>
 </ol>
 <p>Email Link should be installed as usual, there must be a Microsoft authentication configuration for your Office 365 domain that is of type OAuth and has both Email and Drive selected (if both Office and Outlook integration is required).</p>
-<h1><a class="anchor" id="autotoc_md72"></a>
+<h1><a class="anchor" id="autotoc_md71"></a>
 OneDrive file handler</h1>
 <p>When a document is checked in to Content Managed via 'Check in and Delete on Close' a TR5 file is created as a stub for the document in OneDrive. The OneDrive file handler supports:</p><ul>
 <li>re-opening the document for editing in OneDrive, and</li>
