@@ -261,7 +261,7 @@ var NAVTREE =
           [ "Example", "oidc.html#autotoc_md59", null ]
         ] ],
         [ "Configure Azure AD for Office Integration access", "oidc.html#autotoc_md60", [
-          [ "Example Config", "oidc.html#autotoc_md61", null ]
+          [ "Example Config.xml", "oidc.html#autotoc_md61", null ]
         ] ],
         [ "Troubleshooting Azure AD for Office Integration access", "oidc.html#autotoc_md62", [
           [ "Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.", "oidc.html#autotoc_md63", null ]
