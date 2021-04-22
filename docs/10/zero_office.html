@@ -95,12 +95,13 @@ $(document).ready(function(){initNavTree('zero_office.html',''); initResizable()
 </ul>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md69">ServiceAPI Authentication</a></li>
+<li class="level2"><a href="#autotoc_md69">ServiceAPI Authentication Permissions</a></li>
+<li class="level2"><a href="#autotoc_md70">ServiceAPI Authentication Application ID</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#zero_manifests">Manifests</a></li>
-<li class="level1"><a href="#autotoc_md70">Email Link</a></li>
-<li class="level1"><a href="#autotoc_md71">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
+<li class="level1"><a href="#autotoc_md71">Email Link</a></li>
+<li class="level1"><a href="#autotoc_md72">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +137,7 @@ Office Integration configuration</h4>
 <p>** Example **</p>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">officeIntegration</span> <span class="keyword">guid</span>=<span class="stringliteral">&quot;5d7bd8ba-11b0-46b1-98ab-95fadd95a97d&quot;</span> <span class="keyword">version</span>=<span class="stringliteral">&quot;1.0.0.0&quot;</span>/&gt;</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md69"></a>
-ServiceAPI Authentication</h2>
+ServiceAPI Authentication Permissions</h2>
 <p>The ServiceAPI must be configured to use OpenId Connect authentication as described in the <a href="oidc.html#oidc_azuread">authentication section</a>. New permissions must be assigned to the Azure AD Application to support OneDrive access, these are:</p><ul>
 <li>Delegated:<ul>
 <li>Files.Read.All</li>
@@ -167,25 +168,36 @@ ServiceAPI Authentication</h2>
 <li>find 'Office 365 Exchange Online' in the listed</li>
 <li>add the 'Application' permission as you did the other permissions.</li>
 </ul>
+<h2><a class="anchor" id="autotoc_md70"></a>
+ServiceAPI Authentication Application ID</h2>
+<p>The office integration requires that the Application ID Uri in the Azure AD App include the domain name of your ServiceAPI server, this must be adjusted before installing the office integration manifests. To adjust the Application ID URI:</p><ol type="1">
+<li>open the Azure App referenced from your ServiceAPI hptrim.config file,</li>
+<li>go the 'Expose an API' page,</li>
+<li>edit the Application ID URI field,</li>
+<li>by default the Application ID URI will look something like this <code>api://2d89cb2b-3cb7-4c21-807e-029fdbfe74a7</code>,</li>
+<li>edit the Application ID URI to include the name of your ServiceAPI server, for example <code>api://myserver.com/2d89cb2b-3cb7-4c21-807e-029fdbfe74a7</code>, then</li>
+<li>Once you have modified this you will need to update the appIdURI property in the ServiceAPI hptrim.config file.</li>
+</ol>
 <h1><a class="anchor" id="zero_manifests"></a>
 Manifests</h1>
 <p>The manifest's purpose is to notify Office 365 of the presence of your add-in. Manifest files must be customised before upload to your Office 365 Admin. To prepare your manifests:</p><ul>
 <li>download the <a href="files/manifests.zip">sample manifests</a>,</li>
 <li><a href="https://www.guidgenerator.com/online-guid-generator.aspx">generate</a> a new Guid for each manifest (if you are installing both Outlook and Office integrations),</li>
 <li>replace the Id in each manifest with a valid Guid,</li>
-<li>for Office set the new GUID in the officeIntegration element in the hptrim.config file (see above),</li>
+<li>set the GUID from the Office manifest in the officeIntegration element in the hptrim.config file (see above),</li>
 <li>assuming the ServiceAPI is in the pattern <a href="https://yourserver.com/CMServiceAPI">https://yourserver.com/CMServiceAPI</a> do a search and replace of each manifest, replacing [MYSERVER] with your server name,</li>
+<li>at the bottom of the manifest is an element called 'WebApplicationInfo', replace the 'Id' value with the Application Id from Azure and the 'Resource' value with the Application ID URI from Azure,</li>
 <li>the name of the add-in that will be displayed in the task pane title (and in the context menu for Outlook) is embedded in the manifest, by default it is 'Content Manager' but this can be changed if desired, and</li>
 <li>go to the <a href="https://admin.microsoft.com/?applauncher#/Settings/AddIns">Add-ins page</a> in Office 365 Admin and deploy each manifest.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md70"></a>
+<h1><a class="anchor" id="autotoc_md71"></a>
 Email Link</h1>
 <p>Email Link serves to purposes in the Outlook/Office integration, to:</p><ol type="1">
 <li>file email from Linked Folders in the Outlook integration, and</li>
 <li>check documents in from Office applications when 'check in on close' is selected.</li>
 </ol>
 <p>Email Link should be installed as usual, there must be a Microsoft authentication configuration for your Office 365 domain that is of type OAuth and has both Email and Drive selected (if both Office and Outlook integration is required).</p>
-<h1><a class="anchor" id="autotoc_md71"></a>
+<h1><a class="anchor" id="autotoc_md72"></a>
 OneDrive file handler</h1>
 <p>When a document is checked in to Content Managed via 'Check in and Delete on Close' a TR5 file is created as a stub for the document in OneDrive. The OneDrive file handler supports:</p><ul>
 <li>re-opening the document for editing in OneDrive, and</li>

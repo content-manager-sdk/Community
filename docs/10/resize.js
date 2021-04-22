@@ -61,13 +61,13 @@ function initResizable()
     var windowWidth = $(window).width() + "px";
     var sidenavWidth = $(sidenav).outerWidth();
     content.css({marginLeft:parseInt(sidenavWidth)+"px"});
-    writeCookie('width',sidenavWidth, null);
+    writeCookie('width',sidenavWidth-barWidth, null);
   }
 
   function restoreWidth(navWidth)
   {
     var windowWidth = $(window).width() + "px";
-    content.css({marginLeft:parseInt(navWidth)+barWidth+10+"px"});
+    content.css({marginLeft:parseInt(navWidth)+barWidth+"px"});
     sidenav.css({width:navWidth + "px"});
   }
 
