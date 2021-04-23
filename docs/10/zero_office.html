@@ -208,6 +208,12 @@ OneDrive file handler</h1>
 <li>replace all instances of <code><a href="https://mfcm.xyz/ServiceAPI">https://mfcm.xyz/ServiceAPI</a></code> with the URL to your ServiceAPI instance, and</li>
 <li>follow the <a href="https://docs.microsoft.com/en-us/onedrive/developer/file-handlers/register-manually?view=odsp-graph-online">instructions</a> for installing OneDrive handlers.</li>
 </ul>
+<p>If the file handler does not appear in OneDrive it may be that it is not set to be visible. To verify this:</p><ol type="1">
+<li>in Azure AD goto 'Enterprise Applications',</li>
+<li>open the App which has your handler in its manifest,</li>
+<li>go to the 'Properties' page, and</li>
+<li>set 'Visible to users' to Yes.</li>
+</ol>
 <h2><a class="anchor" id="refresh_access_token"></a>
 Refreshing the file handler</h2>
 <p>The file handler registration process can be somewhat fragile. In particular the time taken to reflect any changes is unpredictable. The instructions above refer to a service to <a href="https://docs.microsoft.com/en-us/onedrive/developer/file-handlers/reset-cache?view=odsp-graph-online">refresh the handler</a> which itself does not always seem to actually refresh the handler.</p>
