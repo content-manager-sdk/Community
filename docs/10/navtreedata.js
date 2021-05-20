@@ -26,10 +26,10 @@ var NAVTREE =
 [
   [ "Micro Focus Content Manager SDK 10.0", "index.html", [
     [ "Welcome to the Content Manager SDK Documentation", "index.html", [
-      [ "Overview", "index.html#autotoc_md123", null ],
-      [ "Important", "index.html#autotoc_md124", null ],
-      [ "Older Versions", "index.html#autotoc_md125", null ],
-      [ "More Help", "index.html#autotoc_md126", null ]
+      [ "Overview", "index.html#autotoc_md125", null ],
+      [ "Important", "index.html#autotoc_md126", null ],
+      [ "Older Versions", "index.html#autotoc_md127", null ],
+      [ "More Help", "index.html#autotoc_md128", null ]
     ] ],
     [ "Supporting Information", "md_doc_00____legal.html", [
       [ "Legal Notices", "md_doc_00____legal.html#legal", [
@@ -274,11 +274,13 @@ var NAVTREE =
       [ "ServiceAPI", "zero_office.html#autotoc_md66", [
         [ "ServiceAPI Configuration", "zero_office.html#autotoc_md67", null ],
         [ "ServiceAPI Authentication Permissions", "zero_office.html#autotoc_md69", null ],
-        [ "ServiceAPI Authentication Application ID", "zero_office.html#autotoc_md70", null ]
+        [ "ServiceAPI Authentication Application ID", "zero_office.html#autotoc_md70", null ],
+        [ "ServiceAPI Authorized Client Applications", "zero_office.html#autotoc_md71", null ]
       ] ],
       [ "Manifests", "zero_office.html#zero_manifests", null ],
-      [ "Email Link", "zero_office.html#autotoc_md71", null ],
-      [ "OneDrive file handler", "zero_office.html#autotoc_md72", [
+      [ "Browser Cookies", "zero_office.html#autotoc_md72", null ],
+      [ "Email Link", "zero_office.html#autotoc_md73", null ],
+      [ "OneDrive file handler", "zero_office.html#autotoc_md74", [
         [ "Refreshing the file handler", "zero_office.html#refresh_access_token", null ]
       ] ]
     ] ],
@@ -287,110 +289,110 @@ var NAVTREE =
         [ "The main objects", "programming_guide.html#main_objects", null ],
         [ "Using the TrimApplication object", "programming_guide.html#application_object", null ],
         [ "Using the Database object", "programming_guide.html#database_object", [
-          [ "Code Example", "programming_guide.html#autotoc_md73", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md75", null ]
         ] ],
         [ "Database pooling", "programming_guide.html#database_pooling", [
-          [ "Code Example", "programming_guide.html#autotoc_md74", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md76", null ]
         ] ]
       ] ],
       [ "Creating and modifying Records", "programming_guide.html#creating_records", [
         [ "Creating new Records", "programming_guide.html#new_record", [
-          [ "Code example", "programming_guide.html#autotoc_md75", null ]
+          [ "Code example", "programming_guide.html#autotoc_md77", null ]
         ] ],
         [ "Setting the Container and Classification", "programming_guide.html#creating_records_container", null ],
         [ "Accessing existing records", "programming_guide.html#access_existing_record", null ],
         [ "Getting a record by record number", "programming_guide.html#get_existing_record", [
-          [ "Code Example", "programming_guide.html#autotoc_md76", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md78", null ]
         ] ],
         [ "Getting a Record by URI", "programming_guide.html#record_by_uri", [
-          [ "Code Example", "programming_guide.html#autotoc_md77", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md79", null ]
         ] ]
       ] ],
       [ "Reading record data", "programming_guide.html#reading_record_data", [
         [ "Basic properties", "programming_guide.html#reading_basic_properties", [
-          [ "Examples of basic readable properties of a record are:", "programming_guide.html#autotoc_md78", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md79", null ]
+          [ "Examples of basic readable properties of a record are:", "programming_guide.html#autotoc_md80", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md81", null ]
         ] ],
         [ "Accessing related objects", "programming_guide.html#related_objects", [
-          [ "Code Example", "programming_guide.html#autotoc_md80", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md82", null ]
         ] ],
         [ "Accessing record Location information", "programming_guide.html#record_Location_info", [
-          [ "Code Example", "programming_guide.html#autotoc_md81", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md83", null ]
         ] ]
       ] ],
       [ "Updating records", "programming_guide.html#updating_records", [
         [ "Modifying properties", "programming_guide.html#modifying_properties", [
-          [ "Code Example", "programming_guide.html#autotoc_md82", null ]
-        ] ],
-        [ "Calling update methods", "programming_guide.html#update_methods", [
-          [ "Code Example", "programming_guide.html#autotoc_md83", null ],
           [ "Code Example", "programming_guide.html#autotoc_md84", null ]
         ] ],
+        [ "Calling update methods", "programming_guide.html#update_methods", [
+          [ "Code Example", "programming_guide.html#autotoc_md85", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md86", null ]
+        ] ],
         [ "Updating properties using SetProperty", "programming_guide.html#updating_properties", [
-          [ "Code Example", "programming_guide.html#autotoc_md85", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md87", null ]
         ] ],
         [ "User Defined Fields", "programming_guide.html#update_user_defined_fields", [
-          [ "Code Example (GetFieldValue())", "programming_guide.html#autotoc_md86", null ],
-          [ "Code Example (SetFieldValue())", "programming_guide.html#autotoc_md87", null ]
+          [ "Code Example (GetFieldValue())", "programming_guide.html#autotoc_md88", null ],
+          [ "Code Example (SetFieldValue())", "programming_guide.html#autotoc_md89", null ]
         ] ]
       ] ],
       [ "Verifying and error trapping", "programming_guide.html#Verifying_and_error_trapping", [
         [ "The Verify() method", "programming_guide.html#The_Verify_method", [
-          [ "Code Example", "programming_guide.html#autotoc_md88", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md90", null ]
         ] ],
         [ "The Verified property", "programming_guide.html#The_Verified_property", null ],
         [ "Trapping run-time errors", "programming_guide.html#Trapping_run-time_errors", null ],
         [ "Saving the record to the database", "programming_guide.html#Saving_the_record_to_the_database", null ]
       ] ],
       [ "New records and electronic documents", "programming_guide.html#New_records_and_electronic_documents", [
-        [ "Creating a container file", "programming_guide.html#autotoc_md89", null ],
+        [ "Creating a container file", "programming_guide.html#autotoc_md91", null ],
         [ "Creating a record of a given type", "programming_guide.html#Creating_a_record_of_a_given_type", null ],
         [ "Controlled and free text titling", "programming_guide.html#Controlled_and_free_text_titling", [
-          [ "Code Example", "programming_guide.html#autotoc_md90", null ]
-        ] ],
-        [ "Security Levels and Caveats", "programming_guide.html#Security_Levels_and_Caveats", [
-          [ "Code Example", "programming_guide.html#autotoc_md91", null ],
           [ "Code Example", "programming_guide.html#autotoc_md92", null ]
         ] ],
+        [ "Security Levels and Caveats", "programming_guide.html#Security_Levels_and_Caveats", [
+          [ "Code Example", "programming_guide.html#autotoc_md93", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md94", null ]
+        ] ],
         [ "Record Locations", "programming_guide.html#Record_Locations", [
-          [ "Code Example", "programming_guide.html#autotoc_md93", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md95", null ]
         ] ],
         [ "Record Contacts", "programming_guide.html#Record_Contacts", [
-          [ "Code Example", "programming_guide.html#autotoc_md94", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md96", null ]
         ] ],
         [ "Creating a Document", "programming_guide.html#Creating_a_Document", null ],
         [ "Titling and numbering", "programming_guide.html#Titling_and_numbering", [
-          [ "Code Example", "programming_guide.html#autotoc_md95", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md97", null ]
         ] ],
         [ "Assigning to a container", "programming_guide.html#Assigning_to_a_container", [
-          [ "Code Example", "programming_guide.html#autotoc_md96", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md98", null ]
         ] ],
         [ "Attaching an electronic document", "programming_guide.html#Attaching_an_electronic_document", [
-          [ "Code Example", "programming_guide.html#autotoc_md97", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md99", null ]
         ] ],
         [ "Document Author", "programming_guide.html#Document_Author", null ]
       ] ],
       [ "Locations", "programming_guide.html#Locations", [
         [ "Working with Locations", "programming_guide.html#Working_with_Locations", null ],
         [ "Finding a Person by Name", "programming_guide.html#Finding_a_Person_by_Name", [
-          [ "Code Example", "programming_guide.html#autotoc_md98", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md100", null ]
         ] ],
         [ "Creating a new Staff Member", "programming_guide.html#Creating_a_new_Staff_Member", [
-          [ "Code Example", "programming_guide.html#autotoc_md99", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md100", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md101", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md101", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md102", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md103", null ]
         ] ]
       ] ],
       [ "Searching Content Manager using the .NET SDK", "programming_guide.html#Searching_Content_Manager", [
         [ "Searching for Content Manager objects", "programming_guide.html#Searching_for_Records_Manager_objects", [
-          [ "Code Example", "programming_guide.html#autotoc_md102", null ]
-        ] ],
-        [ "Specifying the search criteria", "programming_guide.html#Specifying_the_search_criteria", [
-          [ "Code Example", "programming_guide.html#autotoc_md103", null ],
           [ "Code Example", "programming_guide.html#autotoc_md104", null ]
         ] ],
+        [ "Specifying the search criteria", "programming_guide.html#Specifying_the_search_criteria", [
+          [ "Code Example", "programming_guide.html#autotoc_md105", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md106", null ]
+        ] ],
         [ "Retrieving the results of the search", "programming_guide.html#Retrieving_the_results", [
-          [ "Code Example", "programming_guide.html#autotoc_md105", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md107", null ]
         ] ]
       ] ],
       [ "Other search features", "programming_guide.html#Other_search_features", [
@@ -398,7 +400,7 @@ var NAVTREE =
         [ "Filtering/searching by enum value", "programming_guide.html#enum_filtering", null ],
         [ "Purpose filtering", "programming_guide.html#Purpose_filtering", null ],
         [ "Persisting a search", "programming_guide.html#Persisting_a_search", null ],
-        [ "Item matching", "programming_guide.html#autotoc_md106", null ],
+        [ "Item matching", "programming_guide.html#autotoc_md108", null ],
         [ "Result counts", "programming_guide.html#search_count", null ],
         [ "Sorting by User Defined Fields", "programming_guide.html#sort_by_field", null ]
       ] ],
@@ -416,8 +418,8 @@ var NAVTREE =
     ] ],
     [ "﻿Search Clauses", "sc_using.html", [
       [ "Using Search Clauses", "sc_using.html#search_clause_using", [
-        [ "Interrogating metadata", "sc_using.html#autotoc_md107", [
-          [ "Code Sample", "sc_using.html#autotoc_md108", null ]
+        [ "Interrogating metadata", "sc_using.html#autotoc_md109", [
+          [ "Code Sample", "sc_using.html#autotoc_md110", null ]
         ] ]
       ] ],
       [ "List of search clauses by object type", "sc_using.html#searcg_clauses_by_object_type", [
@@ -485,8 +487,8 @@ var NAVTREE =
     ] ],
     [ "﻿Enum Items", "enum_metadata.html", [
       [ "Using Enums", "enum_metadata.html#enums_using", [
-        [ "Interrogating metadata", "enum_metadata.html#autotoc_md109", [
-          [ "Code Sample", "enum_metadata.html#autotoc_md110", null ]
+        [ "Interrogating metadata", "enum_metadata.html#autotoc_md111", [
+          [ "Code Sample", "enum_metadata.html#autotoc_md112", null ]
         ] ]
       ] ],
       [ "List of enum items by Enum", "enum_metadata.html#enum_item_by_enum_type_type", [
@@ -831,9 +833,9 @@ var NAVTREE =
         [ "Warning", "object_purposes.html#object_purposes_warning", null ],
         [ "Extra information", "object_purposes.html#object_purposes_extra", null ],
         [ "Purpose metadata", "object_purposes.html#object_purposes_metadata", [
-          [ "Code sample - searching", "object_purposes.html#autotoc_md111", null ],
-          [ "Code sample - post search", "object_purposes.html#autotoc_md112", null ],
-          [ "Code sample - object definition", "object_purposes.html#autotoc_md113", null ]
+          [ "Code sample - searching", "object_purposes.html#autotoc_md113", null ],
+          [ "Code sample - post search", "object_purposes.html#autotoc_md114", null ],
+          [ "Code sample - object definition", "object_purposes.html#autotoc_md115", null ]
         ] ]
       ] ],
       [ "List of objects with related purpose enum", "object_purposes.html#object_with_purpose_enum", [
@@ -950,35 +952,35 @@ var NAVTREE =
     [ "Advanced Topics", "advanced_topics.html", [
       [ "Different ways to fetch a TrimMainObject", "advanced_topics.html#ways_To_Fetch_a_TrimMainObject", [
         [ "Object constructor by Name", "advanced_topics.html#fetch_by_constructorand_name", [
-          [ "Code example", "advanced_topics.html#autotoc_md114", null ]
+          [ "Code example", "advanced_topics.html#autotoc_md116", null ]
         ] ],
         [ "Object name properties", "advanced_topics.html#object_name_properties", null ],
         [ "Database find methods", "advanced_topics.html#fetch_by_database", [
-          [ "Code samples", "advanced_topics.html#autotoc_md115", null ]
+          [ "Code samples", "advanced_topics.html#autotoc_md117", null ]
         ] ],
         [ "TrimMainObjectSearch", "advanced_topics.html#fetch_by_search", [
-          [ "Code sample", "advanced_topics.html#autotoc_md116", null ]
+          [ "Code sample", "advanced_topics.html#autotoc_md118", null ]
         ] ]
       ] ],
       [ "Document access alternatives", "advanced_topics.html#fetchDoc", [
         [ "Overview", "advanced_topics.html#doc_access_overview", null ],
         [ "Record.GetDocument()", "advanced_topics.html#getDoc", [
-          [ "Checkout without getting the document", "advanced_topics.html#autotoc_md118", null ]
+          [ "Checkout without getting the document", "advanced_topics.html#autotoc_md120", null ]
         ] ],
         [ "DocumentPathInClientCache", "advanced_topics.html#clientCache", [
-          [ "Example", "advanced_topics.html#autotoc_md119", null ]
+          [ "Example", "advanced_topics.html#autotoc_md121", null ]
         ] ],
         [ "DocumentPathInWGSCache", "advanced_topics.html#wgsCache", [
-          [ "Example", "advanced_topics.html#autotoc_md120", null ]
+          [ "Example", "advanced_topics.html#autotoc_md122", null ]
         ] ],
         [ "DownloadNotifier", "advanced_topics.html#downloadNotifier", [
-          [ "Example", "advanced_topics.html#autotoc_md121", null ]
+          [ "Example", "advanced_topics.html#autotoc_md123", null ]
         ] ],
         [ "Other object types", "advanced_topics.html#dowload_other_object_types", null ]
       ] ],
       [ "Localised strings", "advanced_topics.html#localisedStrings", [
         [ "TrimMessages", "advanced_topics.html#trimMEssages", [
-          [ "Code Sample", "advanced_topics.html#autotoc_md122", null ]
+          [ "Code Sample", "advanced_topics.html#autotoc_md124", null ]
         ] ],
         [ "Captions", "advanced_topics.html#objectCaptions", [
           [ "Enum captions", "advanced_topics.html#enumCaptions", null ],
