@@ -2,6 +2,7 @@ var class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task =
 [
     [ "DocumentStoreIncrementalCheckTask", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html#a374a73b355b83777a2b6e6ee43c77b53", null ],
     [ "Cancel", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html#a16ebbade4312ca9cd8789ad0b97c6865", null ],
+    [ "Dispose", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html#ab141f9504d952a27a222c01fb1c4773b", null ],
     [ "GetProgressCounter", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html#a9793f159f889125590643d137447b73e", null ],
     [ "Run", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html#a925e05c4dbbe8e61360a4b87aeed91c2", null ],
     [ "SetDateModifiedRange", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html#a414e2cb7709c47685bb5ea42eff8df2c", null ],

@@ -2,8 +2,6 @@ var hierarchy =
 [
     [ "TRIM.SDK.DesktopHelper", "class_t_r_i_m_1_1_s_d_k_1_1_desktop_helper.html", null ],
     [ "TRIM.SDK.DigitalSignatureTool", "class_t_r_i_m_1_1_s_d_k_1_1_digital_signature_tool.html", null ],
-    [ "TRIM.SDK.DocumentStoreIncrementalCheckTask", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html", null ],
-    [ "TRIM.SDK.DocumentStoreIntegrityCheckTask", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html", null ],
     [ "TRIM.SDK.EventProcessorCounters", "class_t_r_i_m_1_1_s_d_k_1_1_event_processor_counters.html", null ],
     [ "System.Exception", null, [
       [ "TRIM.SDK.TrimException", "class_t_r_i_m_1_1_s_d_k_1_1_trim_exception.html", [
@@ -395,6 +393,8 @@ var hierarchy =
     [ "global.SystemIDisposable", null, [
       [ "TRIM.SDK.Database", "class_t_r_i_m_1_1_s_d_k_1_1_database.html", null ],
       [ "TRIM.SDK.DatabaseConnectionPool", "class_t_r_i_m_1_1_s_d_k_1_1_database_connection_pool.html", null ],
+      [ "TRIM.SDK.DocumentStoreIncrementalCheckTask", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_incremental_check_task.html", null ],
+      [ "TRIM.SDK.DocumentStoreIntegrityCheckTask", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html", null ],
       [ "TRIM.SDK.DownloadNotifierBase", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier_base.html", [
         [ "TRIM.SDK.DownloadNotifier", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier.html", null ]
       ] ],

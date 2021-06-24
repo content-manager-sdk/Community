@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#ab3bd1131f5d00aaa1ec6abfdd1e1b4ec":[13,0,0,0,284,2],
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#aea608badc916fed444bd70601cd7b589":[13,0,0,0,284,4],
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_notifier.html":[13,0,0,0,302],
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_notifier.html#a5ea6d710682e24910bb5ed6d59de3dc7":[13,0,0,0,302,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "enum_metadata.html#enum_help_containerSecurityHandling":[8,1,42],
 "enum_metadata.html#enum_help_containmentRule":[8,1,266],
 "enum_metadata.html#enum_help_contentEngineType":[8,1,288],
-"enum_metadata.html#enum_help_contentIndexDocumentStatus":[8,1,317],
-"enum_metadata.html#enum_help_controlLabelType":[8,1,34]
+"enum_metadata.html#enum_help_contentIndexDocumentStatus":[8,1,317]
 };

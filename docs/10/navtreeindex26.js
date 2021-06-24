@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"enum_metadata.html#enum_help_unregisteredUsers":[8,1,245],
 "enum_metadata.html#enum_help_useStoreType":[8,1,45],
 "enum_metadata.html#enum_help_userDashboardItem":[8,1,301],
 "enum_metadata.html#enum_help_userFieldFormats":[8,1,30],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1decf76e7c44809017a16a353ef70bc9":[12,0,0,0,436,468],
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1e5779a33297552e97626a490f2f3405":[12,0,0,0,436,169],
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1ec4d2186636fe5581e3c2d4f2c9987a":[12,0,0,0,436,204],
-"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1f4dfe8d64cfd866edb944a5ffccae0d":[12,0,0,0,436,244],
-"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1fc5884251ca9f20a4fd5f79a458f94f":[12,0,0,0,436,1]
+"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1f4dfe8d64cfd866edb944a5ffccae0d":[12,0,0,0,436,244]
 };

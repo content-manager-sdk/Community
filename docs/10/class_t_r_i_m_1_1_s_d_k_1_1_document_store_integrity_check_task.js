@@ -2,6 +2,7 @@ var class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task =
 [
     [ "DocumentStoreIntegrityCheckTask", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html#a371e6cc22c56431dc5dad483bc5d768f", null ],
     [ "Cancel", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html#aaebd28317b0855a4f1fc22859d46e13d", null ],
+    [ "Dispose", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html#ae3a5352f4abc0864947cc7b663f9c9e1", null ],
     [ "GetProgressCounter", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html#a94e2a44449534681995ec3cd5f099679", null ],
     [ "Run", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html#a9af603a4b81b18b60a3e73936cb49f80", null ],
     [ "swigCMemOwn", "class_t_r_i_m_1_1_s_d_k_1_1_document_store_integrity_check_task.html#a54107cfdb01dedc62fafce8eda2420aa", null ],
