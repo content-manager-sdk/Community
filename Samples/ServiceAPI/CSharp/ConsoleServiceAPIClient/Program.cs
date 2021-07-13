@@ -113,7 +113,7 @@ namespace ConsoleServiceAPIClient
 			var stopWatch = Stopwatch.StartNew();
 
 
-			await recordTypeSearch();
+			//		await recordTypeSearch();
 
 			//	await getRecordUri();
 
@@ -130,6 +130,8 @@ namespace ConsoleServiceAPIClient
 			// await getDocument();
 
 			//await uploadFileAndCreateRecord();
+
+			await uploadBinaryFileAndCreateRecord();
 
 			Console.WriteLine(stopWatch.ElapsedMilliseconds);
 			Console.ReadKey();
@@ -275,6 +277,40 @@ namespace ConsoleServiceAPIClient
 
 					var response = await trimClient.PostAsync<RecordsResponse>(record);
 					Console.WriteLine(response.Results[0].Title);
+			}
+
+		}
+
+
+		private async static Task uploadBinaryFileAndCreateRecord()
+		{
+			var trimClient = await getServiceClient();
+			var httpClient = await getHttpClient();
+
+			HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
+
+			string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
+
+			using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
+			using (var streamContent = new StreamContent(fileStream))
+			{
+				streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+
+				var uploadedFileResponse = await httpClient.PostAsync(url + "/trim.png", streamContent);
+
+				var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
+				var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
+
+				var record = new Record()
+				{
+					RecordType = new RecordTypeRef() { FindBy = "Document" },
+					Title = "my test document",
+					Properties = new List<string>() { $"{PropertyIds.RecordTitle}" },
+					FilePath = uploadedFile.FilePath
+				};
+
+				var response = await trimClient.PostAsync<RecordsResponse>(record);
+				Console.WriteLine(response.Results[0].Title);
 			}
 
 		}
