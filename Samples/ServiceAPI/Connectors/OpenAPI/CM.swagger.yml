@@ -1,9 +1,8 @@
 openapi: 3.0.1
 info:
   title: CM
-  description: Interface to Content Manager web service to create, update and find
-    Records.
-  version: "1.0"
+  description: Interface to Content Manager web service to create, update and find Records.
+  version: "0.5"
 servers:
 - url: https://localhost/ServiceAPI
 tags: []
@@ -121,7 +120,7 @@ components:
       enum: [Raw, String, Both]
     RecordPropertyIds:
       type: string
-      enum: [Title, Number, Uri, RecordType, IsElectronic, IsContainer, AlcoholLevel]
+      enum: [Title, Number, Uri, RecordType, IsElectronic, IsContainer, AlcoholLevel, Assignee]
     LocationPropertyIds:
       type: string
       enum: [FullFormattedName, SortName]      
@@ -165,14 +164,28 @@ components:
           RecordFilePath:
             $ref: '#/components/schemas/StringProperty'  
           RecordRecordType:
-            $ref: '#/components/schemas/RecordType'   
+            $ref: '#/components/schemas/RecordType'  
+          RecordAssignee:
+            $ref: '#/components/schemas/Location'  
     Location:
-      type: object
-      properties:
+      allOf:
+      - $ref: '#/components/schemas/TrimMainObject'
+      - type: object
+        properties:
           LocationFullFormattedName:
             $ref: '#/components/schemas/StringProperty'
           LocationSortName:
             $ref: '#/components/schemas/StringProperty'
+    RecordType:
+      allOf:
+      - $ref: '#/components/schemas/TrimMainObject'
+      - type: object
+        properties:
+          RecordTypeName:
+            type: object
+            properties:
+              Value:
+                type: string         
     TrimMainObject:
       type: object
       properties:
@@ -208,16 +221,7 @@ components:
             message:
               type: string
           description: ResponseStatus           
-    RecordType:
-      allOf:
-      - $ref: '#/components/schemas/TrimMainObject'
-      - type: object
-        properties:
-          RecordTypeName:
-            type: object
-            properties:
-              Value:
-                type: string
+
     FileUploadResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
