@@ -13,7 +13,7 @@ The custom connector can be created within an Azure subscription following these
 The OpenAPI definition provided here assumes that your:
 
 - web server hostname is 'localhost', and
-- ServiceAPI pat is '/ServiceAPI'
+- ServiceAPI path is '/ServiceAPI'
 
 Ensure you change these before uploading the file to your custom connector.
 

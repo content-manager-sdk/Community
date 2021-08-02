@@ -1,10 +1,10 @@
 # Open API Definition
 
-[OpenAPI](https://oai.github.io/Documentation/), formerly know as [Swagger](https://swagger.io/), is a standard for defining RESTful web service interfaces. OpenAPI can be used to assit in the design, development and testing of a web service.
+[OpenAPI](https://oai.github.io/Documentation/), formerly know as [Swagger](https://swagger.io/), is a standard for defining RESTful web service interfaces. OpenAPI can be used to assist in the design, development and testing of a web service.
 
 ## Usage in ServiceAPI
 
-The CM ServiceAPI was designed and developed prior to the popularization of OpenAPI but it is possible to build an OpenAPI definition document to represent a subset of the ServiceAPI operations.  One approach would be to use the same code generation tools used to build the ServiceAPI itself, unfortunately this results in an OpneAPI document so large and complex that it is difficult to use by human beings and causes some of the OpenAPI tools to fail.
+The CM ServiceAPI was designed and developed prior to the popularization of OpenAPI but it is possible to build an OpenAPI definition document to represent a subset of the ServiceAPI operations.  One approach would be to use the same code generation tools used to build the ServiceAPI itself, unfortunately this results in an OpenAPI document so large and complex that it is difficult to use by human beings and causes some of the OpenAPI tools to fail.
 An alternate approach is to build an OpenAPI specification to suite the needs of the consumer, this definition is a starting point for this approach.
 
 ## YAML
@@ -30,7 +30,7 @@ npx @openapitools/openapi-generator-cli generate -i CM.swagger.yml -g csharp-net
 ```
 
 ## Basic Authentication hack
-For the purposes of testing only basic authentication was used to connect to the ServiceAPI.  No doubt there is a better way to set the username/password in the generated client but the only way I found was to create a partial class for ApiClient to set the request.Credentions, for example:
+For the purposes of testing only basic authentication was used to connect to the ServiceAPI.  No doubt there is a better way to set the username/password in the generated client but the only way I found was to create a partial class for ApiClient to set the request.Credentials, for example:
 
 ```cs
 	public partial class ApiClient
@@ -48,7 +48,6 @@ For the purposes of testing only basic authentication was used to connect to the
 The OpenAPI definition provided here assumes that your:
 
 - web server hostname is 'localhost', and
-- ServiceAPI pat is '/ServiceAPI'
+- ServiceAPI path is '/ServiceAPI'
 
-Ensure you change these before uploading the file to your custom connector.
 
