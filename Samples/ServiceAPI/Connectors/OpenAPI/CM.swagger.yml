@@ -1,0 +1,253 @@
+openapi: 3.0.1
+info:
+  title: CM
+  description: Interface to Content Manager web service to create, update and find
+    Records.
+  version: "1.0"
+servers:
+- url: https://localhost/ServiceAPI
+tags: []
+paths:
+  /record/{id}/file/document?format=json:
+    get:
+      summary: download an electronic document
+      description: download an electronic document
+      operationId: DownloadDocument
+      parameters:
+      - name: id
+        in: path
+        description: Uri or Record number
+        required: true
+        schema:
+          type: string
+ 
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /search?trimType=record:
+    post:
+      operationId: RecordPostSearch
+      requestBody:
+        content:          
+          application/x-www-form-urlencoded:      
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SearchQuery'  
+                - type: object
+                  properties:
+                    properties:
+                      type: array    
+                      items: 
+                        $ref: '#/components/schemas/RecordPropertyIds'       
+      responses:
+        '200':
+          description: default
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/RecordsResponse'
+             
+  /search?trimType=location:
+    post:
+      operationId: LocationPostSearch
+      requestBody:
+        content:          
+          application/x-www-form-urlencoded:      
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SearchQuery'  
+                - type: object
+                  properties:
+                    properties:
+                      type: array    
+                      items: 
+                        $ref: '#/components/schemas/LocationPropertyIds'           
+      responses:
+        '200':
+          description: default
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/LocationsResponse'                
+  /record:
+    post:
+      summary: Create or Update Record
+      description: Create or update a Record
+      operationId: CreateUpdateRecord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Record'
+      responses:
+        default:
+          description: default
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RecordsResponse'
+  /uploadFile:
+    post:
+      summary: Upload a file
+      description: Upload a file which may later be attached to a Record   
+      operationId: uploadFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              properties:  
+                file:
+                  type: string
+                  format: binary 
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            'application/json':
+              schema:     
+                $ref: '#/components/schemas/FileUploadResponse'                  
+
+components:
+  schemas:
+    PropertyValueTypes:
+      type: string
+      enum: [Raw, String, Both]
+    RecordPropertyIds:
+      type: string
+      enum: [Title, Number, Uri, RecordType, IsElectronic, IsContainer, AlcoholLevel]
+    LocationPropertyIds:
+      type: string
+      enum: [FullFormattedName, SortName]      
+    SearchQuery:
+      type: object
+      properties:
+        q:
+          type: string
+        propertyValue:
+          $ref: '#/components/schemas/PropertyValueTypes'
+    BaseProperty:
+      type: object
+      properties:
+        StringValue:   
+          type: string
+    StringProperty:
+      allOf:
+        - $ref: '#/components/schemas/BaseProperty'
+        - type: object
+          properties:
+            Value:
+              type: string
+    BooleanProperty:
+      allOf:
+        - $ref: '#/components/schemas/BaseProperty'
+        - type: object
+          properties:
+            Value:
+              type: boolean
+    Record:
+      allOf:
+      - $ref: '#/components/schemas/TrimMainObject'
+      - type: object
+        properties:
+          RecordTitle:
+            $ref: '#/components/schemas/StringProperty'
+          RecordIsElectronic:
+            $ref: '#/components/schemas/BooleanProperty'
+          RecordIsContainer:
+            $ref: '#/components/schemas/BooleanProperty'
+          RecordFilePath:
+            $ref: '#/components/schemas/StringProperty'  
+          RecordRecordType:
+            $ref: '#/components/schemas/RecordType'   
+    Location:
+      type: object
+      properties:
+          LocationFullFormattedName:
+            $ref: '#/components/schemas/StringProperty'
+          LocationSortName:
+            $ref: '#/components/schemas/StringProperty'
+    TrimMainObject:
+      type: object
+      properties:
+        Uri:
+          type: integer
+          format: int64
+        NameString:
+          type: string
+        Fields:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BaseProperty'    
+
+    BaseSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object  
+          properties:
+            TotalResults:
+              type: integer
+              description: TotalResults
+              format: int32
+            Count:
+              type: integer
+              description: Count
+              format: int32
+    BaseResponse:
+      type: object
+      properties:
+         ResponseStatus:
+          type: object
+          properties: 
+            message:
+              type: string
+          description: ResponseStatus           
+    RecordType:
+      allOf:
+      - $ref: '#/components/schemas/TrimMainObject'
+      - type: object
+        properties:
+          RecordTypeName:
+            type: object
+            properties:
+              Value:
+                type: string
+    FileUploadResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            FilePath:
+              type: string
+    RecordsResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseSearchResponse'
+      - type: object
+        properties:
+          Results:
+            type: array
+            description: Results
+            items:
+              $ref: '#/components/schemas/Record'
+         
+    LocationsResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseSearchResponse'
+      type: object
+      properties:
+        Results:
+          type: array
+          description: Results
+          items:
+            $ref: '#/components/schemas/Location'
+     
+  securitySchemes:
+    undefined:
+      type: http
+      scheme: basic
