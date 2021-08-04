@@ -103,9 +103,6 @@ $(document).ready(function(){initNavTree('zero_office.html',''); initResizable()
 <li class="level1"><a href="#zero_manifests">Manifests</a></li>
 <li class="level1"><a href="#autotoc_md72">Browser Cookies</a></li>
 <li class="level1"><a href="#autotoc_md73">Email Link</a></li>
-<li class="level1"><a href="#autotoc_md74">OneDrive file handler</a><ul><li class="level2"><a href="#refresh_access_token">Refreshing the file handler</a></li>
-</ul>
-</li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_doc_15___Office_Integration"></a></p>
@@ -115,11 +112,10 @@ Components</h1>
 <li>ServiceAPI</li>
 <li>Office 365 Application manifests</li>
 <li>Email Link</li>
-<li>OneDrive file handler</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md65"></a>
 Requirements</h1>
-<p>The components listed above work together to provide the complete zero footprint integration. If the only part of the integration required is the Outlook integration then only the ServiceAPI, Email Link and Outlook manifest are required, the other components (Office manifest, Email Link and OneDrive handler) are required for Word, Excel and PowerPoint.</p>
+<p>The components listed above work together to provide the complete zero footprint integration. If the only part of the integration required is the Outlook integration then only the ServiceAPI, Email Link and Outlook manifest are required, the other components (Office manifest and Email Link) are required for Word, Excel and PowerPoint.</p>
 <h1><a class="anchor" id="autotoc_md66"></a>
 ServiceAPI</h1>
 <p>The ServiceAPI must be installed and must have a valid HTTPS certificate, any HTTP errors will cause the Office Integration to fail.</p>
@@ -221,32 +217,7 @@ Email Link</h1>
 <li>file email from Linked Folders in the Outlook integration, and</li>
 <li>check documents in from Office applications when 'check in on close' is selected.</li>
 </ol>
-<p>Email Link should be installed as usual, there must be a Microsoft authentication configuration for your Office 365 domain that is of type OAuth and has both Email and Drive selected (if both Office and Outlook integration is required).</p>
-<h1><a class="anchor" id="autotoc_md74"></a>
-OneDrive file handler</h1>
-<p>When a document is checked in to Content Managed via 'Check in and Delete on Close' a TR5 file is created as a stub for the document in OneDrive. The OneDrive file handler supports:</p><ul>
-<li>re-opening the document for editing in OneDrive, and</li>
-<li>previewing the document in-situ in Content Manager.</li>
-</ul>
-<p>To install the handler:</p><ul>
-<li>download the <a href="files/handler.json">handler content</a>,</li>
-<li>replace all instances of <code><a href="https://mfcm.xyz/ServiceAPI">https://mfcm.xyz/ServiceAPI</a></code> with the URL to your ServiceAPI instance, and</li>
-<li>follow the <a href="https://docs.microsoft.com/en-us/onedrive/developer/file-handlers/register-manually?view=odsp-graph-online">instructions</a> for installing OneDrive handlers.</li>
-</ul>
-<p>If the file handler does not appear in OneDrive it may be that it is not set to be visible. To verify this:</p><ol type="1">
-<li>in Azure AD goto 'Enterprise Applications',</li>
-<li>open the App which has your handler in its manifest,</li>
-<li>go to the 'Properties' page, and</li>
-<li>set 'Visible to users' to Yes.</li>
-</ol>
-<h2><a class="anchor" id="refresh_access_token"></a>
-Refreshing the file handler</h2>
-<p>The file handler registration process can be somewhat fragile. In particular the time taken to reflect any changes is unpredictable. The instructions above refer to a service to <a href="https://docs.microsoft.com/en-us/onedrive/developer/file-handlers/reset-cache?view=odsp-graph-online">refresh the handler</a> which itself does not always seem to actually refresh the handler.</p>
-<p>When refreshing the access token you will need to get a bearer authentication token first, some things to remember:</p><ul>
-<li>Auth Url, Access Token URL, Client ID and Client Secret are sourced from your Azure AD app</li>
-<li>Callback URL should be <code><a href="https://app.getpostman.com/oauth2/callback">https://app.getpostman.com/oauth2/callback</a></code> and must be set in the Redirect Uris of your Azure AD App</li>
-<li>the scope will look something like this: <code><a href="https://mftrim-my.sharepoint.com/MyFiles.Write">https://mftrim-my.sharepoint.com/MyFiles.Write</a></code>, 'mftrim' should be replaced with your domain </li>
-</ul>
+<p>Email Link should be installed as usual, there must be a Microsoft authentication configuration for your Office 365 domain that is of type OAuth and has both Email and Drive selected (if both Office and Outlook integration is required). </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

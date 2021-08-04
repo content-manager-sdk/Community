@@ -58,8 +58,8 @@ var NAVTREEINDEX60 =
 "release_notes.html#rn_94_sdk_nuget":[2,1,16],
 "release_notes.html#rn_sdk_GAC":[2,2,0],
 "sc_using.html":[7],
-"sc_using.html#autotoc_md109":[7,0,0],
-"sc_using.html#autotoc_md110":[7,0,0,0],
+"sc_using.html#autotoc_md108":[7,0,0],
+"sc_using.html#autotoc_md109":[7,0,0,0],
 "sc_using.html#searcg_clauses_by_object_type":[7,1],
 "sc_using.html#search_clause_using":[7,0],
 "sc_using.html#search_clauses_ActionDef":[7,1,0],
@@ -151,7 +151,5 @@ var NAVTREEINDEX60 =
 "zero_office.html#autotoc_md71":[5,2,3],
 "zero_office.html#autotoc_md72":[5,4],
 "zero_office.html#autotoc_md73":[5,5],
-"zero_office.html#autotoc_md74":[5,6],
-"zero_office.html#refresh_access_token":[5,6,0],
 "zero_office.html#zero_manifests":[5,3]
 };
