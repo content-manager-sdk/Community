@@ -1,0 +1,26 @@
+@if (this.Request.Dto is HP.HPTRIM.ServiceModel.Records)
+{
+
+    <script src="js/ss-utils.js"></script>
+
+    <script>
+        var source = new EventSource('event-stream?channel=channel&t=' + new Date().getTime());
+        $(source).handleServerEvents({
+            handlers: {
+                onMessage: function (msg, e) { // fired after every message
+                    if (msg.ObjectUri > 0) {
+                        $("td:nth-child(2) a.prop-val").each(function (index, obj) {
+                            var tokens = $(obj).attr("href").split("/");
+                            if (tokens[tokens.length - 1] === `${msg.ObjectUri}`) {
+                                $.get($(obj).attr("href") + "?format=json&properties=RecordTitle", function (data) {
+                                    $(obj).text(data.Results[0].RecordTitle.Value);
+                                })
+                            }
+
+                        });
+                    }
+                }
+            }
+        });
+    </script>
+}
