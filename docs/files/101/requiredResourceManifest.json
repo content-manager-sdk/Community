@@ -1,0 +1,96 @@
+[
+		{
+			"resourceAppId": "00000003-0000-0000-c000-000000000000",
+			"resourceAccess": [
+				{
+					"id": "f501c180-9344-439a-bca0-6cbf209fd270",
+					"type": "Scope"
+				},
+				{
+					"id": "89fe6a52-be36-487e-b7d8-d061c450a026",
+					"type": "Scope"
+				},
+				{
+					"id": "a154be20-db9c-4678-8ab7-66f6cc099a59",
+					"type": "Scope"
+				},
+				{
+					"id": "024d486e-b451-40bb-833d-3e66d98c5c73",
+					"type": "Scope"
+				},
+				{
+					"id": "10465720-29dd-4523-a11a-6a75c743c9d9",
+					"type": "Scope"
+				},
+				{
+					"id": "5c28f0bf-8a70-41f1-8ab2-9032436ddb65",
+					"type": "Scope"
+				},
+				{
+					"id": "df85f4d6-205c-4ac5-a5ea-6bf408dba283",
+					"type": "Scope"
+				},
+				{
+					"id": "863451e7-0667-486c-a5d6-d135439485f0",
+					"type": "Scope"
+				},
+				{
+					"id": "bc024368-1153-4739-b217-4326f2e966d0",
+					"type": "Scope"
+				},
+				{
+					"id": "233e0cf1-dd62-48bc-b65b-b38fe87fcf8e",
+					"type": "Scope"
+				},
+				{
+					"id": "767156cb-16ae-4d10-8f8b-41b657c8c8c8",
+					"type": "Scope"
+				},
+				{
+					"id": "c5a9e2b1-faf6-41d4-8875-d381aa549b24",
+					"type": "Scope"
+				},
+				{
+					"id": "75359482-378d-4052-8f01-80520e7db3cd",
+					"type": "Role"
+				},
+				{
+					"id": "01d4889c-1287-42c6-ac1f-5d1e02578ef6",
+					"type": "Role"
+				},
+				{
+					"id": "6b7d71aa-70aa-4810-a8d9-5d9fb2830017",
+					"type": "Role"
+				},
+				{
+					"id": "7b2449af-6ccd-4f4d-9f78-e550c193f0d1",
+					"type": "Role"
+				},
+				{
+					"id": "c97b873f-f59f-49aa-8a0e-52b32d762124",
+					"type": "Role"
+				},
+				{
+					"id": "242607bd-1d2c-432c-82eb-bdb27baa23ab",
+					"type": "Role"
+				},
+				{
+					"id": "3b55498e-47ec-484f-8136-9013221c06a9",
+					"type": "Role"
+				},
+				{
+					"id": "a3410be2-8e48-4f32-8454-c29a7465209d",
+					"type": "Role"
+				}
+			]
+		},
+		{
+			"resourceAppId": "00000002-0000-0ff1-ce00-000000000000",
+			"resourceAccess": [
+				{
+					"id": "dc890d15-9560-4a4c-9b7f-a736ec74ec40",
+					"type": "Role"
+				}
+			]
+		}
+	]

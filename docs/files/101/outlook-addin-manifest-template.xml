@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Created:cb85b80c-f585-40ff-8bfc-12ff4d0e34a9-->
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+	xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="MailApp">
+
+		<!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
+	<Id>[MANIFESTGUID]</Id>
+
+	<Version>1.0.0.0</Version>
+	<ProviderName>Micro Focus</ProviderName>
+	<DefaultLocale>en-US</DefaultLocale>
+	<DisplayName DefaultValue="Content Manager" />
+	<Description DefaultValue="An addin to register mail items in Content Manager."> 
+		<Override Locale="fr-fr" Value="Un module d'extension pour enregistrer des éléments de courriel dans Content Manager." />
+		<Override Locale="nl-nl" Value="Een invoegtoepassing voor het registreren van e-mailitems in Content Manager." />
+		<Override Locale="es-es" Value="Un complemento para registrar elementos de correo en Content Manager." />
+	</Description>
+	<IconUrl DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/Trim.png" />
+	<HighResolutionIconUrl DefaultValue="[SERVICEAPIURL]/TrimIcon/W64h64/Trim.png"/>
+	<Hosts>
+		<Host Name="Mailbox" />
+	</Hosts>
+	<Requirements>
+		<Sets>
+			<Set Name="MailBox" MinVersion="1.1" />
+
+		</Sets>
+	</Requirements>
+	<!-- These elements support older clients that don't support add-in commands -->
+	<FormSettings>
+		<Form xsi:type="ItemRead">
+			<DesktopSettings>
+				<!-- NOTE: Just reusing the read taskpane page that is invoked by the button
+             on the ribbon in clients that support add-in commands. You can
+             use a completely different page if desired -->
+				<SourceLocation DefaultValue="[SERVICEAPIURL]/office/index.html?Outlook"/>
+				<RequestedHeight>450</RequestedHeight>
+			</DesktopSettings>
+		</Form>
+
+	</FormSettings>
+	<Permissions>ReadWriteMailbox</Permissions>
+	<Rule xsi:type="RuleCollection" Mode="Or">
+		<Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit" />
+		<Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit" />
+		<Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" />
+		<Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Read" />
+	</Rule>
+	<DisableEntityHighlighting>false</DisableEntityHighlighting>
+
+	<VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+
+		<VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+			<Requirements>
+				<bt:Sets DefaultMinVersion="1.3">
+					<bt:Set Name="Mailbox" />
+				</bt:Sets>
+			</Requirements>
+			<Hosts>
+				<Host xsi:type="MailHost">
+					<DesktopFormFactor>
+						<FunctionFile resid="functionFile" />
+						<ExtensionPoint xsi:type="MessageComposeCommandSurface">
+							<CustomTab id="Trim.Compose.Tab1">
+								<Group id="msgComposeGroup">
+									<Label resid="groupLabel" />
+
+									<Control xsi:type="Button" id="cmpCheckinStylesFunctionButton">
+										<Label resid="funcCheckinStylesButtonLabel" />
+										<Supertip>
+											<Title resid="funcCheckinStylesSuperTipTitle" />
+											<Description resid="Cs_SuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.csicon_16x16" />
+											<bt:Image size="32" resid="Trim.csicon_32x32" />
+											<bt:Image size="80" resid="Trim.csicon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="checkinStyleTaskPaneUrl" />
+										</Action>
+									</Control>
+
+									<Control xsi:type="Button" id="cmpLinkedFoldersFunctionButton">
+										<Label resid="linkedFoldersButtonLabel" />
+										<Supertip>
+											<Title resid="linkedFoldersSuperTipTitle" />
+											<Description resid="linkedFolderSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.foldericon_16x16" />
+											<bt:Image size="32" resid="Trim.foldericon_32x32" />
+											<bt:Image size="80" resid="Trim.foldericon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="linkedFolderTaskPaneUrl" />
+										</Action>
+									</Control>
+
+									<Control xsi:type="Button" id="cmpoptionsFunctionButton">
+										<Label resid="optionsButtonLabel" />
+										<Supertip>
+											<Title resid="optionsSuperTipTitle" />
+											<Description resid="optionsSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.optionsicon_16x16" />
+											<bt:Image size="32" resid="Trim.optionsicon_32x32" />
+											<bt:Image size="80" resid="Trim.optionsicon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="optionsTaskPaneUrl" />
+										</Action>
+									</Control>
+									<Control xsi:type="Button" id="trimHelpButton">
+										<Label resid="Trim.HelpButton.Label" />
+										<Supertip>
+											<!-- ToolTip title. resid must point to a ShortString resource. -->
+											<Title resid="Trim.HelpButton.Label" />
+											<!-- ToolTip description. resid must point to a LongString resource. -->
+											<Description resid="Trim.HelpButton.Tooltip" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.helpicon_16x16" />
+											<bt:Image size="32" resid="Trim.helpicon_32x32" />
+											<bt:Image size="80" resid="Trim.helpicon_80x80" />
+										</Icon>
+
+										<!-- This is what happens when the command is triggered (E.g. click on the Ribbon). Supported actions are ExecuteFunction or ShowTaskpane. -->
+										<Action xsi:type="ExecuteFunction">
+											<FunctionName>openOutlookHelp</FunctionName>
+										</Action>
+									</Control>
+								</Group>
+								<Label resid="Trim.TabLabel" />
+							</CustomTab>
+						</ExtensionPoint>
+
+						<!-- Message read form -->
+						<ExtensionPoint xsi:type="MessageReadCommandSurface">
+							<CustomTab id="Trim.Tab1">
+								<Group id="msgReadDemoGroup">
+									<Label resid="groupLabel" />
+									<!-- Function (UI-less) button -->
+									<Control xsi:type="Button" id="msgReadFunctionButton">
+										<Label resid="funcReadButtonLabel" />
+										<Supertip>
+											<Title resid="funcReadSuperTipTitle" />
+											<Description resid="funcReadSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.saveicon_16x16" />
+											<bt:Image size="32" resid="Trim.saveicon_32x32" />
+											<bt:Image size="80" resid="Trim.saveicon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="checkinTaskPaneUrl" />
+											<SupportsPinning>true</SupportsPinning>
+										</Action>
+									</Control>
+									<Control xsi:type="Button" id="msgCheckinStylesFunctionButton">
+										<Label resid="funcCheckinStylesButtonLabel" />
+										<Supertip>
+											<Title resid="funcCheckinStylesSuperTipTitle" />
+											<Description resid="Cs_SuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.csicon_16x16" />
+											<bt:Image size="32" resid="Trim.csicon_32x32" />
+											<bt:Image size="80" resid="Trim.csicon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="checkinStyleTaskPaneUrl" />
+										</Action>
+									</Control>
+
+									<Control xsi:type="Button" id="msgLinkedFoldersFunctionButton">
+										<Label resid="linkedFoldersButtonLabel" />
+										<Supertip>
+											<Title resid="linkedFoldersSuperTipTitle" />
+											<Description resid="linkedFolderSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.foldericon_16x16" />
+											<bt:Image size="32" resid="Trim.foldericon_32x32" />
+											<bt:Image size="80" resid="Trim.foldericon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="linkedFolderTaskPaneUrl" />
+										</Action>
+									</Control>
+
+									<Control xsi:type="Button" id="optionsFunctionButton">
+										<Label resid="optionsButtonLabel" />
+										<Supertip>
+											<Title resid="optionsSuperTipTitle" />
+											<Description resid="optionsSuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.optionsicon_16x16" />
+											<bt:Image size="32" resid="Trim.optionsicon_32x32" />
+											<bt:Image size="80" resid="Trim.optionsicon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="optionsTaskPaneUrl" />
+										</Action>
+									</Control>
+									<Control xsi:type="Button" id="helpFunctionButton">
+										<Label resid="Trim.HelpButton.Label" />
+										<Supertip>
+											<Title resid="Trim.HelpButton.Label" />
+											<Description resid="Trim.HelpButton.Tooltip" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.helpicon_16x16" />
+											<bt:Image size="32" resid="Trim.helpicon_32x32" />
+											<bt:Image size="80" resid="Trim.helpicon_80x80" />
+										</Icon>
+										<Action xsi:type="ExecuteFunction">
+											<FunctionName>openOutlookHelp</FunctionName>
+										</Action>
+									</Control>
+								</Group>
+								<Label resid="Trim.TabLabel" />
+							</CustomTab>
+						</ExtensionPoint>
+					</DesktopFormFactor>
+
+				</Host>
+			</Hosts>
+
+			<Resources>
+				<bt:Images>
+					<bt:Image id="Trim.saveicon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/FileSave.png"/>
+					<bt:Image id="Trim.saveicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/FileSave.png"/>
+					<bt:Image id="Trim.saveicon_48x48" DefaultValue="[SERVICEAPIURL]/TrimIcon/W48h48/FileSave.png"/>
+					<bt:Image id="Trim.saveicon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W64h64/FileSave.png"/>
+
+					<bt:Image id="Trim.csicon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/CheckinStyle.png"/>
+					<bt:Image id="Trim.csicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/CheckinStyle.png"/>
+					<bt:Image id="Trim.csicon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/CheckinStyle.png"/>
+
+					<bt:Image id="Trim.foldericon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/EmailLink.png"/>
+					<bt:Image id="Trim.foldericon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EmailLink.png"/>
+					<bt:Image id="Trim.foldericon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EmailLink.png"/>
+
+					<bt:Image id="Trim.optionsicon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/UserOptions.png"/>
+					<bt:Image id="Trim.optionsicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/UserOptions.png"/>
+					<bt:Image id="Trim.optionsicon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/UserOptions.png"/>
+					<bt:Image id="Trim.helpicon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/Help.png" />
+					<bt:Image id="Trim.helpicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/Help.png" />
+					<bt:Image id="Trim.helpicon_80x80" DefaultValue="[SERVICEAPIURL]/TrimIcon/W64h64/Help.png" />
+				</bt:Images>
+				<bt:Urls>
+					<bt:Url id="functionFile" DefaultValue="[SERVICEAPIURL]/office/function-file/function-file.html"/>
+					<bt:Url id="checkinTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?Outlook=1"/>
+					<bt:Url id="linksTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?OutlookLinks"/>
+					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?CheckinStyles"/>
+					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?LinkedFolders"/>
+					<bt:Url id="optionsTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?UserOptions=1"/>
+
+				</bt:Urls>
+				<bt:ShortStrings>
+					<bt:String id="Trim.TabLabel" DefaultValue="Content Manager">
+						<bt:Override Locale="nl-nl" Value="Content Manager" />
+						<bt:Override Locale="fr-fr" Value="Content Manager" />
+						<bt:Override Locale="es-es" Value="Content Manager" />
+					</bt:String>
+					<bt:String id="groupLabel" DefaultValue="Content Manager">
+						<bt:Override Locale="nl-nl" Value="Content Manager" />
+						<bt:Override Locale="fr-fr" Value="Content Manager" />
+						<bt:Override Locale="es-es" Value="Content Manager" />
+					</bt:String>
+					<bt:String id="funcReadButtonLabel" DefaultValue="Record">
+						<bt:Override Locale="nl-nl" Value="Record" />
+						<bt:Override Locale="fr-fr" Value="Enregistrement" />
+						<bt:Override Locale="es-es" Value="Registro" />
+					</bt:String>					
+					<bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles">
+						<bt:Override Locale="nl-nl" Value="Incheckstijlen" />
+						<bt:Override Locale="fr-fr" Value="Styles de consignation" />
+						<bt:Override Locale="es-es" Value="Estilos de protección" />
+					</bt:String>
+					<bt:String id="linkedFoldersButtonLabel" DefaultValue="Linked Folders">
+						<bt:Override Locale="nl-nl" Value="Gekoppelde mappen" />
+						<bt:Override Locale="fr-fr" Value="Dossiers associés" />
+						<bt:Override Locale="es-es" Value="Carpetas vinculadas" />
+					</bt:String>
+					<bt:String id="optionsButtonLabel" DefaultValue="User Options">
+						<bt:Override Locale="nl-nl" Value="Gebruikersopties" />
+						<bt:Override Locale="fr-fr" Value="Options utilisateur" />
+						<bt:Override Locale="es-es" Value="Opciones de usuario" />
+					</bt:String>
+					<bt:String id="menuReadButtonLabel" DefaultValue="Get property">
+						<bt:Override Locale="nl-nl" Value="Eigenschap ophalen" />
+						<bt:Override Locale="fr-fr" Value="Obtenir la propriété" />
+						<bt:Override Locale="es-es" Value="Obtener propiedad" />
+					</bt:String>
+					<bt:String id="paneReadButtonLabel" DefaultValue="Display all properties">
+						<bt:Override Locale="nl-nl" Value="Alle eigenschappen weergeven" />
+						<bt:Override Locale="fr-fr" Value="Afficher toutes les propriétés" />
+						<bt:Override Locale="es-es" Value="Mostrar todas las propiedades" />
+					</bt:String>
+					<bt:String id="funcReadSuperTipTitle" DefaultValue="Checks the item into Content Manager">
+						<bt:Override Locale="nl-nl" Value="Hiermee wordt het item ingecheckt in Content Manager" />
+						<bt:Override Locale="fr-fr" Value="Consigne l'élément dans Content Manager" />
+						<bt:Override Locale="es-es" Value="Comprueba el elemento en Content Manager" />
+					</bt:String>
+					<bt:String id="funcAttachmentsSuperTipTitle" DefaultValue="Checks the attachments into Content Manager">
+						<bt:Override Locale="nl-nl" Value="Hiermee worden de bijlagen ingecheckt in Content Manager" />
+						<bt:Override Locale="fr-fr" Value="Consigne les pièces jointes dans Content Manager" />
+						<bt:Override Locale="es-es" Value="Comprueba los archivos adjuntos en Content Manager" />
+					</bt:String>					
+					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles">
+						<bt:Override Locale="nl-nl" Value="Incheckstijlen maken en wijzigen" />
+						<bt:Override Locale="fr-fr" Value="Créer et modifier les styles de consignation" />
+						<bt:Override Locale="es-es" Value="Crear y modificar estilos de protección" />
+					</bt:String>
+					<bt:String id="linkedFoldersSuperTipTitle" DefaultValue="Create linked folders">
+						<bt:Override Locale="nl-nl" Value="Gekoppelde mappen maken" />
+						<bt:Override Locale="fr-fr" Value="Créer des dossiers associés" />
+						<bt:Override Locale="es-es" Value="Crear carpetas vinculadas" />
+					</bt:String>
+					<bt:String id="optionsSuperTipTitle" DefaultValue="Update Content Manager user options">
+						<bt:Override Locale="nl-nl" Value="Gebruikersopties Content Manager bijwerken" />
+						<bt:Override Locale="fr-fr" Value="Mettre à jour les options utilisateur de Content Manager" />
+						<bt:Override Locale="es-es" Value="Actualizar opciones de usuario de Content Manager" />
+					</bt:String>
+					<bt:String id="Trim.HelpButton.Label" DefaultValue="Help">
+						<bt:Override Locale="nl-nl" Value="Help" />
+						<bt:Override Locale="fr-fr" Value="Aide" />
+						<bt:Override Locale="es-es" Value="Ayuda" />
+					</bt:String>
+				</bt:ShortStrings>
+				<bt:LongStrings>
+					<bt:String id="funcReadSuperTipDescription" DefaultValue="Check an email into Content Manager.">
+						<bt:Override Locale="nl-nl" Value="Een e-mail inchecken in Content Manager" />
+						<bt:Override Locale="fr-fr" Value="Consignez un courriel dans Content Manager." />
+						<bt:Override Locale="es-es" Value="Envíe un correo electrónico a Content Manager." />
+					</bt:String>				
+						
+					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles.">
+						<bt:Override Locale="nl-nl" Value="Incheckstijlen bewerken" />
+						<bt:Override Locale="fr-fr" Value="Modifiez les styles de consignation." />
+						<bt:Override Locale="es-es" Value="Edite los estilos de protección." />
+					</bt:String>
+					<bt:String id="linkedFolderSuperTipDescription" DefaultValue="Edit linked folders.">
+						<bt:Override Locale="nl-nl" Value="Gekoppelde mappen bewerken" />
+						<bt:Override Locale="fr-fr" Value="Modifiez les dossiers associés." />
+						<bt:Override Locale="es-es" Value="Edite las carpetas vinculadas." />
+					</bt:String>
+					<bt:String id="optionsSuperTipDescription" DefaultValue="Update Content Manager options.">
+						<bt:Override Locale="nl-nl" Value="Opties Content Manager bijwerken" />
+						<bt:Override Locale="fr-fr" Value="Mettez à jour les options de Content Manager." />
+						<bt:Override Locale="es-es" Value="Permite actualizar las opciones de Content Manager." />
+					</bt:String>
+					<bt:String id="Trim.HelpButton.Tooltip" DefaultValue="Open the help file">
+						<bt:Override Locale="nl-nl" Value="Het Help-bestand openen" />
+						<bt:Override Locale="fr-fr" Value="Ouvrir le fichier d'aide" />
+						<bt:Override Locale="es-es" Value="Abrir el archivo de ayuda" />
+					</bt:String>
+				</bt:LongStrings>
+			</Resources>
+			<WebApplicationInfo>
+				<Id>[APPCLIENTID]</Id>
+				<Resource>[APPIDURI]</Resource>
+				<Scopes>
+					<Scope>Mail.Read</Scope>
+					<Scope>Sites.ReadWrite.All</Scope>
+					<Scope>user.read</Scope>
+					<Scope>profile</Scope>
+					<Scope>openid</Scope>
+				</Scopes>
+			</WebApplicationInfo>
+		</VersionOverrides>	
+	</VersionOverrides>
+</OfficeApp>
