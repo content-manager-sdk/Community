@@ -267,7 +267,7 @@ $officeDomain = "https://$myDomain"
 $officeManifestGuid = [guid]::NewGuid()
 
 
-$OfficeManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/101/office-addin-manifest-template.xml"
+$OfficeManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/office-addin-manifest-template.xml"
 $OfficeManifest.OuterXml.Replace("[MANIFESTGUID]", $officeManifestGuid).Replace("[APPCLIENTID]", $appObject.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $officeDomain) > "$curDir/office-addin-manifest.xml"
 
 
@@ -287,6 +287,10 @@ Compress-Archive -Update -LiteralPath "$curDir/outline.png" -DestinationPath "$c
 $appId = $appObject.appId
 $secret = $creds.password
 
+$xmlManifest = [xml]$OfficeManifest
+$version = $xmlManifest.OfficeApp.Version
+
+
 "==================== Write the sample authentication settings for Web Service ===================="
 
 Set-Content "$curDir\authenication.xml" "<!-- Web Service Authentication settings-->"
@@ -304,6 +308,12 @@ Add-Content "$curDir\authenication.xml" "</authentication>"
 
 Add-Content "$curDir\authenication.xml" ""
 Add-Content "$curDir\authenication.xml" ""
+
+Add-Content "$curDir\authenication.xml" "<!-- ServiceAPI Office Addin Settings -->"
+
+Add-Content "$curDir\authenication.xml" ""
+Add-Content "$curDir\authenication.xml" ""
+Add-Content "$curDir\authenication.xml" "<officeIntegration guid=`"$officeManifestGuid`" version=`"$version`"/>"
 
 "==================== Write the sample authentication settings for Web Client ===================="
 
@@ -325,8 +335,7 @@ Add-Content "$curDir\authenication.xml" ""
 
 Add-Content "$curDir\authenication.xml" "<!-- Web Client Office Addin Settings -->"
 
-$xmlManifest = [xml]$OfficeManifest
-$version = $xmlManifest.OfficeApp.Version
+
 
 Add-Content "$curDir\authenication.xml" "<officeIntegration guid=`"$officeManifestGuid`" version=`"$version`"/>"
 
