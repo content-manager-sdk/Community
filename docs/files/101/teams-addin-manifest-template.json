@@ -60,7 +60,7 @@
         "messageTeamMembers"
     ],
     "validDomains": [
-        "mydev.dev:3000"
+        "[DOMAIN]"
     ],
     "webApplicationInfo": {
         "id": "[APPCLIENTID]",

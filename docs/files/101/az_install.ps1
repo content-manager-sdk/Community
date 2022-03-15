@@ -71,8 +71,7 @@ $newGuid = [guid]::NewGuid()
 
 "==================== Get my details ===================="
 
-$myDetails = az ad signed-in-user show --only-show-errors | ConvertFrom-Json
-
+$myDetails = az ad signed-in-user show| ConvertFrom-Json
 
 if (!$myDetails) {
 "==================== Error: Failed to get my details ===================="
@@ -80,7 +79,7 @@ if (!$myDetails) {
 }
 
 
-$subDetails = az account set --subscription --only-show-errors $tenantId
+$subDetails = az account set --subscription $tenantId
 
 
 "==================== Create the Azure application ===================="
@@ -92,7 +91,7 @@ $resourceResponse | ConvertTo-Json -depth 100 | Out-File $curDir/resman.json
 $appDetails = az ad app create --oauth2-allow-implicit-flow true --display-name "$appName" `
             --identifier-uris "api://$myDomain/$newGuid"  `
             --reply-urls "$webServiceUrl/auth/openid".ToLower() "$webClientUrl/serviceapi/auth/openid".ToLower()`
-            --required-resource-accesses "$curDir/resman.json" --only-show-errors
+            --required-resource-accesses "$curDir/resman.json"
 
 
 $appObject = $appDetails | ConvertFrom-Json
@@ -105,13 +104,13 @@ if (!$appObject) {
 
 "==================== Set me as the App Owner ===================="
 
-az ad app owner add --id $appObject.appId  --owner-object-id $myDetails.objectId --only-show-errors
+az ad app owner add --id $appObject.appId  --owner-object-id $myDetails.objectId
 
 "==================== Set the App Id Uri ===================="
 
 $newAppUri = "api://$myDomain/" + $appObject.appId
 
-az ad app update --id $appObject.appId --identifier-uris $newAppUri --only-show-errors
+az ad app update --id $appObject.appId --identifier-uris $newAppUri
 
 
 
@@ -149,7 +148,7 @@ if (!$creds) {
 
 "==================== Fetch the existing scopes ===================="
 
-az ad app show --id $appObject.appId --query="oauth2Permissions" > $curDir/scopes.json 
+az ad app show --id $appObject.appId --query="oauth2Permissions" > $curDir/scopes.json
 
 
 $scopesObject = Get-Content -Raw -Path $curDir/scopes.json | ConvertFrom-Json
@@ -222,7 +221,7 @@ Foreach ($t in $teamsGuids) {
 }
 
 
-az ad app update --id $appObject.appId --set oauth2Permissions=@$curDir/new_scopes.json --only-show-errors
+az ad app update --id $appObject.appId --set oauth2Permissions=@$curDir/new_scopes.json
 
 
 $token_result = az account get-access-token --tenant $tenantId --resource https://graph.microsoft.com | ConvertFrom-Json
@@ -273,7 +272,7 @@ $OfficeManifest.OuterXml.Replace("[MANIFESTGUID]", $officeManifestGuid).Replace(
 
 
 $TeamsManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/teams-addin-manifest-template.json" | ConvertTo-Json -depth 100
-$TeamsManifest.Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $appObject.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl) > "$curDir/manifest.json"
+$TeamsManifest.Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $appObject.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $myDomain) > "$curDir/manifest.json"
 
 
 
