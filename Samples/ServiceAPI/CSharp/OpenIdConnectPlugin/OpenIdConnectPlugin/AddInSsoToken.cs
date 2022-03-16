@@ -35,11 +35,10 @@ namespace OpenIdConnectPlugin
 		return true;
 	};
 
-
-			return configManagers["openid"].GetConfigurationAsync(CancellationToken.None);
-#else
-			return configManagers[config.Name].GetConfigurationAsync(CancellationToken.None);
 #endif
+			return configManagers["openid"].GetConfigurationAsync(CancellationToken.None);
+
+
 
 		}
 
