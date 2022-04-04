@@ -42,11 +42,12 @@
         {
             "entityId": "ContentManagerAdmin",
             "name": "Content Manager Admin",
-            "contentUrl": "[SERVICEAPIURL]/office/index.html?teamsadmin=1",
-            "websiteUrl": "[SERVICEAPIURL]/office/index.html?teamsadmin=1",
+            "contentUrl": "[SERVICEAPIURL]/office/index.html?teamsadmin=1",     
+			[WEBSITEURLATTR]	
             "scopes": [
                 "personal"
             ]
+
         },
         {
             "entityId": "about",
