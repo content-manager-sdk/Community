@@ -42,8 +42,7 @@
         {
             "entityId": "ContentManagerAdmin",
             "name": "Content Manager Admin",
-            "contentUrl": "[SERVICEAPIURL]/office/index.html?teamsadmin=1",     
-			[WEBSITEURLATTR]	
+            "contentUrl": "[SERVICEAPIURL]/office/index.html?teamsadmin=1",[WEBSITEURLATTR]	
             "scopes": [
                 "personal"
             ]
