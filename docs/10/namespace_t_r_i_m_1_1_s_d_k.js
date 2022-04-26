@@ -720,6 +720,7 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "StringVerificationTypes", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3faf70e9ecae8bf7435bcc0dd37ddf6798e", null ],
       [ "TabBarStyle", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa966e037fc70f4f453385a47bdea0ba45", null ],
       [ "TaskStatus", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa6b7d328390f7fdc36cc054dd8768584c", null ],
+      [ "TextIndexSyncTypes", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa766b72dbfb6326c667f25e50c18a2cf6", null ],
       [ "TextObjectType", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa30b9bec4c176e05034a453f73e11547c", null ],
       [ "TieredStorageType", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa60817eed64cf1e26af3d928b7a4c20ec", null ],
       [ "TimeInterval", "namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa36e3614aa3ad95889ae8beeba7da4e7d", null ],
@@ -1226,7 +1227,6 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "NavContainerExt", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba8aa4c6b38c69df7c83bac5876465f13a", null ],
       [ "NavContentsExt", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba31da8596beb2ec00316e574c1cbbbc51", null ],
       [ "NavToRec", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba309f045ab3502dba5a005bfb161389c3", null ],
-      [ "Share", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba5a95a425f74314a96f13a2f136992178", null ],
       [ "DoTaskAction", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6bade3df62bb850b575ad7c2bcad654ca04", null ],
       [ "ShowTaskHistory", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba970ff9ff45e91c725ba34eaa7e8b206c", null ],
       [ "NewRecord", "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baed2ef85fdb01d600c8bdd67264699e07", null ],
@@ -3063,7 +3063,8 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "FileTypeXml", "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a128ca35cfccc5cf80d9969cefe05ab29", null ],
       [ "FileTypeImage", "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739ae52407e6e7358acf7b2c7f637c3c7915", null ],
       [ "FileTypeTxt", "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a68f4b29d35624bd01194ed1119955c65", null ],
-      [ "OneDrive", "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739af79cd76b16e526d536ec5f9e3a3dbe9d", null ]
+      [ "OneDrive", "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739af79cd76b16e526d536ec5f9e3a3dbe9d", null ],
+      [ "UtyStoreTransfer", "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a08e3931a3abadf364a48c85b3cdaf559", null ]
     ] ],
     [ "IconSizes", "namespace_t_r_i_m_1_1_s_d_k.html#a888940a1ccab0e589acaa70241c99fe0", [
       [ "W16h16", "namespace_t_r_i_m_1_1_s_d_k.html#a888940a1ccab0e589acaa70241c99fe0a9ec69e35872e698079af6b67f463dfaf", null ],
@@ -5309,6 +5310,7 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "RecordLocationEmail", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa2361e0932a165aa3583c5ff9a80cc46", null ],
       [ "RecordLocationFaxNo", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ab354cdefffe5e46dc7c07dfc17da66b8", null ],
       [ "RecordLocationFromDateTime", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a0606afac8af4d5d1aab97d72fb00ed44", null ],
+      [ "RecordLocationIdNumber", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ad61e33c2363ee612ece501413c68901f", null ],
       [ "RecordLocationIsComplete", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ad4c07105c961da0e38df824bbaf1b114", null ],
       [ "RecordLocationIsOverdue", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a2225acac03f022a8748107ce1f70723d", null ],
       [ "RecordLocationIsPrimaryContact", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a5aa9e141ad9c106e5be34ed00a2ee88f", null ],
@@ -6190,6 +6192,7 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "WorkingCopyStore", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ab9bc51b417280eef7e3cea08451c70dd", null ],
       [ "WorkingCopyStoreId", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a44f29b6b152eb7dd2b03fd16ee6d9b7d", null ],
       [ "WorkingCopyTitle", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a5c66c5e49ba3fa54029a2ce3f8f8b4f7", null ],
+      [ "WorkingCopyViewable", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a09cbc88f2ecfbebf701d5ce3698a8a50", null ],
       [ "ZipCodeCity", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ab874784132aae828d04bbbc8383d9802", null ],
       [ "ZipCodeCountry", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a1097edbeab602eca912f9e045a92b791", null ],
       [ "ZipCodePostcode", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aba9c04c8226bc114d1e172fd474a2ea6", null ],
@@ -6242,8 +6245,6 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "ExplorerConfigUserOptionsItemLimit", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394acb3764ba3740f34ea62ffc46154f7e70", null ],
       [ "ExternalSharingUserOptionsDocumentRecordType", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394adc1e96d326b6c039bb8164b2488124e1", null ],
       [ "ExternalSharingUserOptionsMaximumSecurityLevel", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa82e90e2650229c38f05ff7edb2cc28f", null ],
-      [ "ExternalSharingUserOptionsPortNumber", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a7521837ef6b402aa828c4a3f56f35a67", null ],
-      [ "ExternalSharingUserOptionsServerName", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394af3af1e80c4b1b752660192d818e3cea2", null ],
       [ "ExternalSharingUserOptionsSharedByField", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a80256518865d509a35b98669fc699c45", null ],
       [ "ExternalSharingUserOptionsShareGroup", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aba33cd6f0ed841f390718088ff8931fb", null ],
       [ "GisDataUserOptionsDisplayGISinWebBrowser", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394abadbad058a92368f4642911bb16723c4", null ],
@@ -7623,6 +7624,7 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "WorkingCopyLock", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33baf68bfa8b4909411ae9cf3e80ebc9665e", null ],
       [ "WorkingCopyRecord", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba578a7d052a79bda0d739ae60e847abd4", null ],
       [ "WorkingCopyTitle", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba5c66c5e49ba3fa54029a2ce3f8f8b4f7", null ],
+      [ "WorkingCopyViewable", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba09cbc88f2ecfbebf701d5ce3698a8a50", null ],
       [ "ZipCodeCity", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33bab874784132aae828d04bbbc8383d9802", null ],
       [ "ZipCodeCountry", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba1097edbeab602eca912f9e045a92b791", null ],
       [ "ZipCodePostcode", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33baba9c04c8226bc114d1e172fd474a2ea6", null ],
@@ -8059,6 +8061,10 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "Due", "namespace_t_r_i_m_1_1_s_d_k.html#ad4949df0cf52aa62b6508962785aba64ad0363921c897ec48ae2a05228c825d0d", null ],
       [ "Overdue", "namespace_t_r_i_m_1_1_s_d_k.html#ad4949df0cf52aa62b6508962785aba64a3f165a1b2a52913374e648dc763903d4", null ],
       [ "Complete", "namespace_t_r_i_m_1_1_s_d_k.html#ad4949df0cf52aa62b6508962785aba64aae94f80b3ce82062a5dd7815daa04f9d", null ]
+    ] ],
+    [ "TextIndexSyncTypes", "namespace_t_r_i_m_1_1_s_d_k.html#a8b5824b8266b1e77573620e47b8d82a1", [
+      [ "OnCommit", "namespace_t_r_i_m_1_1_s_d_k.html#a8b5824b8266b1e77573620e47b8d82a1aeef81c53d39814c0c8996a4c6db8cfe2", null ],
+      [ "OnRegularInterval", "namespace_t_r_i_m_1_1_s_d_k.html#a8b5824b8266b1e77573620e47b8d82a1abfc43c501ecda584212a6ac9194fd395", null ]
     ] ],
     [ "TextObjectType", "namespace_t_r_i_m_1_1_s_d_k.html#a5e645e3c1c81c9425cba2aa3677293f8", [
       [ "Caption", "namespace_t_r_i_m_1_1_s_d_k.html#a5e645e3c1c81c9425cba2aa3677293f8a272ba7d164aa836995be6319a698be84", null ],

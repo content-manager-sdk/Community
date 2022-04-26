@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('class_t_r_i_m_1_1_s_d_k_1_1_offline_re
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -249,6 +250,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5567886648d2bc450eafc388728646b3 inherit pub_methods_class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set.html#a5567886648d2bc450eafc388728646b3">CanModifyProperty</a> (<a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394">PropertyIds</a> propertyId)</td></tr>
 <tr class="memdesc:a5567886648d2bc450eafc388728646b3 inherit pub_methods_class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the current user has the permission to modify the specified property.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set.html#a5567886648d2bc450eafc388728646b3">More...</a><br /></td></tr>
 <tr class="separator:a5567886648d2bc450eafc388728646b3 inherit pub_methods_class_t_r_i_m_1_1_s_d_k_1_1_trim_property_set"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:abbcfed2e596813d7ef127fd458c7c2ea"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html">OfflineRecord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html#abbcfed2e596813d7ef127fd458c7c2ea">FindOfflineRecord</a> (<a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a> inDatabase, string fullFilePath)</td></tr>
+<tr class="memdesc:abbcfed2e596813d7ef127fd458c7c2ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks to see if there is an <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html" title="A document that has been temporarily stored outside of Content Manager for offline access">OfflineRecord</a> stored in the nominated file path. You need to provide a database for this function, however it can be used in a disconnected state by specifying the Id on a new <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html" title="The Database object is the first object that must be created when using the TRIM SDK....">Database</a> and setting AutoConnect=false.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html#abbcfed2e596813d7ef127fd458c7c2ea">More...</a><br /></td></tr>
+<tr class="separator:abbcfed2e596813d7ef127fd458c7c2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -632,6 +639,44 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Clears the auto check in status for this offline record. If the user chose the Edit function in the trim.exe client the TRIMwatcher process is notified to automatically check in this record once it is no longer in use. If you are writing an add-in for an editing program, you may wish to take over the management of the checkin in process and cancel the TRIMWatcher request </p>
+
+</div>
+</div>
+<a id="abbcfed2e596813d7ef127fd458c7c2ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbcfed2e596813d7ef127fd458c7c2ea">&#9670;&nbsp;</a></span>FindOfflineRecord()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html">OfflineRecord</a> TRIM.SDK.OfflineRecord.FindOfflineRecord </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a>&#160;</td>
+          <td class="paramname"><em>inDatabase</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>fullFilePath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Looks to see if there is an <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html" title="A document that has been temporarily stored outside of Content Manager for offline access">OfflineRecord</a> stored in the nominated file path. You need to provide a database for this function, however it can be used in a disconnected state by specifying the Id on a new <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html" title="The Database object is the first object that must be created when using the TRIM SDK....">Database</a> and setting AutoConnect=false. </p>
 
 </div>
 </div>

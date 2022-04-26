@@ -25,12 +25,6 @@
 var NAVTREE =
 [
   [ "Micro Focus Content Manager SDK 10.0", "index.html", [
-    [ "Welcome to the Content Manager SDK Documentation", "index.html", [
-      [ "Overview", "index.html#autotoc_md124", null ],
-      [ "Important", "index.html#autotoc_md125", null ],
-      [ "Older Versions", "index.html#autotoc_md126", null ],
-      [ "More Help", "index.html#autotoc_md127", null ]
-    ] ],
     [ "Supporting Information", "md_doc_00____legal.html", [
       [ "Legal Notices", "md_doc_00____legal.html#legal", [
         [ "Trademark notices", "md_doc_00____legal.html#trademark", null ],
@@ -196,6 +190,7 @@ var NAVTREE =
     ] ],
     [ "Open ID Connect Authentication", "oidc.html", [
       [ "Authentication overview", "oidc.html#auth_overview", null ],
+      [ "User name", "oidc.html#auth_alt_name", null ],
       [ "ADFS for WebClient and ServiceAPI", "oidc.html#oidc_adfs", [
         [ "Create the AD FS  Application", "oidc.html#autotoc_md19", [
           [ "Examples", "oidc.html#autotoc_md20", [
@@ -825,15 +820,13 @@ var NAVTREE =
       ] ]
     ] ],
     [ "﻿Object Purposes", "object_purposes.html", [
-      [ "Using object purposes", "object_purposes.html#object_purposes", [
-        [ "About", "object_purposes.html#object_purposes_about", null ],
-        [ "Warning", "object_purposes.html#object_purposes_warning", null ],
-        [ "Extra information", "object_purposes.html#object_purposes_extra", null ],
-        [ "Purpose metadata", "object_purposes.html#object_purposes_metadata", [
-          [ "Code sample - searching", "object_purposes.html#autotoc_md112", null ],
-          [ "Code sample - post search", "object_purposes.html#autotoc_md113", null ],
-          [ "Code sample - object definition", "object_purposes.html#autotoc_md114", null ]
-        ] ]
+      [ "About", "object_purposes.html#object_purposes_about", null ],
+      [ "Warning", "object_purposes.html#object_purposes_warning", null ],
+      [ "Extra information", "object_purposes.html#object_purposes_extra", null ],
+      [ "Purpose metadata", "object_purposes.html#object_purposes_metadata", [
+        [ "Code sample - searching", "object_purposes.html#autotoc_md112", null ],
+        [ "Code sample - post search", "object_purposes.html#autotoc_md113", null ],
+        [ "Code sample - object definition", "object_purposes.html#autotoc_md114", null ]
       ] ],
       [ "List of objects with related purpose enum", "object_purposes.html#object_with_purpose_enum", [
         [ "TRIM.SDK.ActionDef", "object_purposes.html#purpose_enum_ActionDef", null ],
@@ -995,6 +988,12 @@ var NAVTREE =
         [ "Example: Manual Record Number", "advanced_topics.html#example_manual_record_number", null ]
       ] ]
     ] ],
+    [ "Welcome to the Content Manager SDK Documentation", "md_doc_index.html", [
+      [ "Overview", "md_doc_index.html#autotoc_md125", null ],
+      [ "Important", "md_doc_index.html#autotoc_md126", null ],
+      [ "Older Versions", "md_doc_index.html#autotoc_md127", null ],
+      [ "More Help", "md_doc_index.html#autotoc_md128", null ]
+    ] ],
     [ "Packages", "namespaces.html", [
       [ "Packages", "namespaces.html", "namespaces_dup" ],
       [ "Package Functions", "namespacemembers.html", [
@@ -1035,18 +1034,18 @@ var NAVTREEINDEX =
 "class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html#a96c5dd694376b3c0699fb716392e410d",
 "class_t_r_i_m_1_1_s_d_k_1_1_property_def.html#a9891625530200b84dcf0bc053ef89970",
 "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a11efbdccfdb9e4a82c14ab17b88331d7",
-"class_t_r_i_m_1_1_s_d_k_1_1_record.html#abe8156982b3ca14560f1a11a8ea8da3e",
-"class_t_r_i_m_1_1_s_d_k_1_1_record_location.html#a986a756105b4e164947d7a7efb812aa4",
-"class_t_r_i_m_1_1_s_d_k_1_1_record_type.html#abc5681ca0b24d8f0ed504456fe3b1547",
-"class_t_r_i_m_1_1_s_d_k_1_1_schedule.html#af4b5128a721d512ca9bb497d2e50c23b",
-"class_t_r_i_m_1_1_s_d_k_1_1_security_caveat.html#aab8500fef5b8e6655baad3684e5d86ab",
-"class_t_r_i_m_1_1_s_d_k_1_1_string_array.html#ad77baaf10f4abe757583feca23e18e4a",
-"class_t_r_i_m_1_1_s_d_k_1_1_trim_decimal.html#a640c373c7a266bc1588974cd38ca61b8",
-"class_t_r_i_m_1_1_s_d_k_1_1_trim_menu_link_list_1_1_trim_menu_link_list_enumerator.html#ac6b0a441d389e76ec1373630efbf8b73",
-"class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a14c1aac9d21f153644a1f250bde72997",
-"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#ab3bd1131f5d00aaa1ec6abfdd1e1b4ec",
-"enum_metadata.html#enum_help_controlLabelType",
-"enum_metadata.html#enum_help_unregisteredUsers",
+"class_t_r_i_m_1_1_s_d_k_1_1_record.html#abe999e3469011291f6d89f0b1fa89f77",
+"class_t_r_i_m_1_1_s_d_k_1_1_record_location.html#a992b45a7cbc3faad78f5320736b10618",
+"class_t_r_i_m_1_1_s_d_k_1_1_record_type.html#abd08f0eafdd21d9a072c8b389ccd1602",
+"class_t_r_i_m_1_1_s_d_k_1_1_schedule.html#af731112012d455955fb41c18eda30f84",
+"class_t_r_i_m_1_1_s_d_k_1_1_security_caveat.html#aacfda41dcfd21f54ee1ce6de8b7dbd95",
+"class_t_r_i_m_1_1_s_d_k_1_1_string_array.html#ad9dfa2dc80db77e7a53e1301b637a33b",
+"class_t_r_i_m_1_1_s_d_k_1_1_trim_decimal.html#a7ffe82a8c56562e73a37849268b85425",
+"class_t_r_i_m_1_1_s_d_k_1_1_trim_object.html",
+"class_t_r_i_m_1_1_s_d_k_1_1_trim_search_sort_item_list.html#a2f017482b88d06395062d4efecaba56c",
+"class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#aea608badc916fed444bd70601cd7b589",
+"enum_metadata.html#enum_help_copyRelationship",
+"enum_metadata.html#enum_help_useStoreType",
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1fc5884251ca9f20a4fd5f79a458f94f",
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a893d031c33d55e59b810596012a04c07",
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739aef8ee04c55eaf3f9e12839ae685b3fb5",
@@ -1058,29 +1057,29 @@ var NAVTREEINDEX =
 "namespace_t_r_i_m_1_1_s_d_k.html#a563760e8f42fa60ac770970a65f595f3a73125fe448cc254214d4969b7869beee",
 "namespace_t_r_i_m_1_1_s_d_k.html#a5d3ef5f1ed54efc1530ce7ba740c6cefa7372c74833f8a45813f1ff356736bc2e",
 "namespace_t_r_i_m_1_1_s_d_k.html#a6688581b60dea6b8108117df844d0bc3a10ff8b0e4bca4f39a2c52af626afd0ca",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba26d824427b505952ed4ac4c19be05a5b",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba6d8bed39ed6b99d8db51f3f5f2d635ae",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33babc0b5be876f8e511fcd4cc6bdbdd5612",
-"namespace_t_r_i_m_1_1_s_d_k.html#a7851db70054f962b98c7523068e5b973af73b999b40e3896ef25bb6d0f7d239fb",
-"namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa60817eed64cf1e26af3d928b7a4c20ec",
-"namespace_t_r_i_m_1_1_s_d_k.html#a88fdad9803136a31cabbe34e628acc57aec5a22291e8c093eb0f92ecdf6d0a328",
-"namespace_t_r_i_m_1_1_s_d_k.html#ab00975e0947347d36dca72d67fdf0b23a745ef75fb0adad4ed69eb0f8a63b2523",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac2d1b9923c582181bdf5c8dbda09e09cab951f3558625fe108c3b556a0f93ee1a",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a195793d49c42ef7b0bc971087e48d30e",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a3511465d762d4e427a767e63edd69bbf",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a4fc6f3259927f9de9a662be23c1524af",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a6a5628b8dadb643252e68214acdb39ff",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a886b8e5060492dd34ff5cc07c050dc9c",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa1ade6f0227f5536d970ec12d72ce5ab",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394abdb7e017056e10d43292f6e2d981a6cd",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394adc87c7cea2740ab7b94a28ac7211f2ea",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394af922b40afe67906ab72bb56a15ba1bb7",
-"namespace_t_r_i_m_1_1_s_d_k.html#ad7258f615e4cb35d7f8642a3fe8cd06fab6ec7abeb6ae29cc35a4b47475e12afe",
-"namespace_t_r_i_m_1_1_s_d_k.html#af33254e6ddf46b290bd5eb7c480ce427a038e648f69b23b2a59daf262d8122a24",
-"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba49cdf9fc54e9eb222629464f8a232bf0",
-"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6bacdec849ac5386f809be37651228da2fb",
-"oidc.html#autotoc_md44",
-"release_notes.html#rn_92_constructors"
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba26ab96eaa7abab2424812dc0b6fa02d7",
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba6d7c6287d778be4aeafb157965906c9f",
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33babbd48b2f8886231c0facf00dc4193b35",
+"namespace_t_r_i_m_1_1_s_d_k.html#a7851db70054f962b98c7523068e5b973a88183b946cc5f0e8c96b2e66e1c74a7e",
+"namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa5f9547af8bc3b57ad356183cb8013fe2",
+"namespace_t_r_i_m_1_1_s_d_k.html#a88fdad9803136a31cabbe34e628acc57aaea23489ce3aa9b6406ebb28e0cda430",
+"namespace_t_r_i_m_1_1_s_d_k.html#aaf376411c995a9a746b512c8c2436a3facacca212d27c711ae4ec7b794368da9f",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac1b09823b32a3e1a189b264b6d712ea0aecbdd6e53cfa64ca0a202785ba4bc42c",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a18c0db0607f12b7ca721248d7e80298c",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a34a9fd2798a0fa5373b3f2e70807bb6b",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a4f4534770958cec06795f487c0be3236",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a69a4a41907d5a410915a95ae19a3dc03",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a8850c59912d5be4c80106294d6fb1b82",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa14d69bdeca779a4427247340fccf4b7",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394abc87e82d9064c0e88e3492bd6d94f7cd",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394adc1130a1b737a9a37dd7b9d9bb74e45a",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394af8b5615a9726b471f049b36b789b8181",
+"namespace_t_r_i_m_1_1_s_d_k.html#ad7258f615e4cb35d7f8642a3fe8cd06f",
+"namespace_t_r_i_m_1_1_s_d_k.html#af32e79527d8e9135252a11488d081b14a28cdc4fe2a9628eede20982d337e5ee6",
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba46ad72b70e2fd28722f00a6c84d20dce",
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6bacc85eb50ef300b13a1db27e1eda7d214",
+"oidc.html#autotoc_md40",
+"release_notes.html#rn_92_HasPermission"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

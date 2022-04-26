@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('oidc.html',''); initResizable(); });
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
 <ul><li class="level1"><a href="#auth_overview">Authentication overview</a></li>
+<li class="level1"><a href="#auth_alt_name">User name</a></li>
 <li class="level1"><a href="#oidc_adfs">ADFS for WebClient and ServiceAPI</a><ul><li class="level2"><a href="#autotoc_md19">Create the AD FS  Application</a><ul><li class="level3"><a href="#autotoc_md20">Examples</a><ul><li class="level4"><a href="#autotoc_md21">New AD FS application</a></li>
 <li class="level4"><a href="#autotoc_md22">Add Redirect URI</a></li>
 <li class="level4"><a href="#autotoc_md23">Generate Secret</a></li>
@@ -167,6 +168,9 @@ $(document).ready(function(){initNavTree('oidc.html',''); initResizable(); });
 <h1><a class="anchor" id="auth_overview"></a>
 Authentication overview</h1>
 <p>OAuth authentication is managed via OpenId Connect authentication. The authentication is configured in yout Identity Provider (e.g. Azure AD) and then the appropriate details are stored in Content Manager in the hptrim.config file, for the Web Client and ServiceAPI or Enterprise Studio for the desktop client.</p>
+<h1><a class="anchor" id="auth_alt_name"></a>
+User name</h1>
+<p>Logging in using OpenId Connect will result in the user's name being returned from the idenity provider to Content Manager, this will usually be a name that is the same as the user's email address. This name must be entered in the peron's Content Manager location. If the user also needs to use Content Manager with their Windows credentials then it is likely their OpenId connect name will go in the Alternative login field, otherwise if OpenId Connect is the only form of authentication being used the name can go in the User name field.</p>
 <h1><a class="anchor" id="oidc_adfs"></a>
 ADFS for WebClient and ServiceAPI</h1>
 <p>As of CM 10 the CM web applications (ServiceAPI, WebDrawer and Web Client) have an OpenId Connect authentication provider built in. This document describes creating an AD FS application and configuring the CM web application.</p>

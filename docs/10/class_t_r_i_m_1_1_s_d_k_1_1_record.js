@@ -70,7 +70,6 @@ var class_t_r_i_m_1_1_s_d_k_1_1_record =
     [ "GetDocumentPathInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a3a7d3ff74fc51f4ff8ed2310fc022738", null ],
     [ "GetDocumentPathInWGSCache", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a61f4416a057239fabc8d83ae2ad15e25", null ],
     [ "GetEmailAttachment", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a68da8269ab8c8b0577a3fb5374c84902", null ],
-    [ "GetExternalShareURL", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a1c89caabc997b0db9983cbae5caa7598", null ],
     [ "GetExtractDocument", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a542a03d9dd03e0d1d6d2105fb3542277", null ],
     [ "GetFieldValue", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#aed641cee8eca1afbf00ac13595f790a1", null ],
     [ "GetFieldValueAsString", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#af1cd0ff4047fd2f73b32b8df7370cd5f", null ],

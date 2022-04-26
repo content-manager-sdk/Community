@@ -4,6 +4,8 @@ var class_t_r_i_m_1_1_s_d_k_1_1_external_link =
     [ "ExternalLink", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#aa741ba34ed8eda23b13004775259c820", null ],
     [ "ExternalLink", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#a3df4abdcc724dd32e641d0a919f5bb74", null ],
     [ "Extract", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#adf1e6daf0b396ecd1491320336037ca7", null ],
+    [ "FormatParameters", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#aba4a0c79146c5f3dab889868dcb0dd53", null ],
+    [ "FormatURL", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#a76b5dcd008d713fd9cedf199d6775d9d", null ],
     [ "GetCommandLineParameters", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#a0818b487e747e6db53d0cde4d13de691", null ],
     [ "GetCommandLineParameters", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#a2a4e3cd929745f49113b16bad016a832", null ],
     [ "GetCommandLineParameters", "class_t_r_i_m_1_1_s_d_k_1_1_external_link.html#abb1c796cc2b0e12a321af65076e9a354", null ],
