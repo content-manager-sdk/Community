@@ -485,11 +485,11 @@ Add-Content $authFile "</authentication>"
 Add-Content $authFile ""
 Add-Content $authFile ""
 
-Add-Content "$curDir\authenication.xml" "<!-- Web Client Office Addin Settings -->"
+Add-Content "$curDir\authentication.xml" "<!-- Web Client Office Addin Settings -->"
 
 
 
-Add-Content "$curDir\authenication.xml" "<officeIntegration guid=`"$officeManifestGuid`" version=`"$version`"/>"
+Add-Content "$curDir\authentication.xml" "<officeIntegration guid=`"$officeManifestGuid`" version=`"$version`"/>"
 
 "==================== Authentication details for ServiceAPI and Web Client written to $authFile ===================="
 "==================== Teams manifest written to $teamsZip ===================="
