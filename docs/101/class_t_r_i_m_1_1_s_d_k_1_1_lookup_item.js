@@ -1,0 +1,25 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_lookup_item =
+[
+    [ "LookupItem", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#af6e3ddce996b3ebcd935bd7d23684a97", null ],
+    [ "LookupItem", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a3e4631b45814865cc8a98f3f4acbcef7", null ],
+    [ "LookupItem", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a6aacc6c294d1f4b67512a363e1b22ce6", null ],
+    [ "NewLowerLevel", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a5f5d24c1cf263ec59682f566e9954d3c", null ],
+    [ "SetNotes", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a79f0a62fe7acdd43e77706b3dc110a92", null ],
+    [ "Abbreviation", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a30c2dd080d0873f6e179b33fa98bcedc", null ],
+    [ "AccessControlList", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#ae6eca54570712b04e0f9d6d5762e95f5", null ],
+    [ "CanAddToNotes", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a0c91039d58d7a0c21be6756432f9a1b9", null ],
+    [ "CanModifyExistingNotes", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a928dd4ae9cc2af59ce46cf156f8c17fe", null ],
+    [ "Comments", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a4b1052ba330c6fa5a66aa4ecf9c59045", null ],
+    [ "CustomIcon", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a88061d56eefbce5e99edbd004816ce61", null ],
+    [ "CustomIconExternal", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a34d6bd0626e48af08b6d1b05e31d9151", null ],
+    [ "CustomIconInternal", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a942af54187ca60d46a82bbf406f605c6", null ],
+    [ "Description", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a8aacec95bb0a632a57e8207e9771fb0a", null ],
+    [ "FullDescription", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#ade93b2a2d45d17dff4cc449d0dfea994", null ],
+    [ "HasChildItems", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a98595b9428bc02d775f4f2c7cfc61546", null ],
+    [ "IconId", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a6f23e043f966b7863acbf708f743507b", null ],
+    [ "ItemNumber", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a5447bfcf173970a59074f7619c7aaeb9", null ],
+    [ "Name", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a901c216567910658ceb3989f52b22214", null ],
+    [ "Notes", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a70f4ac8dd7f0bdef4d5201567496816b", null ],
+    [ "ParentItem", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#a80bc8983c6d1ffa0508ec3d401b993fa", null ],
+    [ "ParentSet", "class_t_r_i_m_1_1_s_d_k_1_1_lookup_item.html#aabd7f1cc1e3d19baa524b685e3aac7be", null ]
+];
