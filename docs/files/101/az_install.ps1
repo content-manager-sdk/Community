@@ -1,4 +1,5 @@
-﻿function getExistingApp {
+﻿$global:creds;
+function getExistingApp {
 
     Write-Information -MessageData "" -InformationAction Continue
     Write-Information -MessageData "================================================================================" -InformationAction Continue
@@ -80,6 +81,10 @@ function createNewApp {
     if ($webClientUrl) {
         $replyUrls = $replyUrls + " $webClientUrl/serviceapi/auth/openid"
     }
+	if($mobileClientUrl)
+	{
+		 $replyUrls = $replyUrls + " $webServiceUrl/auth/mobile"
+	}
 
     $MyArray = $($replyUrls -split " ")
 
@@ -139,9 +144,9 @@ function createNewApp {
         
     Write-Information -MessageData "==================== Set the client secret ====================" -InformationAction Continue 
         
-    $creds = az ad app credential reset --id $appObject.appId --append --only-show-errors | ConvertFrom-Json
+    $global:creds = az ad app credential reset --id $appObject.appId --append --only-show-errors | ConvertFrom-Json
     
-    if (!$creds) {
+    if (!$global:creds) {
         return
     }
     
@@ -254,6 +259,18 @@ function createNewApp {
     } while ($tryClient -eq "y")
     
 
+    if($mobileClientUrl)
+	{
+           Write-Information -MessageData "==================== Adding for Mobile client applications ====================" -InformationAction Continue   
+
+           
+            $body = "{`"publicClient`":{`"redirectUris`":[`"trimapp://mobile`"]}}" | ConvertTo-Json           
+            
+
+           az rest --method PATCH --uri $requrl --headers 'Content-Type=application/json' --body $body  --only-show-errors
+	} 
+   
+
     Remove-Item "$curDir/scopes.json"
     Remove-Item "$curDir/new_scopes.json"
     Remove-Item "$curDir/resman.json"
@@ -333,6 +350,13 @@ if ($includeWebClient -eq "y") {
     }
 }
 
+$mobileClientUrl = ""
+$includeMobileClient = Read-Host -Prompt "Do you want to link to the Content Manager Mobile Client? (y/n)"
+
+if ($includeMobileClient -eq "y") {   
+    $mobileClientUrl = "trimapp://mobile";
+}
+
 do {
 
     $createAppAction = Read-Host -Prompt ‘Either create a new Azure App or use an existing one, do you wish to create a new Azure App (y/n)'
@@ -361,8 +385,8 @@ $officeManifestGuid = [guid]::NewGuid()
 
 
 $OfficeManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/office-addin-manifest-template.xml"
-$OfficeManifest.OuterXml.Replace("[MANIFESTGUID]", $officeManifestGuid).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $officeDomain) > "$curDir/office-addin-manifest.xml"
-
+[xml]$officeManifestXML=$OfficeManifest.OuterXml.Replace("[MANIFESTGUID]", $officeManifestGuid).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $officeDomain)
+$officeManifestXML.Save("$curDir/office-addin-manifest.xml")
 
 $webClientAttr = ""
 
@@ -386,7 +410,9 @@ Compress-Archive -Update -LiteralPath "$curDir/color.png" -DestinationPath $team
 Compress-Archive -Update -LiteralPath "$curDir/outline.png" -DestinationPath $teamsZip
 
 $appId = $newAppDetails.appId
-$secret = $creds.password
+$secret = $global:creds.password
+
+ 
 
 $xmlManifest = [xml]$OfficeManifest
 $version = $xmlManifest.OfficeApp.Version
@@ -394,7 +420,7 @@ $version = $xmlManifest.OfficeApp.Version
 
 # "==================== Write the sample authentication settings for Web Service ===================="
 
-$authFile = "$curDir\authenication.xml"
+$authFile = "$curDir\authentication.xml"
 
 Set-Content $authFile "<!-- Web Service Authentication settings-->"
 
@@ -414,9 +440,32 @@ Add-Content $authFile ""
 
 Add-Content $authFile "<!-- ServiceAPI Office Addin Settings -->"
 
-Add-Content $authFile ""
-Add-Content $authFile ""
 Add-Content $authFile "<officeIntegration guid=`"$officeManifestGuid`" version=`"$version`"/>"
+
+Add-Content $authFile ""
+Add-Content $authFile ""
+
+if($mobileClientUrl)
+{
+
+        # "==================== Write the sample authentication settings for Mobile Client ===================="
+
+        Add-Content $authFile "<!-- Mobile Client Authentication settings-->"
+
+        Add-Content $authFile "<authentication corsAllowedOrigins=`"https://$myDomain`" allowAnonymous=`"false`" slidingSessionMinutes=`"30`" redirectURI=`"`">"
+        Add-Content $authFile "`t<openIdConnect>"
+        Add-Content $authFile "`t`t<add"
+        Add-Content $authFile "`t`t`tname=`"mobile`""
+        Add-Content $authFile "`t`t`tclientID=`"$appId`""
+        Add-Content $authFile "`t`t`tclientSecret=`"$secret`""
+        Add-Content $authFile "`t`t`tissuerURI=`"https://login.microsoftonline.com/$tenantId/v2.0/.well-known/openid-configuration`""
+        Add-Content $authFile "`t`t`tredirectUri=`"trimapp://mobile`" />"
+        Add-Content $authFile "`t</openIdConnect>"
+        Add-Content $authFile "</authentication>"
+
+        Add-Content $authFile ""
+        Add-Content $authFile ""
+}
 
 # "==================== Write the sample authentication settings for Web Client ===================="
 
