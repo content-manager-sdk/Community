@@ -1,0 +1,28 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_minute_item =
+[
+    [ "MinuteItem", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#ac8c5a5d87e511d6e416f3bd82545c17c", null ],
+    [ "MinuteItem", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a326f4e70c03665816418f2ea6f900413", null ],
+    [ "GetDocumentPathInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#ab627b9703922b43b0b065d2e4cd055da", null ],
+    [ "GetDocumentPathInWGSCache", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#aa8bd94c9d818b967946914dc7ddf99d3", null ],
+    [ "GetExtractDocument", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#aae740f71e2a72a3d8b5afb49edba9d1e", null ],
+    [ "LoadDocumentIntoClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a8c80c5d6574826e59ca7186344d384b7", null ],
+    [ "SetDocument", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a2d27785b6acceeefa3406d01ca7f1e7b", null ],
+    [ "ChildActionArisings", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a6c1178ee4fae0930ebf6a8124d845987", null ],
+    [ "Description", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a766c3289f5043c05b548d61d757469be", null ],
+    [ "DocDateModified", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a22a74820e506b85d0498956237753567", null ],
+    [ "DocExtension", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a37326928aa0cf9bd71fa1ad59af65052", null ],
+    [ "DocSize", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#aab1f3bda26c029b8f5ee90488ff4a513", null ],
+    [ "DocStore", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a03c8047eeb6e00f991ce1882058d35f6", null ],
+    [ "DocStoreId", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a54200e71b113287f739c346983ef4ff7", null ],
+    [ "DocumentPathInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#aa0de2b321a206fc1c5501f6f1e817ef0", null ],
+    [ "DocumentPathInWGSCache", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a5d95c20457ddad6944a8d8c525ab95b0", null ],
+    [ "IsDocumentInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a901438291f3b3459950776ddb2916710", null ],
+    [ "IsMotion", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a4e01d22f6fbbcf6a1da7565ace520ef3", null ],
+    [ "ItemType", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a03cb159f3f5e38e1c3d97601b7141202", null ],
+    [ "Meeting", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a107ad3aa833f5633639003066fc8435d", null ],
+    [ "MinuteItemOrderNumber", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a8e08532d77ae6965d5a87231a69d5432", null ],
+    [ "Outcome", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#a86b5107117b3842a04cc36b932324e3b", null ],
+    [ "ParentAgendaItem", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#abbc6237c2011cc9bd51185072543ef2e", null ],
+    [ "ProposedBy", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#ae0bee712221d12eea2a3bb69bc04a1e0", null ],
+    [ "SecondedBy", "class_t_r_i_m_1_1_s_d_k_1_1_minute_item.html#aedbef0779f5c5547af503f5ae6ebdd21", null ]
+];

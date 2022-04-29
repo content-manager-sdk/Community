@@ -1,0 +1,27 @@
+var class_t_r_i_m_1_1_s_d_k_1_1_working_copy =
+[
+    [ "WorkingCopy", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#ab0bd21178cadda442f79236199047733", null ],
+    [ "WorkingCopy", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a455066506e67affd57f3ccf98316807f", null ],
+    [ "WorkingCopy", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a81982e7b40a6e0f197b9c3d464334a43", null ],
+    [ "GetDocumentPathInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#aaeab2a9355703a891dc88f6cbddf227d", null ],
+    [ "GetDocumentPathInWGSCache", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a04d022fe6b6c0fc2b91bce5a9167c3c5", null ],
+    [ "GetExtractDocument", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a1cf61e1d7fbea767c15e0c4c6daec511", null ],
+    [ "LoadDocumentIntoClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a82e949e40383ed8ae0c114a0cdb01de0", null ],
+    [ "SetDocument", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a09721b5029003ef92cd29d5406591a7a", null ],
+    [ "Author", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a989b92e5b83fb1416edc5c1c10021a0b", null ],
+    [ "DateModified", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a55263696817329dcf58d633b2a1a3824", null ],
+    [ "DocumentPathInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#acde4317adf92817075f949a6cf98b7f5", null ],
+    [ "DocumentPathInWGSCache", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a9efd312b05ba5083e772b6636d08c1ce", null ],
+    [ "Extension", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a045579bab0457d1ef6e928b77163a5d2", null ],
+    [ "FullFileName", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a999bd0f435a241c7c0ed3426b606f72d", null ],
+    [ "IsDocumentInClientCache", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#aa7f11218ab9a5bddae8b9b218b0c44f8", null ],
+    [ "LockExpiryDate", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a394aaaf37936f3153a2c968570ccc6bc", null ],
+    [ "LockString", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#ae5488ee3b38d384c16a30138cde0b1f3", null ],
+    [ "Record", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a0b40a2eb2b94876d15a0b51aac975035", null ],
+    [ "RecordUri", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a9a2a10f2bd3802773edd23fb3536c3b5", null ],
+    [ "Revision", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a49b1f7d269b3a992653c132b1864860a", null ],
+    [ "Size", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a1c0056f1d655ea845eb2db28374bd9f2", null ],
+    [ "Store", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#aeaa69a61e958415587569f1eedcb5b4f", null ],
+    [ "StoreId", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a0f6ad3dc035df00d88c8253101493410", null ],
+    [ "Title", "class_t_r_i_m_1_1_s_d_k_1_1_working_copy.html#a014b357da1621e84062020ca323d6789", null ]
+];
