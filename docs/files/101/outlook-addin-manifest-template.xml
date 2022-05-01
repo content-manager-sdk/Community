@@ -66,7 +66,21 @@
 							<CustomTab id="Trim.Compose.Tab1">
 								<Group id="msgComposeGroup">
 									<Label resid="groupLabel" />
-
+									<Control xsi:type="Button" id="cmpCRecordSearchButton">
+										<Label resid="funcRecordSearch" />
+										<Supertip>
+											<Title resid="funcRecordSearchSuperTipTitle" />
+											<Description resid="RS_SuperTipDescription" />
+										</Supertip>
+										<Icon>
+											<bt:Image size="16" resid="Trim.rsicon_16x16" />
+											<bt:Image size="32" resid="Trim.rsicon_32x32" />
+											<bt:Image size="80" resid="Trim.rsicon_64x64" />
+										</Icon>
+										<Action xsi:type="ShowTaskpane">
+											<SourceLocation resid="recordSearch" />
+										</Action>
+									</Control>
 									<Control xsi:type="Button" id="cmpCheckinStylesFunctionButton">
 										<Label resid="funcCheckinStylesButtonLabel" />
 										<Supertip>
@@ -242,6 +256,10 @@
 					<bt:Image id="Trim.csicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/CheckinStyle.png"/>
 					<bt:Image id="Trim.csicon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/CheckinStyle.png"/>
 
+					<bt:Image id="Trim.rsicon_16x16" DefaultValue="https://MyDev.dev/ServiceAPI/TrimIcon/W16h16/EditFind.png"/>
+					<bt:Image id="Trim.rsicon_32x32" DefaultValue="https://MyDev.dev/ServiceAPI/TrimIcon/W32h32/EditFind.png"/>
+					<bt:Image id="Trim.rsicon_64x64" DefaultValue="https://MyDev.dev/ServiceAPI/TrimIcon/W32h32/EditFind.png"/>
+
 					<bt:Image id="Trim.foldericon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/EmailLink.png"/>
 					<bt:Image id="Trim.foldericon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EmailLink.png"/>
 					<bt:Image id="Trim.foldericon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EmailLink.png"/>
@@ -277,7 +295,8 @@
 						<bt:Override Locale="nl-nl" Value="Record" />
 						<bt:Override Locale="fr-fr" Value="Enregistrement" />
 						<bt:Override Locale="es-es" Value="Registro" />
-					</bt:String>					
+					</bt:String>
+					<bt:String id="funcRecordSearch" DefaultValue="Records" />
 					<bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen" />
 						<bt:Override Locale="fr-fr" Value="Styles de consignation" />
@@ -312,7 +331,8 @@
 						<bt:Override Locale="nl-nl" Value="Hiermee worden de bijlagen ingecheckt in Content Manager" />
 						<bt:Override Locale="fr-fr" Value="Consigne les pièces jointes dans Content Manager" />
 						<bt:Override Locale="es-es" Value="Comprueba los archivos adjuntos en Content Manager" />
-					</bt:String>					
+					</bt:String>	
+					<bt:String id="funcRecordSearchSuperTipTitle" DefaultValue="Search for Records" />				
 					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen maken en wijzigen" />
 						<bt:Override Locale="fr-fr" Value="Créer et modifier les styles de consignation" />
@@ -340,7 +360,7 @@
 						<bt:Override Locale="fr-fr" Value="Consignez un courriel dans Content Manager." />
 						<bt:Override Locale="es-es" Value="Envíe un correo electrónico a Content Manager." />
 					</bt:String>				
-						
+					<bt:String id="RS_SuperTipDescription" DefaultValue="Search for Records" />	
 					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles.">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen bewerken" />
 						<bt:Override Locale="fr-fr" Value="Modifiez les styles de consignation." />
