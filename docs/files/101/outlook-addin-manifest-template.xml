@@ -4,10 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
 	xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="MailApp">
-
-		<!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
 	<Id>[MANIFESTGUID]</Id>
-
 	<Version>1.1.0.0</Version>
 	<ProviderName>Micro Focus</ProviderName>
 	<DefaultLocale>en-US</DefaultLocale>
@@ -66,6 +63,7 @@
 							<CustomTab id="Trim.Compose.Tab1">
 								<Group id="msgComposeGroup">
 									<Label resid="groupLabel" />
+
 									<Control xsi:type="Button" id="cmpCRecordSearchButton">
 										<Label resid="funcRecordSearch" />
 										<Supertip>
@@ -331,8 +329,9 @@
 						<bt:Override Locale="nl-nl" Value="Hiermee worden de bijlagen ingecheckt in Content Manager" />
 						<bt:Override Locale="fr-fr" Value="Consigne les pièces jointes dans Content Manager" />
 						<bt:Override Locale="es-es" Value="Comprueba los archivos adjuntos en Content Manager" />
-					</bt:String>	
-					<bt:String id="funcRecordSearchSuperTipTitle" DefaultValue="Search for Records" />				
+					</bt:String>
+					<bt:String id="funcRecordSearchSuperTipTitle" DefaultValue="Search for Records" />
+
 					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen maken en wijzigen" />
 						<bt:Override Locale="fr-fr" Value="Créer et modifier les styles de consignation" />
@@ -360,7 +359,7 @@
 						<bt:Override Locale="fr-fr" Value="Consignez un courriel dans Content Manager." />
 						<bt:Override Locale="es-es" Value="Envíe un correo electrónico a Content Manager." />
 					</bt:String>				
-					<bt:String id="RS_SuperTipDescription" DefaultValue="Search for Records" />	
+					<bt:String id="RS_SuperTipDescription" DefaultValue="Search for Records" />						
 					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles.">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen bewerken" />
 						<bt:Override Locale="fr-fr" Value="Modifiez les styles de consignation." />
