@@ -101,14 +101,15 @@ $(document).ready(function(){initNavTree('zero_teams.html',''); initResizable();
 <li class="level1"><a href="#autotoc_md107">ServiceAPI</a></li>
 <li class="level1"><a href="#autotoc_md108">Setup Script</a></li>
 <li class="level1"><a href="#autotoc_md109">Microsoft protected APIs</a></li>
-<li class="level1"><a href="#autotoc_md110">Setup instructions</a><ul><li class="level2"><a href="#autotoc_md111">ServiceAPI Authentication Permissions</a></li>
-<li class="level2"><a href="#autotoc_md112">ServiceAPI Authentication Application ID</a></li>
-<li class="level2"><a href="#autotoc_md113">ServiceAPI Authorized Client Applications</a></li>
+<li class="level1"><a href="#autotoc_md110">Conversation silent interval</a></li>
+<li class="level1"><a href="#autotoc_md111">Setup instructions</a><ul><li class="level2"><a href="#autotoc_md112">ServiceAPI Authentication Permissions</a></li>
+<li class="level2"><a href="#autotoc_md113">ServiceAPI Authentication Application ID</a></li>
+<li class="level2"><a href="#autotoc_md114">ServiceAPI Authorized Client Applications</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#teams_manifests">Teams App Manifest</a></li>
-<li class="level1"><a href="#autotoc_md114">Browser Cookies</a></li>
-<li class="level1"><a href="#autotoc_md115">Email Link</a></li>
+<li class="level1"><a href="#autotoc_md115">Browser Cookies</a></li>
+<li class="level1"><a href="#autotoc_md116">Email Link</a></li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_doc_16___Microsoft_Teams_Integration"></a></p>
@@ -138,7 +139,7 @@ Check in styles and places</h2>
 <h2><a class="anchor" id="autotoc_md106"></a>
 Creating the check in style and place for Teams</h2>
 <p>The usual way to create check in styles and places for the teams server side integration is via the teams client side app. This will allow you to create a check in style, navigate to a channel or user and create a check in place for that channel or user. Check in places may be created via the SDK if there is a need to automate this process, for example if it is undesirable to install the client app in Teams. To create the Check in place:</p><ol type="1">
-<li>find the apppriate check in style</li>
+<li>find the appropriate check in style</li>
 <li>use the Microsoft Graph API to get the details of the desired channel or user</li>
 <li>create the check in place using <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#af326b6ce89444633a31923951e8da533">CheckinStyle.FindOrCreatePlace</a></li>
 </ol>
@@ -181,8 +182,11 @@ Setup Script</h1>
 Microsoft protected APIs</h1>
 <p>The Microsoft Graph API services used to file either all messages in a channel or all chats for a user are <a href="https://docs.microsoft.com/en-us/graph/teams-protected-apis">protected</a>, this means that they may only used with approval from Microsoft. Prior to submitting this form the Azure App for the Teams integration must be created as the approval is given for a particular App. In the request form an answer to the 'why does your application need to access all messages in the tenant' question might be as simple as 'Our organisation is required for compliance reasons to archive all Teams posts in a corporate Record management system'.</p>
 <h1><a class="anchor" id="autotoc_md110"></a>
+Conversation silent interval</h1>
+<p>The Teams integration groups user chats into conversations so that each conversation can be stored in a separate Record. To achieve this the integration assumes that a period of silence in a group chat indicates that particular conversation has finished. For example if users A, B and C are chatting in Teams and a period of time elapses with nothing being said the integration will assume that the next thing said is a new conversation and file it in a new Record. When filing chats manually it is possible to choose to file one or more of these contiguous conversations as a single record. To configure how long this silent time should be got to <code>System Options &gt; Email and chat &gt; Wait until the conversation has been silent for the specified time</code>.</p>
+<h1><a class="anchor" id="autotoc_md111"></a>
 Setup instructions</h1>
-<h2><a class="anchor" id="autotoc_md111"></a>
+<h2><a class="anchor" id="autotoc_md112"></a>
 ServiceAPI Authentication Permissions</h2>
 <p>The ServiceAPI must be configured to use OpenId Connect authentication as described in the <a href="oidc.html#oidc_azuread">authentication section</a>. New permissions must be assigned to the Azure AD Application to support Teams, these are:</p><ul>
 <li>Delegated:<ul>
@@ -221,7 +225,7 @@ ServiceAPI Authentication Permissions</h2>
 </li>
 <li>once you have added all the permissions select 'Grant admin consent' to consent to all permissions.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md112"></a>
+<h2><a class="anchor" id="autotoc_md113"></a>
 ServiceAPI Authentication Application ID</h2>
 <p>The Teams integration requires that the Application ID Uri in the Azure AD App include the domain name of your ServiceAPI server, this must be adjusted before installing the office integration manifests. To adjust the Application ID URI:</p><ol type="1">
 <li>open the Azure App referenced from your ServiceAPI hptrim.config file,</li>
@@ -231,9 +235,9 @@ ServiceAPI Authentication Application ID</h2>
 <li>edit the Application ID URI to include the name of your ServiceAPI server, for example <code>api://myserver.com/2d89cb2b-3cb7-4c21-807e-029fdbfe74a7</code>, then</li>
 <li>Once you have modified this you will need to update the appIdURI property (case sensitive) in the ServiceAPI hptrim.config file.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md113"></a>
+<h2><a class="anchor" id="autotoc_md114"></a>
 ServiceAPI Authorized Client Applications</h2>
-<p>The Teams integration relies on single sign on from the Microsoft addin framework. To allow this to work we need to register our add-in, this is done in the 'Expose an API section of the Azure App created previously. To register your addin:</p><ol type="1">
+<p>The Teams integration relies on single sign on from the Microsoft add-in framework. To allow this to work we need to register our add-in, this is done in the 'Expose an API section of the Azure App created previously. To register your add-in:</p><ol type="1">
 <li>Add a Scope</li>
 <li>name it <code>access_as_teams_user</code></li>
 <li>fill in the fields with values you think are appropriate, for example:<ul>
@@ -267,10 +271,10 @@ Teams App Manifest</h1>
 </li>
 <li>upload the manifest from the Microsoft Teams Admin center</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md114"></a>
+<h1><a class="anchor" id="autotoc_md115"></a>
 Browser Cookies</h1>
 <p>It may be that the Teams integration addin does not display after it has been uploaded, if this is the case ensure that all cookie blocking is disabled in your web browser.</p>
-<h1><a class="anchor" id="autotoc_md115"></a>
+<h1><a class="anchor" id="autotoc_md116"></a>
 Email Link</h1>
 <p>Email Link serves two purposes in the Teams integration, to:</p><ol type="1">
 <li>file all posts and/or files in selected Channels, and</li>

@@ -32,8 +32,8 @@ var NAVTREEINDEX63 =
 "release_notes.html#rn_94_sdk_nuget":[2,2,16],
 "release_notes.html#rn_sdk_GAC":[2,3,0],
 "sc_using.html":[9],
-"sc_using.html#autotoc_md156":[9,1],
-"sc_using.html#autotoc_md157":[9,1,0],
+"sc_using.html#autotoc_md157":[9,1],
+"sc_using.html#autotoc_md158":[9,1,0],
 "sc_using.html#sc_overview":[9,0],
 "sc_using.html#searcg_clauses_by_object_type":[9,2],
 "sc_using.html#search_clauses_ActionDef":[9,2,0],
@@ -142,10 +142,11 @@ var NAVTREEINDEX63 =
 "zero_teams.html#autotoc_md108":[6,5],
 "zero_teams.html#autotoc_md109":[6,6],
 "zero_teams.html#autotoc_md110":[6,7],
-"zero_teams.html#autotoc_md111":[6,7,0],
-"zero_teams.html#autotoc_md112":[6,7,1],
-"zero_teams.html#autotoc_md113":[6,7,2],
-"zero_teams.html#autotoc_md114":[6,9],
+"zero_teams.html#autotoc_md111":[6,8],
+"zero_teams.html#autotoc_md112":[6,8,0],
+"zero_teams.html#autotoc_md113":[6,8,1],
+"zero_teams.html#autotoc_md114":[6,8,2],
 "zero_teams.html#autotoc_md115":[6,10],
-"zero_teams.html#teams_manifests":[6,8]
+"zero_teams.html#autotoc_md116":[6,11],
+"zero_teams.html#teams_manifests":[6,9]
 };

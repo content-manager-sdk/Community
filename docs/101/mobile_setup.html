@@ -89,23 +89,23 @@ $(document).ready(function(){initNavTree('mobile_setup.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md116">Components</a></li>
-<li class="level1"><a href="#autotoc_md117">ServiceAPI</a></li>
-<li class="level1"><a href="#autotoc_md118">Setup Script</a></li>
-<li class="level1"><a href="#autotoc_md119">Manual Setup</a><ul><li class="level2"><a href="#autotoc_md120">ServiceAPI Configuration</a></li>
-<li class="level2"><a href="#autotoc_md121">Azure App Configuration</a></li>
+<ul><li class="level1"><a href="#autotoc_md117">Components</a></li>
+<li class="level1"><a href="#autotoc_md118">ServiceAPI</a></li>
+<li class="level1"><a href="#autotoc_md119">Setup Script</a></li>
+<li class="level1"><a href="#autotoc_md120">Manual Setup</a><ul><li class="level2"><a href="#autotoc_md121">ServiceAPI Configuration</a></li>
+<li class="level2"><a href="#autotoc_md122">Azure App Configuration</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_doc_17___Mobile_App_Setup"></a></p>
-<h1><a class="anchor" id="autotoc_md116"></a>
+<h1><a class="anchor" id="autotoc_md117"></a>
 Components</h1>
 <p>The Content Manager Mobile App requires an instance of the ServiceAPI configured to use OpenId Connect for authentication.</p>
-<h1><a class="anchor" id="autotoc_md117"></a>
+<h1><a class="anchor" id="autotoc_md118"></a>
 ServiceAPI</h1>
 <p>The ServiceAPI must be installed and must have a valid HTTPS certificate, any HTTP errors will cause the Mobile App to fail.</p>
-<h1><a class="anchor" id="autotoc_md118"></a>
+<h1><a class="anchor" id="autotoc_md119"></a>
 Setup Script</h1>
 <p>The simplest way to setup Azure AD and the ServiceAPI is to run the setup script which will create:</p><ul>
 <li>an Azure App, and</li>
@@ -117,9 +117,9 @@ Setup Script</h1>
 <li><a href="https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/az_install.ps1">download</a> and run the script.</li>
 </ol>
 <p>Once the script is complete there will be a new Azure AD App in your tenant and some sample configuration to be pasted into your ServiceAPI hptrim.config file.</p>
-<h1><a class="anchor" id="autotoc_md119"></a>
+<h1><a class="anchor" id="autotoc_md120"></a>
 Manual Setup</h1>
-<h2><a class="anchor" id="autotoc_md120"></a>
+<h2><a class="anchor" id="autotoc_md121"></a>
 ServiceAPI Configuration</h2>
 <p>The ServiceAPI must be configured to support OpenId Connect authentication as detailed in the <a href="oidc.html#oidc_azuread">authentication section</a>. In addition the hptrim.config file must contain an 'add' element with the name 'mobile' and the redirectUri 'trimapp://mobile'.</p>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">authentication</span> <span class="keyword">corsAllowedOrigins</span>=<span class="stringliteral">&quot;https://mydev.dev:3000&quot;</span> <span class="keyword">allowAnonymous</span>=<span class="stringliteral">&quot;false&quot;</span> <span class="keyword">slidingSessionMinutes</span>=<span class="stringliteral">&quot;30&quot;</span> <span class="keyword">redirectURI</span>=<span class="stringliteral">&quot;&quot;</span>&gt;</div>
@@ -129,7 +129,7 @@ ServiceAPI Configuration</h2>
 <div class="line">    &lt;<span class="keywordtype">add</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;mobile&quot;</span> <span class="keyword">clientID</span>=<span class="stringliteral">&quot;[YOUR CLIENT id]&quot;</span> <span class="keyword">clientSecret</span>=<span class="stringliteral">&quot;[YOUR SECRET]&quot;</span>  <span class="keyword">issuerURI</span>=<span class="stringliteral">&quot;[YOUR ISSUER URI]&quot;</span> <span class="keyword">redirectUri</span>=<span class="stringliteral">&quot;trimapp://mobile&quot;</span> /&gt;</div>
 <div class="line">  &lt;/<span class="keywordtype">openIdConnect</span>&gt;</div>
 <div class="line">&lt;/<span class="keywordtype">authentication</span>&gt;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md121"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md122"></a>
 Azure App Configuration</h2>
 <p>Ensure the Azure AD App created in the previous step has the following settings (both all in lower case):</p><ul>
 <li>Authentication &gt; Web &gt; Redirect URIs - [SERVICEAPIURI]/auth/mobile (e.g <a href="https://acme.com/cmserviceapi/auth/mobile">https://acme.com/cmserviceapi/auth/mobile</a>)</li>
