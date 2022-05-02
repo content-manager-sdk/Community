@@ -276,7 +276,7 @@
 					<bt:Url id="checkinStyleTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?CheckinStyles"/>
 					<bt:Url id="linkedFolderTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?LinkedFolders"/>
 					<bt:Url id="optionsTaskPaneUrl" DefaultValue="[SERVICEAPIURL]/office/index.html?UserOptions=1"/>
-
+					<bt:Url id="recordSearch" DefaultValue="[SERVICEAPIURL]/office/index.html?RecordSearch=1"/>
 				</bt:Urls>
 				<bt:ShortStrings>
 					<bt:String id="Trim.TabLabel" DefaultValue="Content Manager">
