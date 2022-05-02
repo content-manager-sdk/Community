@@ -351,11 +351,6 @@ if ($includeWebClient -eq "y") {
 }
 
 $mobileClientUrl = ""
-$includeMobileClient = Read-Host -Prompt "Do you want to link to the Content Manager Mobile Client? (y/n)"
-
-if ($includeMobileClient -eq "y") {   
-    $mobileClientUrl = "trimapp://mobile";
-}
 
 do {
 
@@ -365,6 +360,13 @@ do {
 
 
 if ($createAppAction -eq "y" -or $createAppAction -eq "Y") {
+
+    $includeMobileClient = Read-Host -Prompt "Do you want to include support for the Content Manager Mobile Client? (y/n)"
+    
+    if ($includeMobileClient -eq "y") {   
+        $mobileClientUrl = "trimapp://mobile";
+    }
+
     $newAppDetails = createNewApp
 }
 else {
@@ -377,7 +379,7 @@ $newAppUri = $newAppDetails.identifierUris[0]
 
 $OutlookManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/outlook-addin-manifest-template.xml"
 
-$OutlookManifest.Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl) > "$curDir/outlook-addin-manifest.xml"
+[IO.File]::WriteAllLines("$curDir/outlook-addin-manifest.xml", $OutlookManifest.Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl))
 
 
 $officeDomain = "https://$myDomain"
