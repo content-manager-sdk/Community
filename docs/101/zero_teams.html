@@ -94,17 +94,21 @@ $(document).ready(function(){initNavTree('zero_teams.html',''); initResizable();
 </li>
 <li class="level1"><a href="#autotoc_md102">Components</a></li>
 <li class="level1"><a href="#autotoc_md103">Requirements</a></li>
-<li class="level1"><a href="#autotoc_md104">ServiceAPI</a></li>
-<li class="level1"><a href="#autotoc_md105">Setup Script</a></li>
-<li class="level1"><a href="#autotoc_md106">Microsoft protected APIs</a></li>
-<li class="level1"><a href="#autotoc_md107">Setup instructions</a><ul><li class="level2"><a href="#autotoc_md108">ServiceAPI Authentication Permissions</a></li>
-<li class="level2"><a href="#autotoc_md109">ServiceAPI Authentication Application ID</a></li>
-<li class="level2"><a href="#autotoc_md110">ServiceAPI Authorized Client Applications</a></li>
+<li class="level1"><a href="#autotoc_md104">Server side architecture</a><ul><li class="level2"><a href="#autotoc_md105">Check in styles and places</a></li>
+<li class="level2"><a href="#autotoc_md106">Creating the check in style and place for Teams</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#autotoc_md107">ServiceAPI</a></li>
+<li class="level1"><a href="#autotoc_md108">Setup Script</a></li>
+<li class="level1"><a href="#autotoc_md109">Microsoft protected APIs</a></li>
+<li class="level1"><a href="#autotoc_md110">Setup instructions</a><ul><li class="level2"><a href="#autotoc_md111">ServiceAPI Authentication Permissions</a></li>
+<li class="level2"><a href="#autotoc_md112">ServiceAPI Authentication Application ID</a></li>
+<li class="level2"><a href="#autotoc_md113">ServiceAPI Authorized Client Applications</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#teams_manifests">Teams App Manifest</a></li>
-<li class="level1"><a href="#autotoc_md111">Browser Cookies</a></li>
-<li class="level1"><a href="#autotoc_md112">Email Link</a></li>
+<li class="level1"><a href="#autotoc_md114">Browser Cookies</a></li>
+<li class="level1"><a href="#autotoc_md115">Email Link</a></li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_doc_16___Microsoft_Teams_Integration"></a></p>
@@ -126,6 +130,32 @@ Components</h1>
 Requirements</h1>
 <p>The components listed above work together to provide the complete Teams integration. If the only part of the integration required are the client side components then only the ServiceAPI and Teams manifest are required, Email Link is required to support scheduled server side filing of chats, posts and files.</p>
 <h1><a class="anchor" id="autotoc_md104"></a>
+Server side architecture</h1>
+<h2><a class="anchor" id="autotoc_md105"></a>
+Check in styles and places</h2>
+<p>The server side component of the Teams integration is managed using check in styles and check in places. Check in Styles and places have a one to many parent-child relationship, meaning one check in style may have zero or more check in places associated with it. The purpose of the check in style is to encapsulate a collection of properties required to create a record, the purpose of the check in place is to track the connection details and synchronization state for a particular application and user.</p>
+<p>For example, there might be one check in style that specifies a record type and default settings required for a particular project or customer. This check in style may have linked to it many check in places for different users, some linked to email folders, some linked to Teams channels and others linked to teams users for filing Teams chats.</p>
+<h2><a class="anchor" id="autotoc_md106"></a>
+Creating the check in style and place for Teams</h2>
+<p>The usual way to create check in styles and places for the teams server side integration is via the teams client side app. This will allow you to create a check in style, navigate to a channel or user and create a check in place for that channel or user. Check in places may be created via the SDK if there is a need to automate this process, for example if it is undesirable to install the client app in Teams. To create the Check in place:</p><ol type="1">
+<li>find the apppriate check in style</li>
+<li>use the Microsoft Graph API to get the details of the desired channel or user</li>
+<li>create the check in place using <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#af326b6ce89444633a31923951e8da533">CheckinStyle.FindOrCreatePlace</a></li>
+</ol>
+<p><b>NOTE:</b> The place Id must be structured correctly:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Place type   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Place Id   </th><th class="markdownTableHeadNone">Place id example    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">ChannelPostsForServerProcessing   </td><td class="markdownTableBodyNone">All posts for a channel.   </td><td class="markdownTableBodyNone">{team-id}/channels/{channel-id}   </td><td class="markdownTableBodyNone"><code>dd8b1122-13f0-41df-923d-a407637b4047/channels/19:3te1ccfc9b6c4390be34f7b69439f57a@thread.tacv2</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">ChannelDocsForServerProcessing   </td><td class="markdownTableBodyNone">All files for a channel.   </td><td class="markdownTableBodyNone">{team-id}/channels/{channel-id}   </td><td class="markdownTableBodyNone"><code>dd8b1122-13f0-41df-923d-a407637b4047/channels/19:3te1ccfc9b6c4390be34f7b69439f57a@thread.tacv2</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">TeamsChatForServerProcessing   </td><td class="markdownTableBodyNone">All chats involving this user.   </td><td class="markdownTableBodyNone">users/{id}/chats/getAllMessages   </td><td class="markdownTableBodyNone"><code>users/98e82caf-9073-449d-9284-1bfad890e3d5/chats/getAllMessages</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">DocsForServerProcessing   </td><td class="markdownTableBodyNone">All files owned by this user.   </td><td class="markdownTableBodyNone">users/{id}/drive/root   </td><td class="markdownTableBodyNone"><code>users/98e82caf-9073-449d-9284-1bfad890e3d5/drive/root</code>   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md107"></a>
 ServiceAPI</h1>
 <p>The ServiceAPI must be installed and must have a valid HTTPS certificate, any HTTP errors will cause the Teams Integration to fail.</p>
 <p>The ServiceAPI performs four functions within the integration:</p><ul>
@@ -134,7 +164,7 @@ ServiceAPI</h1>
 <li>provides the backend services to which the add-on communicates when reading from or writing to Content Manager, and</li>
 <li>provides services that act as a proxy between the Add-in and the Microsoft Graph API for reading from and writing to Microsoft Graph API.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md105"></a>
+<h1><a class="anchor" id="autotoc_md108"></a>
 Setup Script</h1>
 <p>The simplest way to configure the Microsoft Teams Integration is to use the setup script, which will create:</p><ul>
 <li>an Azure App,</li>
@@ -147,12 +177,12 @@ Setup Script</h1>
 <li><a href="https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/az_install.ps1">download</a> and run the script.</li>
 </ol>
 <p>More help running this script can be found in the video in this <a href="https://hprm.info/teams-and-office-installer/">post</a>.</p>
-<h1><a class="anchor" id="autotoc_md106"></a>
+<h1><a class="anchor" id="autotoc_md109"></a>
 Microsoft protected APIs</h1>
 <p>The Microsoft Graph API services used to file either all messages in a channel or all chats for a user are <a href="https://docs.microsoft.com/en-us/graph/teams-protected-apis">protected</a>, this means that they may only used with approval from Microsoft. Prior to submitting this form the Azure App for the Teams integration must be created as the approval is given for a particular App. In the request form an answer to the 'why does your application need to access all messages in the tenant' question might be as simple as 'Our organisation is required for compliance reasons to archive all Teams posts in a corporate Record management system'.</p>
-<h1><a class="anchor" id="autotoc_md107"></a>
+<h1><a class="anchor" id="autotoc_md110"></a>
 Setup instructions</h1>
-<h2><a class="anchor" id="autotoc_md108"></a>
+<h2><a class="anchor" id="autotoc_md111"></a>
 ServiceAPI Authentication Permissions</h2>
 <p>The ServiceAPI must be configured to use OpenId Connect authentication as described in the <a href="oidc.html#oidc_azuread">authentication section</a>. New permissions must be assigned to the Azure AD Application to support Teams, these are:</p><ul>
 <li>Delegated:<ul>
@@ -191,7 +221,7 @@ ServiceAPI Authentication Permissions</h2>
 </li>
 <li>once you have added all the permissions select 'Grant admin consent' to consent to all permissions.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md109"></a>
+<h2><a class="anchor" id="autotoc_md112"></a>
 ServiceAPI Authentication Application ID</h2>
 <p>The Teams integration requires that the Application ID Uri in the Azure AD App include the domain name of your ServiceAPI server, this must be adjusted before installing the office integration manifests. To adjust the Application ID URI:</p><ol type="1">
 <li>open the Azure App referenced from your ServiceAPI hptrim.config file,</li>
@@ -201,7 +231,7 @@ ServiceAPI Authentication Application ID</h2>
 <li>edit the Application ID URI to include the name of your ServiceAPI server, for example <code>api://myserver.com/2d89cb2b-3cb7-4c21-807e-029fdbfe74a7</code>, then</li>
 <li>Once you have modified this you will need to update the appIdURI property (case sensitive) in the ServiceAPI hptrim.config file.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md110"></a>
+<h2><a class="anchor" id="autotoc_md113"></a>
 ServiceAPI Authorized Client Applications</h2>
 <p>The Teams integration relies on single sign on from the Microsoft addin framework. To allow this to work we need to register our add-in, this is done in the 'Expose an API section of the Azure App created previously. To register your addin:</p><ol type="1">
 <li>Add a Scope</li>
@@ -237,10 +267,10 @@ Teams App Manifest</h1>
 </li>
 <li>upload the manifest from the Microsoft Teams Admin center</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md111"></a>
+<h1><a class="anchor" id="autotoc_md114"></a>
 Browser Cookies</h1>
 <p>It may be that the Teams integration addin does not display after it has been uploaded, if this is the case ensure that all cookie blocking is disabled in your web browser.</p>
-<h1><a class="anchor" id="autotoc_md112"></a>
+<h1><a class="anchor" id="autotoc_md115"></a>
 Email Link</h1>
 <p>Email Link serves two purposes in the Teams integration, to:</p><ol type="1">
 <li>file all posts and/or files in selected Channels, and</li>
