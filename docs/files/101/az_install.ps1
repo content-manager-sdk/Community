@@ -310,7 +310,7 @@ else {
     $tenant = $login[0]
 }
 
-$tenantId = $tenant.id
+$tenantId = $tenant.tenantid
 
 $subDetails = az account set --subscription $tenantId
 
