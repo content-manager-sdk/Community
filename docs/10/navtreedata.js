@@ -25,12 +25,18 @@
 var NAVTREE =
 [
   [ "Micro Focus Content Manager SDK 10.0", "index.html", [
-    [ "Supporting Information", "md_doc_00____legal.html", [
-      [ "Legal Notices", "md_doc_00____legal.html#legal", [
-        [ "Trademark notices", "md_doc_00____legal.html#trademark", null ],
-        [ "Copyright Notice", "md_doc_00____legal.html#copyright", null ]
+    [ "Welcome to the Content Manager SDK Documentation", "index.html", [
+      [ "Overview", "index.html#Overview", null ],
+      [ "Important", "index.html#Important", null ],
+      [ "Versions", "index.html#Older", null ],
+      [ "Help", "index.html#More", null ]
+    ] ],
+    [ "Supporting Information", "md_doc_02____legal.html", [
+      [ "Legal Notices", "md_doc_02____legal.html#legal", [
+        [ "Trademark notices", "md_doc_02____legal.html#trademark", null ],
+        [ "Copyright Notice", "md_doc_02____legal.html#copyright", null ]
       ] ],
-      [ "Support", "md_doc_00____legal.html#support", null ]
+      [ "Support", "md_doc_02____legal.html#support", null ]
     ] ],
     [ "Release Notes", "release_notes.html", [
       [ "Content Manager 10.0", "release_notes.html#rn_100", [
@@ -1046,40 +1052,40 @@ var NAVTREEINDEX =
 "class_t_r_i_m_1_1_s_d_k_1_1_wgs_progress_info.html#aea608badc916fed444bd70601cd7b589",
 "enum_metadata.html#enum_help_copyRelationship",
 "enum_metadata.html#enum_help_useStoreType",
-"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1fc5884251ca9f20a4fd5f79a458f94f",
-"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a893d031c33d55e59b810596012a04c07",
-"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739aef8ee04c55eaf3f9e12839ae685b3fb5",
-"namespace_t_r_i_m_1_1_s_d_k.html#a08466ea06e2ccb31ab04adb5c300934baacbadebf2dc4813608b850ccaacbe800",
-"namespace_t_r_i_m_1_1_s_d_k.html#a1aab9a69ed75aa9bbfc361908bc3eb48",
-"namespace_t_r_i_m_1_1_s_d_k.html#a28c22b416faea10d468bcbecf632f5bfa819453534665c162edb2107283f20ff6",
-"namespace_t_r_i_m_1_1_s_d_k.html#a2e313f89c105683826d40daeeac724bbab206a1b4ea1097761f78e8876f6da779",
-"namespace_t_r_i_m_1_1_s_d_k.html#a49400c8361c5cf69b67b70c6408ffc85",
-"namespace_t_r_i_m_1_1_s_d_k.html#a563760e8f42fa60ac770970a65f595f3a73125fe448cc254214d4969b7869beee",
-"namespace_t_r_i_m_1_1_s_d_k.html#a5d3ef5f1ed54efc1530ce7ba740c6cefa7372c74833f8a45813f1ff356736bc2e",
-"namespace_t_r_i_m_1_1_s_d_k.html#a6688581b60dea6b8108117df844d0bc3a10ff8b0e4bca4f39a2c52af626afd0ca",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba26ab96eaa7abab2424812dc0b6fa02d7",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba6d7c6287d778be4aeafb157965906c9f",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33babbd48b2f8886231c0facf00dc4193b35",
-"namespace_t_r_i_m_1_1_s_d_k.html#a7851db70054f962b98c7523068e5b973a88183b946cc5f0e8c96b2e66e1c74a7e",
-"namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa5f9547af8bc3b57ad356183cb8013fe2",
-"namespace_t_r_i_m_1_1_s_d_k.html#a88fdad9803136a31cabbe34e628acc57aaea23489ce3aa9b6406ebb28e0cda430",
-"namespace_t_r_i_m_1_1_s_d_k.html#aaf376411c995a9a746b512c8c2436a3facacca212d27c711ae4ec7b794368da9f",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac1b09823b32a3e1a189b264b6d712ea0aecbdd6e53cfa64ca0a202785ba4bc42c",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a18c0db0607f12b7ca721248d7e80298c",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a34a9fd2798a0fa5373b3f2e70807bb6b",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a4f4534770958cec06795f487c0be3236",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a69a4a41907d5a410915a95ae19a3dc03",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a8850c59912d5be4c80106294d6fb1b82",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa14d69bdeca779a4427247340fccf4b7",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394abc87e82d9064c0e88e3492bd6d94f7cd",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394adc1130a1b737a9a37dd7b9d9bb74e45a",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394af8b5615a9726b471f049b36b789b8181",
-"namespace_t_r_i_m_1_1_s_d_k.html#ad7258f615e4cb35d7f8642a3fe8cd06f",
-"namespace_t_r_i_m_1_1_s_d_k.html#af32e79527d8e9135252a11488d081b14a28cdc4fe2a9628eede20982d337e5ee6",
-"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba46ad72b70e2fd28722f00a6c84d20dce",
-"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6bacc85eb50ef300b13a1db27e1eda7d214",
-"oidc.html#autotoc_md40",
-"release_notes.html#rn_92_HasPermission"
+"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a1b37fefdaf02f62b6879e3f655a2a802",
+"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a88183b946cc5f0e8c96b2e66e1c74a7e",
+"namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739aee1301b17d5493b242315433fd11d8b0",
+"namespace_t_r_i_m_1_1_s_d_k.html#a07e32d7af1a10f7c7c8c0089e36025a5ad01e7d75ad89d901a0d2088e66436c87",
+"namespace_t_r_i_m_1_1_s_d_k.html#a1a9b2a32fcf5d62a69938e77d0d79ab3a8f19a8c7566af54ea8981029730e5465",
+"namespace_t_r_i_m_1_1_s_d_k.html#a28c22b416faea10d468bcbecf632f5bfa78369214b964bb5627e5233820a9d3d7",
+"namespace_t_r_i_m_1_1_s_d_k.html#a2e313f89c105683826d40daeeac724bba184daff620aca4ad23fd2bf70d0b76af",
+"namespace_t_r_i_m_1_1_s_d_k.html#a48df330d488f1a0c861e5d0ff4c0d855aa60db0f0d5ae395b22a9297259d818cd",
+"namespace_t_r_i_m_1_1_s_d_k.html#a563760e8f42fa60ac770970a65f595f3a1bf02782773399e5bbcfbf291c0e62e1",
+"namespace_t_r_i_m_1_1_s_d_k.html#a5d3ef5f1ed54efc1530ce7ba740c6cefa6f72b0334a996d5c5424dab109b1b437",
+"namespace_t_r_i_m_1_1_s_d_k.html#a6639f8e68078575edae812833127ff74ae51a7e5ac762533d0ea534b095c19efb",
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba248336101b461380a4b2391a7625493d",
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba6cf04ac63b41a92242549775ce49f85c",
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33babb2716af0e23f67397c9117bcd4c6537",
+"namespace_t_r_i_m_1_1_s_d_k.html#a7851db70054f962b98c7523068e5b973",
+"namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa5b85df4b0274fb6a064a9413a317215a",
+"namespace_t_r_i_m_1_1_s_d_k.html#a88fdad9803136a31cabbe34e628acc57",
+"namespace_t_r_i_m_1_1_s_d_k.html#aab5b398037a5a396d8659d15f9d40917a32aa0abc0f7e29ce2e0f7349c621196f",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac1b09823b32a3e1a189b264b6d712ea0a86848e86e6fb6822db0ac055a2e8b433",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a180ea5a55e86de96129e34c71e2daeb4",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a33ed930cd4c3b3e493159fed18e07e03",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a4ed2059be3881c086a1569af97d6c304",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a6946bf2551e7cc5d657e15fa2ede4629",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a875256029a4e1b191908f66738136646",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa056690d0f15e24a801bebda9f9db2d2",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394abb6768d61fe3e1196c545cc6ef823e42",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ada1899797e564e3606607f4940fe3d57",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394af84a58747c332f1dc8b7afb5d086b3b3",
+"namespace_t_r_i_m_1_1_s_d_k.html#ad6a5f8f0d9f36fedb5e178978324d50daf765704c63df0b45c973be35638fe7b6",
+"namespace_t_r_i_m_1_1_s_d_k.html#af1a7272b070a0747f5db045018538155a9810aa2b9f44401be4bf73188ef2b67d",
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba44bd23734395b83d71c3245c4a90cc00",
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6bacaff3ae39026d4531d1417e93d4c130f",
+"oidc.html#autotoc_md35",
+"release_notes.html#rn_10_lbl_owner"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
