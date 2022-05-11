@@ -1,4 +1,4 @@
-﻿using HP.HPTRIM.SDK;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TRIM.SDK;
 
 namespace TestWPF
 {
@@ -63,11 +64,18 @@ namespace TestWPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Record record = new Record(_database, 9000000000);
 
+            RecordType rt = new RecordType(_database, "Document");
+            // Record record = new Record(_database, 9000000000);
+            Record record = new Record(rt);
 
+            record.Author = new Location(_database, 9000000036);
+            record.Addressee = new Location(_database, 9000000036);
 
-            if (HP.HPTRIM.SDK.PropertyEditor.EditModal(getWindowHandle(), record))
+            InputDocument inputDoc = new InputDocument("D:\\junk\\EML\\A.eml");
+            record.SetDocument(inputDoc, false, false, null);
+
+            if (TRIM.SDK.PropertyEditor.EditModal(getWindowHandle(), record))
             {
                 record.Save();
             }

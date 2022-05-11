@@ -129,9 +129,9 @@ namespace ConsoleServiceAPIClient
 
 			// await getDocument();
 
-			//await uploadFileAndCreateRecord();
+			await uploadFileAndCreateRecord();
 
-			await uploadBinaryFileAndCreateRecord();
+			//await uploadBinaryFileAndCreateRecord();
 
 			Console.WriteLine(stopWatch.ElapsedMilliseconds);
 			Console.ReadKey();
@@ -282,6 +282,8 @@ namespace ConsoleServiceAPIClient
 		}
 
 
+
+		// this is not supported up to CM 10.  It may be supported in a later release.
 		private async static Task uploadBinaryFileAndCreateRecord()
 		{
 			var trimClient = await getServiceClient();
