@@ -25,11 +25,11 @@
 var NAVTREE =
 [
   [ "Micro Focus Content Manager SDK 10.1", "index.html", [
-    [ "Welcome to the Content Manager SDK Documentation", "md_doc_00___index.html", [
-      [ "Overview", "md_doc_00___index.html#autotoc_md1", null ],
-      [ "Important", "md_doc_00___index.html#autotoc_md2", null ],
-      [ "Older Versions", "md_doc_00___index.html#autotoc_md3", null ],
-      [ "More Help", "md_doc_00___index.html#autotoc_md4", null ]
+    [ "Welcome to the Content Manager SDK Documentation", "index.html", [
+      [ "Overview", "index.html#Overview", null ],
+      [ "Important", "index.html#Important", null ],
+      [ "Versions", "index.html#Older", null ],
+      [ "Help", "index.html#More", null ]
     ] ],
     [ "Supporting Information", "md_doc_02____legal.html", [
       [ "Legal Notices", "md_doc_02____legal.html#legal", [
@@ -40,36 +40,36 @@ var NAVTREE =
     ] ],
     [ "Release Notes", "release_notes.html", [
       [ "Content Manager 10.1", "release_notes.html#rn_101", [
-        [ "BREAKING CHANGE - Record Revision Changes", "release_notes.html#autotoc_md6", null ],
-        [ "IMPORTANT - Revision count performance", "release_notes.html#autotoc_md7", null ],
-        [ "Create Record from OneDrive document", "release_notes.html#autotoc_md8", null ],
-        [ "Manage in Place", "release_notes.html#autotoc_md9", null ],
-        [ "Provide a fully functional API to manage Record Action Tracking", "release_notes.html#autotoc_md10", null ],
-        [ "Use CopyRecordOptions to create new parts", "release_notes.html#autotoc_md11", null ],
+        [ "BREAKING CHANGE - Record Revision Changes", "release_notes.html#autotoc_md1", null ],
+        [ "IMPORTANT - Revision count performance", "release_notes.html#autotoc_md2", null ],
+        [ "Create Record from OneDrive document", "release_notes.html#autotoc_md3", null ],
+        [ "Manage in Place", "release_notes.html#autotoc_md4", null ],
+        [ "Provide a fully functional API to manage Record Action Tracking", "release_notes.html#autotoc_md5", null ],
+        [ "Use CopyRecordOptions to create new parts", "release_notes.html#autotoc_md6", null ],
         [ "Improve timing of date registered/ date last updated to more closely match real time record creation", "release_notes.html#rn_10_CR_567033", null ],
-        [ "Support for multiple storage pools for document stores", "release_notes.html#autotoc_md12", null ],
-        [ "Provide meta-variables to substitute for an Alert Subscriber", "release_notes.html#autotoc_md13", null ],
+        [ "Support for multiple storage pools for document stores", "release_notes.html#autotoc_md7", null ],
+        [ "Provide meta-variables to substitute for an Alert Subscriber", "release_notes.html#autotoc_md8", null ],
         [ "Cannot make a container inactive even though all the contents are inactive", "release_notes.html#rn_10_CR_567015", null ],
         [ "New file type options methods", "release_notes.html#rn_101_FileTypeOptions", null ],
-        [ "Option to Automatically send Reminder Notifications for Overdue Actions", "release_notes.html#autotoc_md14", null ],
-        [ "Flag selected issues as being suppressable on Consignments", "release_notes.html#autotoc_md15", null ],
-        [ "Option to exclude records that need external confirmation from a consignment", "release_notes.html#autotoc_md16", null ],
-        [ "Location delegates may now approve consignments", "release_notes.html#autotoc_md17", null ],
-        [ "Introduce a consignment template that can be used for automating the process of creating consignments", "release_notes.html#autotoc_md18", null ],
-        [ "New ability to find Offline Records while Database is disconnected", "release_notes.html#autotoc_md19", null ],
-        [ "Automatic container creation for Check in Styles", "release_notes.html#autotoc_md20", null ],
-        [ "Enhancements to database and workgroup server configuration tools", "release_notes.html#autotoc_md21", null ],
-        [ "Improvements to ImportHistory", "release_notes.html#autotoc_md22", [
-          [ "Existing event and history methods", "release_notes.html#autotoc_md23", null ],
-          [ "Background to changes", "release_notes.html#autotoc_md24", null ],
-          [ "Changes to event logging and import history", "release_notes.html#autotoc_md25", null ]
+        [ "Option to Automatically send Reminder Notifications for Overdue Actions", "release_notes.html#autotoc_md9", null ],
+        [ "Flag selected issues as being suppressable on Consignments", "release_notes.html#autotoc_md10", null ],
+        [ "Option to exclude records that need external confirmation from a consignment", "release_notes.html#autotoc_md11", null ],
+        [ "Location delegates may now approve consignments", "release_notes.html#autotoc_md12", null ],
+        [ "Introduce a consignment template that can be used for automating the process of creating consignments", "release_notes.html#autotoc_md13", null ],
+        [ "New ability to find Offline Records while Database is disconnected", "release_notes.html#autotoc_md14", null ],
+        [ "Automatic container creation for Check in Styles", "release_notes.html#autotoc_md15", null ],
+        [ "Enhancements to database and workgroup server configuration tools", "release_notes.html#autotoc_md16", null ],
+        [ "Improvements to ImportHistory", "release_notes.html#autotoc_md17", [
+          [ "Existing event and history methods", "release_notes.html#autotoc_md18", null ],
+          [ "Background to changes", "release_notes.html#autotoc_md19", null ],
+          [ "Changes to event logging and import history", "release_notes.html#autotoc_md20", null ]
         ] ]
       ] ],
       [ "Content Manager 10.0", "release_notes.html#rn_100", [
         [ "Content Manager SDK assembly and namespace renamed", "release_notes.html#rn_10_SdkRename", null ],
-        [ "Deleted methods and properties:", "release_notes.html#autotoc_md26", null ],
-        [ "Get the field definition for this word", "release_notes.html#autotoc_md27", null ],
-        [ "Create External Link from SDK", "release_notes.html#autotoc_md28", null ],
+        [ "Deleted methods and properties:", "release_notes.html#autotoc_md21", null ],
+        [ "Get the field definition for this word", "release_notes.html#autotoc_md22", null ],
+        [ "Create External Link from SDK", "release_notes.html#autotoc_md23", null ],
         [ "Monitor event processor", "release_notes.html#rn_10_EventProcessor", null ],
         [ "Get a string listing all the record types to which this classification is allowed to be attached", "release_notes.html#rn_10_OnlyRecordTypes", null ],
         [ "Get the Location object which is the assignee of the first activity in this workflow", "release_notes.html#rn_10_InitialAssignee", null ],
@@ -104,15 +104,15 @@ var NAVTREE =
         [ "Introduce a UDF that can be updated once disposition is Destroyed", "release_notes.html#rn_10_CR_379030", null ],
         [ "Ability to suppress legal hold designation", "release_notes.html#rn_10_CR_242100", null ],
         [ "Light weight Records", "release_notes.html#rn_10_CR_379045", [
-          [ "Example", "release_notes.html#autotoc_md29", null ]
+          [ "Example", "release_notes.html#autotoc_md24", null ]
         ] ],
         [ "Indicator on a record when Notes have been added", "release_notes.html#rn_10_CR_384012", null ],
         [ "Provide a version of TransferStorage just for older revisions", "release_notes.html#rn_10_CR_335066", null ],
         [ "New DocumentStoreIncrementalCheckTask", "release_notes.html#rn_10_CR_373041", null ],
         [ "Changes to Consignment processing", "release_notes.html#rn_10_CR_387008", null ],
-        [ "Unknown Location type validation", "release_notes.html#autotoc_md30", null ],
-        [ "Display Child lists in the .Net SDK", "release_notes.html#autotoc_md31", [
-          [ "Sample Code", "release_notes.html#autotoc_md32", null ]
+        [ "Unknown Location type validation", "release_notes.html#autotoc_md25", null ],
+        [ "Display Child lists in the .Net SDK", "release_notes.html#autotoc_md26", [
+          [ "Sample Code", "release_notes.html#autotoc_md27", null ]
         ] ],
         [ "Provide a way of limiting users from extracting and printing sensitive documents", "release_notes.html#rn_10_CR_339007", null ],
         [ "Make Notes user stamp mandatory", "release_notes.html#rn_10_CR_394004", null ],
@@ -121,7 +121,7 @@ var NAVTREE =
         [ "InputDocument.SetAsAlreadyStoredItem SDK function sets record Date Modified to current date rather than Date Modified from document profile", "release_notes.html#rn_10_CR_398052", null ],
         [ "Allow content index updates of missing Records using the SDK so that users can automate the process", "release_notes.html#rn_10_CR_360002", null ],
         [ "More user-friendly style of displaying record types for selection", "release_notes.html#rn_10_CR_343056", [
-          [ "Sample Code", "release_notes.html#autotoc_md33", null ]
+          [ "Sample Code", "release_notes.html#autotoc_md28", null ]
         ] ],
         [ "More control on copying a record using Record.CreateNewCopy() method", "release_notes.html#rn_100_CreateNewCopy", null ]
       ] ],
@@ -164,7 +164,7 @@ var NAVTREE =
       ] ],
       [ "Content Manager 9.3", "release_notes.html#rn_93", [
         [ "SDK no longer installed in GAC", "release_notes.html#rn_sdk_GAC", null ],
-        [ "Removed properties", "release_notes.html#autotoc_md34", null ],
+        [ "Removed properties", "release_notes.html#autotoc_md29", null ],
         [ "Audits - Unable to see the Audit log for the records placed on hold as a group", "release_notes.html#rn_93_audits", null ],
         [ "Record import not working when lookup item additional field is on a record", "release_notes.html#rn_93_lookupset", null ],
         [ "Property on Offline Record object to tell us whether auto checkin has is enabled", "release_notes.html#rn_93_offlinerecord", null ],
@@ -193,8 +193,8 @@ var NAVTREE =
         [ "Prevent invalid extensions from interfering with the checkout process", "release_notes.html#rn_92_InvalidExtensions", null ],
         [ "SDK methods to support field sorting", "release_notes.html#rn_92_FieldSorting", null ],
         [ "SDK methods to support blocking of search methods", "release_notes.html#rn_92_BlockedSearchMethods", null ],
-        [ "Exposing the Initiating Workflow template concept in the SDK", "release_notes.html#autotoc_md35", null ],
-        [ "Provide a way of \"crawling\" the repository without tripping the LastUpdatedOn date", "release_notes.html#autotoc_md36", null ]
+        [ "Exposing the Initiating Workflow template concept in the SDK", "release_notes.html#autotoc_md30", null ],
+        [ "Provide a way of \"crawling\" the repository without tripping the LastUpdatedOn date", "release_notes.html#autotoc_md31", null ]
       ] ]
     ] ],
     [ "Start here", "start_here.html", [
@@ -206,141 +206,141 @@ var NAVTREE =
       [ "Using the Content Manager .NET SDK", "start_here.html#usingTheSDK", null ],
       [ "Getting started", "start_here.html#sdkGettingStarted", [
         [ "Creating a reference to the .NET SDK", "start_here.html#createRef", null ],
-        [ "Downloading the .NET SDK from NuGet", "start_here.html#autotoc_md37", null ],
+        [ "Downloading the .NET SDK from NuGet", "start_here.html#autotoc_md32", null ],
         [ "Finding Content Manager libraries at runtime", "start_here.html#findingAssemblies", [
-          [ "Code Example (with explicit initialization)", "start_here.html#autotoc_md38", null ],
-          [ "Code Example (without explicit initialization)", "start_here.html#autotoc_md39", null ]
+          [ "Code Example (with explicit initialization)", "start_here.html#autotoc_md33", null ],
+          [ "Code Example (without explicit initialization)", "start_here.html#autotoc_md34", null ]
         ] ],
         [ "Loading TRIM.SDK.dll assembly dynamically", "start_here.html#dynamicSdkLoading", null ],
         [ "Memory Management", "start_here.html#memory_management", [
-          [ "Examples", "start_here.html#autotoc_md40", null ],
-          [ "Using statement", "start_here.html#autotoc_md41", null ],
-          [ "Try/Finally", "start_here.html#autotoc_md42", null ]
+          [ "Examples", "start_here.html#autotoc_md35", null ],
+          [ "Using statement", "start_here.html#autotoc_md36", null ],
+          [ "Try/Finally", "start_here.html#autotoc_md37", null ]
         ] ],
-        [ "Leak tracking", "start_here.html#autotoc_md43", null ]
+        [ "Leak tracking", "start_here.html#autotoc_md38", null ]
       ] ]
     ] ],
     [ "Open ID Connect Authentication", "oidc.html", [
       [ "Authentication overview", "oidc.html#auth_overview", null ],
       [ "User name", "oidc.html#auth_alt_name", null ],
       [ "ADFS for WebClient and ServiceAPI", "oidc.html#oidc_adfs", [
-        [ "Create the AD FS  Application", "oidc.html#autotoc_md44", [
-          [ "Examples", "oidc.html#autotoc_md45", [
-            [ "New AD FS application", "oidc.html#autotoc_md46", null ],
-            [ "Add Redirect URI", "oidc.html#autotoc_md47", null ],
-            [ "Generate Secret", "oidc.html#autotoc_md48", null ],
-            [ "Specify Web API identifier", "oidc.html#autotoc_md49", null ]
+        [ "Create the AD FS  Application", "oidc.html#autotoc_md39", [
+          [ "Examples", "oidc.html#autotoc_md40", [
+            [ "New AD FS application", "oidc.html#autotoc_md41", null ],
+            [ "Add Redirect URI", "oidc.html#autotoc_md42", null ],
+            [ "Generate Secret", "oidc.html#autotoc_md43", null ],
+            [ "Specify Web API identifier", "oidc.html#autotoc_md44", null ]
           ] ]
         ] ],
-        [ "Add the settings to the Web Client", "oidc.html#autotoc_md50", [
-          [ "Example", "oidc.html#autotoc_md51", null ]
+        [ "Add the settings to the Web Client", "oidc.html#autotoc_md45", [
+          [ "Example", "oidc.html#autotoc_md46", null ]
         ] ],
-        [ "Configure AD FS for Office Integration access", "oidc.html#autotoc_md52", [
-          [ "Examples", "oidc.html#autotoc_md53", [
-            [ "Add native application", "oidc.html#autotoc_md54", null ],
-            [ "Add permissions for native application", "oidc.html#autotoc_md55", null ],
-            [ "Specifiy claims to be included in token", "oidc.html#autotoc_md56", null ]
+        [ "Configure AD FS for Office Integration access", "oidc.html#autotoc_md47", [
+          [ "Examples", "oidc.html#autotoc_md48", [
+            [ "Add native application", "oidc.html#autotoc_md49", null ],
+            [ "Add permissions for native application", "oidc.html#autotoc_md50", null ],
+            [ "Specifiy claims to be included in token", "oidc.html#autotoc_md51", null ]
           ] ]
         ] ],
-        [ "Add office integration the settings to the Web Client", "oidc.html#autotoc_md57", null ]
+        [ "Add office integration the settings to the Web Client", "oidc.html#autotoc_md52", null ]
       ] ],
       [ "AzureAD for WebClient and ServiceAPI", "oidc.html#oidc_azuread", [
-        [ "Create the Azure AD Application", "oidc.html#autotoc_md58", [
+        [ "Create the Azure AD Application", "oidc.html#autotoc_md53", [
+          [ "Example", "oidc.html#autotoc_md54", null ]
+        ] ],
+        [ "Add a secret", "oidc.html#autotoc_md55", [
+          [ "Example", "oidc.html#autotoc_md56", null ]
+        ] ],
+        [ "Configure Tokens", "oidc.html#autotoc_md57", null ],
+        [ "Configure permissions", "oidc.html#autotoc_md58", [
           [ "Example", "oidc.html#autotoc_md59", null ]
         ] ],
-        [ "Add a secret", "oidc.html#autotoc_md60", [
-          [ "Example", "oidc.html#autotoc_md61", null ]
+        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md60", [
+          [ "Example config", "oidc.html#autotoc_md61", null ]
         ] ],
-        [ "Configure Tokens", "oidc.html#autotoc_md62", null ],
-        [ "Configure permissions", "oidc.html#autotoc_md63", [
+        [ "Enable redirect", "oidc.html#autotoc_md62", null ],
+        [ "Logout", "oidc.html#autotoc_md63", [
           [ "Example", "oidc.html#autotoc_md64", null ]
         ] ],
-        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md65", [
-          [ "Example config", "oidc.html#autotoc_md66", null ]
-        ] ],
-        [ "Enable redirect", "oidc.html#autotoc_md67", null ],
-        [ "Logout", "oidc.html#autotoc_md68", [
-          [ "Example", "oidc.html#autotoc_md69", null ]
-        ] ],
-        [ "Allow anonymous access in the IIS", "oidc.html#autotoc_md70", null ]
+        [ "Allow anonymous access in the IIS", "oidc.html#autotoc_md65", null ]
       ] ],
       [ "Google authentication for WebClient and ServiceAPI", "oidc.html#oidc_google", [
-        [ "Create the Google Credentials", "oidc.html#autotoc_md71", [
+        [ "Create the Google Credentials", "oidc.html#autotoc_md66", [
+          [ "Example", "oidc.html#autotoc_md67", null ]
+        ] ],
+        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md68", [
+          [ "Example config", "oidc.html#autotoc_md69", null ]
+        ] ],
+        [ "Enable redirect", "oidc.html#autotoc_md70", null ],
+        [ "Logout", "oidc.html#autotoc_md71", [
           [ "Example", "oidc.html#autotoc_md72", null ]
         ] ],
-        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md73", [
-          [ "Example config", "oidc.html#autotoc_md74", null ]
-        ] ],
-        [ "Enable redirect", "oidc.html#autotoc_md75", null ],
-        [ "Logout", "oidc.html#autotoc_md76", [
-          [ "Example", "oidc.html#autotoc_md77", null ]
-        ] ],
-        [ "Allow anonymous access in the IIS", "oidc.html#autotoc_md78", null ]
+        [ "Allow anonymous access in the IIS", "oidc.html#autotoc_md73", null ]
       ] ],
       [ "AzureAD for Content Manager Desktop", "oidc.html#oidc_azuread_desktop", [
-        [ "Create the Azure AD Application", "oidc.html#autotoc_md79", [
-          [ "Example", "oidc.html#autotoc_md80", null ]
+        [ "Create the Azure AD Application", "oidc.html#autotoc_md74", [
+          [ "Example", "oidc.html#autotoc_md75", null ]
         ] ],
-        [ "Configure permissions", "oidc.html#autotoc_md81", [
-          [ "Example", "oidc.html#autotoc_md82", null ]
+        [ "Configure permissions", "oidc.html#autotoc_md76", [
+          [ "Example", "oidc.html#autotoc_md77", null ]
         ] ],
-        [ "Configure authentication in Content Manager Enterprise Studio", "oidc.html#autotoc_md83", [
-          [ "Example", "oidc.html#autotoc_md84", null ]
+        [ "Configure authentication in Content Manager Enterprise Studio", "oidc.html#autotoc_md78", [
+          [ "Example", "oidc.html#autotoc_md79", null ]
         ] ],
-        [ "Configure Azure AD for Office Integration access", "oidc.html#autotoc_md85", [
-          [ "Example Config.xml", "oidc.html#autotoc_md86", null ]
+        [ "Configure Azure AD for Office Integration access", "oidc.html#autotoc_md80", [
+          [ "Example Config.xml", "oidc.html#autotoc_md81", null ]
         ] ],
-        [ "Troubleshooting Azure AD for Office Integration access", "oidc.html#autotoc_md87", [
-          [ "Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.", "oidc.html#autotoc_md88", null ]
+        [ "Troubleshooting Azure AD for Office Integration access", "oidc.html#autotoc_md82", [
+          [ "Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.", "oidc.html#autotoc_md83", null ]
         ] ]
       ] ]
     ] ],
     [ "Zero Footprint Office Integration", "zero_office.html", [
-      [ "Components", "zero_office.html#autotoc_md89", null ],
-      [ "Requirements", "zero_office.html#autotoc_md90", null ],
-      [ "ServiceAPI", "zero_office.html#autotoc_md91", [
-        [ "ServiceAPI Configuration", "zero_office.html#autotoc_md92", null ],
-        [ "ServiceAPI Authentication Permissions", "zero_office.html#autotoc_md94", null ],
-        [ "ServiceAPI Authentication Application ID", "zero_office.html#autotoc_md95", null ],
-        [ "ServiceAPI Authorized Client Applications", "zero_office.html#autotoc_md96", null ]
+      [ "Components", "zero_office.html#autotoc_md84", null ],
+      [ "Requirements", "zero_office.html#autotoc_md85", null ],
+      [ "ServiceAPI", "zero_office.html#autotoc_md86", [
+        [ "ServiceAPI Configuration", "zero_office.html#autotoc_md87", null ],
+        [ "ServiceAPI Authentication Permissions", "zero_office.html#autotoc_md89", null ],
+        [ "ServiceAPI Authentication Application ID", "zero_office.html#autotoc_md90", null ],
+        [ "ServiceAPI Authorized Client Applications", "zero_office.html#autotoc_md91", null ]
       ] ],
       [ "Manifests", "zero_office.html#zero_manifests", null ],
-      [ "Browser Cookies", "zero_office.html#autotoc_md97", null ],
-      [ "Email Link", "zero_office.html#autotoc_md98", null ],
-      [ "OneDrive file handler", "zero_office.html#autotoc_md99", [
+      [ "Browser Cookies", "zero_office.html#autotoc_md92", null ],
+      [ "Email Link", "zero_office.html#autotoc_md93", null ],
+      [ "OneDrive file handler", "zero_office.html#autotoc_md94", [
         [ "Refreshing the file handler", "zero_office.html#refresh_access_token", null ]
       ] ]
     ] ],
     [ "Microsoft Teams Integration", "zero_teams.html", [
-      [ "Two modes of operation", "zero_teams.html#autotoc_md100", [
-        [ "Edit manifest to remove client side mode", "zero_teams.html#autotoc_md101", null ]
+      [ "Two modes of operation", "zero_teams.html#autotoc_md95", [
+        [ "Edit manifest to remove client side mode", "zero_teams.html#autotoc_md96", null ]
       ] ],
-      [ "Components", "zero_teams.html#autotoc_md102", null ],
-      [ "Requirements", "zero_teams.html#autotoc_md103", null ],
-      [ "Server side architecture", "zero_teams.html#autotoc_md104", [
-        [ "Check in styles and places", "zero_teams.html#autotoc_md105", null ],
-        [ "Creating the check in style and place for Teams", "zero_teams.html#autotoc_md106", null ]
+      [ "Components", "zero_teams.html#autotoc_md97", null ],
+      [ "Requirements", "zero_teams.html#autotoc_md98", null ],
+      [ "Server side architecture", "zero_teams.html#autotoc_md99", [
+        [ "Check in styles and places", "zero_teams.html#autotoc_md100", null ],
+        [ "Creating the check in style and place for Teams", "zero_teams.html#autotoc_md101", null ]
       ] ],
-      [ "ServiceAPI", "zero_teams.html#autotoc_md107", null ],
-      [ "Setup Script", "zero_teams.html#autotoc_md108", null ],
-      [ "Microsoft protected APIs", "zero_teams.html#autotoc_md109", null ],
-      [ "Conversation silent interval", "zero_teams.html#autotoc_md110", null ],
-      [ "Setup instructions", "zero_teams.html#autotoc_md111", [
-        [ "ServiceAPI Authentication Permissions", "zero_teams.html#autotoc_md112", null ],
-        [ "ServiceAPI Authentication Application ID", "zero_teams.html#autotoc_md113", null ],
-        [ "ServiceAPI Authorized Client Applications", "zero_teams.html#autotoc_md114", null ]
+      [ "ServiceAPI", "zero_teams.html#autotoc_md102", null ],
+      [ "Setup Script", "zero_teams.html#autotoc_md103", null ],
+      [ "Microsoft protected APIs", "zero_teams.html#autotoc_md104", null ],
+      [ "Conversation silent interval", "zero_teams.html#autotoc_md105", null ],
+      [ "Setup instructions", "zero_teams.html#autotoc_md106", [
+        [ "ServiceAPI Authentication Permissions", "zero_teams.html#autotoc_md107", null ],
+        [ "ServiceAPI Authentication Application ID", "zero_teams.html#autotoc_md108", null ],
+        [ "ServiceAPI Authorized Client Applications", "zero_teams.html#autotoc_md109", null ]
       ] ],
       [ "Teams App Manifest", "zero_teams.html#teams_manifests", null ],
-      [ "Browser Cookies", "zero_teams.html#autotoc_md115", null ],
-      [ "Email Link", "zero_teams.html#autotoc_md116", null ]
+      [ "Browser Cookies", "zero_teams.html#autotoc_md110", null ],
+      [ "Email Link", "zero_teams.html#autotoc_md111", null ]
     ] ],
     [ "Mobile App setup", "mobile_setup.html", [
-      [ "Components", "mobile_setup.html#autotoc_md117", null ],
-      [ "ServiceAPI", "mobile_setup.html#autotoc_md118", null ],
-      [ "Setup Script", "mobile_setup.html#autotoc_md119", null ],
-      [ "Manual Setup", "mobile_setup.html#autotoc_md120", [
-        [ "ServiceAPI Configuration", "mobile_setup.html#autotoc_md121", null ],
-        [ "Azure App Configuration", "mobile_setup.html#autotoc_md122", null ]
+      [ "Components", "mobile_setup.html#autotoc_md112", null ],
+      [ "ServiceAPI", "mobile_setup.html#autotoc_md113", null ],
+      [ "Setup Script", "mobile_setup.html#autotoc_md114", null ],
+      [ "Manual Setup", "mobile_setup.html#autotoc_md115", [
+        [ "ServiceAPI Configuration", "mobile_setup.html#autotoc_md116", null ],
+        [ "Azure App Configuration", "mobile_setup.html#autotoc_md117", null ]
       ] ]
     ] ],
     [ "Programming in Content Manager", "programming_guide.html", [
@@ -348,110 +348,110 @@ var NAVTREE =
         [ "The main objects", "programming_guide.html#main_objects", null ],
         [ "Using the TrimApplication object", "programming_guide.html#application_object", null ],
         [ "Using the Database object", "programming_guide.html#database_object", [
-          [ "Code Example", "programming_guide.html#autotoc_md123", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md118", null ]
         ] ],
         [ "Database pooling", "programming_guide.html#database_pooling", [
-          [ "Code Example", "programming_guide.html#autotoc_md124", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md119", null ]
         ] ]
       ] ],
       [ "Creating and modifying Records", "programming_guide.html#creating_records", [
         [ "Creating new Records", "programming_guide.html#new_record", [
-          [ "Code example", "programming_guide.html#autotoc_md125", null ]
+          [ "Code example", "programming_guide.html#autotoc_md120", null ]
         ] ],
         [ "Setting the Container and Classification", "programming_guide.html#creating_records_container", null ],
         [ "Accessing existing records", "programming_guide.html#access_existing_record", null ],
         [ "Getting a record by record number", "programming_guide.html#get_existing_record", [
-          [ "Code Example", "programming_guide.html#autotoc_md126", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md121", null ]
         ] ],
         [ "Getting a Record by URI", "programming_guide.html#record_by_uri", [
-          [ "Code Example", "programming_guide.html#autotoc_md127", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md122", null ]
         ] ]
       ] ],
       [ "Reading record data", "programming_guide.html#reading_record_data", [
         [ "Basic properties", "programming_guide.html#reading_basic_properties", [
-          [ "Examples of basic readable properties of a record are:", "programming_guide.html#autotoc_md128", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md129", null ]
+          [ "Examples of basic readable properties of a record are:", "programming_guide.html#autotoc_md123", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md124", null ]
         ] ],
         [ "Accessing related objects", "programming_guide.html#related_objects", [
-          [ "Code Example", "programming_guide.html#autotoc_md130", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md125", null ]
         ] ],
         [ "Accessing record Location information", "programming_guide.html#record_Location_info", [
-          [ "Code Example", "programming_guide.html#autotoc_md131", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md126", null ]
         ] ]
       ] ],
       [ "Updating records", "programming_guide.html#updating_records", [
         [ "Modifying properties", "programming_guide.html#modifying_properties", [
-          [ "Code Example", "programming_guide.html#autotoc_md132", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md127", null ]
         ] ],
         [ "Calling update methods", "programming_guide.html#update_methods", [
-          [ "Code Example", "programming_guide.html#autotoc_md133", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md134", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md128", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md129", null ]
         ] ],
         [ "Updating properties using SetProperty", "programming_guide.html#updating_properties", [
-          [ "Code Example", "programming_guide.html#autotoc_md135", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md130", null ]
         ] ],
         [ "User Defined Fields", "programming_guide.html#update_user_defined_fields", [
-          [ "Code Example (GetFieldValue())", "programming_guide.html#autotoc_md136", null ],
-          [ "Code Example (SetFieldValue())", "programming_guide.html#autotoc_md137", null ]
+          [ "Code Example (GetFieldValue())", "programming_guide.html#autotoc_md131", null ],
+          [ "Code Example (SetFieldValue())", "programming_guide.html#autotoc_md132", null ]
         ] ]
       ] ],
       [ "Verifying and error trapping", "programming_guide.html#Verifying_and_error_trapping", [
         [ "The Verify() method", "programming_guide.html#The_Verify_method", [
-          [ "Code Example", "programming_guide.html#autotoc_md138", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md133", null ]
         ] ],
         [ "The Verified property", "programming_guide.html#The_Verified_property", null ],
         [ "Trapping run-time errors", "programming_guide.html#Trapping_run-time_errors", null ],
         [ "Saving the record to the database", "programming_guide.html#Saving_the_record_to_the_database", null ]
       ] ],
       [ "New records and electronic documents", "programming_guide.html#New_records_and_electronic_documents", [
-        [ "Creating a container file", "programming_guide.html#autotoc_md139", null ],
+        [ "Creating a container file", "programming_guide.html#autotoc_md134", null ],
         [ "Creating a record of a given type", "programming_guide.html#Creating_a_record_of_a_given_type", null ],
         [ "Controlled and free text titling", "programming_guide.html#Controlled_and_free_text_titling", [
-          [ "Code Example", "programming_guide.html#autotoc_md140", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md135", null ]
         ] ],
         [ "Security Levels and Caveats", "programming_guide.html#Security_Levels_and_Caveats", [
-          [ "Code Example", "programming_guide.html#autotoc_md141", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md142", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md136", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md137", null ]
         ] ],
         [ "Record Locations", "programming_guide.html#Record_Locations", [
-          [ "Code Example", "programming_guide.html#autotoc_md143", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md138", null ]
         ] ],
         [ "Record Contacts", "programming_guide.html#Record_Contacts", [
-          [ "Code Example", "programming_guide.html#autotoc_md144", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md139", null ]
         ] ],
         [ "Creating a Document", "programming_guide.html#Creating_a_Document", null ],
         [ "Titling and numbering", "programming_guide.html#Titling_and_numbering", [
-          [ "Code Example", "programming_guide.html#autotoc_md145", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md140", null ]
         ] ],
         [ "Assigning to a container", "programming_guide.html#Assigning_to_a_container", [
-          [ "Code Example", "programming_guide.html#autotoc_md146", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md141", null ]
         ] ],
         [ "Attaching an electronic document", "programming_guide.html#Attaching_an_electronic_document", [
-          [ "Code Example", "programming_guide.html#autotoc_md147", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md142", null ]
         ] ],
         [ "Document Author", "programming_guide.html#Document_Author", null ]
       ] ],
       [ "Locations", "programming_guide.html#Locations", [
         [ "Working with Locations", "programming_guide.html#Working_with_Locations", null ],
         [ "Finding a Person by Name", "programming_guide.html#Finding_a_Person_by_Name", [
-          [ "Code Example", "programming_guide.html#autotoc_md148", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md143", null ]
         ] ],
         [ "Creating a new Staff Member", "programming_guide.html#Creating_a_new_Staff_Member", [
-          [ "Code Example", "programming_guide.html#autotoc_md149", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md150", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md151", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md144", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md145", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md146", null ]
         ] ]
       ] ],
       [ "Searching Content Manager using the .NET SDK", "programming_guide.html#Searching_Content_Manager", [
         [ "Searching for Content Manager objects", "programming_guide.html#Searching_for_Records_Manager_objects", [
-          [ "Code Example", "programming_guide.html#autotoc_md152", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md147", null ]
         ] ],
         [ "Specifying the search criteria", "programming_guide.html#Specifying_the_search_criteria", [
-          [ "Code Example", "programming_guide.html#autotoc_md153", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md154", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md148", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md149", null ]
         ] ],
         [ "Retrieving the results of the search", "programming_guide.html#Retrieving_the_results", [
-          [ "Code Example", "programming_guide.html#autotoc_md155", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md150", null ]
         ] ]
       ] ],
       [ "Other search features", "programming_guide.html#Other_search_features", [
@@ -459,7 +459,7 @@ var NAVTREE =
         [ "Filtering/searching by enum value", "programming_guide.html#enum_filtering", null ],
         [ "Purpose filtering", "programming_guide.html#Purpose_filtering", null ],
         [ "Persisting a search", "programming_guide.html#Persisting_a_search", null ],
-        [ "Item matching", "programming_guide.html#autotoc_md156", null ],
+        [ "Item matching", "programming_guide.html#autotoc_md151", null ],
         [ "Result counts", "programming_guide.html#search_count", null ],
         [ "Sorting by User Defined Fields", "programming_guide.html#sort_by_field", null ]
       ] ],
@@ -477,8 +477,8 @@ var NAVTREE =
     ] ],
     [ "﻿Search Clauses", "sc_using.html", [
       [ "Overview", "sc_using.html#sc_overview", null ],
-      [ "Interrogating metadata", "sc_using.html#autotoc_md157", [
-        [ "Code Sample", "sc_using.html#autotoc_md158", null ]
+      [ "Interrogating metadata", "sc_using.html#autotoc_md152", [
+        [ "Code Sample", "sc_using.html#autotoc_md153", null ]
       ] ],
       [ "List of search clauses by object type", "sc_using.html#searcg_clauses_by_object_type", [
         [ "ActionDef", "sc_using.html#search_clauses_ActionDef", null ],
@@ -547,8 +547,8 @@ var NAVTREE =
     ] ],
     [ "﻿Enum Items", "enum_items.html", [
       [ "Using Enums", "enum_items.html#enums_using", null ],
-      [ "Interrogating metadata", "enum_items.html#autotoc_md159", [
-        [ "Code Sample", "enum_items.html#autotoc_md160", null ]
+      [ "Interrogating metadata", "enum_items.html#autotoc_md154", [
+        [ "Code Sample", "enum_items.html#autotoc_md155", null ]
       ] ],
       [ "List of enum items by Enum", "enum_items.html#enum_item_by_enum_type_type", [
         [ "Database Type", "enum_items.html#enum_help_databaseTypes", null ],
@@ -902,9 +902,9 @@ var NAVTREE =
       [ "Warning", "object_purposes.html#object_purposes_warning", null ],
       [ "Extra information", "object_purposes.html#object_purposes_extra", null ],
       [ "Purpose metadata", "object_purposes.html#object_purposes_metadata", [
-        [ "Code sample - searching", "object_purposes.html#autotoc_md161", null ],
-        [ "Code sample - post search", "object_purposes.html#autotoc_md162", null ],
-        [ "Code sample - object definition", "object_purposes.html#autotoc_md163", null ]
+        [ "Code sample - searching", "object_purposes.html#autotoc_md156", null ],
+        [ "Code sample - post search", "object_purposes.html#autotoc_md157", null ],
+        [ "Code sample - object definition", "object_purposes.html#autotoc_md158", null ]
       ] ],
       [ "List of objects with related purpose enum", "object_purposes.html#object_with_purpose_enum", [
         [ "TRIM.SDK.ActionDef", "object_purposes.html#purpose_enum_ActionDef", null ],
@@ -1026,35 +1026,35 @@ var NAVTREE =
     [ "Advanced Topics", "advanced_topics.html", [
       [ "Different ways to fetch a TrimMainObject", "advanced_topics.html#ways_To_Fetch_a_TrimMainObject", [
         [ "Object constructor by Name", "advanced_topics.html#fetch_by_constructorand_name", [
-          [ "Code example", "advanced_topics.html#autotoc_md164", null ]
+          [ "Code example", "advanced_topics.html#autotoc_md159", null ]
         ] ],
         [ "Object name properties", "advanced_topics.html#object_name_properties", null ],
         [ "Database find methods", "advanced_topics.html#fetch_by_database", [
-          [ "Code samples", "advanced_topics.html#autotoc_md165", null ]
+          [ "Code samples", "advanced_topics.html#autotoc_md160", null ]
         ] ],
         [ "TrimMainObjectSearch", "advanced_topics.html#fetch_by_search", [
-          [ "Code sample", "advanced_topics.html#autotoc_md166", null ]
+          [ "Code sample", "advanced_topics.html#autotoc_md161", null ]
         ] ]
       ] ],
       [ "Document access alternatives", "advanced_topics.html#fetchDoc", [
         [ "Overview", "advanced_topics.html#doc_access_overview", null ],
         [ "Record.GetDocument()", "advanced_topics.html#getDoc", [
-          [ "Checkout without getting the document", "advanced_topics.html#autotoc_md168", null ]
+          [ "Checkout without getting the document", "advanced_topics.html#autotoc_md163", null ]
         ] ],
         [ "DocumentPathInClientCache", "advanced_topics.html#clientCache", [
-          [ "Example", "advanced_topics.html#autotoc_md169", null ]
+          [ "Example", "advanced_topics.html#autotoc_md164", null ]
         ] ],
         [ "DocumentPathInWGSCache", "advanced_topics.html#wgsCache", [
-          [ "Example", "advanced_topics.html#autotoc_md170", null ]
+          [ "Example", "advanced_topics.html#autotoc_md165", null ]
         ] ],
         [ "DownloadNotifier", "advanced_topics.html#downloadNotifier", [
-          [ "Example", "advanced_topics.html#autotoc_md171", null ]
+          [ "Example", "advanced_topics.html#autotoc_md166", null ]
         ] ],
         [ "Other object types", "advanced_topics.html#dowload_other_object_types", null ]
       ] ],
       [ "Localised strings", "advanced_topics.html#localisedStrings", [
         [ "TrimMessages", "advanced_topics.html#trimMEssages", [
-          [ "Code Sample", "advanced_topics.html#autotoc_md172", null ]
+          [ "Code Sample", "advanced_topics.html#autotoc_md167", null ]
         ] ],
         [ "Captions", "advanced_topics.html#objectCaptions", [
           [ "Enum captions", "advanced_topics.html#enumCaptions", null ],
@@ -1125,7 +1125,7 @@ var NAVTREEINDEX =
 "class_t_r_i_m_1_1_s_d_k_1_1_trim_u_r_i_list.html#a170cf5796137db5b41677c3df36eb14b",
 "class_t_r_i_m_1_1_s_d_k_1_1_workflow_template.html#af305d017996aa184904cae35e1c9b55b",
 "enum_items.html#enum_help_numberingMethods",
-"interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_document.html#a162902ca06d3eade4a625f91efa3d995",
+"interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_custom_icon.html#a5958a515ebfe2712cfc31b7352125f60",
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739a54c7e65d36b941ba2d458f24d9d57d17",
 "namespace_t_r_i_m_1_1_s_d_k.html#a0193b3b41a16f67d107228cdc4c92739ab280a95cd3c6b11c35184ef2740e27ab",
 "namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a3cea3a2e92b426309c053d0a0523472a",
