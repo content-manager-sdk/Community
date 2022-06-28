@@ -89,36 +89,17 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#rn_101">Content Manager 10.1</a><ul><li class="level2"><a href="#autotoc_md1">BREAKING CHANGE - Record Revision Changes</a></li>
-<li class="level2"><a href="#autotoc_md2">IMPORTANT - Revision count performance</a></li>
-<li class="level2"><a href="#autotoc_md3">Create Record from OneDrive document</a></li>
-<li class="level2"><a href="#autotoc_md4">Manage in Place</a></li>
-<li class="level2"><a href="#autotoc_md5">Provide a fully functional API to manage Record Action Tracking</a></li>
-<li class="level2"><a href="#autotoc_md6">Use CopyRecordOptions to create new parts</a></li>
+<ul><li class="level1"><a href="#rn_101">Content Manager 10.1</a><ul><li class="level2"><a href="#autotoc_md6">IMPORTANT - Revision count performance</a></li>
 <li class="level2"><a href="#rn_10_CR_567033">Improve timing of date registered/ date last updated to more closely match real time record creation</a></li>
-<li class="level2"><a href="#autotoc_md7">Support for multiple storage pools for document stores</a></li>
-<li class="level2"><a href="#autotoc_md8">Provide meta-variables to substitute for an Alert Subscriber</a></li>
+<li class="level2"><a href="#rn_10_CR_563022">CM Enterprise Studio - Update or change CM Workgroup server HTTPS certificate via command</a></li>
 <li class="level2"><a href="#rn_10_CR_567015">Cannot make a container inactive even though all the contents are inactive</a></li>
-<li class="level2"><a href="#rn_101_FileTypeOptions">New file type options methods</a></li>
-<li class="level2"><a href="#autotoc_md9">Option to Automatically send Reminder Notifications for Overdue Actions</a></li>
-<li class="level2"><a href="#autotoc_md10">Flag selected issues as being suppressable on Consignments</a></li>
-<li class="level2"><a href="#autotoc_md11">Option to exclude records that need external confirmation from a consignment</a></li>
-<li class="level2"><a href="#autotoc_md12">Location delegates may now approve consignments</a></li>
-<li class="level2"><a href="#autotoc_md13">Introduce a consignment template that can be used for automating the process of creating consignments</a></li>
-<li class="level2"><a href="#autotoc_md14">New ability to find Offline Records while Database is disconnected</a></li>
-<li class="level2"><a href="#autotoc_md15">Automatic container creation for Check in Styles</a></li>
-<li class="level2"><a href="#autotoc_md16">Enhancements to database and workgroup server configuration tools</a></li>
-<li class="level2"><a href="#autotoc_md17">Improvements to ImportHistory</a><ul><li class="level3"><a href="#autotoc_md18">Existing event and history methods</a></li>
-<li class="level3"><a href="#autotoc_md19">Background to changes</a></li>
-<li class="level3"><a href="#autotoc_md20">Changes to event logging and import history</a></li>
-</ul>
-</li>
+<li class="level2"><a href="#rn_101_FileTypeOptions">Content Manager SDK assembly and namespace renamed</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#rn_100">Content Manager 10.0</a><ul><li class="level2"><a href="#rn_10_SdkRename">Content Manager SDK assembly and namespace renamed</a></li>
-<li class="level2"><a href="#autotoc_md21">Deleted methods and properties:</a></li>
-<li class="level2"><a href="#autotoc_md22">Get the field definition for this word</a></li>
-<li class="level2"><a href="#autotoc_md23">Create External Link from SDK</a></li>
+<li class="level2"><a href="#autotoc_md7">Deleted methods and properties:</a></li>
+<li class="level2"><a href="#autotoc_md8">Get the field definition for this word</a></li>
+<li class="level2"><a href="#autotoc_md9">Create External Link from SDK</a></li>
 <li class="level2"><a href="#rn_10_EventProcessor">Monitor event processor</a></li>
 <li class="level2"><a href="#rn_10_OnlyRecordTypes">Get a string listing all the record types to which this classification is allowed to be attached</a></li>
 <li class="level2"><a href="#rn_10_InitialAssignee">Get the Location object which is the assignee of the first activity in this workflow</a></li>
@@ -152,15 +133,15 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <li class="level2"><a href="#rn_10_CR_373007">Include Tags in the metadata options of electronic records</a></li>
 <li class="level2"><a href="#rn_10_CR_379030">Introduce a UDF that can be updated once disposition is Destroyed</a></li>
 <li class="level2"><a href="#rn_10_CR_242100">Ability to suppress legal hold designation</a></li>
-<li class="level2"><a href="#rn_10_CR_379045">Light weight Records</a><ul><li class="level3"><a href="#autotoc_md24">Example</a></li>
+<li class="level2"><a href="#rn_10_CR_379045">Light weight Records</a><ul><li class="level3"><a href="#autotoc_md10">Example</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#rn_10_CR_384012">Indicator on a record when Notes have been added</a></li>
 <li class="level2"><a href="#rn_10_CR_335066">Provide a version of TransferStorage just for older revisions</a></li>
 <li class="level2"><a href="#rn_10_CR_373041">New DocumentStoreIncrementalCheckTask</a></li>
 <li class="level2"><a href="#rn_10_CR_387008">Changes to Consignment processing</a></li>
-<li class="level2"><a href="#autotoc_md25">Unknown Location type validation</a></li>
-<li class="level2"><a href="#autotoc_md26">Display Child lists in the .Net SDK</a><ul><li class="level3"><a href="#autotoc_md27">Sample Code</a></li>
+<li class="level2"><a href="#autotoc_md11">Unknown Location type validation</a></li>
+<li class="level2"><a href="#autotoc_md12">Display Child lists in the .Net SDK</a><ul><li class="level3"><a href="#autotoc_md13">Sample Code</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#rn_10_CR_339007">Provide a way of limiting users from extracting and printing sensitive documents</a></li>
@@ -169,7 +150,7 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <li class="level2"><a href="#rn_10_CR_421003">Improve performance and stability of document integrity check</a></li>
 <li class="level2"><a href="#rn_10_CR_398052">InputDocument.SetAsAlreadyStoredItem SDK function sets record Date Modified to current date rather than Date Modified from document profile</a></li>
 <li class="level2"><a href="#rn_10_CR_360002">Allow content index updates of missing Records using the SDK so that users can automate the process</a></li>
-<li class="level2"><a href="#rn_10_CR_343056">More user-friendly style of displaying record types for selection</a><ul><li class="level3"><a href="#autotoc_md28">Sample Code</a></li>
+<li class="level2"><a href="#rn_10_CR_343056">More user-friendly style of displaying record types for selection</a><ul><li class="level3"><a href="#autotoc_md14">Sample Code</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#rn_100_CreateNewCopy">More control on copying a record using Record.CreateNewCopy() method</a></li>
@@ -213,7 +194,7 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 </ul>
 </li>
 <li class="level1"><a href="#rn_93">Content Manager 9.3</a><ul><li class="level2"><a href="#rn_sdk_GAC">SDK no longer installed in GAC</a></li>
-<li class="level2"><a href="#autotoc_md29">Removed properties</a></li>
+<li class="level2"><a href="#autotoc_md15">Removed properties</a></li>
 <li class="level2"><a href="#rn_93_audits">Audits - Unable to see the Audit log for the records placed on hold as a group</a></li>
 <li class="level2"><a href="#rn_93_lookupset">Record import not working when lookup item additional field is on a record</a></li>
 <li class="level2"><a href="#rn_93_offlinerecord">Property on Offline Record object to tell us whether auto checkin has is enabled</a></li>
@@ -242,8 +223,8 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <li class="level2"><a href="#rn_92_InvalidExtensions">Prevent invalid extensions from interfering with the checkout process</a></li>
 <li class="level2"><a href="#rn_92_FieldSorting">SDK methods to support field sorting</a></li>
 <li class="level2"><a href="#rn_92_BlockedSearchMethods">SDK methods to support blocking of search methods</a></li>
-<li class="level2"><a href="#autotoc_md30">Exposing the Initiating Workflow template concept in the SDK</a></li>
-<li class="level2"><a href="#autotoc_md31">Provide a way of &quot;crawling&quot; the repository without tripping the LastUpdatedOn date</a></li>
+<li class="level2"><a href="#autotoc_md16">Exposing the Initiating Workflow template concept in the SDK</a></li>
+<li class="level2"><a href="#autotoc_md17">Provide a way of &quot;crawling&quot; the repository without tripping the LastUpdatedOn date</a></li>
 </ul>
 </li>
 </ul>
@@ -251,88 +232,29 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <div class="textblock"><p><a class="anchor" id="md_doc_02___Release_Notes"></a></p>
 <h1><a class="anchor" id="rn_101"></a>
 Content Manager 10.1</h1>
-<h2><a class="anchor" id="autotoc_md1"></a>
-BREAKING CHANGE - Record Revision Changes</h2>
-<p>Prior to Content Manager 10.1 Record Revisions were managed using the child list model similar to that used by RecordRenditions, meaning a Record would have a child list of RecordRevisions. The child list model is designed to provide high speed access to a small list of items. In 10.1 Revisions have been promoted to being a first class object at the same level as other objects such as Records, this allows a Record to have many more revisions than can be contained in a child list. Therefore instead of have to first find the Record and then inspect its ChildRevisions list you are now able to do a search directly for Revisions. <br  />
-</p>
-<p>Changes include:</p>
-<p>Classes</p><ul>
-<li>added <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_revision.html">Revision</a></li>
-<li>removed RecordRevision</li>
-</ul>
-<p>New method</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#a9bb6320782527c71410985b2e2fa77e9">Record.GetRevisions</a></li>
-</ul>
-<p><b>NOTE</b> GetRevisions is a convenience method, the search clauses are the primary way to find revisions.</p>
-<p>Deleted property</p><ul>
-<li>Record.ChildRevisions</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md2"></a>
-IMPORTANT - Revision count performance</h2>
-<p>Due to the changes in Record Revisions the property Record.RevisionCount is now an expensive property, requiring an extra SQL request. Where possible avoid this property, <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#ae0e591bef0b39375baebad6085abedca">Record.RevisionNumber</a> is often a feasible replacement.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Create Record from OneDrive document</h2>
-<p>It is now possible to store the One Drive details for a document on a Record. This is used by the Content Manager Teams integration to indicate that while the document is stored in Content Manager the primary instance of this document is actually in OneDrive. Creating a Record in this way will prevent users from modifying the document in Content Manager, they should make modifications in OneDrive and rely on the Teams integration to update the document in Content Manager.</p>
-<p>New methods</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_input_document.html#a04d1f0cb41863ce0ab211f0d4d4af053">InputDocument.SetAsOneDriveDocument</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#a562498460da054e5b34b22cd92616970">Record.UnlinkOneDrive</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Manage in Place</h2>
-<p>Properties and methods to support the new manage in place feature.</p>
-<p>New method</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_input_document.html#a61e91c3ece75db89757894cb34b06ede">InputDocument.SetAsManageInPlaceItem</a></li>
-</ul>
-<p>New properties</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a28ac169aad81d6904ac9d49ba1c0da48">ElectronicStore.IsManagedInPlace</a></li>
-</ul>
-<p>New values in enum <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a11292345af7e04049db95a95d505c536">EstoreTypes</a>:</p><ul>
-<li>MipIdol<ul>
-<li>MipFS</li>
-<li>MipOneDrive</li>
-<li>MipAmazon</li>
-</ul>
-</li>
-<li>MipAzure</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
-Provide a fully functional API to manage Record Action Tracking</h2>
-<p>Prior to Content Manager 10.1 the Record Action tracking was only partially exposed in the SDK.</p>
-<p>New classes</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record_child_action.html">RecordChildAction</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record_child_actions.html">RecordChildActions</a></li>
-</ul>
-<p>New properties</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#a716cdf416751c5ece7c50818a1ef0ac1">Record.ChildActions</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#a8c503d6685a80067e0239508ad7da30e">Record.CurrentChildAction</a> <br  />
-</li>
-</ul>
 <h2><a class="anchor" id="autotoc_md6"></a>
-Use CopyRecordOptions to create new parts</h2>
-<p>The <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_copy_record_options.html">CopyRecordOptions</a> object now has a new constructor allow you to specify what sort of copy this is, New Version, New Redaction, New Part or Copy.</p>
+IMPORTANT - Revision count performance</h2>
+<p>Due to changes in Record Revisions the propery Record.RevisionCount is now an expensive property, requiring an extra SQL request. Where possible avoid this property, Record.RevisionNumber is often a feasibable replacement.</p>
 <h2><a class="anchor" id="rn_10_CR_567033"></a>
 Improve timing of date registered/ date last updated to more closely match real time record creation</h2>
 <p>In CM 10.1 there is a new property called LatestTransactionDate which is superior to use when sychronising changes within Content Manager with external systems. For this use case, it replaces the property Date Last Updated, It is superior because the date time is allocated by the RDBMS at time of transaction commit (or by the WGS if the RDBMS does not support date time stamping). Date Last Updated is allocated in the business logic layer and is really more of a row stamp to indicate when stale data is being updated. It can lag the actual commit time by a number of seconds when working with complex transactions. In a multiple WGS environment, it is theoretically possible for a record to be updated with a new Date Time Update which may before the latest value of Date Time Updated across the entire set of records.</p>
 <p>So, for external synchronizing applications, use the new LatestTransactionDate property when doing incremental updates.</p>
 <p>There is a new search method provided called "latestTrans" which works identically to the existing "updated" search method.</p>
-<p>The property LatestTransactionDate is available for Record, Location, Schedule and Classification objects. Retrieving this property value will always involve a round trip to the database server as it is not cached anywhere on any clients. This is done to ensure the integrity of the value. This property is also available when using TrimSearchDataStream retrieval class.</p>
-<p>If you have an existing synchronizing application, it should be a simple matter to switch from using DateUpdated to LatestTransactionDate.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
-Support for multiple storage pools for document stores</h2>
-<p>New class</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_store_pool.html">StorePool</a></li>
+<p>The property LatestTransactionDate is available for Record, Location, Schedule and Classification objects. Retrieving this property value will always involve a round trip to the database server as it is not cached anywhere on any clients. This is done to ensure the entegrity of the value. This property is also available when using TrimSearchDataStream retrieval class.</p>
+<p>If you have an existing snchronizing application, it should be a simple matter to switch from using DateUpdated to LatestTransactionDate.</p>
+<h2><a class="anchor" id="rn_10_CR_563022"></a>
+CM Enterprise Studio - Update or change CM Workgroup server HTTPS certificate via command</h2>
+<p>Various improvements have been made to the SDK classes used to auto configure work group servers.</p>
+<p>Classes:</p><ul>
+<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_configuration.html">TrimEnterpriseConfiguration</a></li>
+<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_workgroup_server.html">TrimEnterpriseWorkgroupServer</a></li>
+<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_dataset.html">TrimEnterpriseDataset</a></li>
 </ul>
-<p>New property</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_electronic_store.html#a377a38eaa8267613dded048f992396b0">ElectronicStore.Pool</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md8"></a>
-Provide meta-variables to substitute for an Alert Subscriber</h2>
-<p>When configuring Alerts in addition to alerting a selected person it is now possible to choose a Record property (.e.g. Assignee, Creator, Editor). The new subscribers objects are added to the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_alert.html#a2f002b7829a68d0a79ca8b314548da80">Alert.ChildSubscribers</a> property using two new overloads to the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_alert_subscribers.html#a557eee9304f19afab896363e4370b6dc">AlertSubscribers.NewSubscriber</a> method.</p>
 <h2><a class="anchor" id="rn_10_CR_567015"></a>
 Cannot make a container inactive even though all the contents are inactive</h2>
 <p>Fixed a problem that prevented the MakeInactive() function from working on Container when all contents where already inactive.</p>
 <h2><a class="anchor" id="rn_101_FileTypeOptions"></a>
-New file type options methods</h2>
+Content Manager SDK assembly and namespace renamed</h2>
 <p>New File Type user options methods:</p><ul>
 <li>GetContentIndexStatus</li>
 <li>SuppressRenderingList</li>
@@ -340,1324 +262,6 @@ New file type options methods</h2>
 <li>IsFileTypeARendition</li>
 <li>DisableEstoreCompression</li>
 <li>IsSuitableForOCR</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md9"></a>
-Option to Automatically send Reminder Notifications for Overdue Actions</h2>
-<p>Instead of receiving only one email when an action becomes overdue users can receive repeated reminder emails.</p>
-<p>New property</p><ul>
-<li>Action.OverdueReminderInterval</li>
-<li>Database.OverdueActionReminder</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
-Flag selected issues as being suppressable on Consignments</h2>
-<p>New methods:</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment.html#a3737917e24af0f84fad34877f1c99f5c">Consignment.SetShouldCheckForIssue</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment.html#a33bf215a5a0a8fc599bd88cf8d549ad0">Consignment.ShouldCheckForIssue</a> <br  />
-</li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment_template.html#a24d5fc202e37195803e2f5231736b9ad">ConsignmentTemplate.SetShouldCheckForIssue</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment_template.html#a53b943201120e80c577830ec7735715f">ConsignmentTemplate.ShouldCheckForIssue</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md11"></a>
-Option to exclude records that need external confirmation from a consignment</h2>
-<p>New consigmnent property <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment.html#a2e6e17ccfec82682aa74e205850d1fc7">ExcludeXDMSRecords</a>.</p>
-<h2><a class="anchor" id="autotoc_md12"></a>
-Location delegates may now approve consignments</h2>
-<p>To allow Location delegates to approve consignments first enable the system option.</p>
-<p>New properties</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#a4039a2a1f5c3f5c3368256211f927a54">Database.DelegatesCanApproveConsignments</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment_approver.html#a915fabf55b19a19c5d6b5ebe186444aa">ConsignmentApprover.ApprovedBy</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md13"></a>
-Introduce a consignment template that can be used for automating the process of creating consignments</h2>
-<p>To store a bunch of repeatable settings for consignment creation, there is now a new <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_consignment_template.html">Consignment Template</a> object.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
-New ability to find Offline Records while Database is disconnected</h2>
-<p>Offline records are stored in the local hard drive, the new static method <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_offline_record.html#abbcfed2e596813d7ef127fd458c7c2ea">OfflineRecord.FindOfflineRecord</a> finds an offline record at the path specified.</p>
-<h2><a class="anchor" id="autotoc_md15"></a>
-Automatic container creation for Check in Styles</h2>
-<p>Check in Styles now allow for the specification of a Container to be automatically created for records created using this check in style.</p>
-<p>New properties:</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#afb8a66236ae0cee3a6c4e0dc3c00098a">CheckinStyle.ContainerCreation</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#a074b7c73b3502b2d7c95acde5ded0f1b">CheckinStyle.ContainerDateInterval</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ac53d9586f9affa0e52cbf850e3980aa6">CheckinStyle.ContainerHasDateRange</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ae313ce6701a17ff528fe6e9d6a847206">CheckinStyle.ContainerPerUserField</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ab6819225a17a5e2689676424245bf5a5">CheckinStyle.ContainerPerOwner</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ab74272a1584361824f0ce2af0add0584">CheckinStyle.ContainerType</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#a65895d01db2797ccebd5dd60cbe809ab">CheckinStyle.SubFolderRecordType</a></li>
-</ul>
-<p>New methods:</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_checkin_style.html#ac4c5dd029a51d81a3b8fddc8f3e5c22c">CheckinStyle.AllocateContainer</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md16"></a>
-Enhancements to database and workgroup server configuration tools</h2>
-<p>New class</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_workgroup_server.html">TrimEnterpriseWorkgroupServer</a></li>
-</ul>
-<p>New methods:</p><ul>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_configuration.html#ac019debebeeff2e0cdb9b2ff9c0502ba">TrimEnterpriseConfiguration.FindWorkgroupServer</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_configuration.html#acdf9f37dd407fb1f09e928b51d93907f">TrimEnterpriseConfiguration.GetWorkgroupServer</a></li>
-<li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_enterprise_configuration.html#a05bf7298912602419fc7a98735991a31">TrimEnterpriseConfiguration.NewWorkgroupServer</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md17"></a>
-Improvements to ImportHistory</h2>
-<h3><a class="anchor" id="autotoc_md18"></a>
-Existing event and history methods</h3>
-<p>Record.LogEvent Database.LogExternalEvent Record.ImportHistory</p>
-<h3><a class="anchor" id="autotoc_md19"></a>
-Background to changes</h3>
-<p>In 10.1 there has been a review of how these functions work with the aim of clearing up the confusion about how the events surface in Content Manager and how some of the parameters are handled. The original format of the ImportHistory function was designed to support just the standard Records Management "movement history" event. This event is designated in Content Manager as the "curLocChanged" event and the parameters were designed to suit this event. When more exotic events are being imported the parameters are not as useful. Events in Content Manager are characterized by a number of attributes: </p><pre class="fragment">Event Type - an enumeration denoting which actual event happened
-Main Object - which object the event happened on
-Related Object - an (optional) object that was also related to the event
-User - the login location responsible for creating the event.
-</pre> <h3><a class="anchor" id="autotoc_md20"></a>
-Changes to event logging and import history</h3>
-<p>These concepts are now better described by new versions of the functions:</p>
-<p>Record.LogEventEx( Events eventType, String eventDetails, Location onBehalfOf, // if null, the current user is assumed String eventDetailsSummary, TrimObject relatedObject); // can be null</p>
-<p>Record.ImportHistoryEx( Events eventType, TrimDateTime historyDate, String userLogin, String eventDetails, TrimObject relatedObject, // can be null bool isSecurityViolation); // only used for events that involve owner, home and assignee</p>
-<p>As part of the review, some business rules were added to ensure that relationships between the event type, the main object and the related object all make sense. So, it is possible that using these methods may raise an exception if the supplied combination is wrong. Valid combinations at the time of writing are listed below.</p>
-<p>In addition, the display of event information in Content Manager was designed around the way Content Manager created events and how it formatted the Event Description string when creating events. This could make some events added by the SDK to not appear properly in the Content Manager user interface. To alleviate these anomalies whilst still presenting a consistent user interface to existing Content Manager users, the following minor adjustments were made to the following display properties:</p>
-<p>EventDescription(Caption:Event Description): this formats the eventType, eventDetails and relatedObject into something fairly comprehensive. And SDK supplied value for eventDetails will now appear in this property.</p>
-<p>RawEventDescription(Caption:Event Details): this contains the eventDetails string as passed by the SDK call or the eventDetails string generated by Content Manager if the event was created by Content Manager.</p>
-<p>RelatedObject(Caption:Related Object): this is a string display of any related object associated with the event. Currently only if the related object can be displayed.</p>
-<p>Table of events with main and related object rules. (Auditable indicates the event can be stored in online/offline audit logs).</p>
-<ul>
-<li>AccessControlChanged:auditable <br  />
-<ul>
-<li>main - activity</li>
-<li>main - fieldDefinition</li>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - autoPartRule</li>
-<li>main - classification</li>
-<li>main - documentQueue</li>
-<li>main - externalLink</li>
-<li>main - hold</li>
-<li>main - location</li>
-<li>main - lookupItem</li>
-<li>main - lookupSet</li>
-<li>main - meeting</li>
-<li>main - meetingType</li>
-<li>main - minuteItemType</li>
-<li>main - origin</li>
-<li>main - record</li>
-<li>main - statistics</li>
-<li>main - recordType</li>
-<li>main - report</li>
-<li>main - savedSearch</li>
-<li>main - schedule</li>
-<li>main - searchForm</li>
-<li>main - space</li>
-<li>main - stzReport</li>
-<li>main - workflowTemplate</li>
-<li>main - keyword</li>
-<li>main - todoItem</li>
-<li>main - userLabel</li>
-<li>main - workflow</li>
-</ul>
-</li>
-<li>AccessExclusionsChanged:auditable<ul>
-<li>main - classification</li>
-<li>main - record</li>
-<li>main - recordType</li>
-</ul>
-</li>
-<li>ActionAssigned:auditable<ul>
-<li>main - record, related - recordAction</li>
-</ul>
-</li>
-<li>ActionCompleted:auditable<ul>
-<li>main - record, related - recordAction</li>
-</ul>
-</li>
-<li>ActionCurrent:auditable<ul>
-<li>main - record, related - recordAction</li>
-</ul>
-</li>
-<li>ActionReassigned:auditable<ul>
-<li>main - record, related - recordAction</li>
-</ul>
-</li>
-<li>ActionRemoved:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>ActionUndone:auditable<ul>
-<li>main - record, related - recordAction</li>
-</ul>
-</li>
-<li>ActivityAssigned:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivityCompleted:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivityCurrent:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivityEscalated:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivityNeedsAuthorization:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivityReassigned:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivitySkipped:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivitySuspended:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>ActivityUndone:auditable<ul>
-<li>main - activity , related - location</li>
-</ul>
-</li>
-<li>AgendaItemApproved:auditable<ul>
-<li>main - agendaItem</li>
-</ul>
-</li>
-<li>AgendaItemRescheduled:auditable<ul>
-<li>main - agendaItem</li>
-</ul>
-</li>
-<li>AgendaItemTypeRescheduled:auditable<ul>
-<li>main - agendaItem , related - meetingType</li>
-</ul>
-</li>
-<li>AgendaNowReady:auditable<ul>
-<li>main - meeting , related - record</li>
-</ul>
-</li>
-<li>AuditSettingsChanged:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>AutoPartCheck:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>BasicRecordDisposed:auditable<ul>
-<li>main - record, related - consignment</li>
-</ul>
-</li>
-<li>BreachDetected:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>BulkLoaderRunComplete:auditable<ul>
-<li>main - originHistory</li>
-</ul>
-</li>
-<li>BypassACLAdded:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>CaveatRemoved:auditable<ul>
-<li>main - classification</li>
-<li>main - location</li>
-<li>main - record</li>
-<li>main - recordType</li>
-<li>main - securityGuide</li>
-<li>main - space</li>
-</ul>
-</li>
-<li>ClassificationApproved:auditable<ul>
-<li>main - classification</li>
-</ul>
-</li>
-<li>ClassificationChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>CloseDateChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>ConsignmentAcknowledged:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentApprovalComplete:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentApprovalReset:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentApproved:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentApproverReassigned:auditable<ul>
-<li>main - consignment , related - location</li>
-</ul>
-</li>
-<li>ConsignmentDisposed:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentIssueResolved:auditable<ul>
-<li>main - consignment , related - record</li>
-</ul>
-</li>
-<li>ConsignmentReadyForApproval:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentReceived:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentRecordExcluded:auditable<ul>
-<li>main - consignment , related - record</li>
-</ul>
-</li>
-<li>ConsignmentRecordRejected:auditable<ul>
-<li>main - consignment , related - record</li>
-</ul>
-</li>
-<li>ConsignmentRecordRejectionCancelled:auditable<ul>
-<li>main - consignment , related - record</li>
-</ul>
-</li>
-<li>ConsignmentRejected:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ConsignmentSent:auditable<ul>
-<li>main - consignment</li>
-</ul>
-</li>
-<li>ContactAdded:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>ContactRemoved:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>ContainerChanged:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>ContentAdded:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>ContentIndexAdd:<ul>
-<li>main - originHistory</li>
-<li>main - record</li>
-</ul>
-</li>
-<li>ContentIndexRemove:<ul>
-<li>main - classification</li>
-<li>main - record</li>
-</ul>
-</li>
-<li>ContentRemoved:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>CopiedAccessControlChanged:auditable<ul>
-<li>main - classification</li>
-<li>main - meetingType</li>
-<li>main - recordType</li>
-<li>main - workflowTemplate</li>
-</ul>
-</li>
-<li>CreateDateChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>CsDeclassifyChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>CsDowngradeChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>CurLocAssigned:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>CurLocChanged:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>DataCleanup:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>DataConversionCompleted:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>DateDestructionChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DateInactiveChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DateLastActionChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DatePublishedChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DateRetentionChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DirSyncConfigChanged:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>DispositionChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocAnnotated:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocAttached:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocCheckedOut:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocExportedToXML:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocExtracted:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocLinkExtracted:auditable<ul>
-<li>main - record, related - recLinked* Document</li>
-</ul>
-</li>
-<li>DocLinkPrinted:auditable<ul>
-<li>main - record, related - recLinked* Document</li>
-</ul>
-</li>
-<li>DocLinkViewed:auditable<ul>
-<li>main - record, related - recLinked* Document</li>
-</ul>
-</li>
-<li>DocMailed:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocMailedLink:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocNewVersion:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocNotAnnotated:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocPrinted:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocPublished:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocRedacted:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>DocRemoved:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocRenditionAdded:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>DocRenditionExtracted:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>DocRenditionPrinted:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>DocRenditionRemoved:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocRenditionViewed:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>DocReplaced:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocRevisionExtracted:auditable<ul>
-<li>main - record, related - revision</li>
-</ul>
-</li>
-<li>DocRevisionPrinted:auditable<ul>
-<li>main - record, related - revision</li>
-</ul>
-</li>
-<li>DocRevisionRemoved:auditable<ul>
-<li>main - record, related - revision</li>
-</ul>
-</li>
-<li>DocRevisionViewed:auditable<ul>
-<li>main - record, related - revision</li>
-</ul>
-</li>
-<li>DocumentAuthorizationComplete:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentHashAdded:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentHashCheckFailed:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentHashRecalculated:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentHashVerified:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentReadyForAuthorization:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentReadyForDrafting:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentReadyForReview:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentReviewCommentsUpdated:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentReviewComplete:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocumentScanCompleted:auditable<ul>
-<li>main - request</li>
-</ul>
-</li>
-<li>DocumentShared:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>DocUndoCheckout:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocusignFailed:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DocViewed:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>DueDateChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>ElasticMetadataSchemaChanged:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>EstoreFull:auditable<ul>
-<li>main - electronicStore</li>
-</ul>
-</li>
-<li>EstoreNearingCapacity:auditable<ul>
-<li>main - electronicStore</li>
-</ul>
-</li>
-<li>ExternalEvent:auditable<ul>
-<li>main - actionDef</li>
-<li>main - history</li>
-<li>main - activity</li>
-<li>main - fieldDefinition</li>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - alert</li>
-<li>main - archiveEvent</li>
-<li>main - autoPartRule</li>
-<li>main - barcodeScanner</li>
-<li>main - census</li>
-<li>main - checkinPlace</li>
-<li>main - checkinStyle</li>
-<li>main - classification</li>
-<li>main - communication</li>
-<li>main - consignment</li>
-<li>main - consignmentApprover</li>
-<li>main - consignmentIssue</li>
-<li>main - consignmentRejection</li>
-<li>main - consignmentTemplate</li>
-<li>main - database</li>
-<li>main - controlBarcode</li>
-<li>main - documentQueue</li>
-<li>main - electronicStore</li>
-<li>main - storePool</li>
-<li>main - mailTemplate</li>
-<li>main - externalIcon</li>
-<li>main - externalLink</li>
-<li>main - externalWorkflow</li>
-<li>main - externalWorkflowTask</li>
-<li>main - externalWorkflowType</li>
-<li>main - hold</li>
-<li>main - jurisdiction</li>
-<li>main - location</li>
-<li>main - lookupItem</li>
-<li>main - lookupSet</li>
-<li>main - meeting</li>
-<li>main - meetingType</li>
-<li>main - metadataRule</li>
-<li>main - minuteItem</li>
-<li>main - minuteItemType</li>
-<li>main - stopWord</li>
-<li>main - offlineRecord</li>
-<li>main - origin</li>
-<li>main - originHistory</li>
-<li>main - zipCode</li>
-<li>main - record</li>
-<li>main - recordAction</li>
-<li>main - statistics</li>
-<li>main - recordType</li>
-<li>main - report</li>
-<li>main - reportBitmap</li>
-<li>main - request</li>
-<li>main - revision</li>
-<li>main - savedSearch</li>
-<li>main - schedule</li>
-<li>main - scheduledTask</li>
-<li>main - searchForm</li>
-<li>main - securityCaveat</li>
-<li>main - securityGuide</li>
-<li>main - securityLevel</li>
-<li>main - sharePointItem</li>
-<li>main - space</li>
-<li>main - stzReport</li>
-<li>main - workflowTemplate</li>
-<li>main - keyword</li>
-<li>main - todoItem</li>
-<li>main - userLabel</li>
-<li>main - htmlLayout</li>
-<li>main - workflow</li>
-<li>main - workingCopy</li>
-</ul>
-</li>
-<li>FileTypesModified:<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>Finalized:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>FolderShared:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>GlobalSettingsChanged:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>HighPriorityRequestAdded:auditable<ul>
-<li>main - request</li>
-</ul>
-</li>
-<li>HoldAdded:auditable<ul>
-<li>main - record, related - hold</li>
-</ul>
-</li>
-<li>HoldDatesChanged:<ul>
-<li>main - hold</li>
-</ul>
-</li>
-<li>HoldRemoved:auditable<ul>
-<li>main - record, related - hold</li>
-</ul>
-</li>
-<li>HomeAssigned:auditable<ul>
-<li>main - record, related - location, space</li>
-</ul>
-</li>
-<li>HomeChanged:auditable<ul>
-<li>main - record, related - location, space</li>
-</ul>
-</li>
-<li>IdolMetadataChanged:<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>IdolMetadata* ContainerSecurityChanged:<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>IdolMetadataSchemaChanged:<ul>
-<li>main - fieldDefinition</li>
-</ul>
-</li>
-<li>LabelAdded:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>LabelRemoved:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>LocationRelationshipAdded:auditable<ul>
-<li>main - location , related - location</li>
-</ul>
-</li>
-<li>LocationRelationshipRemoved:auditable<ul>
-<li>main - location , related - location</li>
-</ul>
-</li>
-<li>LoginDeactivated:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>MadeNotVital:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>MadeVital:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>MinutesNowReady:auditable<ul>
-<li>main - meeting , related - record</li>
-</ul>
-</li>
-<li>NewArchiveEventOccurrence:auditable<ul>
-<li>main - archiveEvent</li>
-</ul>
-</li>
-<li>NewInstantOnUser:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>ObjectAdded:auditable<ul>
-<li>main - actionDef</li>
-<li>main - history</li>
-<li>main - activity</li>
-<li>main - fieldDefinition</li>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - alert</li>
-<li>main - archiveEvent</li>
-<li>main - autoPartRule</li>
-<li>main - barcodeScanner</li>
-<li>main - census</li>
-<li>main - checkinPlace</li>
-<li>main - checkinStyle</li>
-<li>main - classification</li>
-<li>main - communication</li>
-<li>main - consignment</li>
-<li>main - consignmentApprover</li>
-<li>main - consignmentIssue</li>
-<li>main - consignmentRejection</li>
-<li>main - consignmentTemplate</li>
-<li>main - database</li>
-<li>main - controlBarcode</li>
-<li>main - documentQueue</li>
-<li>main - electronicStore</li>
-<li>main - storePool</li>
-<li>main - mailTemplate</li>
-<li>main - externalIcon</li>
-<li>main - externalLink</li>
-<li>main - externalWorkflow</li>
-<li>main - externalWorkflowTask</li>
-<li>main - externalWorkflowType</li>
-<li>main - hold</li>
-<li>main - jurisdiction</li>
-<li>main - location</li>
-<li>main - lookupItem</li>
-<li>main - lookupSet</li>
-<li>main - meeting</li>
-<li>main - meetingType</li>
-<li>main - metadataRule</li>
-<li>main - minuteItem</li>
-<li>main - minuteItemType</li>
-<li>main - stopWord</li>
-<li>main - offlineRecord</li>
-<li>main - origin</li>
-<li>main - originHistory</li>
-<li>main - zipCode</li>
-<li>main - record</li>
-<li>main - recordAction</li>
-<li>main - statistics</li>
-<li>main - recordType</li>
-<li>main - report</li>
-<li>main - reportBitmap</li>
-<li>main - request</li>
-<li>main - revision</li>
-<li>main - savedSearch</li>
-<li>main - schedule</li>
-<li>main - scheduledTask</li>
-<li>main - searchForm</li>
-<li>main - securityCaveat</li>
-<li>main - securityGuide</li>
-<li>main - securityLevel</li>
-<li>main - sharePointItem</li>
-<li>main - space</li>
-<li>main - stzReport</li>
-<li>main - workflowTemplate</li>
-<li>main - keyword</li>
-<li>main - todoItem</li>
-<li>main - userLabel</li>
-<li>main - htmlLayout</li>
-<li>main - workflow</li>
-<li>main - workingCopy</li>
-</ul>
-</li>
-<li>ObjectModified:auditable<ul>
-<li>main - actionDef</li>
-<li>main - history</li>
-<li>main - activity</li>
-<li>main - fieldDefinition</li>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - alert</li>
-<li>main - archiveEvent</li>
-<li>main - autoPartRule</li>
-<li>main - barcodeScanner</li>
-<li>main - census</li>
-<li>main - checkinPlace</li>
-<li>main - checkinStyle</li>
-<li>main - classification</li>
-<li>main - communication</li>
-<li>main - consignment</li>
-<li>main - consignmentApprover</li>
-<li>main - consignmentIssue</li>
-<li>main - consignmentRejection</li>
-<li>main - consignmentTemplate</li>
-<li>main - database</li>
-<li>main - controlBarcode</li>
-<li>main - documentQueue</li>
-<li>main - electronicStore</li>
-<li>main - storePool</li>
-<li>main - mailTemplate</li>
-<li>main - externalIcon</li>
-<li>main - externalLink</li>
-<li>main - externalWorkflow</li>
-<li>main - externalWorkflowTask</li>
-<li>main - externalWorkflowType</li>
-<li>main - hold</li>
-<li>main - jurisdiction</li>
-<li>main - location</li>
-<li>main - lookupItem</li>
-<li>main - lookupSet</li>
-<li>main - meeting</li>
-<li>main - meetingType</li>
-<li>main - metadataRule</li>
-<li>main - minuteItem</li>
-<li>main - minuteItemType</li>
-<li>main - stopWord</li>
-<li>main - offlineRecord</li>
-<li>main - origin</li>
-<li>main - originHistory</li>
-<li>main - zipCode</li>
-<li>main - record</li>
-<li>main - recordAction</li>
-<li>main - statistics</li>
-<li>main - recordType</li>
-<li>main - report</li>
-<li>main - reportBitmap</li>
-<li>main - request</li>
-<li>main - revision</li>
-<li>main - savedSearch</li>
-<li>main - schedule</li>
-<li>main - scheduledTask</li>
-<li>main - searchForm</li>
-<li>main - securityCaveat</li>
-<li>main - securityGuide</li>
-<li>main - securityLevel</li>
-<li>main - sharePointItem</li>
-<li>main - space</li>
-<li>main - stzReport</li>
-<li>main - workflowTemplate</li>
-<li>main - keyword</li>
-<li>main - todoItem</li>
-<li>main - userLabel</li>
-<li>main - htmlLayout</li>
-<li>main - workflow</li>
-<li>main - workingCopy</li>
-</ul>
-</li>
-<li>ObjectRemoved:auditable<ul>
-<li>main - actionDef</li>
-<li>main - history</li>
-<li>main - activity</li>
-<li>main - fieldDefinition</li>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - alert</li>
-<li>main - archiveEvent</li>
-<li>main - autoPartRule</li>
-<li>main - barcodeScanner</li>
-<li>main - census</li>
-<li>main - checkinPlace</li>
-<li>main - checkinStyle</li>
-<li>main - classification</li>
-<li>main - communication</li>
-<li>main - consignment</li>
-<li>main - consignmentApprover</li>
-<li>main - consignmentIssue</li>
-<li>main - consignmentRejection</li>
-<li>main - consignmentTemplate</li>
-<li>main - database</li>
-<li>main - controlBarcode</li>
-<li>main - documentQueue</li>
-<li>main - electronicStore</li>
-<li>main - storePool</li>
-<li>main - mailTemplate</li>
-<li>main - externalIcon</li>
-<li>main - externalLink</li>
-<li>main - externalWorkflow</li>
-<li>main - externalWorkflowTask</li>
-<li>main - externalWorkflowType</li>
-<li>main - hold</li>
-<li>main - jurisdiction</li>
-<li>main - location</li>
-<li>main - lookupItem</li>
-<li>main - lookupSet</li>
-<li>main - meeting</li>
-<li>main - meetingType</li>
-<li>main - metadataRule</li>
-<li>main - minuteItem</li>
-<li>main - minuteItemType</li>
-<li>main - stopWord</li>
-<li>main - offlineRecord</li>
-<li>main - origin</li>
-<li>main - originHistory</li>
-<li>main - zipCode</li>
-<li>main - record</li>
-<li>main - recordAction</li>
-<li>main - statistics</li>
-<li>main - recordType</li>
-<li>main - report</li>
-<li>main - reportBitmap</li>
-<li>main - request</li>
-<li>main - revision</li>
-<li>main - savedSearch</li>
-<li>main - schedule</li>
-<li>main - scheduledTask</li>
-<li>main - searchForm</li>
-<li>main - securityCaveat</li>
-<li>main - securityGuide</li>
-<li>main - securityLevel</li>
-<li>main - sharePointItem</li>
-<li>main - space</li>
-<li>main - stzReport</li>
-<li>main - workflowTemplate</li>
-<li>main - keyword</li>
-<li>main - todoItem</li>
-<li>main - userLabel</li>
-<li>main - htmlLayout</li>
-<li>main - workflow</li>
-<li>main - workingCopy</li>
-</ul>
-</li>
-<li>OwnerAssigned:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>OwnerChanged:auditable<ul>
-<li>main - record, related - location</li>
-</ul>
-</li>
-<li>PermissionsChanged:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>RecAddedToWorkflow:auditable<ul>
-<li>main - record, related - workflow</li>
-</ul>
-</li>
-<li>RecalcDispEvents:<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecNotesChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordCaveatAdded:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordCaveatRemoved:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordCopied:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>RecordExported:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordIdChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordRecycled:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>RecordRelationshipAdded:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>RecordRelationshipRemoved:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>RecordRestored:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordSecurityDeclassified:<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordSecurityDowngraded:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordSecurityUpgraded:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecordSuperseded:auditable<ul>
-<li>main - record, related - record</li>
-</ul>
-</li>
-<li>RecordWebPublished:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RecRemovedFromWorkflow:auditable<ul>
-<li>main - record, related - workflow</li>
-</ul>
-</li>
-<li>RecSchChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>RegDateChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>ReindexExtra:<ul>
-<li>main - actionDef</li>
-<li>main - fieldDefinition</li>
-<li>main - autoPartRule</li>
-<li>main - documentQueue</li>
-<li>main - externalLink</li>
-<li>main - externalWorkflow</li>
-<li>main - hold</li>
-<li>main - jurisdiction</li>
-<li>main - location</li>
-<li>main - lookupSet</li>
-<li>main - meeting</li>
-<li>main - mtgInvitation</li>
-<li>main - meetingType</li>
-<li>main - areOccurrence</li>
-<li>main - origin</li>
-<li>main - record</li>
-<li>main - recordAction</li>
-<li>main - recordType</li>
-<li>main - request</li>
-<li>main - scheduledTask</li>
-<li>main - tskHistory</li>
-<li>main - securityCaveat</li>
-<li>main - securityGuide</li>
-<li>main - securityLevel</li>
-<li>main - workflowTemplate</li>
-<li>main - todoItem</li>
-<li>main - userLabel</li>
-</ul>
-</li>
-<li>ReindexField:<ul>
-<li>main - activity , related - fieldDefinition</li>
-<li>main - archiveEvent , related - fieldDefinition</li>
-<li>main - checkinStyle , related - fieldDefinition</li>
-<li>main - classification , related - fieldDefinition</li>
-<li>main - consignment , related - fieldDefinition</li>
-<li>main - consignmentTemplate , related - fieldDefinition</li>
-<li>main - externalWorkflow , related - fieldDefinition</li>
-<li>main - hold , related - fieldDefinition</li>
-<li>main - location , related - fieldDefinition</li>
-<li>main - meeting , related - fieldDefinition</li>
-<li>main - meetingType , related - fieldDefinition</li>
-<li>main - record, related - fieldDefinition</li>
-<li>main - request , related - fieldDefinition</li>
-<li>main - schedule , related - fieldDefinition</li>
-<li>main - securityGuide , related - fieldDefinition</li>
-<li>main - space , related - fieldDefinition</li>
-<li>main - keyword , related - fieldDefinition</li>
-<li>main - todoItem , related - fieldDefinition</li>
-<li>main - workflow , related - fieldDefinition</li>
-</ul>
-</li>
-<li>ReindexWords:<ul>
-<li>main - activity</li>
-<li>main - archiveEvent</li>
-<li>main - classification</li>
-<li>main - cmmDetail , related - communication</li>
-<li>main - location</li>
-<li>main - locAddress , related - location</li>
-<li>main - record</li>
-<li>main - schedule</li>
-<li>main - keyword</li>
-<li>main - workflow</li>
-</ul>
-</li>
-<li>SapComponentExtracted:auditable<ul>
-<li>main - record, related - recSapComponent</li>
-</ul>
-</li>
-<li>SapComponentPrinted:auditable<ul>
-<li>main - record, related - recSapComponent</li>
-</ul>
-</li>
-<li>SapComponentViewed:auditable<ul>
-<li>main - record, related - recSapComponent</li>
-</ul>
-</li>
-<li>ScheduleReplaced:auditable<ul>
-<li>main - schedule , related - schedule</li>
-</ul>
-</li>
-<li>ScheduleReviewed:auditable<ul>
-<li>main - record, related - schedule</li>
-</ul>
-</li>
-<li>SearchExecuted:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>SecurityChanged:auditable<ul>
-<li>main - classification , related - unspecified, location</li>
-<li>main - location , related - unspecified, location</li>
-<li>main - record, related - unspecified, location</li>
-<li>main - recordType , related - unspecified, location</li>
-<li>main - securityGuide , related - unspecified, location</li>
-<li>main - space , related - unspecified, location</li>
-</ul>
-</li>
-<li>SharePointLinkRemoved:auditable<ul>
-<li>main - sharePointItem , related - record</li>
-</ul>
-</li>
-<li>SignatureAttached:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>SignatureCreated:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>SignatureFailVerify:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>SignatureVerified:auditable<ul>
-<li>main - record, related - recRendition</li>
-</ul>
-</li>
-<li>SignedRenditionPromoted:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>SpiEdited:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>SpiExposed:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>SpiManaged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>SpiRelocated:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>SpiViewed:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>StorageExpiry* DateExtended:<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>StorageTransferred:auditable<ul>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - consignmentApprover</li>
-<li>main - locEAddress</li>
-<li>main - externalIcon</li>
-<li>main - externalLink</li>
-<li>main - recLinked* Document</li>
-<li>main - location , related - locEAddress</li>
-<li>main - meetingType</li>
-<li>main - minuteItem</li>
-<li>main - minuteItemType</li>
-<li>main - origin</li>
-<li>main - record, related - unspecified, recLinkedDocument, recRendition, recSapCompone</li>
-<li>main - statistics</li>
-<li>main - recRendition</li>
-<li>main - report</li>
-<li>main - reportBitmap</li>
-<li>main - revision</li>
-<li>main - recSapComponent</li>
-<li>main - workingCopy</li>
-</ul>
-</li>
-<li>StorageTransferredInPlace:auditable<ul>
-<li>main - agendaItem</li>
-<li>main - agendaItemType</li>
-<li>main - consignmentApprover</li>
-<li>main - locEAddress</li>
-<li>main - externalIcon</li>
-<li>main - externalLink</li>
-<li>main - recLinkedDocument</li>
-<li>main - location , related - locEAddress</li>
-<li>main - meetingType</li>
-<li>main - minuteItem</li>
-<li>main - minuteItemType</li>
-<li>main - origin</li>
-<li>main - record, related - unspecified, recLinkedDocument, recRendition, recSapCompone</li>
-<li>main - statistics</li>
-<li>main - recRendition</li>
-<li>main - report</li>
-<li>main - reportBitmap</li>
-<li>main - revision</li>
-<li>main - recSapComponent</li>
-<li>main - workingCopy</li>
-</ul>
-</li>
-<li>TitleChanged:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>TodoItemCompleted:auditable<ul>
-<li>main - todoItem</li>
-</ul>
-</li>
-<li>TodoItemReassigned:auditable<ul>
-<li>main - todoItem , related - location</li>
-</ul>
-</li>
-<li>TriggersChanged:auditable<ul>
-<li>main - schedule</li>
-</ul>
-</li>
-<li>UdfChanged:auditable<ul>
-<li>main - activity , related - fieldDefinition</li>
-<li>main - archiveEvent , related - fieldDefinition</li>
-<li>main - checkinStyle , related - fieldDefinition</li>
-<li>main - classification , related - fieldDefinition</li>
-<li>main - consignment , related - fieldDefinition</li>
-<li>main - consignmentTemplate , related - fieldDefinition</li>
-<li>main - externalWorkflow , related - fieldDefinition</li>
-<li>main - hold , related - fieldDefinition</li>
-<li>main - location , related - fieldDefinition</li>
-<li>main - meeting , related - fieldDefinition</li>
-<li>main - meetingType , related - fieldDefinition</li>
-<li>main - record, related - fieldDefinition</li>
-<li>main - request , related - fieldDefinition</li>
-<li>main - schedule , related - fieldDefinition</li>
-<li>main - securityGuide , related - fieldDefinition</li>
-<li>main - space , related - fieldDefinition</li>
-<li>main - keyword , related - fieldDefinition</li>
-<li>main - todoItem , related - fieldDefinition</li>
-<li>main - workflow , related - fieldDefinition</li>
-</ul>
-</li>
-<li>Unfinalized:auditable<ul>
-<li>main - record</li>
-</ul>
-</li>
-<li>UpdateStorageMetadata:<ul>
-<li>main - originHistory</li>
-<li>main - record</li>
-</ul>
-</li>
-<li>UserHierarchyChanged:<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>UserLogoff:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>UserLogon:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>UserLogonFailed:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>UserLogonImpersonation:auditable<ul>
-<li>main - location</li>
-</ul>
-</li>
-<li>UserLogonImpersonationFailed:auditable<ul>
-<li>main - database</li>
-</ul>
-</li>
-<li>WorkflowInitiated:auditable<ul>
-<li>main - record, related - workflow</li>
-</ul>
-</li>
 </ul>
 <h1><a class="anchor" id="rn_100"></a>
 Content Manager 10.0</h1>
@@ -1670,7 +274,7 @@ Content Manager SDK assembly and namespace renamed</h2>
 <li>Change namespace references in your code, from <code>HP.HPTRIM.SDK</code> to <code><a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">TRIM.SDK</a></code>.</li>
 </ul>
 <p>Please note that it is not supported for a process to load both the <code>TRIM.SDK.dll</code> and <code>HP.HPTRIM.SDK.dll</code> assemblies. As a consequence, if you have a record addin configured, which references a particular SDK assembly, then any SDK code you write must be compiled against the same SDK assembly as the record addin.</p>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Deleted methods and properties:</h2>
 <ul>
 <li>Consignment.PrepareForTransfer() (see new functions WaitForTransferReceipt() and AcknowledgeTransferReceipt())</li>
@@ -1682,12 +286,12 @@ Deleted methods and properties:</h2>
 <li>StartupUserOptions.WebClientPane2</li>
 <li>StartupUserOptions.WebClientPane3</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Get the field definition for this word</h2>
 <p>If the word is sourced from a field the relevant FieldDefinition:</p><ul>
 <li>Word.Field</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md23"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Create External Link from SDK</h2>
 <p>New <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_external_link.html">ExternalLink</a> object to allow for creation of External Links.</p>
 <h2><a class="anchor" id="rn_10_EventProcessor"></a>
@@ -1917,7 +521,7 @@ Light weight Records</h2>
 <p>New property:</p><ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record_type.html#a687b43ce76a607296e6bda015cca67af">RecordType.BasicMetadataOnly</a> </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md24"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a9a91a6f03e7107a92af44bdd2092ca45a237bc42b2bd920bfb5e405bee26c8a36">RecordType</a> rt = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a9a91a6f03e7107a92af44bdd2092ca45a237bc42b2bd920bfb5e405bee26c8a36">RecordType</a>(database, <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a0aa5083d1e8b9be139d6b73d1928ecbd">RecordBehaviour</a>.BasicDocument);</div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a0aa5083d1e8b9be139d6b73d1928ecbd"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a0aa5083d1e8b9be139d6b73d1928ecbd">TRIM.SDK.RecordBehaviour</a></div><div class="ttdeci">RecordBehaviour</div><div class="ttdoc">Behaviours</div><div class="ttdef"><b>Definition:</b> RecordBehaviour.cs:16</div></div>
@@ -1951,16 +555,16 @@ Changes to Consignment processing</h2>
 <li>Consignment.CompleteTransfer</li>
 <li>Consignment.PrepareForTransfer</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md25"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 Unknown Location type validation</h2>
 <p>Gets or sets a GeneralExceptionHandling enum value indicating how to deal with unknown location types when verifying new record data entry forms that contain auto profiled contacts</p>
 <ul>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#af7c847845c3432ef4c5f08105a6aeb2a">Database.UnknownLocationTypeValidation</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md26"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Display Child lists in the .Net SDK</h2>
 <p>The COM SDK included a UI component to display and modify a child list (for example Record Revisions), this is now also available in the .Net SDK.</p>
-<h3><a class="anchor" id="autotoc_md27"></a>
+<h3><a class="anchor" id="autotoc_md13"></a>
 Sample Code</h3>
 <div class="fragment"><div class="line"><span class="keyword">private</span> IntPtr windowHandle = IntPtr.Zero;</div>
 <div class="line"> </div>
@@ -2030,7 +634,7 @@ More user-friendly style of displaying record types for selection</h2>
 <p>New <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#af33254e6ddf46b290bd5eb7c480ce427">UserOptionSet</a> SelectRecordType with properties:</p><ul>
 <li>SelectRecordTypeUserOptionsFavoritesFirst = SelectRecordTypeUserOptionsUseSavedSearch</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md28"></a>
+<h3><a class="anchor" id="autotoc_md14"></a>
 Sample Code</h3>
 <div class="fragment"><div class="line">var search = <span class="keyword">new</span> TrimMainObjectSearch(db, <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#ae8f17bcd9c48f17f7d0e776779d0ced6">RecordTypeFilter</a>.ElectronicForCreateNoManual);</div>
 <div class="line"> </div>
@@ -2425,7 +1029,7 @@ SDK no longer installed in GAC</h2>
 <ul>
 <li>In previous versions the .NET SDK has been installed in the GAC. This is no longer the case. To support dynamic loading of <code>TRIM.SDK.dll</code>, follow the pattern demonstrated in this <a href="https://github.com/HPECM/Community/tree/master/Samples/SDK/CSharp/SDKLocationResolver">sample</a>.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md29"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Removed properties</h2>
 <ul>
 <li>The following properties are no longer required and have been removed from the SDK:<ul>
@@ -2882,7 +1486,7 @@ SDK methods to support blocking of search methods</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md30"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Exposing the Initiating Workflow template concept in the SDK</h2>
 <ul>
 <li><b>CR</b> <a href="https://quixy.hpecorp.net/quixy/query/detail.php?ISSUEID=QCCR2D64493">64493</a></li>
@@ -2895,7 +1499,7 @@ Exposing the Initiating Workflow template concept in the SDK</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Provide a way of "crawling" the repository without tripping the LastUpdatedOn date</h2>
 <ul>
 <li><b>CR</b> <a href="https://quixy.hpecorp.net/quixy/query/detail.php?ISSUEID=QCCR2D64506">64506</a></li>

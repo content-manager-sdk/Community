@@ -1,6 +1,6 @@
 var namespace_t_r_i_m_1_1_s_d_k =
 [
-    [ "Office Integration configuration", "zero_office.html#autotoc_md88", null ],
+    [ "Office Integration configuration", "zero_office.html#autotoc_md74", null ],
     [ "DownloadNotifier", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier.html", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier" ],
     [ "SwigHelper", "class_t_r_i_m_1_1_s_d_k_1_1_swig_helper.html", null ],
     [ "ITrimAccessControl", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control.html", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control" ],
