@@ -149,15 +149,8 @@ function createNewApp {
     if (!$global:creds) {
         return
     }
-    
-    Write-Information -MessageData "==================== Fetch the existing scopes ====================" -InformationAction Continue 
-    
-    # az ad app show --id $appObject.appId --query="oauth2Permissions" --only-show-errors > $curDir/scopes.json
-    
-    
-   # $scopesObject = Get-Content -Raw -Path $curDir/scopes.json | ConvertFrom-Json
-    
-   # $scopesObject[0].isEnabled = $FALSE
+   
+   
     
     Write-Information -MessageData "==================== Add the Office and Teams Scopes ====================" -InformationAction Continue    
     
@@ -230,6 +223,8 @@ $scopesObject | ConvertTo-Json -depth 100 | Out-File $curDir/new_scopes.json
 
     az rest --method patch --url $gurl --only-show-errors --body @$curDir/new_scopes.json
     
+
+    az rest --method patch --url $gurl --headers 'Content-Type=application/json' --only-show-errors --body "{`"web`": {`"implicitGrantSettings`": {`"enableIdTokenIssuance`": true }}}"
     
     $token_result = az account get-access-token --tenant $tenantId --resource https://graph.microsoft.com | ConvertFrom-Json
     
