@@ -92,10 +92,10 @@ function createNewApp {
     
     $resourceResponse | ConvertTo-Json -depth 100 | Out-File $curDir/resman.json
     
-   $appDetails = az ad app create --display-name "$appName" `
+   $appDetails = az ad app create --oauth2-allow-implicit-flow true --display-name "$appName" `
         --identifier-uris "api://$myDomain/$newGuid"`
         --required-resource-accesses "$curDir/resman.json"`
-        --web-redirect-uris @MyArray --only-show-errors
+        --reply-urls @MyArray --only-show-errors
         
     
 
@@ -109,7 +109,7 @@ function createNewApp {
 
     Write-Information -MessageData "==================== Set me as the App Owner ====================" -InformationAction Continue 
         
-    az ad app owner add --id $appObject.appId --owner-object-id $myDetails.id --only-show-errors
+    az ad app owner add --id $appObject.appId --owner-object-id $myDetails.objectId --only-show-errors
     
     
     Write-Information -MessageData "==================== Set the App Id Uri ====================" -InformationAction Continue 
@@ -152,46 +152,48 @@ function createNewApp {
     
     Write-Information -MessageData "==================== Fetch the existing scopes ====================" -InformationAction Continue 
     
-    # az ad app show --id $appObject.appId --query="oauth2Permissions" --only-show-errors > $curDir/scopes.json
+    az ad app show --id $appObject.appId --query="oauth2Permissions" --only-show-errors > $curDir/scopes.json
     
     
-   # $scopesObject = Get-Content -Raw -Path $curDir/scopes.json | ConvertFrom-Json
+    $scopesObject = Get-Content -Raw -Path $curDir/scopes.json | ConvertFrom-Json
     
-   # $scopesObject[0].isEnabled = $FALSE
+    $scopesObject[0].isEnabled = $FALSE
     
     Write-Information -MessageData "==================== Add the Office and Teams Scopes ====================" -InformationAction Continue    
     
     $newTeamsGuid = [guid]::NewGuid()
     $newOfficeGuid = [guid]::NewGuid()
     
-      $scopesObject = "{
-    `"api`": {
-        `"oauth2PermissionScopes`": [
-            {
+    $scopesObject += "[{
                 `"adminConsentDescription`": `"CM Teams Tab`",
                 `"adminConsentDisplayName`": `"CM Teams Tab`",
                 `"id`": `"$newTeamsGuid`",
                 `"isEnabled`": true,
+                `"lang`": null,
+                `"origin`": `"Application`",
                 `"type`": `"User`",
                 `"userConsentDescription`": `"CM Teams Tab`",
                 `"userConsentDisplayName`": `"CM Teams Tab`",
                 `"value`": `"access_as_teams_user`"
-            },
-            {
+            }]" | ConvertFrom-Json
+    
+    
+    
+    $scopesObject += "[{
                 `"adminConsentDescription`": `"Office Integration`",
                 `"adminConsentDisplayName`": `"Office Integration`",
                 `"id`": `"$newOfficeGuid`",
                 `"isEnabled`": true,
+                `"lang`": null,
+                `"origin`": `"Application`",
                 `"type`": `"User`",
                 `"userConsentDescription`": null,
                 `"userConsentDisplayName`": null,
                 `"value`": `"access_for_office`"
-            }
-        ]
-    }
-}" | ConvertFrom-Json
-
-$scopesObject | ConvertTo-Json -depth 100 | Out-File $curDir/new_scopes.json
+            }]" | ConvertFrom-Json
+    
+    
+    $scopesObject | ConvertTo-Json -depth 100 | Out-File $curDir/new_scopes.json
     
     $officeGuids = @("08e18876-6177-487e-b8b5-cf950c1e598c", "93d53678-613d-4013-afc1-62e9e444a0a5", "ea5a67f6-b6f3-4338-b240-c655ddc3cc8e", "d3590ed6-52b3-4102-aeff-aad2292ab01c", "bc59ab01-8403-45c6-8796-ac3ef710b3e3", "57fb890c-0dab-4253-a5e0-7188c88b2bb4")
     
@@ -223,12 +225,7 @@ $scopesObject | ConvertTo-Json -depth 100 | Out-File $curDir/new_scopes.json
     }
     
     
-    # az ad app update --id $appObject.appId --set oauth2Permissions=@$curDir/new_scopes.json
-    # az rest --method patch --url https://graph.microsoft.com/v1.0/applications/$appObject.id --body @$curDir/new_scopes.json
-
-    $gurl = "https://graph.microsoft.com/v1.0/applications/" + $appObject.id
-
-    az rest --method patch --url $gurl --only-show-errors --body @$curDir/new_scopes.json
+    az ad app update --id $appObject.appId --set oauth2Permissions=@$curDir/new_scopes.json
     
     
     $token_result = az account get-access-token --tenant $tenantId --resource https://graph.microsoft.com | ConvertFrom-Json
@@ -247,7 +244,7 @@ $scopesObject | ConvertTo-Json -depth 100 | Out-File $curDir/new_scopes.json
     
     $tryClient = "n"
     
-    $requrl = "https://graph.microsoft.com/beta/applications/" + $appObject.id
+    $requrl = "https://graph.microsoft.com/beta/applications/" + $appObject.objectId
     
     
     do {
@@ -274,21 +271,12 @@ $scopesObject | ConvertTo-Json -depth 100 | Out-File $curDir/new_scopes.json
 	} 
    
 
+    Remove-Item "$curDir/scopes.json"
     Remove-Item "$curDir/new_scopes.json"
     Remove-Item "$curDir/resman.json"
 
     $appObject 
 }
-
-$version = az version | ConvertFrom-Json
-$version = $version.{azure-cli}.Split(".")
-
-if ($version[0] -lt 2 -or $version[1] -lt 37) {
-	Write-Information -MessageData "Azure CLI version 2.37.0 or greater must be installed to use this script" -InformationAction Continue  
-    return
-}
-
-
 
 $curDir = Split-Path $script:MyInvocation.MyCommand.Path
 
@@ -385,7 +373,7 @@ else {
     $newAppDetails = getExistingApp
 }
 
-$newAppDetails = az ad app show --id $newAppDetails.id --only-show-errors | ConvertFrom-Json
+$newAppDetails = az ad app show --id $newAppDetails.objectId --only-show-errors | ConvertFrom-Json
 
 $newAppUri = $newAppDetails.identifierUris[0]
 
