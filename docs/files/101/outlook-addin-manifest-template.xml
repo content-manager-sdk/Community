@@ -295,7 +295,11 @@
 						<bt:Override Locale="fr-fr" Value="Enregistrement" />
 						<bt:Override Locale="es-es" Value="Registro" />
 					</bt:String>
-					<bt:String id="funcRecordSearch" DefaultValue="Records" />
+					<bt:String id="funcRecordSearch" DefaultValue="Records">
+						<bt:Override Locale="nl-nl" Value="Records" />
+						<bt:Override Locale="fr-fr" Value="Enregistrements" />
+						<bt:Override Locale="es-es" Value="Registros" />
+					</bt:String>					
 					<bt:String id="funcCheckinStylesButtonLabel" DefaultValue="Checkin Styles">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen" />
 						<bt:Override Locale="fr-fr" Value="Styles de consignation" />
@@ -331,8 +335,11 @@
 						<bt:Override Locale="fr-fr" Value="Consigne les pièces jointes dans Content Manager" />
 						<bt:Override Locale="es-es" Value="Comprueba los archivos adjuntos en Content Manager" />
 					</bt:String>
-					<bt:String id="funcRecordSearchSuperTipTitle" DefaultValue="Search for Records" />
-
+					<bt:String id="funcRecordSearchSuperTipTitle" DefaultValue="Search for Records">
+						<bt:Override Locale="nl-nl" Value="Zoeken naar records" />
+						<bt:Override Locale="fr-fr" Value="Rechercher des enregistrements" />
+						<bt:Override Locale="es-es" Value="Buscar registros" />					
+					</bt:String>
 					<bt:String id="funcCheckinStylesSuperTipTitle" DefaultValue="Create and modify Check in Styles">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen maken en wijzigen" />
 						<bt:Override Locale="fr-fr" Value="Créer et modifier les styles de consignation" />
@@ -360,7 +367,11 @@
 						<bt:Override Locale="fr-fr" Value="Consignez un courriel dans Content Manager." />
 						<bt:Override Locale="es-es" Value="Envíe un correo electrónico a Content Manager." />
 					</bt:String>				
-					<bt:String id="RS_SuperTipDescription" DefaultValue="Search for Records" />						
+					<bt:String id="RS_SuperTipDescription" DefaultValue="Search for Records">						
+						<bt:Override Locale="nl-nl" Value="Zoeken naar records" />
+						<bt:Override Locale="fr-fr" Value="Rechercher des enregistrements" />
+						<bt:Override Locale="es-es" Value="Buscar registros" />					
+					</bt:String>
 					<bt:String id="Cs_SuperTipDescription" DefaultValue="Edit check in Styles.">
 						<bt:Override Locale="nl-nl" Value="Incheckstijlen bewerken" />
 						<bt:Override Locale="fr-fr" Value="Modifiez les styles de consignation." />
