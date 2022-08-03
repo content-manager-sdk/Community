@@ -1,5 +1,8 @@
 var NAVTREEINDEX63 =
 {
+"release_notes.html#rn_94_242619":[2,2,7],
+"release_notes.html#rn_94_243330":[2,2,11],
+"release_notes.html#rn_94_243471":[2,2,8],
 "release_notes.html#rn_94_243890":[2,2,9],
 "release_notes.html#rn_94_244326":[2,2,12],
 "release_notes.html#rn_94_244672":[2,2,18],

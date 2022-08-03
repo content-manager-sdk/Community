@@ -1,5 +1,8 @@
 var NAVTREEINDEX61 =
 {
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baeea55a518fd3e2185497fac04d12de8f":[13,0,0,0,362,124],
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baef9524444fa008938e6bc6530b88695f":[13,0,0,0,362,157],
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baf09d90f8ec9865c68404de90ec41bd5e":[13,0,0,0,362,263],
 "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baf114bb06f4e16c715b1702fd6dad908c":[13,0,0,0,362,110],
 "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baf12798c1277f93aa0471532f4399b2b2":[13,0,0,0,362,309],
 "namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baf1cefec9e2196c672a622347f1fbc325":[13,0,0,0,362,203],
@@ -56,14 +59,14 @@ var NAVTREEINDEX61 =
 "namespace_t_r_i_m_1_1_s_d_k.html#afeacb6ea3589e96ab256f3dea7cb642da0457d49616a5c728849ea5109681e9ba":[13,0,0,0,450,2],
 "namespace_t_r_i_m_1_1_s_d_k.html#afeacb6ea3589e96ab256f3dea7cb642da3797e4775977e1ddc2dd8839f0e238d3":[13,0,0,0,450,1],
 "namespace_t_r_i_m_1_1_s_d_k.html#afeacb6ea3589e96ab256f3dea7cb642da777a6adf9c9558ec373b51bd1efea843":[13,0,0,0,450,0],
-"namespacemembers.html":[13,1,0],
 "namespacemembers.html":[13,1,0,0],
+"namespacemembers.html":[13,1,0],
 "namespacemembers_b.html":[13,1,0,1],
 "namespacemembers_c.html":[13,1,0,2],
 "namespacemembers_d.html":[13,1,0,3],
 "namespacemembers_e.html":[13,1,0,4],
-"namespacemembers_enum.html":[13,1,1,0],
 "namespacemembers_enum.html":[13,1,1],
+"namespacemembers_enum.html":[13,1,1,0],
 "namespacemembers_enum_b.html":[13,1,1,1],
 "namespacemembers_enum_c.html":[13,1,1,2],
 "namespacemembers_enum_d.html":[13,1,1,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX61 =
 "programming_guide.html#New_records_and_electronic_documents":[7,5],
 "programming_guide.html#Other_search_features":[7,8],
 "programming_guide.html#Persisting_a_search":[7,8,3],
-"programming_guide.html#Purpose_filtering":[7,8,2],
-"programming_guide.html#Record_Contacts":[7,5,5],
-"programming_guide.html#Record_Locations":[7,5,4],
-"programming_guide.html#Retrieving_the_results":[7,7,2]
+"programming_guide.html#Purpose_filtering":[7,8,2]
 };

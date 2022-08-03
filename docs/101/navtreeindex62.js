@@ -1,5 +1,8 @@
 var NAVTREEINDEX62 =
 {
+"programming_guide.html#Record_Contacts":[7,5,5],
+"programming_guide.html#Record_Locations":[7,5,4],
+"programming_guide.html#Retrieving_the_results":[7,7,2],
 "programming_guide.html#Saving_the_record_to_the_database":[7,4,3],
 "programming_guide.html#Searching_Content_Manager":[7,7],
 "programming_guide.html#Searching_for_Records_Manager_objects":[7,7,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX62 =
 "release_notes.html#rn_94_237958":[2,2,24],
 "release_notes.html#rn_94_240852":[2,2,6],
 "release_notes.html#rn_94_241217":[2,2,21],
-"release_notes.html#rn_94_242263":[2,2,19],
-"release_notes.html#rn_94_242619":[2,2,7],
-"release_notes.html#rn_94_243330":[2,2,11],
-"release_notes.html#rn_94_243471":[2,2,8]
+"release_notes.html#rn_94_242263":[2,2,19]
 };
