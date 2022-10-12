@@ -495,6 +495,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aef37fe6722bc77d55fae92e3ca48b2b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#aef37fe6722bc77d55fae92e3ca48b2b8">ChangeMatter</a> (<a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html">Record</a> newMatter)</td></tr>
 <tr class="memdesc:aef37fe6722bc77d55fae92e3ca48b2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the matter associated with this record - for use when using the client/matter feature. Note that this method automatically commits the change, so no <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object.html#ae3c6e22a31d36fdf5b88f60e27ba5fe2" title="Permanently commits all changes made to this object (and all its child objects). For new objects a ne...">Save()</a> is necessary and it should not be used with other transactions.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#aef37fe6722bc77d55fae92e3ca48b2b8">More...</a><br /></td></tr>
 <tr class="separator:aef37fe6722bc77d55fae92e3ca48b2b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb4ee75d92b5a36400b2877e534562af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#afb4ee75d92b5a36400b2877e534562af">UpdateContentId</a> (string contentId)</td></tr>
+<tr class="memdesc:afb4ee75d92b5a36400b2877e534562af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the external content ID property for this record. Use this when the external content ID has changed after record creation.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#afb4ee75d92b5a36400b2877e534562af">More...</a><br /></td></tr>
+<tr class="separator:afb4ee75d92b5a36400b2877e534562af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2336cda460563978f70447f2ed00fd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#ad2336cda460563978f70447f2ed00fd0">SetNotes</a> (string newValue, <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a42af1386ef48f0d54b74f298b9515fd6">NotesUpdateType</a> TypeOfNotesUpdate)</td></tr>
 <tr class="memdesc:ad2336cda460563978f70447f2ed00fd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the notes attached to this object. Typically used when a new contibution is to be combined with the existing notes, as some users only have the privilige to add to the notes, rather than overwriting them.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#ad2336cda460563978f70447f2ed00fd0">More...</a><br /></td></tr>
 <tr class="separator:ad2336cda460563978f70447f2ed00fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -5093,6 +5096,26 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Transfers the document management functions for this record from OneDrive to Content Manager. Automatically commits the change. </p>
+
+</div>
+</div>
+<a id="afb4ee75d92b5a36400b2877e534562af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb4ee75d92b5a36400b2877e534562af">&#9670;&nbsp;</a></span>UpdateContentId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TRIM.SDK.Record.UpdateContentId </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>contentId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates the external content ID property for this record. Use this when the external content ID has changed after record creation. </p>
 
 </div>
 </div>

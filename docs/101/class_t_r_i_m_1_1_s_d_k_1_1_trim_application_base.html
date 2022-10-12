@@ -113,6 +113,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3d25b2c713b90ebb08f7f39763ab2951"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a3d25b2c713b90ebb08f7f39763ab2951">Initialize</a> ()</td></tr>
 <tr class="memdesc:a3d25b2c713b90ebb08f7f39763ab2951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>, by explicitly loading native binaries. Once <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a3d25b2c713b90ebb08f7f39763ab2951" title="Initializes the SDK, by explicitly loading native binaries. Once Initialize() returns successfully,...">Initialize()</a> returns successfully, subsequent calls to <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a3d25b2c713b90ebb08f7f39763ab2951" title="Initializes the SDK, by explicitly loading native binaries. Once Initialize() returns successfully,...">Initialize()</a> have no effect. If <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a3d25b2c713b90ebb08f7f39763ab2951" title="Initializes the SDK, by explicitly loading native binaries. Once Initialize() returns successfully,...">Initialize()</a> is not called by the application, it will be called implicitly by the <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>, when the first native-backed <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a> method is called.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a3d25b2c713b90ebb08f7f39763ab2951">More...</a><br /></td></tr>
 <tr class="separator:a3d25b2c713b90ebb08f7f39763ab2951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a482316b9e22362bf505ee57d13f0a2e0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a482316b9e22362bf505ee57d13f0a2e0">DiagnoseDllLoading</a> (string binariesDir=&quot;&quot;, string systemDir=&quot;C:\\Windows\\System32&quot;)</td></tr>
+<tr class="memdesc:a482316b9e22362bf505ee57d13f0a2e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Diagnoses DLL dependency issues when loading the <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>. Loads known dependencies one by one to determine if any are missing. Any loading errors are written to the console.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a482316b9e22362bf505ee57d13f0a2e0">More...</a><br /></td></tr>
+<tr class="separator:a482316b9e22362bf505ee57d13f0a2e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a326f0076a04e9e038f3c37868f0a1a7f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a326f0076a04e9e038f3c37868f0a1a7f">EnableSdkLeakTracking</a> (bool enable)</td></tr>
 <tr class="memdesc:a326f0076a04e9e038f3c37868f0a1a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a> leak tracking. If leak tracking is enabled, stack traces are collected upon the creation of each <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html" title="The Database object is the first object that must be created when using the Content Manager SDK....">Database</a>. If the leak tracker subsequently detects that one of these objects is being disposed by the garbage collector, rather than through explicit disposal, an error will be logged to the Windows Application event log. Such an error will only be logged once.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#a326f0076a04e9e038f3c37868f0a1a7f">More...</a><br /></td></tr>
 <tr class="separator:a326f0076a04e9e038f3c37868f0a1a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +168,51 @@ Properties</h2></td></tr>
 <tr class="separator:ad0dbf0425719ed357ab2210d3dba6f12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a482316b9e22362bf505ee57d13f0a2e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a482316b9e22362bf505ee57d13f0a2e0">&#9670;&nbsp;</a></span>DiagnoseDllLoading()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void TRIM.SDK.TrimApplicationBase.DiagnoseDllLoading </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>binariesDir</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>systemDir</em> = <code>&quot;C:\\Windows\\System32&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Diagnoses DLL dependency issues when loading the <a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html">SDK</a>. Loads known dependencies one by one to determine if any are missing. Any loading errors are written to the console. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">binariesDir</td><td>Directory from which to load Content Manager binaries. Leave blank to use the directory from which TRIM.SDK.dll was loaded.</td></tr>
+    <tr><td class="paramname">systemDir</td><td>Directory from which to load Windows system DLL's. Defaults to "C:\Windows\System32".</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a326f0076a04e9e038f3c37868f0a1a7f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a326f0076a04e9e038f3c37868f0a1a7f">&#9670;&nbsp;</a></span>EnableSdkLeakTracking()</h2>
 

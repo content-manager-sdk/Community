@@ -152,6 +152,7 @@ var class_t_r_i_m_1_1_s_d_k_1_1_record =
     [ "Undispose", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a061bc5e32545b3f344e2e4ebc24e9dec", null ],
     [ "UndoCheckout", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#ab51105ea8db661db1839ad53082b7250", null ],
     [ "UnlinkOneDrive", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a562498460da054e5b34b22cd92616970", null ],
+    [ "UpdateContentId", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#afb4ee75d92b5a36400b2877e534562af", null ],
     [ "AccessControlList", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#ad973032dcdca2062bd492e05f20ebd52", null ],
     [ "AccessExclusions", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a1aea85d18266b175620833018b07c63f", null ],
     [ "AccessionNumber", "class_t_r_i_m_1_1_s_d_k_1_1_record.html#a2659aff12d6ce062893547724ca3ff03", null ],
