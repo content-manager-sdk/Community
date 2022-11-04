@@ -9,11 +9,37 @@ The following Nuget packages are used in this project:
  * ServiceStack.HttpClient
  * Microsoft.Identity.Client
 
+## Configuration
+The ServiceAPI URL and authentication information should be stored in a file called my.config.  To do this:
+ - in the same folder as App.config create a text file called my.config
+ - add the sample XML below to this file
+ - enter the ServiceAPI URL in the url key
+ - add username and password for basic authentication or tenant and client id for Azure AD OpenId Connect authentication.
+
+### Configuration XML
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+  <appSettings>
+    <add key="tenantId" value=""/>
+    <add key="clientId" value=""/>
+	  <add key="userName" value=""/>
+	  <add key="password" value=""/>
+	  <add key="url" value=""/>
+  </appSettings>
+```
+
 ## Authentication
-These samples use the Microsoft Identity Client to connect via [OpenID connect authentication](https://content-manager-sdk.github.io/Community/10/oidc.html#oidc_azuread) with Content Manager 10. The code could be changed to use either basic or Windows integrated authentication. Before using these samples copy the client and tenant IDs from your Azure AD App to the appSettins in app.config.
+These samples support either basic or OpenId authentication.
+
+### OpenId Connect
+Use the Microsoft Identity Client to connect via [OpenID connect authentication](https://content-manager-sdk.github.io/Community/10/oidc.html#oidc_azuread) with Content Manager 10. Before using these samples copy the client and tenant IDs from your Azure AD App to the appSettins in my.config.
+
+### Basic
+Include your username and password in my.config.
 
 ## ServiceModel
-Prior to Content Manager 10 the ServiceAPI model classes were available from the insallation folder, they are are now downloadable from Nuget.
+Prior to Content Manager 10 the ServiceAPI model classes were available from the installation folder, they are are now downloadable from Nuget.
 
 
 

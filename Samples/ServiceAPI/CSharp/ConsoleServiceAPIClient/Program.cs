@@ -3,6 +3,7 @@ using Microsoft.Identity.Client;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,340 +15,433 @@ using System.Threading.Tasks;
 
 namespace ConsoleServiceAPIClient
 {
-	class Program
-	{
+    class Program
+    {
+
+        private static JsonHttpClient _trimClient;
+        private static HttpClient _httpClient;
+        static IPublicClientApplication _app;
 
-		private static JsonHttpClient _trimClient;
-		private static HttpClient _httpClient;
-		static IPublicClientApplication _app;
+        static async Task<string> getAuthToken()
+        {
+            string clientId = System.Configuration.ConfigurationManager.AppSettings["clientId"];
+            string tenantId = System.Configuration.ConfigurationManager.AppSettings["tenantId"];
 
-		static async Task<string> getAuthToken()
-		{
-			string clientId = System.Configuration.ConfigurationManager.AppSettings["clientId"];
-			string tenantId = System.Configuration.ConfigurationManager.AppSettings["tenantId"];
+            if (_app == null)
+            {
+                _app = PublicClientApplicationBuilder.Create(clientId)
+                    .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+                    .WithAuthority(AzureCloudInstance.AzurePublic, tenantId)
+                    .Build();
 
-			if (_app == null)
-			{
-				_app = PublicClientApplicationBuilder.Create(clientId)
-					.WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
-					.WithAuthority(AzureCloudInstance.AzurePublic, tenantId)
-					.Build();
+                TokenCacheHelper.EnableSerialization(_app.UserTokenCache);
+            }
 
-				TokenCacheHelper.EnableSerialization(_app.UserTokenCache);
-			}
+            var accounts = await _app.GetAccountsAsync();
+            AuthenticationResult result;
 
-			var accounts = await _app.GetAccountsAsync();
-			AuthenticationResult result;
+            var scopes = new string[] { "User.Read", "offline_access", "openid", "profile" };
 
-			var scopes = new string[] { "User.Read", "offline_access", "openid", "profile" };
+            try
+            {
+                result = await _app.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                       .ExecuteAsync();
+            }
+            catch (MsalUiRequiredException ex)
+            {
+                // A MsalUiRequiredException happened on AcquireTokenSilent.
+                // This indicates you need to call AcquireTokenInteractive to acquire a token
+                System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
 
-			try
-			{
-				result = await _app.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-					   .ExecuteAsync();
-			}
-			catch (MsalUiRequiredException ex)
-			{
-				// A MsalUiRequiredException happened on AcquireTokenSilent.
-				// This indicates you need to call AcquireTokenInteractive to acquire a token
-				System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
+                try
+                {
+                    result = await _app.AcquireTokenInteractive(scopes)
+                          .ExecuteAsync();
+                }
+                catch (MsalException msalex)
+                {
+                    Console.WriteLine($"Error Acquiring Token:{System.Environment.NewLine}{msalex}");
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
+                throw;
+            }
 
-				try
-				{
-					result = await _app.AcquireTokenInteractive(scopes)
-						  .ExecuteAsync();
-				}
-				catch (MsalException msalex)
-				{
-					Console.WriteLine($"Error Acquiring Token:{System.Environment.NewLine}{msalex}");
-					throw;
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
-				throw;
-			}
+            return result.IdToken;
+        }
 
-			return result.IdToken;
-		}
 
+        static async Task<JsonHttpClient> getServiceClient()
+        {
+            // this is only test code so we will bypass TLS certificate errors...
+            ServicePointManager
+                .ServerCertificateValidationCallback +=
+                (sender, cert, chain, sslPolicyErrors) => true;
 
-		static async Task<JsonHttpClient> getServiceClient()
-		{
 
-			string token = await getAuthToken();
 
-			if (_trimClient == null)
-			{
-				// repalce the URL with the URL to your ServiceAPI instance
-				_trimClient = new JsonHttpClient("https://MyDev/ServiceAPI");
-			}
+            if (_trimClient == null)
+            {
+                string url = System.Configuration.ConfigurationManager.AppSettings["url"];
 
+                if (string.IsNullOrWhiteSpace(url))
+                {
+                    throw new ConfigurationErrorsException("Unable to find URL in my.config");
+                }
 
-			_trimClient.Headers["Authorization"] = $"Bearer {token}";
-			return _trimClient;
+                _trimClient = new JsonHttpClient(url);
 
 
-		}
+            }
 
-		static async Task<HttpClient> getHttpClient()
-		{
+            string userName = System.Configuration.ConfigurationManager.AppSettings["userName"];
+            string password = System.Configuration.ConfigurationManager.AppSettings["password"];
 
-			string token = await getAuthToken();
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                string token = await getAuthToken();
+                _trimClient.Headers["Authorization"] = $"Bearer {token}";
+            }
+            else
+            {
+                _trimClient.SetCredentials(userName, password);
+                _trimClient.AlwaysSendBasicAuthHeader = true;
+            }
 
-			if (_httpClient == null)
-			{
-				_httpClient = new HttpClient();
-				_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-			}
+            return _trimClient;
 
-			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-			return _httpClient;
-		}
+        }
 
-		static async Task Main(string[] args)
-		{
 
-			var stopWatch = Stopwatch.StartNew();
 
+        static async Task<HttpClient> getHttpClient()
+        {
 
-			//		await recordTypeSearch();
+            string token = await getAuthToken();
 
-			//	await getRecordUri();
+            if (_httpClient == null)
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
 
-			//	await getRecordTitle();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-			//	await createRecord();
+            return _httpClient;
+        }
 
-			//await recordSearch();
+        static async Task Main(string[] args)
+        {
 
-			//await streamSearch();
+            var stopWatch = Stopwatch.StartNew();
 
-			//await createRecordWithDocument();
+            //     await removeContact();
 
-			// await getDocument();
+            //	await getRecordByUri();
+            //		await recordTypeSearch();
 
-			await uploadFileAndCreateRecord();
+            //	await getRecordUri();
 
-			//await uploadBinaryFileAndCreateRecord();
+            //	await getRecordTitle();
 
-			Console.WriteLine(stopWatch.ElapsedMilliseconds);
-			Console.ReadKey();
-		}
+            //	await createRecord();
 
+            //await recordSearch();
 
-		private async static Task recordTypeSearch()
-		{
-			var trimClient = await getServiceClient();
+            await streamSearch();
 
-			var response = trimClient.Get<RecordTypesResponse>(new RecordTypes() { q = "all" });
-			Console.WriteLine(response.Results[0].Uri );
+            //await createRecordWithDocument();
 
+            // await getDocument();
 
-		}
+            //	await uploadFileAndCreateRecord();
 
-		private async static Task getRecordUri()
-		{
-			var trimClient = await getServiceClient();
-			var response = trimClient.Get<RecordsResponse>(new RecordFind() { Id = "REC_1" });
-			Console.WriteLine(response.Results[0].Uri);
-		}
+            //await uploadBinaryFileAndCreateRecord();
 
-		private async static Task getRecordTitle()
-		{
-			var trimClient = await getServiceClient();
-			var response = trimClient.Get<RecordsResponse>(new RecordFind()
-			{
-				Id = "REC_1",
-				Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
-			});
+            Console.WriteLine($"=================== {stopWatch.ElapsedMilliseconds} =======================");
+            Console.ReadKey();
+        }
 
 
-			Console.WriteLine(response.Results[0].Title);
-		}
+        private async static Task recordTypeSearch()
+        {
+            var trimClient = await getServiceClient();
 
-		private async static Task createRecord()
-		{
-			var trimClient = await getServiceClient();
+            var response = trimClient.Get<RecordTypesResponse>(new RecordTypes() { q = "all" });
+            Console.WriteLine(response.Results[0].Uri);
 
-			var record = new Record()
-			{
-				RecordType = new RecordTypeRef() { FindBy = "Document" },
-				Title = "my test",
-				Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
-			};
 
-			var response = trimClient.Post<RecordsResponse>(record);
+        }
 
-			Console.WriteLine(response.Results[0].Title);
-		}
+        private async static Task steamSearch()
+        {
+            var trimClient = await getServiceClient();
+            var response = trimClient.Get<RecordsResponse>(new RecordFind() { Id = "1501", Properties = new List<string>() { $"{PropertyIds.RecordTitle}" } });
+            Console.WriteLine(response.Results[0].Number);
+            Console.WriteLine(response.Results[0].Title);
+        }
 
-		private async static Task recordSearch()
-		{
-			var trimClient = await getServiceClient();
-			var response = trimClient.Get<RecordsResponse>(new Records()
-			{
-				q = "all",
-				Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}" },
-				ResultsOnly = true,
-				PropertyValue = PropertyType.String,
-				pageSize = 100
-			});
+        private async static Task getRecordUri()
+        {
+            var trimClient = await getServiceClient();
+            var response = trimClient.Get<RecordsResponse>(new RecordFind() { Id = "REC_1" });
+            Console.WriteLine(response.Results[0].Uri);
+        }
 
+        private async static Task getRecordTitle()
+        {
+            var trimClient = await getServiceClient();
+            var response = trimClient.Get<RecordsResponse>(new RecordFind()
+            {
+                Id = "REC_1",
+                Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
+            });
 
-			foreach (var record in response.Results)
-			{
-				Console.WriteLine(record.OwnerLocation.StringValue);
-			}
-		}
 
-		private async static Task streamSearch()
-		{
-			var trimClient = await getServiceClient();
-			var response = trimClient.Get<RecordsResponse>(new TrimStreamSearch()
-			{
-				TrimType = BaseObjectTypes.Record,
-				q = "all",
-				Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}", $"{PropertyIds.RecordTitle}" },
-				pageSize = 100,
-			});
+            Console.WriteLine(response.Results[0].Title);
+        }
 
+        private async static Task createRecord()
+        {
+            var trimClient = await getServiceClient();
 
-			foreach (var record in response.Results)
-			{
-				Console.WriteLine(record.Uri);
-				Console.WriteLine(record.OwnerLocation);
+            var record = new Record()
+            {
+                RecordType = new RecordTypeRef() { FindBy = "Document" },
+                Title = "my test",
+                Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
+            };
 
-			}
-		}
+            var response = trimClient.Post<RecordsResponse>(record);
 
+            Console.WriteLine(response.Results[0].Title);
+        }
 
-		private async static Task createRecordWithDocument()
-		{
-			var trimClient = await getServiceClient();
+        private async static Task recordSearch()
+        {
+            var trimClient = await getServiceClient();
+            var response = trimClient.Get<RecordsResponse>(new Records()
+            {
+                q = "all",
+                Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}" },
+                ResultsOnly = true,
+                PropertyValue = PropertyType.String,
+                pageSize = 100
+            });
 
-			var record = new Record()
-			{
-				RecordType = new RecordTypeRef() { FindBy = "Document" },
-				Title = "my test document",
-				Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
-			};
 
-			using (FileStream filestream = new FileStream("d:\\junk\\trim.png", FileMode.Open))
-			{
-				var uploadFile = new ServiceStack.UploadFile("trim.png", filestream);
-				uploadFile.ContentType = "image/png";
+            foreach (var record in response.Results)
+            {
+                Console.WriteLine(record.OwnerLocation.StringValue);
+            }
+        }
 
-				var response = trimClient.PostFilesWithRequest<RecordsResponse>(record, new ServiceStack.UploadFile[] { uploadFile });
-				Console.WriteLine(response.Results[0].Title);
-			}
-		}
+        private async static Task removeContact()
+        {
+            var trimClient = await getServiceClient();
+            var response = trimClient.Post<RecordsResponse>(new Record()
+            {
+                Uri = 9000000001,
+                ChildLocations = new List<RecordLocation>() {
+                    new RecordLocation() {
+                        Uri = 9000004217,
+                        TypeOfRecordLocation = RecordLocationType.Contact,
+                        Delete = true
+                    }
+                }
+            });
 
-		private async static Task uploadFileAndCreateRecord()
-		{
-			var trimClient = await getServiceClient();
-			var httpClient = await getHttpClient();
 
-			HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
 
-			string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
+        }
 
-			using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
-			using (var formContent = new MultipartFormDataContent("NKdKd9Yk"))
-			using (var streamContent = new StreamContent(fileStream))
-			{
+        private async static Task streamSearch()
+        {
+            PropertyIds[] propertyIds = new PropertyIds[] {
+                PropertyIds.RecordNumber,
+                PropertyIds.RecordAuthor,
+                PropertyIds.RecordAssignee,
+               PropertyIds.RecordTitle,
+                PropertyIds.RecordRevisionNumber,
+                PropertyIds.RecordClassification,
+                PropertyIds.RecordNotes,
+                PropertyIds.RecordContainer,
+                PropertyIds.RecordIsElectronic,
+            };
 
-				formContent.Headers.ContentType.MediaType = "multipart/form-data";
-				formContent.Add(streamContent, "Files", "trim.png");
 
-				var uploadedFileResponse = await httpClient.PostAsync(url, formContent);
+            bool more = false;
+            int start = 0;
+            var trimClient = await getServiceClient();
 
-				var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
-				var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
+            var hc = trimClient.GetHttpClient();
+            hc.Timeout = new System.TimeSpan(1, 30, 0);
 
-				var record = new Record()
-				{
-					RecordType = new RecordTypeRef() { FindBy = "Document" },
-					Title = "my test document",
-					Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }, 
-					FilePath = uploadedFile.FilePath
-				};
+            do
+            {
+                try
+                {
+                    var response = trimClient.Get<RecordsResponse>(new TrimStreamSearch()
+                    {
+                        TrimType = BaseObjectTypes.Record,
+                        q = "recElectronic",
+                        Properties = propertyIds.Select(pid => $"{pid}").ToList(),
+                        pageSize = 20,
+                        sortBy = new string[] { "updated" },
+                        Filter = "updated>1970-01-01 00:00:00Z",
+                        start = start
+                    });
 
-					var response = await trimClient.PostAsync<RecordsResponse>(record);
-					Console.WriteLine(response.Results[0].Title);
-			}
 
-		}
 
+                    more = response.HasMoreItems;
+                    start = start + response.Results.Count;
 
+                    foreach (var record in response.Results)
+                    {
 
-		// this is not supported up to CM 10.  It may be supported in a later release.
-		private async static Task uploadBinaryFileAndCreateRecord()
-		{
-			var trimClient = await getServiceClient();
-			var httpClient = await getHttpClient();
+                        Console.WriteLine($"{record.IsElectronic} - {record.Uri} - {record.Title} - {record.Number} - {record.Assignee}");
+                    }
 
-			HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("============ ERROR ==========");
+                    Console.WriteLine(ex.Message);
+                    more = true;
+                }
+            } while (more == true);
+        }
 
-			string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
 
-			using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
-			using (var streamContent = new StreamContent(fileStream))
-			{
-				streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+        private async static Task createRecordWithDocument()
+        {
+            var trimClient = await getServiceClient();
 
-				var uploadedFileResponse = await httpClient.PostAsync(url + "/trim.png", streamContent);
+            var record = new Record()
+            {
+                RecordType = new RecordTypeRef() { FindBy = "Document" },
+                Title = "my test document",
+                Properties = new List<string>() { $"{PropertyIds.RecordTitle}" }
+            };
 
-				var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
-				var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
+            using (FileStream filestream = new FileStream("d:\\junk\\trim.png", FileMode.Open))
+            {
+                var uploadFile = new ServiceStack.UploadFile("trim.png", filestream);
+                uploadFile.ContentType = "image/png";
 
-				var record = new Record()
-				{
-					RecordType = new RecordTypeRef() { FindBy = "Document" },
-					Title = "my test document",
-					Properties = new List<string>() { $"{PropertyIds.RecordTitle}" },
-					FilePath = uploadedFile.FilePath
-				};
+                var response = trimClient.PostFilesWithRequest<RecordsResponse>(record, new ServiceStack.UploadFile[] { uploadFile });
+                Console.WriteLine(response.Results[0].Title);
+            }
+        }
 
-				var response = await trimClient.PostAsync<RecordsResponse>(record);
-				Console.WriteLine(response.Results[0].Title);
-			}
+        private async static Task uploadFileAndCreateRecord()
+        {
+            var trimClient = await getServiceClient();
+            var httpClient = await getHttpClient();
 
-		}
+            HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
 
-		private async static Task getDocument()
-		{
-			var trimClient = await getServiceClient();
-			var httpClient = await getHttpClient();
+            string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
 
-			var recordDownload = new RecordDownload()
-			{
-				Id = "REC_1",
-				DownloadType = DownloadType.Document
-			};
+            using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
+            using (var formContent = new MultipartFormDataContent("NKdKd9Yk"))
+            using (var streamContent = new StreamContent(fileStream))
+            {
 
-			string url = trimClient.ResolveTypedUrl("GET", recordDownload);
+                formContent.Headers.ContentType.MediaType = "multipart/form-data";
+                formContent.Add(streamContent, "Files", "trim.png");
 
+                var uploadedFileResponse = await httpClient.PostAsync(url, formContent);
 
-			var response = await httpClient.GetAsync(url).ConfigureAwait(false);
-			string fileName = "test.dat";
-			IEnumerable<string> values;
-			if (response.Content.Headers.TryGetValues("Content-Disposition", out values))
-			{
-				ContentDisposition contentDisposition = new ContentDisposition(values.First());
-				fileName = contentDisposition.FileName;
-			}
+                var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
+                var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
 
-			using (var fileStream = File.Create(Path.Combine($"C:\\junk\\{fileName}")))
-			{
-				var stream = await response.Content.ReadAsStreamAsync();
-				stream.CopyTo(fileStream);
-			}
+                var record = new Record()
+                {
+                    RecordType = new RecordTypeRef() { FindBy = "Document" },
+                    Title = "my test document",
+                    Properties = new List<string>() { $"{PropertyIds.RecordTitle}" },
+                    FilePath = uploadedFile.FilePath
+                };
 
-		}
+                var response = await trimClient.PostAsync<RecordsResponse>(record);
+                Console.WriteLine(response.Results[0].Title);
+            }
 
-	}
+        }
+
+
+
+        // this is not supported up to CM 10.  It may be supported in a later release.
+        private async static Task uploadBinaryFileAndCreateRecord()
+        {
+            var trimClient = await getServiceClient();
+            var httpClient = await getHttpClient();
+
+            HP.HPTRIM.ServiceModel.UploadFile uploadFileRequest = new HP.HPTRIM.ServiceModel.UploadFile();
+
+            string url = trimClient.ResolveTypedUrl("POST", uploadFileRequest);
+
+            using (var fileStream = File.OpenRead("d:\\junk\\trim.png"))
+            using (var streamContent = new StreamContent(fileStream))
+            {
+                streamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+
+                var uploadedFileResponse = await httpClient.PostAsync(url + "/trim.png", streamContent);
+
+                var uploadedJson = await uploadedFileResponse.Content.ReadAsStringAsync();
+                var uploadedFile = uploadedJson.FromJson<UploadFileResponse>();
+
+                var record = new Record()
+                {
+                    RecordType = new RecordTypeRef() { FindBy = "Document" },
+                    Title = "my test document",
+                    Properties = new List<string>() { $"{PropertyIds.RecordTitle}" },
+                    FilePath = uploadedFile.FilePath
+                };
+
+                var response = await trimClient.PostAsync<RecordsResponse>(record);
+                Console.WriteLine(response.Results[0].Title);
+            }
+
+        }
+
+        private async static Task getDocument()
+        {
+            var trimClient = await getServiceClient();
+            var httpClient = await getHttpClient();
+
+            var recordDownload = new RecordDownload()
+            {
+                Id = "REC_1",
+                DownloadType = DownloadType.Document
+            };
+
+            string url = trimClient.ResolveTypedUrl("GET", recordDownload);
+
+
+            var response = await httpClient.GetAsync(url).ConfigureAwait(false);
+            string fileName = "test.dat";
+            IEnumerable<string> values;
+            if (response.Content.Headers.TryGetValues("Content-Disposition", out values))
+            {
+                ContentDisposition contentDisposition = new ContentDisposition(values.First());
+                fileName = contentDisposition.FileName;
+            }
+
+            using (var fileStream = File.Create(Path.Combine($"C:\\junk\\{fileName}")))
+            {
+                var stream = await response.Content.ReadAsStreamAsync();
+                stream.CopyTo(fileStream);
+            }
+
+        }
+
+    }
 
 }
