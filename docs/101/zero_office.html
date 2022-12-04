@@ -110,12 +110,14 @@ $(document).ready(function(){initNavTree('zero_office.html',''); initResizable()
 Components</h1>
 <p>The zero footprint office integration is made up of a number of components, not all of which need to be configured depending on the level of functionality required. The components are:</p><ul>
 <li>ServiceAPI</li>
-<li>Office 365 Application manifests</li>
+<li>Office 365 Application manifest</li>
+<li>Outlook 365 manifest</li>
 <li>Email Link</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md89"></a>
 Requirements</h1>
-<p>The components listed above work together to provide the complete zero footprint integration. If the only part of the integration required is the Outlook integration then only the ServiceAPI, Email Link and Outlook manifest are required, the other components (Office manifest, and Email Link) are required for Word, Excel and PowerPoint.</p>
+<p>The components listed above work together to provide the complete zero footprint integration. If the only part of the integration required is the Outlook integration then only the ServiceAPI, Email Link and Outlook manifest are required, the Office manifest is required for Word, Excel and PowerPoint.</p>
+<p>As portions of both the Outlook and Office integration require server side interaction with Office 365 the sever upon which EmailLink is installed will require Internet connectivity.</p>
 <h1><a class="anchor" id="autotoc_md90"></a>
 ServiceAPI</h1>
 <p>The ServiceAPI must be installed and must have a valid HTTPS certificate, any HTTP errors will cause the Office Integration to fail.</p>
