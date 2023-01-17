@@ -69,11 +69,48 @@ namespace ConsoleServiceAPIClient
                 Console.WriteLine($"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
                 throw;
             }
-
+           
             return result.IdToken;
         }
 
+        static async Task<string> getConfidentialClientAuthToken()
+        {
+            string clientId = System.Configuration.ConfigurationManager.AppSettings["clientId"];
+            string scopeClientId = System.Configuration.ConfigurationManager.AppSettings["scopeClientId"];
+            string tenantId = System.Configuration.ConfigurationManager.AppSettings["tenantId"];
+            string clientSecret = System.Configuration.ConfigurationManager.AppSettings["clientSecret"];
 
+            string[] scopes = new string[] { $"{scopeClientId}/.default" };
+
+
+            IConfidentialClientApplication app = ConfidentialClientApplicationBuilder.Create(clientId)
+      .WithAuthority(AzureCloudInstance.AzurePublic, tenantId)
+     .WithClientSecret(clientSecret)
+     .Build();
+
+            //    Microsoft.Identity.Client.AuthenticationResult result;
+            // var authResult = app.AcquireTokenForClient(scopes).ExecuteAsync();
+
+            try
+            {
+                var result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
+
+               
+                return result.AccessToken;
+
+            }
+            catch (AggregateException agEx)
+            {
+                foreach (var ex in agEx.InnerExceptions)
+                {
+                    Console.WriteLine(ex.Message, ex);
+                }
+
+                throw new TimeoutException($"Error connecting to identity provider.");
+            }
+
+
+        }
         static async Task<JsonHttpClient> getServiceClient()
         {
             // this is only test code so we will bypass TLS certificate errors...
@@ -99,8 +136,13 @@ namespace ConsoleServiceAPIClient
 
             string userName = System.Configuration.ConfigurationManager.AppSettings["userName"];
             string password = System.Configuration.ConfigurationManager.AppSettings["password"];
-
-            if (string.IsNullOrWhiteSpace(userName))
+            string clientSecret = System.Configuration.ConfigurationManager.AppSettings["clientSecret"];
+            if (!string.IsNullOrWhiteSpace(clientSecret))
+            {
+                string token = await getConfidentialClientAuthToken();
+                _trimClient.Headers["Authorization"] = $"Bearer {token}";
+            }
+            else if (string.IsNullOrWhiteSpace(userName))
             {
                 string token = await getAuthToken();
                 _trimClient.Headers["Authorization"] = $"Bearer {token}";
@@ -139,6 +181,8 @@ namespace ConsoleServiceAPIClient
 
             var stopWatch = Stopwatch.StartNew();
 
+            //   await updateRecord();
+
             //     await removeContact();
 
             //	await getRecordByUri();
@@ -146,13 +190,15 @@ namespace ConsoleServiceAPIClient
 
             //	await getRecordUri();
 
+            await getMe();
+
             //	await getRecordTitle();
 
             //	await createRecord();
 
-            //await recordSearch();
+            //   await recordSearch();
 
-            await streamSearch();
+            // await streamSearch();
 
             //await createRecordWithDocument();
 
@@ -192,6 +238,13 @@ namespace ConsoleServiceAPIClient
             Console.WriteLine(response.Results[0].Uri);
         }
 
+        private async static Task getMe()
+        {
+            var trimClient = await getServiceClient();
+            var response = trimClient.Get<LocationsResponse>(new LocationFind() { Id = "me" });
+            Console.WriteLine(response.Results[0].Uri);
+        }
+
         private async static Task getRecordTitle()
         {
             var trimClient = await getServiceClient();
@@ -221,23 +274,101 @@ namespace ConsoleServiceAPIClient
             Console.WriteLine(response.Results[0].Title);
         }
 
+        private async static Task updateRecord()
+        {
+            var trimClient = await getServiceClient();
+
+            var surfaces = new string[] { "Dirt", "Bitumen", "Concrete", "Blue Metal" };
+
+
+            for (int counter = 0; counter < 100; counter++)
+            {
+                Random random = new Random();
+                int number = random.Next(0, 3);
+
+                var fields = new Dictionary<string, string>();
+                fields["RoadSurface"] = surfaces[number];
+                Console.WriteLine("*****************************");
+                Console.WriteLine(fields["RoadSurface"]);
+
+                var record = new Record()
+                {
+                    Uri = 9000000221,
+                    AdditionalFields = fields,
+
+                };
+
+                trimClient.Post<RecordsResponse>(record);
+
+
+
+                var response = trimClient.Get<RecordsResponse>(new RecordFind()
+                {
+                    Id = "9000000221",
+                    Properties = new List<string>() { $"RoadSurface" },
+                    PropertyValue = PropertyType.Both
+                });
+
+
+                Console.WriteLine(response.Results[0].Fields["RoadSurface"].StringValue);
+
+
+                Console.WriteLine("*****************************");
+
+            }
+
+
+
+
+
+
+
+
+
+        }
+
         private async static Task recordSearch()
         {
             var trimClient = await getServiceClient();
-            var response = trimClient.Get<RecordsResponse>(new Records()
-            {
-                q = "all",
-                Properties = new List<string>() { $"{PropertyIds.RecordOwnerLocation}" },
-                ResultsOnly = true,
-                PropertyValue = PropertyType.String,
-                pageSize = 100
-            });
+
+            trimClient.AddHeader("Next-Page-Id", $"{Guid.NewGuid()}");
+
+            PropertyIds[] propertyIds = new PropertyIds[] {
+                        PropertyIds.RecordNumber,
+                 //       PropertyIds.RecordAuthor,
+                  //      PropertyIds.RecordAssignee,
+                 //    PropertyIds.RecordTitle,
+              //  PropertyIds.RecordRevisionNumber,
+               //         PropertyIds.RecordClassification,
+               //         PropertyIds.RecordNotes,
+               //         PropertyIds.RecordContainer,
+               //         PropertyIds.RecordIsElectronic,
+            };
 
 
-            foreach (var record in response.Results)
+            RecordsResponse response;
+            int pageSize = 3;
+            int start = 1;
+            do
             {
-                Console.WriteLine(record.OwnerLocation.StringValue);
-            }
+                response = trimClient.Get<RecordsResponse>(new Records()
+                {
+                    q = "electronic",
+                    Properties = propertyIds.Select(pid => $"{pid}").ToList(),
+                    ResultsOnly = true,
+                    PropertyValue = PropertyType.Both,
+                    pageSize = pageSize,
+                    //    start = start, 
+                    sortBy = new string[] { "uri" }
+                });
+
+                Console.WriteLine("***********************************************");
+                foreach (var record in response.Results)
+                {
+                    Console.WriteLine(record.Number);
+                }
+                start = start + pageSize;
+            } while (response.HasMoreItems == true && start < 70);
         }
 
         private async static Task removeContact()
@@ -263,12 +394,12 @@ namespace ConsoleServiceAPIClient
         {
             PropertyIds[] propertyIds = new PropertyIds[] {
                 PropertyIds.RecordNumber,
-                PropertyIds.RecordAuthor,
+             //   PropertyIds.RecordAuthor,
                 PropertyIds.RecordAssignee,
                PropertyIds.RecordTitle,
                 PropertyIds.RecordRevisionNumber,
                 PropertyIds.RecordClassification,
-                PropertyIds.RecordNotes,
+              //  PropertyIds.RecordNotes,
                 PropertyIds.RecordContainer,
                 PropertyIds.RecordIsElectronic,
             };
@@ -280,7 +411,7 @@ namespace ConsoleServiceAPIClient
 
             var hc = trimClient.GetHttpClient();
             hc.Timeout = new System.TimeSpan(1, 30, 0);
-
+            string id = $"{Guid.NewGuid()}";
             do
             {
                 try
@@ -290,10 +421,11 @@ namespace ConsoleServiceAPIClient
                         TrimType = BaseObjectTypes.Record,
                         q = "recElectronic",
                         Properties = propertyIds.Select(pid => $"{pid}").ToList(),
-                        pageSize = 20,
+                        pageSize = 2000,
                         sortBy = new string[] { "updated" },
                         Filter = "updated>1970-01-01 00:00:00Z",
-                        start = start
+                        start = start,
+                        Id = id
                     });
 
 
@@ -306,7 +438,7 @@ namespace ConsoleServiceAPIClient
 
                         Console.WriteLine($"{record.IsElectronic} - {record.Uri} - {record.Title} - {record.Number} - {record.Assignee}");
                     }
-
+                    return;
                 }
                 catch (Exception ex)
                 {
