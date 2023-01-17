@@ -52,7 +52,7 @@ Use a confidential client to connect to the ServiceAPI without a user's credenti
  * create a Location in Content Manager and use the Object Id of the client Azure application as its network login name, and
  * within the ServiceAPI hptrim.config file modify the openIdConnect element to include the identityClaims attribute, this attribute should contain the claim oid, in addition to any other claims you you use for normal OpenId authentication
  
- **** Example identityClaims in hptrim.config
+#### Example identityClaims in hptrim.config
  ```xml
 <openIdConnect>
   <add
