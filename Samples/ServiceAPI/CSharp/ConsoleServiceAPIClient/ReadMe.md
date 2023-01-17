@@ -48,8 +48,21 @@ Use a confidential client to connect to the ServiceAPI without a user's credenti
 	* clientId - The Application ID URI from your client Azure Application
 	* clientSecret - the client secret from your client Azure Application
 	* scopeClientId - the Application ID Uri from the ServiceAPI Azure Application
- * find the client Azure Application in the Azure section 'Enterprise Applications'
- * create a Location in Content Manager and use the Object Id of the client Azure application as its network login name.
+ * find the client Azure Application in the Azure section 'Enterprise Applications',
+ * create a Location in Content Manager and use the Object Id of the client Azure application as its network login name, and
+ * within the ServiceAPI hptrim.config file modify the openIdConnect element to include the identityClaims attribute, this attribute should contain the claim oid, in addition to any other claims you you use for normal OpenId authentication
+ 
+ **** Example identityClaims in hptrim.config
+ ```xml
+<openIdConnect>
+  <add
+    name="openid"
+    clientID="CLIENT_ID"
+    clientSecret="CLIENT_SECRET"
+    issuerURI="https://login.microsoftonline.com/TENANT_ID/v2.0/.well-known/openid-configuration"
+    identityClaims="email upn preferred_username oid"
+/>
+ ```
  
  Once the steps above have been followed this sample code should connect to the ServiceAPI as a confidential client.  To test this call the getMe() sample to verify which Location you are operating as.
 
