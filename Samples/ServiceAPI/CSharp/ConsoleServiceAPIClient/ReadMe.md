@@ -33,7 +33,25 @@ The ServiceAPI URL and authentication information should be stored in a file cal
 These samples support either basic or OpenId authentication.
 
 ### OpenId Connect
-Use the Microsoft Identity Client to connect via [OpenID connect authentication](https://content-manager-sdk.github.io/Community/10/oidc.html#oidc_azuread) with Content Manager 10. Before using these samples copy the client and tenant IDs from your Azure AD App to the appSettins in my.config.
+Use the Microsoft Identity Client to connect via [OpenID connect authentication](https://content-manager-sdk.github.io/Community/10/oidc.html#oidc_azuread) with Content Manager 10. Before using these samples copy the client and tenant IDs from your Azure AD App to the appSettings in my.config.
+
+### OpenId Connect Confidential client
+Use a confidential client to connect to the ServiceAPI without a user's credentials, typically used for server to server communication.  To use this:
+ * add a new scope to the Azure Application used by the ServiceAPI,
+ * create a new Azure Application for you client application,
+ * Add a permission and select (from My APIs) the scope you added to your ServiceAPI application,
+ * Grant admin consent,
+ * create a client secret for this new Application, take note of this for later use,
+ * ensure the Application ID URI (under Expose an API) is set to something like this: ```api://ClientId``` (e.g. api://3b30db06-b306-4924-805e-e491a709b6fd)
+ * edit my.config and set these attributes:
+	* tenantId - The ID of your Azure AD tenant
+	* clientId - The Application ID URI from your client Azure Application
+	* clientSecret - the client secret from your client Azure Application
+	* scopeClientId - the Application ID Uri from the ServiceAPI Azure Application
+ * find the client Azure Application in the Azure section 'Enterprise Applications'
+ * create a Location in Content Manager and use the Object Id of the client Azure application as its network login name.
+ 
+ Once the steps above have been followed this sample code should connect to the ServiceAPI as a confidential client.  To test this call the getMe() sample to verify which Location you are operating as.
 
 ### Basic
 Include your username and password in my.config.
