@@ -89,35 +89,35 @@ $(document).ready(function(){initNavTree('advanced_topics.html',''); initResizab
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#ways_To_Fetch_a_TrimMainObject">Different ways to fetch a TrimMainObject</a><ul><li class="level2"><a href="#fetch_by_constructorand_name">Object constructor by Name</a><ul><li class="level3"><a href="#autotoc_md155">Code example</a></li>
+<ul><li class="level1"><a href="#ways_To_Fetch_a_TrimMainObject">Different ways to fetch a TrimMainObject</a><ul><li class="level2"><a href="#fetch_by_constructorand_name">Object constructor by Name</a><ul><li class="level3"><a href="#autotoc_md157">Code example</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#object_name_properties">Object name properties</a></li>
-<li class="level2"><a href="#fetch_by_database">Database find methods</a><ul><li class="level3"><a href="#autotoc_md156">Code samples</a></li>
+<li class="level2"><a href="#fetch_by_database">Database find methods</a><ul><li class="level3"><a href="#autotoc_md158">Code samples</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#fetch_by_search">TrimMainObjectSearch</a><ul><li class="level3"><a href="#autotoc_md157">Code sample</a></li>
+<li class="level2"><a href="#fetch_by_search">TrimMainObjectSearch</a><ul><li class="level3"><a href="#autotoc_md159">Code sample</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="level1"><a href="#fetchDoc">Document access alternatives</a><ul><li class="level2"><a href="#doc_access_overview">Overview</a></li>
-<li class="level2"><a href="#getDoc">Record.GetDocument()</a><ul><li class="level3"><a href="#autotoc_md159">Checkout without getting the document</a></li>
+<li class="level2"><a href="#getDoc">Record.GetDocument()</a><ul><li class="level3"><a href="#autotoc_md161">Checkout without getting the document</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#clientCache">DocumentPathInClientCache</a><ul><li class="level3"><a href="#autotoc_md160">Example</a></li>
+<li class="level2"><a href="#clientCache">DocumentPathInClientCache</a><ul><li class="level3"><a href="#autotoc_md162">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#wgsCache">DocumentPathInWGSCache</a><ul><li class="level3"><a href="#autotoc_md161">Example</a></li>
+<li class="level2"><a href="#wgsCache">DocumentPathInWGSCache</a><ul><li class="level3"><a href="#autotoc_md163">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#downloadNotifier">DownloadNotifier</a><ul><li class="level3"><a href="#autotoc_md162">Example</a></li>
+<li class="level2"><a href="#downloadNotifier">DownloadNotifier</a><ul><li class="level3"><a href="#autotoc_md164">Example</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#dowload_other_object_types">Other object types</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#localisedStrings">Localised strings</a><ul><li class="level2"><a href="#trimMEssages">TrimMessages</a><ul><li class="level3"><a href="#autotoc_md163">Code Sample</a></li>
+<li class="level1"><a href="#localisedStrings">Localised strings</a><ul><li class="level2"><a href="#trimMEssages">TrimMessages</a><ul><li class="level3"><a href="#autotoc_md165">Code Sample</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#objectCaptions">Captions</a><ul><li class="level3"><a href="#enumCaptions">Enum captions</a></li>
@@ -145,7 +145,7 @@ Different ways to fetch a TrimMainObject</h1>
 <h2><a class="anchor" id="fetch_by_constructorand_name"></a>
 Object constructor by Name</h2>
 <p>As <a class="el" href="programming_guide.html#access_existing_record">discussed</a> in the help use the Name or Uri to instantiate the object.</p>
-<h3><a class="anchor" id="autotoc_md155"></a>
+<h3><a class="anchor" id="autotoc_md157"></a>
 Code example</h3>
 <p>This example fetches a <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_classification.html">Classification</a> by name. <br  />
 </p>
@@ -214,7 +214,7 @@ Database find methods</h2>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#a404187bed49dc83d0883ba62728b2787">Database.FindTrimObjectByUri()</a></li>
 <li><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html#ae839c8a34d30efb47572c259ee57d9ff">Database.FindTrimObjectByURN()</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md156"></a>
+<h3><a class="anchor" id="autotoc_md158"></a>
 Code samples</h3>
 <div class="fragment"><div class="line"><span class="comment">// fetch by Record Number</span></div>
 <div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a6a0d9eaee314c567fd72fb97ee707a36">Record</a> record1 = database.FindTrimObjectByName(<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650">BaseObjectTypes</a>.Record, <span class="stringliteral">&quot;REC_1&quot;</span>) as <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a6a0d9eaee314c567fd72fb97ee707a36">Record</a>;</div>
@@ -233,7 +233,7 @@ Code samples</h3>
 <h2><a class="anchor" id="fetch_by_search"></a>
 TrimMainObjectSearch</h2>
 <p><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html">TrimMainObjectSearch</a> may be used in place of the constructor and <code>Database</code> methods of fetching an object. One benefit when fetching by name, where the name may not be unique, is that you can respond better to the various scenarios.</p>
-<h3><a class="anchor" id="autotoc_md157"></a>
+<h3><a class="anchor" id="autotoc_md159"></a>
 Code sample</h3>
 <div class="fragment"><div class="line"><span class="comment">// Find all Locations where the name starts with David</span></div>
 <div class="line">TrimMainObjectSearch locationSearch = <span class="keyword">new</span> TrimMainObjectSearch(database, <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650">BaseObjectTypes</a>.Location);</div>
@@ -279,7 +279,7 @@ Overview</h2>
 <h2><a class="anchor" id="getDoc"></a>
 Record.GetDocument()</h2>
 <p><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#a3244e6444eadd9af0efb9199dedba632">Record.GetDocument()</a> is the primary way to get an electronic document from a Record and will be used for most .NET SDK applications. It allows the user to fetch a copy of the document from the document store to their local hard drive. If the document is already in the users cache then it will be retrieved from the cache, rather than from the store.</p>
-<h3><a class="anchor" id="autotoc_md159"></a>
+<h3><a class="anchor" id="autotoc_md161"></a>
 Checkout without getting the document</h3>
 <p>You may wish to set the Record edit status to 'checked out', without fetching the Record. In this case simply call <code>GetDocument()</code> with a null <code>outputDocumentName</code>. For example:</p>
 <div class="fragment"><div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a6a0d9eaee314c567fd72fb97ee707a36">Record</a> record = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a6a0d9eaee314c567fd72fb97ee707a36">Record</a>(database, <span class="stringliteral">&quot;REC_430&quot;</span>);</div>
@@ -287,7 +287,7 @@ Checkout without getting the document</h3>
 </div><!-- fragment --> <h2><a class="anchor" id="clientCache"></a>
 DocumentPathInClientCache</h2>
 <p>This method of fetching documents was added to improve support for web services. The advantage it has over <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_record.html#a3244e6444eadd9af0efb9199dedba632">Record.GetDocument()</a> is that it does not require you to store a new copy of the document, copied from your local cache to the path in the <code>outputDocumentName</code> parameter. If document store caching is disabled, this property will be empty, unless your application is running as a service or web service.</p>
-<h3><a class="anchor" id="autotoc_md160"></a>
+<h3><a class="anchor" id="autotoc_md162"></a>
 Example</h3>
 <div class="fragment"><div class="line">TrimApplication.SetAsWebService(<span class="stringliteral">&quot;c:\\hptrim\\mytest&quot;</span>);</div>
 <div class="line"><span class="keyword">using</span> (<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a> database = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a>())</div>
@@ -307,7 +307,7 @@ Example</h3>
 </div><!-- fragment --> <h2><a class="anchor" id="wgsCache"></a>
 DocumentPathInWGSCache</h2>
 <p>If your workgroup server has document caching enabled, an application running on that server (not on a client machine) can use the <code>DocumentPathInWgsCache</code> property to get the location of the document in the workgroup server cache. The benefit of doing so is that the workgroup server cache can be pre-emptively loaded, so that the document can be present in the cache before it is first asked for.</p>
-<h3><a class="anchor" id="autotoc_md161"></a>
+<h3><a class="anchor" id="autotoc_md163"></a>
 Example</h3>
 <div class="fragment"><div class="line"><a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a6a0d9eaee314c567fd72fb97ee707a36">Record</a> record = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650a6a0d9eaee314c567fd72fb97ee707a36">Record</a>(database, <span class="stringliteral">&quot;REC_430&quot;</span>);</div>
 <div class="line">Console.WriteLine(record.DocumentPathInWGSCache);</div>
@@ -318,7 +318,7 @@ DownloadNotifier</h2>
 <li>you may start part way through a file.</li>
 </ol>
 <p><code>DownloadNotifier</code> is of particular use in web applications, where you will want to start returning the file to the end user as soon as possible, rather than waiting until the entire file has been fetched from the document store, and also where you may wish to have a resumable download.</p>
-<h3><a class="anchor" id="autotoc_md162"></a>
+<h3><a class="anchor" id="autotoc_md164"></a>
 Example</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">long</span> count = 20922;</div>
 <div class="line"><span class="keywordtype">byte</span>[] buffer = <span class="keyword">new</span> <span class="keywordtype">byte</span>[20922];</div>
@@ -343,7 +343,7 @@ Localised strings</h1>
 <h2><a class="anchor" id="trimMEssages"></a>
 TrimMessages</h2>
 <p><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application_base.html#aee4017d46ad0d676f9e3b171a88a137a">TrimApplication.GetMessage()</a> is used to fetch error and other messages from Content Manager. These messages will automatically account for any custom captions.</p>
-<h3><a class="anchor" id="autotoc_md163"></a>
+<h3><a class="anchor" id="autotoc_md165"></a>
 Code Sample</h3>
 <div class="fragment"><div class="line"><span class="comment">//This code will display the following string, replacing the word &#39;record&#39; with the custom caption for &#39;record&#39; if set.</span></div>
 <div class="line"><span class="comment">//</span></div>

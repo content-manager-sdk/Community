@@ -182,6 +182,7 @@ var class_t_r_i_m_1_1_s_d_k_1_1_database =
     [ "GoogleKey", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#a25fe600ab27a0ae1eb7d644d008b7e1e", null ],
     [ "HideAllLocationDetails", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#abf158713c2ba87402bdf95122a8ce3b8", null ],
     [ "HideClassificationNumbers", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#aab5bcea2a64c3491c51989512d95425d", null ],
+    [ "HideCopyLink", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#a2822aa95883253e83d5ca4c7452ef8d8", null ],
     [ "HideCustomRecordTypes", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#acc3849ee2d86dc3de1b041d5b846f9cb", null ],
     [ "HideSQLFromClients", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#a1303f33c6a4637461c23d59be6af23f3", null ],
     [ "Id", "class_t_r_i_m_1_1_s_d_k_1_1_database.html#a0cd3f59a50c7dde5b53e8935cdfab063", null ],

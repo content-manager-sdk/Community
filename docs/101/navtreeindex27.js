@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"enum_items.html#enum_help_nbrTypes":[9,2,212],
 "enum_items.html#enum_help_notesInsertStyles":[9,2,208],
 "enum_items.html#enum_help_notesUpdateType":[9,2,209],
 "enum_items.html#enum_help_notificationType":[9,2,210],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_active_dates.html#a43ff3705d1d98f62936d4f82e83a6f31":[14,0,0,0,4,4],
 "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_active_dates.html#ad4312cc42a8ecdcd80ba2e823b912f89":[14,0,0,0,4,2],
 "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_active_dates.html#ae21dc4286eafe53e0e67c91c287e40ac":[14,0,0,0,4,1],
-"interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_custom_icon.html":[14,0,0,0,6],
-"interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_custom_icon.html#a5958a515ebfe2712cfc31b7352125f60":[14,0,0,0,6,0]
+"interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_custom_icon.html":[14,0,0,0,6]
 };

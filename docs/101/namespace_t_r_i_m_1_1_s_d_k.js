@@ -1,6 +1,6 @@
 var namespace_t_r_i_m_1_1_s_d_k =
 [
-    [ "Office Integration configuration", "zero_office.html#autotoc_md92", null ],
+    [ "Office Integration configuration", "zero_office.html#autotoc_md94", null ],
     [ "DownloadNotifier", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier.html", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier" ],
     [ "SwigHelper", "class_t_r_i_m_1_1_s_d_k_1_1_swig_helper.html", null ],
     [ "ITrimAccessControl", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control.html", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control" ],
@@ -4771,6 +4771,7 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "DatabaseGoogleKey", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a29ec9aaaef11a891c58247dafb55f612", null ],
       [ "DatabaseHideAllLocationDetails", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aa6c0c49b47c4828bdf25511a06136b6d", null ],
       [ "DatabaseHideClassificationNumbers", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a82ebe3bb6b36b012400dda184c348d6d", null ],
+      [ "DatabaseHideCopyLink", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a6e7c0821426361520150623ba64e7ad0", null ],
       [ "DatabaseHideCustomRecordTypes", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ac8ff833268d4daa51432fc72ca1383df", null ],
       [ "DatabaseHideSQLFromClients", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a6e67e73b9c577ac09778f61bf0300cd3", null ],
       [ "DatabaseId", "namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a37d0b1a1f3439795e691c1221acc49dc", null ],

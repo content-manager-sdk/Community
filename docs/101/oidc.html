@@ -146,38 +146,41 @@ $(document).ready(function(){initNavTree('oidc.html',''); initResizable(); });
 </ul>
 </li>
 <li class="level2"><a href="#autotoc_md66">Enable redirect</a></li>
-<li class="level2"><a href="#autotoc_md67">Logout</a><ul><li class="level3"><a href="#autotoc_md68">Example</a></li>
+<li class="level2"><a href="#autotoc_md67">Allow users (Web Client only)</a><ul><li class="level3"><a href="#autotoc_md68">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md69">Allow anonymous access in the IIS</a></li>
+<li class="level2"><a href="#autotoc_md69">Logout</a><ul><li class="level3"><a href="#autotoc_md70">Example</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#oidc_google">Google authentication for WebClient and ServiceAPI</a><ul><li class="level2"><a href="#autotoc_md70">Create the Google Credentials</a><ul><li class="level3"><a href="#autotoc_md71">Example</a></li>
+<li class="level2"><a href="#autotoc_md71">Allow anonymous access in IIS</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md72">Configure authentication in hptrim.config</a><ul><li class="level3"><a href="#autotoc_md73">Example config</a></li>
+<li class="level1"><a href="#oidc_google">Google authentication for WebClient and ServiceAPI</a><ul><li class="level2"><a href="#autotoc_md72">Create the Google Credentials</a><ul><li class="level3"><a href="#autotoc_md73">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md74">Enable redirect</a></li>
-<li class="level2"><a href="#autotoc_md75">Logout</a><ul><li class="level3"><a href="#autotoc_md76">Example</a></li>
+<li class="level2"><a href="#autotoc_md74">Configure authentication in hptrim.config</a><ul><li class="level3"><a href="#autotoc_md75">Example config</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md77">Allow anonymous access in the IIS</a></li>
+<li class="level2"><a href="#autotoc_md76">Enable redirect</a></li>
+<li class="level2"><a href="#autotoc_md77">Logout</a><ul><li class="level3"><a href="#autotoc_md78">Example</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#oidc_azuread_desktop">AzureAD for Content Manager Desktop</a><ul><li class="level2"><a href="#autotoc_md78">Create the Azure AD Application</a><ul><li class="level3"><a href="#autotoc_md79">Example</a></li>
+<li class="level2"><a href="#autotoc_md79">Allow anonymous access in the IIS</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md80">Configure permissions</a><ul><li class="level3"><a href="#autotoc_md81">Example</a></li>
+<li class="level1"><a href="#oidc_azuread_desktop">AzureAD for Content Manager Desktop</a><ul><li class="level2"><a href="#autotoc_md80">Create the Azure AD Application</a><ul><li class="level3"><a href="#autotoc_md81">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md82">Configure authentication in Content Manager Enterprise Studio</a><ul><li class="level3"><a href="#autotoc_md83">Example</a></li>
+<li class="level2"><a href="#autotoc_md82">Configure permissions</a><ul><li class="level3"><a href="#autotoc_md83">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md84">Configure Azure AD for Office Integration access</a><ul><li class="level3"><a href="#autotoc_md85">Example Config.xml</a></li>
+<li class="level2"><a href="#autotoc_md84">Configure authentication in Content Manager Enterprise Studio</a><ul><li class="level3"><a href="#autotoc_md85">Example</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md86">Troubleshooting Azure AD for Office Integration access</a><ul><li class="level3"><a href="#autotoc_md87">Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.</a></li>
+<li class="level2"><a href="#autotoc_md86">Configure Azure AD for Office Integration access</a><ul><li class="level3"><a href="#autotoc_md87">Example Config.xml</a></li>
+</ul>
+</li>
+<li class="level2"><a href="#autotoc_md88">Troubleshooting Azure AD for Office Integration access</a><ul><li class="level3"><a href="#autotoc_md89">Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.</a></li>
 </ul>
 </li>
 </ul>
@@ -443,22 +446,39 @@ Enable redirect</h2>
 <li>Add the feature Html</li>
 </ol>
 <h2><a class="anchor" id="autotoc_md67"></a>
+Allow users (Web Client only)</h2>
+<p>For the Web Client find the web.config file and wuthin it find the Location element with the path "serviceapi", it should contain the element <code>&lt;allow users="*" /&gt;</code> within its authorization element.</p>
+<h3><a class="anchor" id="autotoc_md68"></a>
+Example</h3>
+<div class="fragment"><div class="line">&lt;location path=&quot;serviceapi&quot;&gt;</div>
+<div class="line">  &lt;system.web&gt;</div>
+<div class="line">    &lt;httpHandlers&gt;</div>
+<div class="line">      &lt;add path=&quot;*&quot; type=&quot;ServiceStack.WebHost.Endpoints.ServiceStackHttpHandlerFactory, ServiceStack&quot; verb=&quot;*&quot; /&gt;</div>
+<div class="line">    &lt;/httpHandlers&gt;</div>
+<div class="line">    &lt;authorization&gt;</div>
+<div class="line">      &lt;allow users=&quot;*&quot; /&gt;</div>
+<div class="line">    &lt;/authorization&gt;</div>
+<div class="line">  &lt;/system.web&gt;</div>
+<div class="line">  </div>
+<div class="line">  ...</div>
+<div class="line">  &lt;/location&gt; </div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md69"></a>
 Logout</h2>
 <p>For WebDrawer the logout link is configured in the uiSettings. It should contain '~/auth/logout'. In the Web Client a logout link will be displayed automatically when OpenId Connect authentication is enabled.</p>
-<h3><a class="anchor" id="autotoc_md68"></a>
+<h3><a class="anchor" id="autotoc_md70"></a>
 Example</h3>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">uiSettings</span></div>
 <div class="line">  <span class="keyword">logoutLink</span>=<span class="stringliteral">&quot;~/auth/logout&quot;</span></div>
 <div class="line">  ...</div>
 <div class="line">/&gt;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md69"></a>
-Allow anonymous access in the IIS</h2>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md71"></a>
+Allow anonymous access in IIS</h2>
 <p>IIS will not be handling authentication so we use IIS Manager to allow anonymous access only.</p>
 <p><img src="iis_anon.PNG" alt="" class="inline" title="image 1"/></p>
 <h1><a class="anchor" id="oidc_google"></a>
 Google authentication for WebClient and ServiceAPI</h1>
 <p>As of CM 10 the CM web applications (ServiceAPI, WebDrawer and Web Client) have an OpenId Connect authentication provider built in. This document describes creating Google credentials and configuring the CM web application.</p>
-<h2><a class="anchor" id="autotoc_md70"></a>
+<h2><a class="anchor" id="autotoc_md72"></a>
 Create the Google Credentials</h2>
 <p>To create the Google credentials:</p>
 <ol type="1">
@@ -469,10 +489,10 @@ Create the Google Credentials</h2>
 <li>The value in Authorized redirect URIs is important, it must be lowercase and it must be the URL to your application (e.g. <a href="https://mydomain.com/cmwebdrawer">https://mydomain.com/cmwebdrawer</a>) followed by the path to the authentication provider (for example /auth/openid). The /auth/ component is fixed but the 'openid' is the name you will supply in hptrim.config later and so can be any string, as long as it matches the value in hptrim.config. For the web client the path must include the path to the ServiceAPI, for example: <a href="https://mydomain.com/contentManager/serviceapi/auth/openid">https://mydomain.com/contentManager/serviceapi/auth/openid</a>.</li>
 <li>On saving the Client ID and Client Secret will be displayed, preserve them for later use.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md71"></a>
+<h3><a class="anchor" id="autotoc_md73"></a>
 Example</h3>
 <p><img src="google_credentials.png" alt="" class="inline"/></p>
-<h2><a class="anchor" id="autotoc_md72"></a>
+<h2><a class="anchor" id="autotoc_md74"></a>
 Configure authentication in hptrim.config</h2>
 <p>To use the Google credentials created above edit hptrim.config (hprmServiceAPI.config in the Web Client) so that it has am authentication similar to the one below.</p>
 <ol type="1">
@@ -481,7 +501,7 @@ Configure authentication in hptrim.config</h2>
 <li>The secret is the one preserved earlier.</li>
 <li>The issuerURI is: <a href="https://accounts.google.com">https://accounts.google.com</a></li>
 </ol>
-<h3><a class="anchor" id="autotoc_md73"></a>
+<h3><a class="anchor" id="autotoc_md75"></a>
 Example config</h3>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">authentication</span> <span class="keyword">allowAnonymous</span>=<span class="stringliteral">&quot;false&quot;</span> <span class="keyword">slidingSessionMinutes</span>=<span class="stringliteral">&quot;2&quot;</span>&gt;</div>
 <div class="line">    &lt;<span class="keywordtype">openIdConnect</span>&gt;</div>
@@ -493,7 +513,7 @@ Example config</h3>
 <div class="line">        /&gt;</div>
 <div class="line">    &lt;/<span class="keywordtype">openIdConnect</span>&gt;</div>
 <div class="line">&lt;/<span class="keywordtype">authentication</span>&gt;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md74"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md76"></a>
 Enable redirect</h2>
 <p>The web client will not re-direct the authentication endpoint unless the Html feature is enabled in hprmServiceAPI.config. To do this:</p>
 <ol type="1">
@@ -501,22 +521,22 @@ Enable redirect</h2>
 <li>find the property named 'serviceFeatures'</li>
 <li>Add the feature Html</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md75"></a>
+<h2><a class="anchor" id="autotoc_md77"></a>
 Logout</h2>
 <p>For WebDrawer the logout link is configured in the uiSettings. It should contain '~/auth/logout'. In the Web Client a logout link will be displayed automatically when OpenId Connect authentication is enabled.</p>
-<h3><a class="anchor" id="autotoc_md76"></a>
+<h3><a class="anchor" id="autotoc_md78"></a>
 Example</h3>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">uiSettings</span></div>
 <div class="line">  <span class="keyword">logoutLink</span>=<span class="stringliteral">&quot;~/auth/logout&quot;</span></div>
 <div class="line">  ...</div>
 <div class="line">/&gt;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md77"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md79"></a>
 Allow anonymous access in the IIS</h2>
 <p>IIS will not be handling authentication so we use IIS Manager to allow anonymous access only. <img src="iis_anon.PNG" alt="" class="inline" title="image 1"/></p>
 <h1><a class="anchor" id="oidc_azuread_desktop"></a>
 AzureAD for Content Manager Desktop</h1>
 <p>OpenID Connect may be used to authenticate with the Content Manager desktop client, this document details how to configure this.</p>
-<h2><a class="anchor" id="autotoc_md78"></a>
+<h2><a class="anchor" id="autotoc_md80"></a>
 Create the Azure AD Application</h2>
 <p>To create the Azure AD application:</p>
 <ol type="1">
@@ -526,10 +546,10 @@ Create the Azure AD Application</h2>
 <li>Select 'Public native client' in the Redirect URI</li>
 <li>Enter this redirect Uri 'urn:ietf:wg:oauth:2.0:oob'</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md79"></a>
+<h3><a class="anchor" id="autotoc_md81"></a>
 Example</h3>
 <p><img src="azuread_app_desktop_1.png" alt="" class="inline"/></p>
-<h2><a class="anchor" id="autotoc_md80"></a>
+<h2><a class="anchor" id="autotoc_md82"></a>
 Configure permissions</h2>
 <p>From API Permissions add the following delegated Microsoft Graph permissions:</p><ul>
 <li>email</li>
@@ -545,10 +565,10 @@ Configure permissions</h2>
 <li>User.Read</li>
 </ul>
 <p>Select 'Grant Admin Access' to grant access to all permissions.</p>
-<h3><a class="anchor" id="autotoc_md81"></a>
+<h3><a class="anchor" id="autotoc_md83"></a>
 Example</h3>
 <p><img src="azuread_app_desktop_2.png" alt="" class="inline"/></p>
-<h2><a class="anchor" id="autotoc_md82"></a>
+<h2><a class="anchor" id="autotoc_md84"></a>
 Configure authentication in Content Manager Enterprise Studio</h2>
 <p>To use the Azure AD app created above open Content Manager Enterprise Studio and:</p><ol type="1">
 <li>from the database choose Authentication &gt; OpenID</li>
@@ -557,10 +577,10 @@ Configure authentication in Content Manager Enterprise Studio</h2>
 <li>Client secret should be empty</li>
 <li>Client app scope should contain 'openid email offline_access'</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md83"></a>
+<h3><a class="anchor" id="autotoc_md85"></a>
 Example</h3>
 <p><img src="/images/azuread_app_desktop_3.png" alt="" class="inline"/></p>
-<h2><a class="anchor" id="autotoc_md84"></a>
+<h2><a class="anchor" id="autotoc_md86"></a>
 Configure Azure AD for Office Integration access</h2>
 <p>The office integration requires an access token to allow it to authenticate with the Web Client, this can be configured in Azure AD:</p>
 <ol type="1">
@@ -604,7 +624,7 @@ Configure Azure AD for Office Integration access</h2>
 </ol>
 </li>
 </ol>
-<h3><a class="anchor" id="autotoc_md85"></a>
+<h3><a class="anchor" id="autotoc_md87"></a>
 Example Config.xml</h3>
 <div class="fragment"><div class="line">&lt;<span class="keywordtype">adfsClient</span>&gt;</div>
 <div class="line">&lt;<span class="keywordtype">clientAuthority</span>&gt;<span class="keyword">https:</span>//<span class="keyword">login.windows.net</span>/<span class="keyword">cmofficedev.onmicrosoft.com</span>&lt;/<span class="keywordtype">clientAuthority</span>&gt;</div>
@@ -612,9 +632,9 @@ Example Config.xml</h3>
 <div class="line">&lt;<span class="keywordtype">clientID</span>&gt;<span class="keyword">cf2501bd-10f0-4ad6-96dc-f5cf7b2b3bf5</span>&lt;/<span class="keywordtype">clientID</span>&gt;</div>
 <div class="line">&lt;<span class="keywordtype">clientReturnUri</span>&gt;<span class="keyword">http:</span>//<span class="keyword">MyWebClient</span>&lt;/<span class="keywordtype">clientReturnUri</span>&gt;</div>
 <div class="line">&lt;/<span class="keywordtype">adfsClient</span>&gt;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md86"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md88"></a>
 Troubleshooting Azure AD for Office Integration access</h2>
-<h3><a class="anchor" id="autotoc_md87"></a>
+<h3><a class="anchor" id="autotoc_md89"></a>
 Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.</h3>
 <p>If you get this error try using the Client ID in clientResourceUri, rather than Application ID URI. </p>
 </div></div><!-- contents -->
