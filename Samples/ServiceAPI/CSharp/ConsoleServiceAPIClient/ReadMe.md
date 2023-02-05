@@ -1,7 +1,7 @@
 # ServiceAPI Client Samples
 
 ## Overview
-These samples use C# to connec to the Micro Focus Content web service (the ServiceAPI).
+These samples use C# to connect to the Micro Focus Content web service (the ServiceAPI).
 
 ## Setup
 The following Nuget packages are used in this project:
