@@ -44,7 +44,6 @@ The following XML must be copied as a child of the hptrim element of hptrim.conf
 ## Usage
 Once the plugin is installed you should be able to download a file using a URL similar to this:
 
-### Record TR5
 ```
 http://localhost/CMServiceAPI/PartialDownload/D16/1
 ```
