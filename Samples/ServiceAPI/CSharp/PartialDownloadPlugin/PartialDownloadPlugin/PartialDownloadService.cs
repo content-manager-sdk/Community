@@ -6,7 +6,7 @@ using System.Net;
 
 namespace HP.HPTRIM.ServiceAPI.Samples
 {
-    [Route("/PartialDownload/{Number}", "GET")]
+    [Route("/PartialDownload/{Number*}", "GET")]
     public class PartialDownload
     {
         public string Number { get; set; }
@@ -39,10 +39,10 @@ namespace HP.HPTRIM.ServiceAPI.Samples
                         record.LoadDocumentIntoClientCache();
                     }
 
+                    // HttpResult has Content-Range support built-in so returning the file wrapped in this class will support
+                    // partial downloads
                     return new HttpResult(new FileInfo(record.GetDocumentPathInClientCache(TRIM.SDK.Events.DocExtracted)), GetMimeType(record));
-                    // replace / with _ so that windows will not get confused by the path seperator in a file name
-                  //  string fileLocation = trimObject.MakeReference(string.Format("c:\\temp\\{0}.tr5", request.Name.Replace('/', '_')));
-                 //   return new HttpResult(new TempDownloadableFile(fileLocation), true);
+
                 }                
             }
 

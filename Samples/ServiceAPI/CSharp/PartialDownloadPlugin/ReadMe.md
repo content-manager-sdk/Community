@@ -1,8 +1,8 @@
 # Partial Download ServiceAPI Plugin
-This sample adds a new service to the ServiceAPI to support re-sumable file downloads.
+This sample adds a new service to the ServiceAPI to support resumable file downloads.
 
 ## Background
-In CM versions up to 10.1 partial downloads are not supported by the standard file dowbload URL (e.g. Record/[Uri]/document/file), this sample adds a new service which does support this.
+In Content Manager versions up to 10.1 partial downloads are not supported by the standard file dowbload URL (e.g. Record/[Uri]/document/file), this sample adds a new service to support this.
 
 Partial downloads are implemented using Content-Range header.
 
@@ -20,8 +20,8 @@ To use this sample:
  - copy PartialDownloadPlugin.dll to your ServiceAPI bin folder
  - add the XML below to the hptrim.config file in your ServiceAPI folder
 
-## NOTE for HPE CM 9.x users
-This sample has been built against HPE CM 10.1 but will work against 9.x if you use the 9.x version of the Content Manager DLLs, which are""
+## NOTE for Content Manager 9.x users
+This sample has been built against Content Manager 10.1 but will work against 9.x if you use the 9.x version of the Content Manager DLLs, which are""
  - HP.HPTRIM.SDK.dll
  - HP.HPTRIM.Service.dll
  - HP.HPTRIM.ServiceModel.dll
@@ -42,14 +42,9 @@ The following XML must be copied as a child of the hptrim element of hptrim.conf
 
 
 ## Usage
-Once the plugin is installed you should be able to download a TR5 file using a URL similar to this:
+Once the plugin is installed you should be able to download a file using a URL similar to this:
 
 ### Record TR5
 ```
-http://localhost/HPRMServiceAPI/MakeReference?TrimType=Record&Name=D16/1
-```
-
-### Location TR5
-```
-http://localhost/HPRMServiceAPI/MakeReference?TrimType=Location&Name=David
+http://localhost/CMServiceAPI/PartialDownload/D16/1
 ```
