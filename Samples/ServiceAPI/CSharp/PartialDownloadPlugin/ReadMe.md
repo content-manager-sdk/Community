@@ -21,7 +21,7 @@ To use this sample:
  - add the XML below to the hptrim.config file in your ServiceAPI folder
 
 ## NOTE for Content Manager 9.x users
-This sample has been built against Content Manager 10.1 but will work against 9.x if you use the 9.x version of the Content Manager DLLs, which are""
+This sample has been built against Content Manager 10.1 but will work against 10.1 if you use the 9.x version of the Content Manager DLLs, which are""
  - HP.HPTRIM.SDK.dll
  - HP.HPTRIM.Service.dll
  - HP.HPTRIM.ServiceModel.dll
