@@ -277,5 +277,5 @@ if (response.Content.Headers.ContentRange.Length.HasValue
 if (response.Content.Headers.ContentRange.To.HasValue)
 {
 	to = (long)response.Content.Headers.ContentRange.To;
-	}
+}
 ```
