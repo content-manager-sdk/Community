@@ -251,31 +251,31 @@ Download a document and write it to the local file system using the HTTP Content
 The key difference to the download document sample is the use of the ContentRange header to specify which chunk of the file is required.
 
 ```cs
-	long endRange = chunkSize;
-	if (to > 0)
+long endRange = chunkSize;
+if (to > 0)
+{
+	if ((length - to) > chunkSize)
 	{
-		if ((length - to) > chunkSize)
-		{
-			endRange = (to + 1) + chunkSize;
-		}
-		else
-		{
-			endRange = length - 1;
-		}
+		endRange = (to + 1) + chunkSize;
 	}
-	request.Headers.Range = new RangeHeaderValue(to > 0 ? to + 1 : 0, endRange);
-
-	var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-
-	if (response.Content.Headers.ContentRange.Length.HasValue
-		&& response.Content.Headers.ContentRange.To.HasValue)
+	else
 	{
-		length = (long)response.Content.Headers.ContentRange.Length;
+		endRange = length - 1;
 	}
+}
+request.Headers.Range = new RangeHeaderValue(to > 0 ? to + 1 : 0, endRange);
+
+var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+if (response.Content.Headers.ContentRange.Length.HasValue
+	&& response.Content.Headers.ContentRange.To.HasValue)
+{
+	length = (long)response.Content.Headers.ContentRange.Length;
+}
               
 
-	if (response.Content.Headers.ContentRange.To.HasValue)
-	{
-		to = (long)response.Content.Headers.ContentRange.To;
+if (response.Content.Headers.ContentRange.To.HasValue)
+{
+	to = (long)response.Content.Headers.ContentRange.To;
 	}
 ```
