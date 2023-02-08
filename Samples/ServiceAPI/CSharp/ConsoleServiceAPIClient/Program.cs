@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ConsoleServiceAPIClient
 {
@@ -69,7 +71,7 @@ namespace ConsoleServiceAPIClient
                 Console.WriteLine($"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
                 throw;
             }
-           
+
             return result.IdToken;
         }
 
@@ -95,7 +97,7 @@ namespace ConsoleServiceAPIClient
             {
                 var result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
 
-               
+
                 return result.AccessToken;
 
             }
@@ -190,7 +192,7 @@ namespace ConsoleServiceAPIClient
 
             //	await getRecordUri();
 
-            await getMe();
+            //   await getMe();
 
             //	await getRecordTitle();
 
@@ -202,7 +204,9 @@ namespace ConsoleServiceAPIClient
 
             //await createRecordWithDocument();
 
-            // await getDocument();
+            //await getDocument();
+
+            await getDocumentInChunks();
 
             //	await uploadFileAndCreateRecord();
 
@@ -543,6 +547,7 @@ namespace ConsoleServiceAPIClient
 
         }
 
+
         private async static Task getDocument()
         {
             var trimClient = await getServiceClient();
@@ -571,6 +576,94 @@ namespace ConsoleServiceAPIClient
                 var stream = await response.Content.ReadAsStreamAsync();
                 stream.CopyTo(fileStream);
             }
+
+        }
+
+        // This only works in Content Manager versions subsequent to version 10.1 as the Content-Range header
+        // was not supported in 10.1.x and earlier
+        private async static Task getDocumentInChunks()
+        {
+            var trimClient = await getServiceClient();
+            var httpClient = await getHttpClient();
+ 
+            long to = 0;
+            long length = 0;
+            string filePath = null;
+
+            // long chunkSize = 1024 * 1000;
+            long chunkSize = 999;
+
+            var recordDownload = new RecordDownload()
+            {
+                Id = "REC_264",
+                DownloadType = DownloadType.Document
+            };
+
+            string url = trimClient.ResolveTypedUrl("GET", recordDownload);
+
+
+
+            do
+            {
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(url),
+                    Method = HttpMethod.Get,
+                };
+
+                long endRange = chunkSize;
+                if (to > 0)
+                {
+                    if ((length - to) > chunkSize)
+                    {
+                        endRange = (to + 1) + chunkSize;
+                    }
+                    else
+                    {
+                        endRange = length - 1;
+                    }
+                }
+                request.Headers.Range = new RangeHeaderValue(to > 0 ? to + 1 : 0, endRange);
+
+
+                var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+                if (response.Content.Headers.ContentRange.Length.HasValue
+                    && response.Content.Headers.ContentRange.To.HasValue)
+                {
+                    length = (long)response.Content.Headers.ContentRange.Length;
+                }
+              
+
+                if (response.Content.Headers.ContentRange.To.HasValue)
+                {
+                    to = (long)response.Content.Headers.ContentRange.To;
+                }
+
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    string fileName = "test.dat";
+                    IEnumerable<string> values;
+                    if (response.Content.Headers.TryGetValues("Content-Disposition", out values))
+                    {
+                        ContentDisposition contentDisposition = new ContentDisposition(values.First());
+                        fileName = HttpUtility.UrlDecode(contentDisposition.FileName);
+                    }
+
+                    filePath = $"C:\\junk\\{fileName}";
+
+                    File.Delete(filePath);
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Append))
+                {
+                    var stream = await response.Content.ReadAsStreamAsync();
+
+                    fileStream.Write(stream.ReadFully(), 0, Convert.ToInt32(stream.Length));                   
+                }
+
+
+            } while ((to + 1) < length);
 
         }
 

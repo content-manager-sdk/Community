@@ -243,3 +243,39 @@ using (var fileStream = File.Create(Path.Combine($"C:\\junk\\{fileName}")))
 }
 
 ```
+
+
+### Download document in chunks
+Download a document and write it to the local file system using the HTTP Content-Range header to fetch the document in chunks.  This only works in Content Manager versions after 10.1.x.
+
+The key difference to the download document sample is the use of the ContentRange header to specify which chunk of the file is required.
+
+```cs
+	long endRange = chunkSize;
+	if (to > 0)
+	{
+		if ((length - to) > chunkSize)
+		{
+			endRange = (to + 1) + chunkSize;
+		}
+		else
+		{
+			endRange = length - 1;
+		}
+	}
+	request.Headers.Range = new RangeHeaderValue(to > 0 ? to + 1 : 0, endRange);
+
+	var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+	if (response.Content.Headers.ContentRange.Length.HasValue
+		&& response.Content.Headers.ContentRange.To.HasValue)
+	{
+		length = (long)response.Content.Headers.ContentRange.Length;
+	}
+              
+
+	if (response.Content.Headers.ContentRange.To.HasValue)
+	{
+		to = (long)response.Content.Headers.ContentRange.To;
+	}
+```
