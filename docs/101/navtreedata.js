@@ -244,206 +244,209 @@ var NAVTREE =
         ] ],
         [ "Add office integration the settings to the Web Client", "oidc.html#autotoc_md55", null ]
       ] ],
-      [ "AzureAD for WebClient and ServiceAPI", "oidc.html#oidc_azuread", [
+      [ "AzureAD for WebClient/Mobile App and ServiceAPI", "oidc.html#oidc_azuread", [
         [ "Create the Azure AD Application", "oidc.html#autotoc_md56", [
           [ "Example", "oidc.html#autotoc_md57", null ]
         ] ],
-        [ "Configue for mobile", "oidc.html#autotoc_md58", null ],
-        [ "Add a secret", "oidc.html#autotoc_md59", [
-          [ "Example", "oidc.html#autotoc_md60", null ]
+        [ "Add a secret", "oidc.html#autotoc_md58", [
+          [ "Example", "oidc.html#autotoc_md59", null ]
         ] ],
-        [ "Configure Tokens", "oidc.html#autotoc_md61", null ],
-        [ "Configure permissions", "oidc.html#autotoc_md62", [
-          [ "Example", "oidc.html#autotoc_md63", null ]
+        [ "Configure Tokens", "oidc.html#autotoc_md60", null ],
+        [ "Configure permissions", "oidc.html#autotoc_md61", [
+          [ "Example", "oidc.html#autotoc_md62", null ]
         ] ],
-        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md64", [
-          [ "Example config", "oidc.html#autotoc_md65", null ]
+        [ "Configure for mobile", "oidc.html#oidc_mobile", [
+          [ "Add the mobile redirect URI", "oidc.html#autotoc_md63", null ],
+          [ "Add the mobile redirect URI to the ServiceAPI", "oidc.html#autotoc_md64", null ]
         ] ],
-        [ "Enable redirect", "oidc.html#autotoc_md66", null ],
-        [ "Allow users (Web Client only)", "oidc.html#autotoc_md67", [
-          [ "Example", "oidc.html#autotoc_md68", null ]
+        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md65", [
+          [ "Example config", "oidc.html#autotoc_md66", null ]
         ] ],
-        [ "Logout", "oidc.html#autotoc_md69", [
-          [ "Example", "oidc.html#autotoc_md70", null ]
+        [ "Enable redirect", "oidc.html#autotoc_md67", null ],
+        [ "Allow users (Web Client only)", "oidc.html#autotoc_md68", [
+          [ "Example", "oidc.html#autotoc_md69", null ]
         ] ],
-        [ "Allow anonymous access in IIS", "oidc.html#autotoc_md71", null ]
+        [ "Logout", "oidc.html#autotoc_md70", [
+          [ "Example", "oidc.html#autotoc_md71", null ]
+        ] ],
+        [ "Allow anonymous access in IIS", "oidc.html#autotoc_md72", null ]
       ] ],
       [ "Google authentication for WebClient and ServiceAPI", "oidc.html#oidc_google", [
-        [ "Create the Google Credentials", "oidc.html#autotoc_md72", [
-          [ "Example", "oidc.html#autotoc_md73", null ]
+        [ "Create the Google Credentials", "oidc.html#autotoc_md73", [
+          [ "Example", "oidc.html#autotoc_md74", null ]
         ] ],
-        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md74", [
-          [ "Example config", "oidc.html#autotoc_md75", null ]
+        [ "Configure authentication in hptrim.config", "oidc.html#autotoc_md75", [
+          [ "Example config", "oidc.html#autotoc_md76", null ]
         ] ],
-        [ "Enable redirect", "oidc.html#autotoc_md76", null ],
-        [ "Logout", "oidc.html#autotoc_md77", [
-          [ "Example", "oidc.html#autotoc_md78", null ]
+        [ "Enable redirect", "oidc.html#autotoc_md77", null ],
+        [ "Logout", "oidc.html#autotoc_md78", [
+          [ "Example", "oidc.html#autotoc_md79", null ]
         ] ],
-        [ "Allow anonymous access in the IIS", "oidc.html#autotoc_md79", null ]
+        [ "Allow anonymous access in the IIS", "oidc.html#autotoc_md80", null ]
       ] ],
       [ "AzureAD for Content Manager Desktop", "oidc.html#oidc_azuread_desktop", [
-        [ "Create the Azure AD Application", "oidc.html#autotoc_md80", [
-          [ "Example", "oidc.html#autotoc_md81", null ]
+        [ "Create the Azure AD Application", "oidc.html#autotoc_md81", [
+          [ "Example", "oidc.html#autotoc_md82", null ]
         ] ],
-        [ "Configure permissions", "oidc.html#autotoc_md82", [
-          [ "Example", "oidc.html#autotoc_md83", null ]
+        [ "Configure permissions", "oidc.html#autotoc_md83", [
+          [ "Example", "oidc.html#autotoc_md84", null ]
         ] ],
-        [ "Configure authentication in Content Manager Enterprise Studio", "oidc.html#autotoc_md84", [
-          [ "Example", "oidc.html#autotoc_md85", null ]
+        [ "Configure authentication in Content Manager Enterprise Studio", "oidc.html#autotoc_md85", [
+          [ "Example", "oidc.html#autotoc_md86", null ]
         ] ],
-        [ "Configure Azure AD for Office Integration access", "oidc.html#autotoc_md86", [
-          [ "Example Config.xml", "oidc.html#autotoc_md87", null ]
+        [ "Configure Azure AD for Office Integration access", "oidc.html#autotoc_md87", [
+          [ "Example Config.xml", "oidc.html#autotoc_md88", null ]
         ] ],
-        [ "Troubleshooting Azure AD for Office Integration access", "oidc.html#autotoc_md88", [
-          [ "Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.", "oidc.html#autotoc_md89", null ]
+        [ "Troubleshooting Azure AD for Office Integration access", "oidc.html#autotoc_md89", [
+          [ "Error AADSTS500011: The resource principal named https://MYSERVER/contentmanager/ was not found in the tenant named XXXX-XXXX-XXXXX-XXXXXX.", "oidc.html#autotoc_md90", null ]
         ] ]
       ] ]
     ] ],
     [ "Zero Footprint Office Integration", "zero_office.html", [
-      [ "Components", "zero_office.html#autotoc_md90", null ],
-      [ "Requirements", "zero_office.html#autotoc_md91", null ],
-      [ "ServiceAPI", "zero_office.html#autotoc_md92", [
-        [ "ServiceAPI Configuration", "zero_office.html#autotoc_md93", null ],
-        [ "ServiceAPI Authentication Permissions", "zero_office.html#autotoc_md95", null ],
-        [ "ServiceAPI Authentication Application ID", "zero_office.html#autotoc_md96", null ],
-        [ "ServiceAPI Authorized Client Applications", "zero_office.html#autotoc_md97", null ]
+      [ "Components", "zero_office.html#autotoc_md91", null ],
+      [ "Requirements", "zero_office.html#autotoc_md92", null ],
+      [ "ServiceAPI", "zero_office.html#autotoc_md93", [
+        [ "ServiceAPI Configuration", "zero_office.html#autotoc_md94", null ],
+        [ "ServiceAPI Authentication Permissions", "zero_office.html#autotoc_md96", null ],
+        [ "ServiceAPI Authentication Application ID", "zero_office.html#autotoc_md97", null ],
+        [ "ServiceAPI Authorized Client Applications", "zero_office.html#autotoc_md98", null ]
       ] ],
       [ "Manifests", "zero_office.html#zero_manifests", null ],
-      [ "Browser Cookies", "zero_office.html#autotoc_md98", null ],
-      [ "Email Link", "zero_office.html#autotoc_md99", null ]
+      [ "Browser Cookies", "zero_office.html#autotoc_md99", null ],
+      [ "Email Link", "zero_office.html#autotoc_md100", null ]
     ] ],
     [ "Microsoft Teams Integration", "zero_teams.html", [
-      [ "Two modes of operation", "zero_teams.html#autotoc_md100", [
-        [ "Edit manifest to remove client side mode", "zero_teams.html#autotoc_md101", null ]
+      [ "Two modes of operation", "zero_teams.html#autotoc_md101", [
+        [ "Edit manifest to remove client side mode", "zero_teams.html#autotoc_md102", null ]
       ] ],
-      [ "Components", "zero_teams.html#autotoc_md102", null ],
-      [ "Requirements", "zero_teams.html#autotoc_md103", null ],
-      [ "Server side architecture", "zero_teams.html#autotoc_md104", [
-        [ "Check in styles and places", "zero_teams.html#autotoc_md105", null ],
-        [ "Creating the check in style and place for Teams", "zero_teams.html#autotoc_md106", null ]
+      [ "Components", "zero_teams.html#autotoc_md103", null ],
+      [ "Requirements", "zero_teams.html#autotoc_md104", null ],
+      [ "Server side architecture", "zero_teams.html#autotoc_md105", [
+        [ "Check in styles and places", "zero_teams.html#autotoc_md106", null ],
+        [ "Creating the check in style and place for Teams", "zero_teams.html#autotoc_md107", null ]
       ] ],
-      [ "ServiceAPI", "zero_teams.html#autotoc_md107", null ],
+      [ "ServiceAPI", "zero_teams.html#autotoc_md108", null ],
       [ "Setup Script", "zero_teams.html#zero_teams_script", null ],
-      [ "Microsoft protected APIs", "zero_teams.html#autotoc_md108", null ],
-      [ "Conversation silent interval", "zero_teams.html#autotoc_md109", null ],
-      [ "Setup instructions", "zero_teams.html#autotoc_md110", [
-        [ "ServiceAPI Authentication Permissions", "zero_teams.html#autotoc_md111", null ],
-        [ "ServiceAPI Authentication Application ID", "zero_teams.html#autotoc_md112", null ],
-        [ "ServiceAPI Authorized Client Applications", "zero_teams.html#autotoc_md113", null ]
+      [ "Microsoft protected APIs", "zero_teams.html#autotoc_md109", null ],
+      [ "Conversation silent interval", "zero_teams.html#autotoc_md110", null ],
+      [ "Setup instructions", "zero_teams.html#autotoc_md111", [
+        [ "ServiceAPI Authentication Permissions", "zero_teams.html#autotoc_md112", null ],
+        [ "ServiceAPI Authentication Application ID", "zero_teams.html#autotoc_md113", null ],
+        [ "ServiceAPI Authorized Client Applications", "zero_teams.html#autotoc_md114", null ]
       ] ],
       [ "Teams App Manifest", "zero_teams.html#teams_manifests", null ],
-      [ "Browser Cookies", "zero_teams.html#autotoc_md114", null ],
-      [ "Email Link", "zero_teams.html#autotoc_md115", null ]
+      [ "Browser Cookies", "zero_teams.html#autotoc_md115", null ],
+      [ "Email Link", "zero_teams.html#autotoc_md116", null ]
     ] ],
     [ "Programming in Content Manager", "programming_guide.html", [
       [ "Introduction", "programming_guide.html#programming_in", [
         [ "The main objects", "programming_guide.html#main_objects", null ],
         [ "Using the TrimApplication object", "programming_guide.html#application_object", null ],
         [ "Using the Database object", "programming_guide.html#database_object", [
-          [ "Code Example", "programming_guide.html#autotoc_md116", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md117", null ]
         ] ],
         [ "Database pooling", "programming_guide.html#database_pooling", [
-          [ "Code Example", "programming_guide.html#autotoc_md117", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md118", null ]
         ] ]
       ] ],
       [ "Creating and modifying Records", "programming_guide.html#creating_records", [
         [ "Creating new Records", "programming_guide.html#new_record", [
-          [ "Code example", "programming_guide.html#autotoc_md118", null ]
+          [ "Code example", "programming_guide.html#autotoc_md119", null ]
         ] ],
         [ "Setting the Container and Classification", "programming_guide.html#creating_records_container", null ],
         [ "Accessing existing records", "programming_guide.html#access_existing_record", null ],
         [ "Getting a record by record number", "programming_guide.html#get_existing_record", [
-          [ "Code Example", "programming_guide.html#autotoc_md119", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md120", null ]
         ] ],
         [ "Getting a Record by URI", "programming_guide.html#record_by_uri", [
-          [ "Code Example", "programming_guide.html#autotoc_md120", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md121", null ]
         ] ]
       ] ],
       [ "Reading record data", "programming_guide.html#reading_record_data", [
         [ "Basic properties", "programming_guide.html#reading_basic_properties", [
-          [ "Examples of basic readable properties of a record are:", "programming_guide.html#autotoc_md121", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md122", null ]
-        ] ],
-        [ "Accessing related objects", "programming_guide.html#related_objects", [
+          [ "Examples of basic readable properties of a record are:", "programming_guide.html#autotoc_md122", null ],
           [ "Code Example", "programming_guide.html#autotoc_md123", null ]
         ] ],
-        [ "Accessing record Location information", "programming_guide.html#record_Location_info", [
+        [ "Accessing related objects", "programming_guide.html#related_objects", [
           [ "Code Example", "programming_guide.html#autotoc_md124", null ]
+        ] ],
+        [ "Accessing record Location information", "programming_guide.html#record_Location_info", [
+          [ "Code Example", "programming_guide.html#autotoc_md125", null ]
         ] ]
       ] ],
       [ "Updating records", "programming_guide.html#updating_records", [
         [ "Modifying properties", "programming_guide.html#modifying_properties", [
-          [ "Code Example", "programming_guide.html#autotoc_md125", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md126", null ]
         ] ],
         [ "Calling update methods", "programming_guide.html#update_methods", [
-          [ "Code Example", "programming_guide.html#autotoc_md126", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md127", null ]
-        ] ],
-        [ "Updating properties using SetProperty", "programming_guide.html#updating_properties", [
+          [ "Code Example", "programming_guide.html#autotoc_md127", null ],
           [ "Code Example", "programming_guide.html#autotoc_md128", null ]
         ] ],
+        [ "Updating properties using SetProperty", "programming_guide.html#updating_properties", [
+          [ "Code Example", "programming_guide.html#autotoc_md129", null ]
+        ] ],
         [ "User Defined Fields", "programming_guide.html#update_user_defined_fields", [
-          [ "Code Example (GetFieldValue())", "programming_guide.html#autotoc_md129", null ],
-          [ "Code Example (SetFieldValue())", "programming_guide.html#autotoc_md130", null ]
+          [ "Code Example (GetFieldValue())", "programming_guide.html#autotoc_md130", null ],
+          [ "Code Example (SetFieldValue())", "programming_guide.html#autotoc_md131", null ]
         ] ]
       ] ],
       [ "Verifying and error trapping", "programming_guide.html#Verifying_and_error_trapping", [
         [ "The Verify() method", "programming_guide.html#The_Verify_method", [
-          [ "Code Example", "programming_guide.html#autotoc_md131", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md132", null ]
         ] ],
         [ "The Verified property", "programming_guide.html#The_Verified_property", null ],
         [ "Trapping run-time errors", "programming_guide.html#Trapping_run-time_errors", null ],
         [ "Saving the record to the database", "programming_guide.html#Saving_the_record_to_the_database", null ]
       ] ],
       [ "New records and electronic documents", "programming_guide.html#New_records_and_electronic_documents", [
-        [ "Creating a container file", "programming_guide.html#autotoc_md132", null ],
+        [ "Creating a container file", "programming_guide.html#autotoc_md133", null ],
         [ "Creating a record of a given type", "programming_guide.html#Creating_a_record_of_a_given_type", null ],
         [ "Controlled and free text titling", "programming_guide.html#Controlled_and_free_text_titling", [
-          [ "Code Example", "programming_guide.html#autotoc_md133", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md134", null ]
         ] ],
         [ "Security Levels and Caveats", "programming_guide.html#Security_Levels_and_Caveats", [
-          [ "Code Example", "programming_guide.html#autotoc_md134", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md135", null ]
-        ] ],
-        [ "Record Locations", "programming_guide.html#Record_Locations", [
+          [ "Code Example", "programming_guide.html#autotoc_md135", null ],
           [ "Code Example", "programming_guide.html#autotoc_md136", null ]
         ] ],
-        [ "Record Contacts", "programming_guide.html#Record_Contacts", [
+        [ "Record Locations", "programming_guide.html#Record_Locations", [
           [ "Code Example", "programming_guide.html#autotoc_md137", null ]
+        ] ],
+        [ "Record Contacts", "programming_guide.html#Record_Contacts", [
+          [ "Code Example", "programming_guide.html#autotoc_md138", null ]
         ] ],
         [ "Creating a Document", "programming_guide.html#Creating_a_Document", null ],
         [ "Titling and numbering", "programming_guide.html#Titling_and_numbering", [
-          [ "Code Example", "programming_guide.html#autotoc_md138", null ]
-        ] ],
-        [ "Assigning to a container", "programming_guide.html#Assigning_to_a_container", [
           [ "Code Example", "programming_guide.html#autotoc_md139", null ]
         ] ],
-        [ "Attaching an electronic document", "programming_guide.html#Attaching_an_electronic_document", [
+        [ "Assigning to a container", "programming_guide.html#Assigning_to_a_container", [
           [ "Code Example", "programming_guide.html#autotoc_md140", null ]
+        ] ],
+        [ "Attaching an electronic document", "programming_guide.html#Attaching_an_electronic_document", [
+          [ "Code Example", "programming_guide.html#autotoc_md141", null ]
         ] ],
         [ "Document Author", "programming_guide.html#Document_Author", null ]
       ] ],
       [ "Locations", "programming_guide.html#Locations", [
         [ "Working with Locations", "programming_guide.html#Working_with_Locations", null ],
         [ "Finding a Person by Name", "programming_guide.html#Finding_a_Person_by_Name", [
-          [ "Code Example", "programming_guide.html#autotoc_md141", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md142", null ]
         ] ],
         [ "Creating a new Staff Member", "programming_guide.html#Creating_a_new_Staff_Member", [
-          [ "Code Example", "programming_guide.html#autotoc_md142", null ],
           [ "Code Example", "programming_guide.html#autotoc_md143", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md144", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md144", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md145", null ]
         ] ]
       ] ],
       [ "Searching Content Manager using the .NET SDK", "programming_guide.html#Searching_Content_Manager", [
         [ "Searching for Content Manager objects", "programming_guide.html#Searching_for_Records_Manager_objects", [
-          [ "Code Example", "programming_guide.html#autotoc_md145", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md146", null ]
         ] ],
         [ "Specifying the search criteria", "programming_guide.html#Specifying_the_search_criteria", [
-          [ "Code Example", "programming_guide.html#autotoc_md146", null ],
-          [ "Code Example", "programming_guide.html#autotoc_md147", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md147", null ],
+          [ "Code Example", "programming_guide.html#autotoc_md148", null ]
         ] ],
         [ "Retrieving the results of the search", "programming_guide.html#Retrieving_the_results", [
-          [ "Code Example", "programming_guide.html#autotoc_md148", null ]
+          [ "Code Example", "programming_guide.html#autotoc_md149", null ]
         ] ]
       ] ],
       [ "Other search features", "programming_guide.html#Other_search_features", [
@@ -451,7 +454,7 @@ var NAVTREE =
         [ "Filtering/searching by enum value", "programming_guide.html#enum_filtering", null ],
         [ "Purpose filtering", "programming_guide.html#Purpose_filtering", null ],
         [ "Persisting a search", "programming_guide.html#Persisting_a_search", null ],
-        [ "Item matching", "programming_guide.html#autotoc_md149", null ],
+        [ "Item matching", "programming_guide.html#autotoc_md150", null ],
         [ "Result counts", "programming_guide.html#search_count", null ],
         [ "Sorting by User Defined Fields", "programming_guide.html#sort_by_field", null ]
       ] ],
@@ -469,8 +472,8 @@ var NAVTREE =
     ] ],
     [ "﻿Search Clauses", "sc_using.html", [
       [ "Overview", "sc_using.html#sc_overview", null ],
-      [ "Interrogating metadata", "sc_using.html#autotoc_md150", [
-        [ "Code Sample", "sc_using.html#autotoc_md151", null ]
+      [ "Interrogating metadata", "sc_using.html#autotoc_md151", [
+        [ "Code Sample", "sc_using.html#autotoc_md152", null ]
       ] ],
       [ "List of search clauses by object type", "sc_using.html#searcg_clauses_by_object_type", [
         [ "ActionDef", "sc_using.html#search_clauses_ActionDef", null ],
@@ -539,8 +542,8 @@ var NAVTREE =
     ] ],
     [ "﻿Enum Items", "enum_items.html", [
       [ "Using Enums", "enum_items.html#enums_using", null ],
-      [ "Interrogating metadata", "enum_items.html#autotoc_md152", [
-        [ "Code Sample", "enum_items.html#autotoc_md153", null ]
+      [ "Interrogating metadata", "enum_items.html#autotoc_md153", [
+        [ "Code Sample", "enum_items.html#autotoc_md154", null ]
       ] ],
       [ "List of enum items by Enum", "enum_items.html#enum_item_by_enum_type_type", [
         [ "Access Control Custom Add Menu Item", "enum_items.html#enum_help_aclMenuItems", null ],
@@ -897,9 +900,9 @@ var NAVTREE =
       [ "Warning", "object_purposes.html#object_purposes_warning", null ],
       [ "Extra information", "object_purposes.html#object_purposes_extra", null ],
       [ "Purpose metadata", "object_purposes.html#object_purposes_metadata", [
-        [ "Code sample - searching", "object_purposes.html#autotoc_md154", null ],
-        [ "Code sample - post search", "object_purposes.html#autotoc_md155", null ],
-        [ "Code sample - object definition", "object_purposes.html#autotoc_md156", null ]
+        [ "Code sample - searching", "object_purposes.html#autotoc_md155", null ],
+        [ "Code sample - post search", "object_purposes.html#autotoc_md156", null ],
+        [ "Code sample - object definition", "object_purposes.html#autotoc_md157", null ]
       ] ],
       [ "List of objects with related purpose enum", "object_purposes.html#object_with_purpose_enum", [
         [ "TRIM.SDK.ActionDef", "object_purposes.html#purpose_enum_ActionDef", null ],
@@ -1021,35 +1024,35 @@ var NAVTREE =
     [ "Advanced Topics", "advanced_topics.html", [
       [ "Different ways to fetch a TrimMainObject", "advanced_topics.html#ways_To_Fetch_a_TrimMainObject", [
         [ "Object constructor by Name", "advanced_topics.html#fetch_by_constructorand_name", [
-          [ "Code example", "advanced_topics.html#autotoc_md157", null ]
+          [ "Code example", "advanced_topics.html#autotoc_md158", null ]
         ] ],
         [ "Object name properties", "advanced_topics.html#object_name_properties", null ],
         [ "Database find methods", "advanced_topics.html#fetch_by_database", [
-          [ "Code samples", "advanced_topics.html#autotoc_md158", null ]
+          [ "Code samples", "advanced_topics.html#autotoc_md159", null ]
         ] ],
         [ "TrimMainObjectSearch", "advanced_topics.html#fetch_by_search", [
-          [ "Code sample", "advanced_topics.html#autotoc_md159", null ]
+          [ "Code sample", "advanced_topics.html#autotoc_md160", null ]
         ] ]
       ] ],
       [ "Document access alternatives", "advanced_topics.html#fetchDoc", [
         [ "Overview", "advanced_topics.html#doc_access_overview", null ],
         [ "Record.GetDocument()", "advanced_topics.html#getDoc", [
-          [ "Checkout without getting the document", "advanced_topics.html#autotoc_md161", null ]
+          [ "Checkout without getting the document", "advanced_topics.html#autotoc_md162", null ]
         ] ],
         [ "DocumentPathInClientCache", "advanced_topics.html#clientCache", [
-          [ "Example", "advanced_topics.html#autotoc_md162", null ]
-        ] ],
-        [ "DocumentPathInWGSCache", "advanced_topics.html#wgsCache", [
           [ "Example", "advanced_topics.html#autotoc_md163", null ]
         ] ],
-        [ "DownloadNotifier", "advanced_topics.html#downloadNotifier", [
+        [ "DocumentPathInWGSCache", "advanced_topics.html#wgsCache", [
           [ "Example", "advanced_topics.html#autotoc_md164", null ]
+        ] ],
+        [ "DownloadNotifier", "advanced_topics.html#downloadNotifier", [
+          [ "Example", "advanced_topics.html#autotoc_md165", null ]
         ] ],
         [ "Other object types", "advanced_topics.html#dowload_other_object_types", null ]
       ] ],
       [ "Localised strings", "advanced_topics.html#localisedStrings", [
         [ "TrimMessages", "advanced_topics.html#trimMEssages", [
-          [ "Code Sample", "advanced_topics.html#autotoc_md165", null ]
+          [ "Code Sample", "advanced_topics.html#autotoc_md166", null ]
         ] ],
         [ "Captions", "advanced_topics.html#objectCaptions", [
           [ "Enum captions", "advanced_topics.html#enumCaptions", null ],
@@ -1134,28 +1137,28 @@ var NAVTREEINDEX =
 "namespace_t_r_i_m_1_1_s_d_k.html#a6e8c23accbbfd81493674ded41e2e7b7a2faa76b51c287d54b4d22edd79e2655f",
 "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba2f44b1d7cdd17ea0c36cb6df12d06ddb",
 "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba7554996e4bb5f575db3d2b8d669a1130",
-"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33bac4a1b8b3c8292491ff20112e907939c7",
-"namespace_t_r_i_m_1_1_s_d_k.html#a7a695a17c3750db2f7567606a7cb78fba1fbb1e3943c2c6c560247ac8f9289780",
-"namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa60817eed64cf1e26af3d928b7a4c20ec",
-"namespace_t_r_i_m_1_1_s_d_k.html#a888940a1ccab0e589acaa70241c99fe0aa7fe1e41a5d2ddf97f2612586ffbd970",
-"namespace_t_r_i_m_1_1_s_d_k.html#aaa854ff5c32b8c96605799da8da55336a6311ae17c1ee52b36e68aaf4ad066387",
-"namespace_t_r_i_m_1_1_s_d_k.html#abe38318eb78eed6dc6344ec3eedf4c0ba9732bcb9ad25d24fbd97c181bda02759",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a126ba2ae21a66b119f81c1cbfd57ff74",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a2b1bde6c96414bdc526d064246e83178",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a46a7f500e7c5498ef562c4ffd5149f7e",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a5fc55e182e17d50ea830c7b812f83026",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a7a648b95bcdfad5bfa5b48a32846b798",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a95111729bd9fe621353c30a7e7e9506b",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aaf7ff8a6f5f003c6a5044dc191240d2f",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394acb88f570d7790e374eea6d4a66fc98b9",
-"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ae93f36a4d0d61433a3dca0d033cfc9f7",
-"namespace_t_r_i_m_1_1_s_d_k.html#acbfd2ea579ca7ade1f11c93f89b08a81a827023b0a88031927dfc312d4c0271ba",
-"namespace_t_r_i_m_1_1_s_d_k.html#ae635ab84af4699fa15a34adf5579e979ae5eb00c2dccb877e4e4400057f2cbb2a",
-"namespace_t_r_i_m_1_1_s_d_k.html#af4b6c8ea56bca814a3cd0b3ec065ee06ae4ef81cce7e4e10033ebb10962dfdd5e",
-"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba6efe8b18583d82e139b6b611ab143574",
-"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baede97f163eb888c59285492ee4aa7a8c",
-"programming_guide.html#Finding_a_Person_by_Name",
-"release_notes.html#rn_94_237708"
+"namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33bac492d633652339317ff4fc7504996600",
+"namespace_t_r_i_m_1_1_s_d_k.html#a7a695a17c3750db2f7567606a7cb78fb",
+"namespace_t_r_i_m_1_1_s_d_k.html#a8365d4848a1d591c9d414bdcdf180d3fa5f9547af8bc3b57ad356183cb8013fe2",
+"namespace_t_r_i_m_1_1_s_d_k.html#a888940a1ccab0e589acaa70241c99fe0a9ec69e35872e698079af6b67f463dfaf",
+"namespace_t_r_i_m_1_1_s_d_k.html#aaa854ff5c32b8c96605799da8da55336a2a393ebaa4f1e93d24e880b5dde6bb5d",
+"namespace_t_r_i_m_1_1_s_d_k.html#abe38318eb78eed6dc6344ec3eedf4c0ba8f7f4c1ce7a4f933663d10543562b096",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a1262ffbc41533bd8840191cd739a57d9",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a2add33372224b5704a63680310aa09c6",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a46a4dbfc320ea9ddabb062b1c9313428",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a5fc472b3dd22144a8a679109a6c459c9",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a7a233e00e1b07300325b5fb8430a48d1",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394a950fa07d7c43019b1d122971db90d033",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394aaf76d793d3cab8311d9811fa88cdeb00",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394acb82a45937fbe8d69c35cc4d832b7680",
+"namespace_t_r_i_m_1_1_s_d_k.html#ac89cda7c5437633dc79a88c21e468394ae933d47f6ff5515b9ed9d3559749edad",
+"namespace_t_r_i_m_1_1_s_d_k.html#acbfd2ea579ca7ade1f11c93f89b08a81a826a30a2d22a45bae9fcea53b507428e",
+"namespace_t_r_i_m_1_1_s_d_k.html#ae635ab84af4699fa15a34adf5579e979abcfaccebf745acfd5e75351095a5394a",
+"namespace_t_r_i_m_1_1_s_d_k.html#af4b6c8ea56bca814a3cd0b3ec065ee06ae12167aa0a7698e6ebc92b4ce3909b53",
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6ba6ec50bbec7ba9cf854867916192b4488",
+"namespace_t_r_i_m_1_1_s_d_k.html#af7e058b1d73a0123587a52d773c2ad6baed91259d205ca0fb38882e47975730c3",
+"programming_guide.html#Creating_a_new_Staff_Member",
+"release_notes.html#rn_94_236524"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

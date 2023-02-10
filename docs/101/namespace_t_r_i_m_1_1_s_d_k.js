@@ -1,6 +1,6 @@
 var namespace_t_r_i_m_1_1_s_d_k =
 [
-    [ "Office Integration configuration", "zero_office.html#autotoc_md94", null ],
+    [ "Office Integration configuration", "zero_office.html#autotoc_md95", null ],
     [ "DownloadNotifier", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier.html", "class_t_r_i_m_1_1_s_d_k_1_1_download_notifier" ],
     [ "SwigHelper", "class_t_r_i_m_1_1_s_d_k_1_1_swig_helper.html", null ],
     [ "ITrimAccessControl", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control.html", "interface_t_r_i_m_1_1_s_d_k_1_1_i_trim_access_control" ],
@@ -7692,6 +7692,7 @@ var namespace_t_r_i_m_1_1_s_d_k =
       [ "RecordSupersedes", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba68c1c6e14ebc1a5932c0b36b749854c0", null ],
       [ "RecordTask", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33bac0526ecc42bd221b9bcdbeb48358024d", null ],
       [ "RecordTitle", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba6553c8a472fdb511d620483ec19c0eec", null ],
+      [ "RecordTitleAdv", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33baa546818f5bb0a4baa12175e90dfa427f", null ],
       [ "RecordTodo", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33badb1bad158c2937842acc24469d9395d7", null ],
       [ "RecordTransferOn", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33badb43ef2ff5fbcc8095fdf0ba05c1c24b", null ],
       [ "RecordTransferredOn", "namespace_t_r_i_m_1_1_s_d_k.html#a753711ce2302f9a98b7fbca2c79cb33ba75deeffb19b42276277230e323b3d811", null ],

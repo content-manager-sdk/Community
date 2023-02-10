@@ -104,7 +104,7 @@ Extra information</h1>
 <h1><a class="anchor" id="object_purposes_metadata"></a>
 Purpose metadata</h1>
 <p>For those who need to determine which purpose enum and extra objects are available, the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_object_def.html">ObjectDef</a> class contains various purpose related properties and methods. The code sample below demonstrates their usage. In addition, when using the <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_form_definition.html">FormDefinition</a> class, each page item that supports an object lookup contains the properties <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_page_item_definition.html#aa9be23502be9a402d7ece6a6678561c9">EditPurpose</a> and <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_page_item_definition.html#afa1c51af81e76b9bea53e543f5694bba">EditPurposeExtra</a>.</p>
-<h2><a class="anchor" id="autotoc_md154"></a>
+<h2><a class="anchor" id="autotoc_md155"></a>
 Code sample - searching</h2>
 <p>The sample below only lists those Record Types that are valid for creating folders.</p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> (<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a> database = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a>())</div>
@@ -126,7 +126,7 @@ Code sample - searching</h2>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a03fe8e34db7010985558027db56c8650"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650">TRIM.SDK.BaseObjectTypes</a></div><div class="ttdeci">BaseObjectTypes</div><div class="ttdoc">The BaseObjectTypes enum</div><div class="ttdef"><b>Definition:</b> BaseObjectTypes.cs:16</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">TRIM.SDK.BaseObjectTypes.Database</a></div><div class="ttdeci">@ Database</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_ae8f17bcd9c48f17f7d0e776779d0ced6"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#ae8f17bcd9c48f17f7d0e776779d0ced6">TRIM.SDK.RecordTypeFilter</a></div><div class="ttdeci">RecordTypeFilter</div><div class="ttdoc">Record Type Filters</div><div class="ttdef"><b>Definition:</b> RecordTypeFilter.cs:16</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md155"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md156"></a>
 Code sample - post search</h2>
 <p>Many purposes cannot be efficiently applied in a database search and therefore must be run on the results once returned. The code below sets the purpose on the search but then uses <a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_main_object_search.html#a2c8d9e387aaa0a98d9b32d45d57767a8">TrimMainObjectSearch.IsValidForPurpose()</a> to do the actual filtering. This code will find all Records which are valid containers for a Record of type Document.</p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> (<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a> database = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a>())</div>
@@ -151,7 +151,7 @@ Code sample - post search</h2>
 <div class="line">}</div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a250004fa9447b2e9be3ec5ed162797d9"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a250004fa9447b2e9be3ec5ed162797d9">TRIM.SDK.RecordPurposes</a></div><div class="ttdeci">RecordPurposes</div><div class="ttdoc">Record Purposes</div><div class="ttdef"><b>Definition:</b> RecordPurposes.cs:16</div></div>
 <div class="ttc" id="anamespace_t_r_i_m_1_1_s_d_k_html_a9a91a6f03e7107a92af44bdd2092ca45a237bc42b2bd920bfb5e405bee26c8a36"><div class="ttname"><a href="namespace_t_r_i_m_1_1_s_d_k.html#a9a91a6f03e7107a92af44bdd2092ca45a237bc42b2bd920bfb5e405bee26c8a36">TRIM.SDK.AlertConditionTypes.RecordType</a></div><div class="ttdeci">@ RecordType</div><div class="ttdoc">For Records that have a Record Type of</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md156"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md157"></a>
 Code sample - object definition</h2>
 <p>This code sample demonstrates how to interrogate an <code>ObjectDef</code> to determine whether it supports purpose filtering, and if so, which of the purpose enum values support extra information.</p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> (<a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a> database = <span class="keyword">new</span> <a class="code" href="namespace_t_r_i_m_1_1_s_d_k.html#a03fe8e34db7010985558027db56c8650ae307db07b3975fef922a80d07455ee5e">Database</a>())</div>

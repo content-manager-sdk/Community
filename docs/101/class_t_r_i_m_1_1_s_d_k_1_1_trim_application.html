@@ -152,9 +152,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac0f5ba348e860f630e29bf83215c69b0"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#ac0f5ba348e860f630e29bf83215c69b0">MIMETypeToFileType</a> (string mimeTypeString)</td></tr>
 <tr class="memdesc:ac0f5ba348e860f630e29bf83215c69b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a MIME type to a Windows File Type extension string, according to the list of known file types used by Content Manager.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#ac0f5ba348e860f630e29bf83215c69b0">More...</a><br /></td></tr>
 <tr class="separator:ac0f5ba348e860f630e29bf83215c69b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae93ed6760bfb39705a8d2816f5e52ef2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#ae93ed6760bfb39705a8d2816f5e52ef2">InitializeIconCache</a> (<a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a> db)</td></tr>
-<tr class="memdesc:ae93ed6760bfb39705a8d2816f5e52ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the icon cache for this application. This will basically download and synchronize any external icons.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#ae93ed6760bfb39705a8d2816f5e52ef2">More...</a><br /></td></tr>
-<tr class="separator:ae93ed6760bfb39705a8d2816f5e52ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e38b41744951c7cf19a116d05a81259"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#a1e38b41744951c7cf19a116d05a81259">InitializeIconCache</a> (<a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a> db, bool useAuthoringAppIconsIfAvailable)</td></tr>
+<tr class="memdesc:a1e38b41744951c7cf19a116d05a81259"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set useAuthoringAppIconsIfAvailable to true, to enable loading of icons from locally installed authoring applications (such as Microsoft Office).  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#a1e38b41744951c7cf19a116d05a81259">More...</a><br /></td></tr>
+<tr class="separator:a1e38b41744951c7cf19a116d05a81259"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade654c28cc3d4f89626f316aa444b395"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#ade654c28cc3d4f89626f316aa444b395">PreloadIconsAsPNG</a> (<a class="el" href="namespace_t_r_i_m_1_1_s_d_k.html#a888940a1ccab0e589acaa70241c99fe0">IconSizes</a> size)</td></tr>
 <tr class="memdesc:ade654c28cc3d4f89626f316aa444b395"><td class="mdescLeft">&#160;</td><td class="mdescRight">This will pre-load the icon cache with all icons converted to PNG format. It will synchronize to ensure that the latest versions of the icons are in the cache. You will need to call this for each size of PNG file that you wish to pre-load. Note that other sizes will be loaded on demand when using the GetIconAsPNG function.  <a href="class_t_r_i_m_1_1_s_d_k_1_1_trim_application.html#ade654c28cc3d4f89626f316aa444b395">More...</a><br /></td></tr>
 <tr class="separator:ade654c28cc3d4f89626f316aa444b395"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -510,8 +510,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="ae93ed6760bfb39705a8d2816f5e52ef2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae93ed6760bfb39705a8d2816f5e52ef2">&#9670;&nbsp;</a></span>InitializeIconCache()</h2>
+<a id="a1e38b41744951c7cf19a116d05a81259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e38b41744951c7cf19a116d05a81259">&#9670;&nbsp;</a></span>InitializeIconCache()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -523,8 +523,18 @@ Properties</h2></td></tr>
           <td class="memname">static void TRIM.SDK.TrimApplication.InitializeIconCache </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_t_r_i_m_1_1_s_d_k_1_1_database.html">Database</a>&#160;</td>
-          <td class="paramname"><em>db</em></td><td>)</td>
+          <td class="paramname"><em>db</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>useAuthoringAppIconsIfAvailable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -534,7 +544,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initializes the icon cache for this application. This will basically download and synchronize any external icons. </p>
+<p>Set useAuthoringAppIconsIfAvailable to true, to enable loading of icons from locally installed authoring applications (such as Microsoft Office). </p>
 
 </div>
 </div>
