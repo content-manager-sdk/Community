@@ -21,10 +21,11 @@ function getExistingApp {
     $data = @()
     foreach ($item in $allApps) {
       
-        $row = "" | Select-Object displayName, appId, objectId
+        $row = "" | Select-Object displayName, appId, objectId, id
         $row.displayName = $item.displayName
         $row.appId = $item.appId     
         $row.objectId = $item.objectId   
+        $row.id = $item.id
         $data += $row     
     
     }
@@ -379,6 +380,7 @@ if ($createAppAction -eq "y" -or $createAppAction -eq "Y") {
 else {
     $newAppDetails = getExistingApp
 }
+
 
 $newAppDetails = az ad app show --id $newAppDetails.id --only-show-errors | ConvertFrom-Json
 
