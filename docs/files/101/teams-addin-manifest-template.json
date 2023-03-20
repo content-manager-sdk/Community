@@ -59,9 +59,7 @@
         "identity",
         "messageTeamMembers"
     ],
-    "validDomains": [
-        "[DOMAIN]"
-    ],
+    [VALIDDOMAINSATTR],
     "webApplicationInfo": {
         "id": "[APPCLIENTID]",
         "resource": "[APPIDURI]"
