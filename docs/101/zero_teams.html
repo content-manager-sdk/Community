@@ -261,8 +261,9 @@ Teams App Manifest</h1>
 <li>download the <a href="https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/teams-addin-manifest-template.json">sample manifest</a>,</li>
 <li><a href="https://www.guidgenerator.com/online-guid-generator.aspx">generate</a> a new Guid and replace [MANIFESTGUID] with this new Guid,</li>
 <li>replace [SERVICEAPIURL] with your ServiceAPI Url</li>
-<li>if you want to include a link to the Content Manager Web Client replace [WEBSITEURLATTR] with <code>"websiteUrl": "{YOUR WEB CLIENT URL]",</code></li>
+<li>if you want to include a link to the Content Manager Web Client replace [WEBSITEURLATTR] with <code>"websiteUrl": "[YOUR WEB CLIENT URL]",</code></li>
 <li>if you do not wish to include a link to the Content Manger Web client remove [WEBSITEURLATTR],</li>
+<li><b>important</b>, replace [VALIDDOMAINSATTR] with "validDomains": ["[DOMAIN FROM SERVICEAPIULR]", "[IF DIFFENT THE DOMAIN FROM YOUR WEB CLIENT URL]"] (for example: "validDomains": ["mydev.dev", "mycorp.com"]),</li>
 <li>replace [APPCLIENTID] with the client id from the Azure Ad App</li>
 <li>replace [APPIDURI] with the Application ID URI from the Azure Ad App</li>
 <li>create a zip file called content-manager-teams.zip which contains:<ul>
