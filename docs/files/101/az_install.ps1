@@ -399,14 +399,21 @@ $OfficeManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/cont
 [xml]$officeManifestXML=$OfficeManifest.OuterXml.Replace("[MANIFESTGUID]", $officeManifestGuid).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $officeDomain)
 $officeManifestXML.Save("$curDir/office-addin-manifest.xml")
 
+$validDomains = "`"$myDomain`""
 $webClientAttr = ""
 
 if ($webClientUrl) {
     $webClientAttr = "`r`n            `"websiteUrl`": `"$webClientUrl`","
+	
+    $clientHost = ([System.Uri]$webClientUrl).Host
+	if ($myDoman -ne $clientHost) {
+       
+		$validDomains = "$validDomains, `"$clientHost`""
+	}
 }
 
 $TeamsManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/teams-addin-manifest-template.json"
-$TeamsManifest.Replace("[WEBSITEURLATTR]", $webClientAttr).Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $myDomain) > "$curDir/manifest.json"
+$TeamsManifest.Replace("[WEBSITEURLATTR]", $webClientAttr).Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[VALIDDOMAINSATTR]", "`"validDomains`": [$validDomains]") > "$curDir/manifest.json"
 
 
 
