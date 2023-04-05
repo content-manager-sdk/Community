@@ -255,9 +255,9 @@
 					<bt:Image id="Trim.csicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/CheckinStyle.png"/>
 					<bt:Image id="Trim.csicon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/CheckinStyle.png"/>
 
-					<bt:Image id="Trim.rsicon_16x16" DefaultValue="https://MyDev.dev/ServiceAPI/TrimIcon/W16h16/EditFind.png"/>
-					<bt:Image id="Trim.rsicon_32x32" DefaultValue="https://MyDev.dev/ServiceAPI/TrimIcon/W32h32/EditFind.png"/>
-					<bt:Image id="Trim.rsicon_64x64" DefaultValue="https://MyDev.dev/ServiceAPI/TrimIcon/W32h32/EditFind.png"/>
+					<bt:Image id="Trim.rsicon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/EditFind.png"/>
+					<bt:Image id="Trim.rsicon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EditFind.png"/>
+					<bt:Image id="Trim.rsicon_64x64" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EditFind.png"/>
 
 					<bt:Image id="Trim.foldericon_16x16" DefaultValue="[SERVICEAPIURL]/TrimIcon/W16h16/EmailLink.png"/>
 					<bt:Image id="Trim.foldericon_32x32" DefaultValue="[SERVICEAPIURL]/TrimIcon/W32h32/EmailLink.png"/>
