@@ -385,6 +385,12 @@ else {
 $newAppDetails = az ad app show --id $newAppDetails.id --only-show-errors | ConvertFrom-Json
 
 $newAppUri = $newAppDetails.identifierUris[0]
+$appDisplayName = $newAppDetails.displayName
+
+if ($newAppUri.Length -eq 0) {
+"==================== Error: Application ID Uri has not been set in $appDisplayName ===================="
+        return
+}
 
 $OutlookManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/outlook-addin-manifest-template.xml"
 
@@ -442,7 +448,7 @@ $authFile = "$curDir\authentication.xml"
 
 Set-Content $authFile "<!-- Web Service Authentication settings-->"
 
-Add-Content $authFile "<authentication allowAnonymous=`"false`" slidingSessionMinutes=`"30`" redirectURI=`"`">"
+Add-Content $authFile "<authentication corsAllowedOrigins=`"https://$myDomain`" allowAnonymous=`"false`" slidingSessionMinutes=`"30`" redirectURI=`"`">"
 Add-Content $authFile "`t<openIdConnect>"
 Add-Content $authFile "`t`t<add"
 Add-Content $authFile "`t`t`tname=`"openid`""
