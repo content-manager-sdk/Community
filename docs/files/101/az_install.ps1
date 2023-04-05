@@ -442,7 +442,7 @@ $authFile = "$curDir\authentication.xml"
 
 Set-Content $authFile "<!-- Web Service Authentication settings-->"
 
-Add-Content $authFile "<authentication corsAllowedOrigins=`"https://$myDomain`" allowAnonymous=`"false`" slidingSessionMinutes=`"30`" redirectURI=`"`">"
+Add-Content $authFile "<authentication allowAnonymous=`"false`" slidingSessionMinutes=`"30`" redirectURI=`"`">"
 Add-Content $authFile "`t<openIdConnect>"
 Add-Content $authFile "`t`t<add"
 Add-Content $authFile "`t`t`tname=`"openid`""
