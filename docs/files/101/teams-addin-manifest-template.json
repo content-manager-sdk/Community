@@ -1,12 +1,12 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
-    "manifestVersion": "1.11",
+    "manifestVersion": "23.3",
     "version": "0.1.0",
     "showLoadingIndicator": true,
     "id": "[MANIFESTGUID]",
     "packageName": "com.microfocus.contentmanager",
     "developer": {
-        "name": "MicroFocus",
+        "name": "OpenText",
         "websiteUrl": "https://www.microfocus.com",
         "privacyUrl": "https://www.microfocus.com",
         "termsOfUseUrl": "https://www.microfocus.com"

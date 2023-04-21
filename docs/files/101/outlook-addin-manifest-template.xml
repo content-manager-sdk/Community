@@ -6,7 +6,7 @@
 	xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="MailApp">
 	<Id>[MANIFESTGUID]</Id>
 	<Version>1.1.0.0</Version>
-	<ProviderName>Micro Focus</ProviderName>
+	<ProviderName>OpenText</ProviderName>
 	<DefaultLocale>en-US</DefaultLocale>
 	<DisplayName DefaultValue="Content Manager" />
 	<Description DefaultValue="An addin to register mail items in Content Manager."> 
