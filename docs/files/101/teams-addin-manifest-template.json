@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
-    "manifestVersion": "23.3",
-    "version": "0.1.0",
+    "manifestVersion": "1.11",
+    "version": "23.3",
     "showLoadingIndicator": true,
     "id": "[MANIFESTGUID]",
     "packageName": "com.microfocus.contentmanager",
