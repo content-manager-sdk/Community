@@ -1,0 +1,71 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.16",
+    "version": "24.1",
+    "showLoadingIndicator": true,
+    "id": "[MANIFESTGUID]",
+    "packageName": "com.microfocus.contentmanager",
+    "developer": {
+        "name": "OpenText",
+        "websiteUrl": "https://www.microfocus.com",
+        "privacyUrl": "https://www.microfocus.com",
+        "termsOfUseUrl": "https://www.microfocus.com"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Content Manager",
+        "full": "Content Manager"
+    },
+    "description": {
+        "short": "Content Manager",
+        "full": "Content Manager"
+    },
+    "accentColor": "#FFFFFF",
+    "configurableTabs": [
+        {
+            "configurationUrl": "[SERVICEAPIURL]/office/index.html?teamsconfig=1",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team",
+                "groupchat"
+            ],
+            "context": [
+                "channelTab",
+                "privateChatTab"
+            ]
+        }
+    ],
+    "staticTabs": [
+        {
+            "entityId": "ContentManagerAdmin",
+            "name": "Content Manager Admin",
+            "contentUrl": "[SERVICEAPIURL]/office/index.html?teamsadmin=1",[WEBSITEURLATTR]	
+            "scopes": [
+                "personal"
+            ]
+
+        },
+        {
+            "entityId": "about",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+	"supportedChannelTypes": [
+		"sharedChannels",
+		"privateChannels"
+	],
+    [VALIDDOMAINSATTR],
+    "webApplicationInfo": {
+        "id": "[APPCLIENTID]",
+        "resource": "[APPIDURI]"
+    }
+}
