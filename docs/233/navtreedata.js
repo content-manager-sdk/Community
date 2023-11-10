@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "OpenText Content Manager SDK 23.3", "index.html", [
+  [ "OpenText Content Manager SDK 23.3 and 23.4", "index.html", [
     [ "Welcome to the Content Manager SDK Documentation", "index.html", [
       [ "Overview", "index.html#Overview", null ],
       [ "Important", "index.html#Important", null ],
