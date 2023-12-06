@@ -89,7 +89,7 @@ function createNewApp {
 
     $MyArray = $($replyUrls -split " ")
 
-    $resourceResponse = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/requiredResourceManifest.json"
+    $resourceResponse = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/24.1/requiredResourceManifest.json"
     
     $resourceResponse | ConvertTo-Json -depth 100 | Out-File $curDir/resman.json
     
@@ -392,7 +392,7 @@ if ($newAppUri.Length -eq 0) {
         return
 }
 
-$OutlookManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/outlook-addin-manifest-template.xml"
+$OutlookManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/24.1/outlook-addin-manifest-template.xml"
 
 [IO.File]::WriteAllLines("$curDir/outlook-addin-manifest.xml", $OutlookManifest.Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl))
 
@@ -401,7 +401,7 @@ $officeDomain = "https://$myDomain"
 $officeManifestGuid = [guid]::NewGuid()
 
 
-$OfficeManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/office-addin-manifest-template.xml"
+$OfficeManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/24.1/office-addin-manifest-template.xml"
 [xml]$officeManifestXML=$OfficeManifest.OuterXml.Replace("[MANIFESTGUID]", $officeManifestGuid).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[DOMAIN]", $officeDomain)
 $officeManifestXML.Save("$curDir/office-addin-manifest.xml")
 
@@ -418,13 +418,13 @@ if ($webClientUrl) {
 	}
 }
 
-$TeamsManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/101/teams-addin-manifest-template.json"
+$TeamsManifest = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/content-manager-sdk/Community/master/docs/files/24.1/teams-addin-manifest-template.json"
 $TeamsManifest.Replace("[WEBSITEURLATTR]", $webClientAttr).Replace("[MANIFESTGUID]", [guid]::NewGuid()).Replace("[APPCLIENTID]", $newAppDetails.appId).Replace("[APPIDURI]", $newAppUri).Replace("[SERVICEAPIURL]", $webServiceUrl).Replace("[VALIDDOMAINSATTR]", "`"validDomains`": [$validDomains]") > "$curDir/manifest.json"
 
 
 
-Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/101/color.png -OutFile "$curDir/color.png"
-Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/101/outline.png -OutFile "$curDir/outline.png"
+Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/24.1/color.png -OutFile "$curDir/color.png"
+Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/24.1/outline.png -OutFile "$curDir/outline.png"
 
 
 $teamsZip = "$curDir/content-manager-teams.zip"
