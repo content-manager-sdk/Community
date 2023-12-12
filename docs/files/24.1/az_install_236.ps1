@@ -401,8 +401,8 @@ $TeamsManifest.Replace("[WEBSITEURLATTR]", $webClientAttr).Replace("[MANIFESTGUI
 
 
 
-Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/24.1/color.png -OutFile "$curDir/color.png"
-Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/24.1/outline.png -OutFile "$curDir/outline.png"
+Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/101/color.png -OutFile "$curDir/color.png"
+Invoke-WebRequest https://raw.githubusercontent.com/content-manager-sdk/Community/aba15c6fe5d3b34af219aba0dd635704fe18f9a6/docs/files/101/outline.png -OutFile "$curDir/outline.png"
 
 
 $teamsZip = "$curDir/content-manager-teams.zip"
